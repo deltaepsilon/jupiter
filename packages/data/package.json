@@ -1,0 +1,7 @@
+{
+  "name": "data",
+  "packageManager": "yarn@3.2.4",
+  "dependencies": {
+    "typescript": "latest"
+  }
+}

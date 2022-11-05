@@ -1,0 +1,66 @@
+:root {
+  --color-acid-green: #cbe800;
+  --color-gentian-blue-metallic: #09203f;
+  --color-jade-green: #00bc96;
+  --color-lava-orange: #ff2600;
+  --color-miami-blue: #00b5c8;
+  --color-pastel-blue: #a0d8fb;
+  --color-rubystone-red: #f3037e;
+
+  --font-body-family: rival-sans, serif;
+  --font-body-weight: 300;
+  --font-body-style: normal;
+
+  --font-secondary-family: filicudi-solid, sans-serif;
+  --font-secondary-weight: 400;
+
+  --font-light-weight: 400;
+  --font-regular-weight: 400;
+  --font-bold-weight: 400;
+  --font-extrabold-weight: 700;
+}
+
+body {
+  font-family: var(--font-body-family);
+  font-weight: var(--font-body-weight);
+  font-style: var(--font-body-style);
+
+  padding: 0;
+  margin: 0;
+}
+
+a {
+  text-decoration: none;
+}
+
+a:visited {
+  color: var(--color-gentian-blue-metallic);
+}
+
+.light {
+  font-weight: var(--font-light-weight);
+}
+
+.bold {
+  font-weight: var(--font-bold-weight);
+}
+
+.extrabold {
+  font-weight: var(--font-extrabold-weight);
+}
+
+.secondary {
+  font-family: var(--font-secondary-family);
+  font-weight: var(--font-secondary-weight);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+strong {
+  font-family: var(--font-secondary-family);
+  font-weight: var(--font-secondary-weight);
+}
