@@ -22,6 +22,7 @@
     "@mui/icons-material": "^5.10.9",
     "@mui/material": "^5.10.12",
     "firebase": "^9.13.0",
-    "nookies": "^2.5.2"
+    "nookies": "^2.5.2",
+    "zod": "^3.19.1"
   }
 }

@@ -1,17 +1,17 @@
 import { Button } from '@mui/material';
 import { Link } from 'ui/components';
-import { ROUTES } from 'ui/constants/routes';
-import { useAuth } from 'ui/hooks/use-auth';
+import { WEB } from 'data/web';
+import { useAuth } from 'ui/contexts';
 import { useRouter } from 'next/router';
 
 export function LogInOrContinue() {
   const { signInWithGoogle, user } = useAuth();
   const router = useRouter();
-  const isRoot = router.route === ROUTES.ROOT;
+  const isRoot = router.route === WEB.ROUTES.ROOT;
 
   return user ? (
     isRoot ? (
-      <Link button href={ROUTES.IMPORTS}>
+      <Link button href={WEB.ROUTES.SYNC}>
         <Button>Go to app</Button>
       </Link>
     ) : null

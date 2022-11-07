@@ -11,7 +11,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
       <ThemeProvider theme={theme}>
         <Box sx={{ paddingX: [1, 1, 2], paddingY: [1, 1, 2] }}>
           <AppHeader />
-          <Box>{children}</Box>
+          <Box sx={{ display: 'flex', flexDirection: 'column', gridGap: 4 }}>{children}</Box>
         </Box>
       </ThemeProvider>
     </>

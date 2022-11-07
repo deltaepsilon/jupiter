@@ -5,7 +5,7 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import LogoutIcon from '@mui/icons-material/Logout';
 import MenuIcon from '@mui/icons-material/Menu';
 import NextImage from 'next/image';
-import { useAuth } from 'ui/hooks';
+import { useAuth } from 'ui/contexts';
 
 export function AppUserBubble() {
   const { user } = useAuth();

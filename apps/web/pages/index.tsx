@@ -1,4 +1,4 @@
-import { LandingPage } from 'web/components/landing-page';
+import { LandingPage } from 'web/components/pages/landing-page';
 
 export default function WebLandingPage() {
   return <LandingPage />;
