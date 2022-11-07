@@ -17,6 +17,22 @@ export const theme = responsiveFontSizes(
           },
         },
       },
+      MuiPaper: {
+        styleOverrides: {
+          root: {
+            padding: '1rem',
+          },
+        },
+        variants: [
+          {
+            props: { elevation: -1 },
+            style: {
+              border: '1px solid var(--color-gentian-blue-metallic)',
+              boxShadow: '4px 4px 0px 2px var(--color-rubystone-red)',
+            },
+          },
+        ],
+      },
     },
     palette: {
       primary: {

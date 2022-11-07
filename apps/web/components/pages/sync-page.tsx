@@ -1,4 +1,4 @@
-import { Box, CircularProgress, Typography } from '@mui/material';
+import { Box, CircularProgress, Paper, Typography } from '@mui/material';
 import { SyncJobsProvider, useSyncJobs } from 'web/contexts/sync-jobs-context';
 
 import { Container } from 'ui/components';
@@ -37,9 +37,11 @@ function SyncPageConnected() {
 
 function SyncJobsEmptyState() {
   return (
-    <Box>
-      <Typography>Empty</Typography>
+    <Paper elevation={-1} sx={{ display: 'flex', flexDirection: 'column', gridGap: 1, width: 400 }}>
+      <Box sx={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <Typography variant='h4'>No Active Jobs</Typography>
+      </Box>
       <CreateSyncJobButton />
-    </Box>
+    </Paper>
   );
 }

@@ -6,7 +6,11 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "firebase": "GOOGLE_APPLICATION_CREDENTIALS=./service-account.json npx firebase --project=photos-tools-2022",
+    "firebase:deploy:database": "yarn firebase deploy --only database",
+    "service-account:encode": "cat ./service-account.json | base64 -w 0",
+    "service-account:decode": "echo $SERVICE_ACCOUNT_BASE64 | base64 --decode"
   },
   "dependencies": {
     "@emotion/react": "^11.10.5",

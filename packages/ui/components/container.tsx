@@ -14,7 +14,6 @@ export function Container({ children, sx = {} }: Props) {
         width: '100%',
         maxWidth: '80rem',
         minHeight: '50vh',
-        backgroundColor: 'gold',
         ...sx,
       }}
     >
