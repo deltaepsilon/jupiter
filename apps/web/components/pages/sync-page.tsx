@@ -37,7 +37,7 @@ function SyncPageConnected() {
 
 function SyncJobsEmptyState() {
   return (
-    <Paper elevation={-1} sx={{ display: 'flex', flexDirection: 'column', gridGap: 1, width: 400 }}>
+    <Paper elevation={0} sx={{ display: 'flex', flexDirection: 'column', gridGap: 1, width: 400 }}>
       <Box sx={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         <Typography variant='h4'>No Active Jobs</Typography>
       </Box>

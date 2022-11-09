@@ -1,14 +1,16 @@
 import { Box, Button } from '@mui/material';
+import { FormEvent, FormEventHandler, useCallback } from 'react';
 import { ModalDrawer, ModalDrawerFooter, useModalDrawer } from 'ui/components';
 
 import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
+import { CreateSyncJobForm } from './create-sync-job-form';
 import { stopPropagation } from 'ui/utils';
-import { useCallback } from 'react';
 import { useModalState } from 'ui/hooks';
 
 export function CreateSyncJobButton() {
   const { isOpen, onOpen, onClose } = useModalState();
-  const onSubmitCallback = useCallback(() => {
+  const onSubmitCallback = useCallback((e?: Event) => {
+    e?.preventDefault();
     console.log('onSubmitCallback');
   }, []);
 
@@ -22,10 +24,11 @@ export function CreateSyncJobButton() {
         title='Create Sync Job'
       >
         <Box onClick={stopPropagation} sx={{ padding: [1, 2] }}>
-          hey
+          <form onSubmit={onSubmitCallback as unknown as FormEventHandler}>
+            <CreateSyncJobForm />
+            <Footer canSave={true} onSubmitCallback={onSubmitCallback} />
+          </form>
         </Box>
-
-        <Footer canSave={true} onSubmitCallback={onSubmitCallback} />
       </ModalDrawer>
 
       <Button onClick={onOpen} startIcon={<CloudDownloadIcon />} variant='contained'>

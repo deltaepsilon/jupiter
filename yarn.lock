@@ -2059,6 +2059,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"api@workspace:packages/api":
+  version: 0.0.0-use.local
+  resolution: "api@workspace:packages/api"
+  dependencies:
+    axios: ^1.1.3
+    googleapis: ^109.0.1
+    next: ^13.0.2
+    nookies: ^2.5.2
+    typescript: latest
+  languageName: unknown
+  linkType: soft
+
 "aproba@npm:^1.0.3 || ^2.0.0":
   version: 2.0.0
   resolution: "aproba@npm:2.0.0"
@@ -2287,6 +2299,17 @@ __metadata:
   version: 4.5.1
   resolution: "axe-core@npm:4.5.1"
   checksum: db90c6b41483e9c3452393933072fe0b8c2221e6d9b96ae0e6a03a4ce1e4c35bec539c92e9b6fcd63c4acf6678ad3c3ca7f5ab1d884210d157867cc54acd4f6a
+  languageName: node
+  linkType: hard
+
+"axios@npm:^1.1.3":
+  version: 1.1.3
+  resolution: "axios@npm:1.1.3"
+  dependencies:
+    follow-redirects: ^1.15.0
+    form-data: ^4.0.0
+    proxy-from-env: ^1.1.0
+  checksum: cab3b17bf6092c9387f7023d699db093cfa23650b56c4422cd474d124b78b2e3b5a520f932c330664a58ab85b867b1c25a95cace475ef72d236888c852b84e6d
   languageName: node
   linkType: hard
 
@@ -4697,6 +4720,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"follow-redirects@npm:^1.15.0":
+  version: 1.15.2
+  resolution: "follow-redirects@npm:1.15.2"
+  peerDependenciesMeta:
+    debug:
+      optional: true
+  checksum: faa66059b66358ba65c234c2f2a37fcec029dc22775f35d9ad6abac56003268baf41e55f9ee645957b32c7d9f62baf1f0b906e68267276f54ec4b4c597c2b190
+  languageName: node
+  linkType: hard
+
 "forever-agent@npm:~0.6.1":
   version: 0.6.1
   resolution: "forever-agent@npm:0.6.1"
@@ -5192,6 +5225,30 @@ __metadata:
   bin:
     gp12-pem: build/src/bin/gp12-pem.js
   checksum: 59a5026331ea67455672e83770da29f09d979f02e06cb2227ea5916f8cca437887c2d3869f2602a686dc84437886ae9d2ac010780803cbe8e5f161c2d02d8efd
+  languageName: node
+  linkType: hard
+
+"googleapis-common@npm:^6.0.0":
+  version: 6.0.3
+  resolution: "googleapis-common@npm:6.0.3"
+  dependencies:
+    extend: ^3.0.2
+    gaxios: ^5.0.1
+    google-auth-library: ^8.0.2
+    qs: ^6.7.0
+    url-template: ^2.0.8
+    uuid: ^9.0.0
+  checksum: 72b3f2f4018d96d6e5bcc08096c693e393ba1ae59be243ac409e8876d941f918aad556a62d828709956552a5940295360674b9681b7871a1b3be54ea8a588f3f
+  languageName: node
+  linkType: hard
+
+"googleapis@npm:^109.0.1":
+  version: 109.0.1
+  resolution: "googleapis@npm:109.0.1"
+  dependencies:
+    google-auth-library: ^8.0.2
+    googleapis-common: ^6.0.0
+  checksum: d07b928d6003c9d4959689466f305474c3fd9e43412d6d8de57c2995a380baf70d0cdff9575559757fe76149d8edb75b1609e75ad5539548f7836c43e2b954ca
   languageName: node
   linkType: hard
 
@@ -7005,7 +7062,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"next@npm:13.0.2":
+"next@npm:13.0.2, next@npm:^13.0.2":
   version: 13.0.2
   resolution: "next@npm:13.0.2"
   dependencies:
@@ -7795,7 +7852,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"proxy-from-env@npm:^1.0.0":
+"proxy-from-env@npm:^1.0.0, proxy-from-env@npm:^1.1.0":
   version: 1.1.0
   resolution: "proxy-from-env@npm:1.1.0"
   checksum: ed7fcc2ba0a33404958e34d95d18638249a68c430e30fcb6c478497d72739ba64ce9810a24f53a7d921d0c065e5b78e3822759800698167256b04659366ca4d4
@@ -7842,7 +7899,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"qs@npm:6.11.0, qs@npm:^6.6.0":
+"qs@npm:6.11.0, qs@npm:^6.6.0, qs@npm:^6.7.0":
   version: 6.11.0
   resolution: "qs@npm:6.11.0"
   dependencies:
@@ -9466,6 +9523,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"url-template@npm:^2.0.8":
+  version: 2.0.8
+  resolution: "url-template@npm:2.0.8"
+  checksum: 4183fccd74e3591e4154134d4443dccecba9c455c15c7df774f1f1e3fa340fd9bffb903b5beec347196d15ce49c34edf6dec0634a95d170ad6e78c0467d6e13e
+  languageName: node
+  linkType: hard
+
 "use-sync-external-store@npm:1.2.0":
   version: 1.2.0
   resolution: "use-sync-external-store@npm:1.2.0"
@@ -9514,6 +9578,15 @@ __metadata:
   bin:
     uuid: dist/bin/uuid
   checksum: 5575a8a75c13120e2f10e6ddc801b2c7ed7d8f3c8ac22c7ed0c7b2ba6383ec0abda88c905085d630e251719e0777045ae3236f04c812184b7c765f63a70e58df
+  languageName: node
+  linkType: hard
+
+"uuid@npm:^9.0.0":
+  version: 9.0.0
+  resolution: "uuid@npm:9.0.0"
+  bin:
+    uuid: dist/bin/uuid
+  checksum: 8dd2c83c43ddc7e1c71e36b60aea40030a6505139af6bee0f382ebcd1a56f6cd3028f7f06ffb07f8cf6ced320b76aea275284b224b002b289f89fe89c389b028
   languageName: node
   linkType: hard
 
@@ -9575,8 +9648,10 @@ __metadata:
     "@types/node": ^18.11.9
     "@types/react": ^18.0.25
     "@types/react-dom": ^18.0.8
+    axios: ^1.1.3
     eslint: 8.26.0
     eslint-config-custom: "*"
+    googleapis: ^109.0.1
     next: 13.0.2
     react: ^18.2.0
     react-dom: ^18.2.0

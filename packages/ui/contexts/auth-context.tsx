@@ -1,19 +1,20 @@
-import { GoogleAuthProvider, User, getAuth, signInWithPopup } from 'firebase/auth';
+import { GoogleAuthProvider, OAuthCredential, User, getAuth, signInWithPopup } from 'firebase/auth';
 import { createContext, useCallback, useContext, useEffect, useState } from 'react';
 
 import { NOOP } from 'ui/utils';
 import { WEB } from 'data/web';
-import nookies from 'nookies';
 import { useFirebase } from 'ui/contexts';
 import { useRouter } from 'next/router';
 
+type Credential = OAuthCredential | null;
 export interface AuthValue {
-  signInWithGoogle: () => void;
+  credential?: Credential;
+  signInWithGoogle: () => Promise<Credential>;
   signOut: () => void;
   user?: User | null;
 }
 
-const DEFAULT_AUTH: AuthValue = { signInWithGoogle: NOOP, signOut: NOOP, user: null };
+const DEFAULT_AUTH: AuthValue = { signInWithGoogle: async () => null, signOut: NOOP, user: null };
 
 export const AuthContext = createContext<AuthValue>(DEFAULT_AUTH);
 
@@ -33,15 +34,25 @@ export function useAuth({ forceRedirect }: { forceRedirect: boolean } = { forceR
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const { app } = useFirebase();
   const [user, setUser] = useState<User | null | undefined>();
-  const signInWithGoogle = useCallback(() => {
+  const [credential, setCredential] = useState<Credential>(null);
+
+  const signInWithGoogle = useCallback(async (): Promise<Credential> => {
     if (app) {
       const auth = getAuth(app);
       const provider = new GoogleAuthProvider();
 
+      provider.setCustomParameters({ access_type: 'offline' });
       provider.addScope('https://www.googleapis.com/auth/photoslibrary.readonly');
 
-      return signInWithPopup(auth, provider);
+      const result = await signInWithPopup(auth, provider);
+      const credential = GoogleAuthProvider.credentialFromResult(result);
+
+      setCredential(credential);
+
+      return credential;
     }
+
+    return null;
   }, [app]);
   const signOut = useCallback(() => {
     if (app) {
@@ -54,17 +65,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     if (app) {
       const unsubscribe = getAuth(app).onAuthStateChanged(async (user) => {
-        console.log('auth', { user });
         setUser(user);
-
-        const token = await user?.getIdToken();
-
-        token && nookies.set(undefined, 'token', token, { path: '/' });
       });
 
       return () => unsubscribe();
     }
   }, [app]);
 
-  return <AuthContext.Provider value={{ signInWithGoogle, signOut, user }}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={{ credential, signInWithGoogle, signOut, user }}>{children}</AuthContext.Provider>
+  );
 }
