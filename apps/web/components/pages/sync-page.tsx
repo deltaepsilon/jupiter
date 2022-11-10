@@ -19,15 +19,13 @@ export function SyncPage() {
 }
 
 function SyncPageConnected() {
-  const { isLoading, syncJobs } = useSyncJobs();
-
-  console.log({ isLoading, syncJobs });
+  const { isLoading, syncJobRecords } = useSyncJobs();
 
   switch (true) {
     case isLoading:
       return <CircularProgress sx={{ alignSelf: 'center' }} />;
 
-    case !syncJobs.length:
+    case !syncJobRecords.length:
       return <SyncJobsEmptyState />;
 
     default:

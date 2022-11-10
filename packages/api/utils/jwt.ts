@@ -2,6 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { parseCookies, setCookie } from 'nookies';
 
 import { Auth } from 'firebase/auth';
+import { Cookie } from 'data/sync';
 import { addParams } from 'ui/utils';
 import axios from 'axios';
 import { google } from 'googleapis';
@@ -14,7 +15,7 @@ const { GOOGLE_AUTH_CLIENT_ID, GOOGLE_AUTH_CLIENT_SECRET } = z
   })
   .parse(process.env);
 
-const COOKIES_SCHEMA = z.object({ accessToken: z.string().optional(), refreshToken: z.string() });
+const COOKIES_SCHEMA = z.object({ [Cookie.accessToken]: z.string().optional(), [Cookie.refreshToken]: z.string() });
 // const CREDENTIAL_SCHEMA = z.object({
 //   idToken: z.string(),
 //   accessToken: z.string(),

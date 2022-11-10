@@ -1,6 +1,6 @@
 import React, { SyntheticEvent, useCallback, useState } from 'react';
 import { isClient, stopClick } from 'ui/utils';
-import { useKeydown, useValue } from 'ui/hooks';
+import { useKeydown, useModalHash, useValue } from 'ui/hooks';
 
 import { useDebounce } from 'usehooks-ts';
 
@@ -16,28 +16,32 @@ export interface Args {
   delay?: number;
   startOpen?: boolean;
   closeOnEscape?: boolean;
+  autoOpenHash?: string;
 }
 
 export function useModalState(
-  { delay = 0, closeOnEscape = false, startOpen = false }: Args = {
+  { delay = 0, closeOnEscape = false, startOpen = false, autoOpenHash = '' }: Args = {
     startOpen: false,
     closeOnEscape: false,
   }
 ): ModalState {
+  const { isMatchingHash, closeModalHash, openModalHash } = useModalHash({ autoOpenHash });
   const [rawIsOpen, setIsOpen] = useState(startOpen);
   const [scrollPosition, setScrollPosition] = useState<number | null>(null);
-  const isOpen = useDebounce<boolean>(rawIsOpen, delay);
+  const isOpen = useDebounce<boolean>(rawIsOpen || isMatchingHash, delay);
   const onOpen = useCallback(() => {
     isClient(() => {
       setScrollPosition(window.pageYOffset);
     });
 
     setIsOpen(true);
-  }, [setIsOpen]);
+    openModalHash();
+  }, [openModalHash]);
   const onClose = useCallback(
     (e?: SyntheticEvent) => {
       stopClick(e);
       setIsOpen(false);
+      closeModalHash();
 
       if (isClient() && scrollPosition !== null) {
         setTimeout(() => {
@@ -47,7 +51,7 @@ export function useModalState(
         }, 200);
       }
     },
-    [scrollPosition, setIsOpen]
+    [closeModalHash, scrollPosition]
   );
   const toggle = useCallback(
     (e?: SyntheticEvent) => {

@@ -13,6 +13,7 @@ export default async function MediaItems(req: NextApiRequest, res: NextApiRespon
       if (error.toString().includes('No access token found')) {
         res.status(401).json({ error: 'No access token found' });
       } else {
+        // @ts-ignore
         res.status(error.response.status || 500).json(error.response.data);
       }
     }

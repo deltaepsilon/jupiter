@@ -1,6 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { parseCookies, setCookie } from 'nookies';
 
+import { Cookie } from 'data/sync';
 import { google } from 'googleapis';
 import { z } from 'zod';
 
@@ -31,8 +32,8 @@ export default async function OAuth2(req: NextApiRequest, res: NextApiResponse) 
   if (isCallback) {
     const { tokens } = await oauth2Client.getToken(req.query.code as string);
 
-    setCookie({ res }, 'accessToken', tokens.access_token ?? '', { maxAge: ONE_HOUR, path: '/' });
-    setCookie({ res }, 'refreshToken', tokens.refresh_token ?? '', { maxAge: ONE_YEAR, path: '/' });
+    setCookie({ res }, Cookie.accessToken, tokens.access_token ?? '', { maxAge: ONE_HOUR, path: '/' });
+    setCookie({ res }, Cookie.refreshToken, tokens.refresh_token ?? '', { maxAge: ONE_YEAR, path: '/' });
 
     typeof redirect === 'string' ? res.redirect(redirect) : res.status(200).send('OK');
   } else {

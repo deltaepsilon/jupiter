@@ -1,15 +1,20 @@
 import { useCallback, useEffect, useState } from 'react';
 
 export function useLocalFilesystem() {
-  // const [files, setFiles] = useState<string[]>([]);
-  console.log('here');
+  const [fileHandles, setFileHandles] = useState<FileSystemFileHandle[] | null>(null);
+  const [directoryHandle, setDirectoryHandle] = useState<FileSystemDirectoryHandle | null>(null);
 
-  // useEffect(() => {
-  //   (async () => {
-  //     console.log('here');
-  //     const res = await fetch('/api/local-filesystem');
-  //   })();
-  // }, []);
+  const getFileHandles = useCallback(async () => {
+    const handles = await window.showOpenFilePicker();
 
-  // return { files };
+    setFileHandles(() => handles);
+  }, []);
+
+  const getDirectoryHandle = useCallback(async () => {
+    const handle = await window.showDirectoryPicker({ mode: 'readwrite' });
+
+    setDirectoryHandle(handle);
+  }, []);
+
+  return { directoryHandle, fileHandles, getDirectoryHandle, getFileHandles };
 }

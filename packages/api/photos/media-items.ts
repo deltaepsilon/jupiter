@@ -12,11 +12,12 @@ interface Args {
 
 export async function getMediaItems({ req, res }: Args) {
   const accessToken = await getAccessToken(req, res);
+  const pageSize = typeof req.query.pageSize === 'string' ? parseInt(req.query.pageSize, 10) : 25;
 
   if (!accessToken) {
     throw new Error('No access token found');
   } else {
-    return queryMediaItems({ accessToken, pageSize: 25 });
+    return queryMediaItems({ accessToken, pageSize });
   }
 }
 

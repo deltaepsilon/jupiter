@@ -1795,6 +1795,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/wicg-file-system-access@npm:^2020.9.5":
+  version: 2020.9.5
+  resolution: "@types/wicg-file-system-access@npm:2020.9.5"
+  checksum: 56243705df43fd3b18049adcf5cb639dfbec5a033a33991f4050d0f6e09ebc94a70f426fde1926b7b0fb493d75ea7064eba95e06852eccd8d9cff4b1fde47e35
+  languageName: node
+  linkType: hard
+
 "@typescript-eslint/parser@npm:^5.21.0":
   version: 5.42.0
   resolution: "@typescript-eslint/parser@npm:5.42.0"
@@ -9334,6 +9341,7 @@ __metadata:
     "@mui/material": ^5.10.12
     "@types/react": ^18.0.25
     "@types/react-dom": ^18.0.8
+    "@types/wicg-file-system-access": ^2020.9.5
     eslint: ^8.26.0
     eslint-config-custom: "*"
     firebase: ^9.13.0
