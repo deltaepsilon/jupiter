@@ -23,8 +23,8 @@ export const syncJobRecordSchema = z.object({
 
 export type SyncJob = z.infer<typeof syncJobSchema>;
 export type SyncJobRecord = z.infer<typeof syncJobRecordSchema>;
-export type SyncJobs = SyncJob[];
-export type SyncJobRecords = SyncJobRecords[];
+export type SyncJobs = Record<string, SyncJob>;
+export type SyncJobRecords = Record<string, SyncJobRecord>;
 
 export function serializeSyncJob(job: SyncJob): SyncJobRecord {
   return syncJobRecordSchema.parse({

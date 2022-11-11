@@ -77,6 +77,7 @@ export function CreateSyncJobForm({ onSyncJobChange }: Props) {
                 <Image
                   alt={mediaItem.description ?? 'preview image'}
                   fill
+                  sizes='230px'
                   src={mediaItem.baseUrl}
                   sx={{ objectFit: 'cover' }}
                 />

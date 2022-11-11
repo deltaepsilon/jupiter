@@ -3,6 +3,7 @@ import { SyncJobsProvider, useSyncJobs } from 'web/contexts/sync-jobs-context';
 
 import { Container } from 'ui/components';
 import { CreateSyncJobButton } from 'web/components/sync-jobs';
+import { SyncJobRecords } from 'data/sync';
 import { useAuth } from 'ui/contexts';
 
 export function SyncPage() {
@@ -25,11 +26,11 @@ function SyncPageConnected() {
     case isLoading:
       return <CircularProgress sx={{ alignSelf: 'center' }} />;
 
-    case !syncJobRecords.length:
+    case !syncJobRecords:
       return <SyncJobsEmptyState />;
 
     default:
-      return <CreateSyncJobButton />;
+      return syncJobRecords ? <SyncJobsList syncJobRecords={syncJobRecords} /> : null;
   }
 }
 
@@ -38,6 +39,26 @@ function SyncJobsEmptyState() {
     <Paper elevation={0} sx={{ display: 'flex', flexDirection: 'column', gridGap: 1, width: 400 }}>
       <Box sx={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         <Typography variant='h4'>No Active Jobs</Typography>
+      </Box>
+      <CreateSyncJobButton />
+    </Paper>
+  );
+}
+
+function SyncJobsList({ syncJobRecords }: { syncJobRecords: SyncJobRecords }) {
+  return (
+    <Paper elevation={0} sx={{ display: 'flex', flexDirection: 'column', gridGap: 1, width: 400 }}>
+      <Typography variant='body1'>TODO: Create an attractive list that links to a detail page</Typography>
+      <Typography variant='body1'>TODO: Listen to deletes and delete localforage records</Typography>
+
+      <Box sx={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        {Object.entries(syncJobRecords).map(([key, syncJobRecord]) => (
+          <>
+            <Typography variant='h4'>
+              {key}: {syncJobRecord.directoryName}
+            </Typography>
+          </>
+        ))}
       </Box>
       <CreateSyncJobButton />
     </Paper>
