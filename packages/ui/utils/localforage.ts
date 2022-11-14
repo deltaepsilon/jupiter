@@ -37,6 +37,9 @@ export async function removeSyncJob(id: string) {
   const syncJobs = await getSyncJobs();
 
   if (syncJobs) {
+    console.log(id, { syncJobs });
+
+    debugger;
     delete syncJobs[id];
 
     setSyncJobs(syncJobs);

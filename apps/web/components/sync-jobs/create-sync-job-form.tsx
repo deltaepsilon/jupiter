@@ -1,6 +1,6 @@
 import { Box, Button, TextField, Typography } from '@mui/material';
+import { Stage as JobStage, SyncJob, syncJobSchema } from 'data/sync';
 import { MediaItems, mediaItemsResponseSchema } from 'data/media-items';
-import { SyncJob, syncJobSchema } from 'data/sync';
 import nookies, { parseCookies } from 'nookies';
 import { useCallback, useEffect, useState } from 'react';
 
@@ -27,12 +27,23 @@ export function CreateSyncJobForm({ onSyncJobChange }: Props) {
     if (directoryHandle) {
       const { accessToken, refreshToken } = parseCookies();
 
+      console.log({
+        accessToken,
+        refreshToken,
+        directoryHandle,
+        created: new Date(),
+        stage: JobStage.ready,
+      });
+
       const parsed = syncJobSchema.safeParse({
         accessToken,
         refreshToken,
         directoryHandle,
         created: new Date(),
+        stage: JobStage.ready,
       });
+
+      console.log({ parsed });
 
       if (parsed.success) {
         onSyncJobChange(parsed.data);

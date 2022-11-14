@@ -1,0 +1,18 @@
+{
+  "short_name": "Google Photos",
+  "name": "Master your Google Photos library",
+  "icons": [
+    {
+      "src": "/icons/app.svg",
+      "type": "image/svg+xml",
+      "sizes": "144x144"
+    }
+  ],
+  "id": "/?source=pwa",
+  "start_url": "/?source=pwa",
+  "background_color": "#00bc96",
+  "display": "standalone",
+  "scope": "/",
+  "theme_color": "#09203f",
+  "description": "Sync your Google Photos library down to your computer. Master your data."
+}

@@ -23,7 +23,7 @@ export const mediaItemSchema = z.object({
       .object({
         cameraMake: z.string().optional(),
         cameraModel: z.string().optional(),
-        focalLength: z.string().optional(),
+        focalLength: z.number().optional(),
         apertureFNumber: z.number().optional(),
         isoEquivalent: z.number().optional(),
         exposureTime: z.string().optional(),

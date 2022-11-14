@@ -9,6 +9,8 @@ export default async function MediaItems(req: NextApiRequest, res: NextApiRespon
 
     res.json(media);
   } catch (error) {
+    console.error('api/media-items error: ', error);
+
     if (error instanceof Error) {
       if (error.toString().includes('No access token found')) {
         res.status(401).json({ error: 'No access token found' });
