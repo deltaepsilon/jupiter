@@ -1,0 +1,17 @@
+{
+  "name": "service-worker",
+  "version": "0.0.0",
+  "main": "service-worker.ts",
+  "private": true,
+  "dependencies": {
+    "esbuild": "^0.15.14",
+    "firebase": "^9.14.0"
+  },
+  "scripts": {
+    "dev": "chokidar \"./*.ts\" -c \"yarn build\"",
+    "build": "esbuild service-worker.ts --bundle --sourcemap --outfile=../web/public/service-worker.js"
+  },
+  "devDependencies": {
+    "chokidar-cli": "3.0.0"
+  }
+}

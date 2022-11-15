@@ -1,6 +1,6 @@
 {
   "rules": {
-    "sync-jobs": {
+    "$unspecified": {
       "$userId": {
         ".read": "$userId === auth.uid",
         ".write": "$userId === auth.uid"

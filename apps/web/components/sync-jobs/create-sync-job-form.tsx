@@ -1,5 +1,5 @@
-import { Box, Button, TextField, Typography } from '@mui/material';
-import { Stage as JobStage, SyncJob, syncJobSchema } from 'data/sync';
+import { Box, Button, Divider, TextField, Typography } from '@mui/material';
+import { DEFAULT_SYNC_JOB, SyncJob, syncJobSchema } from 'data/sync';
 import { MediaItems, mediaItemsResponseSchema } from 'data/media-items';
 import nookies, { parseCookies } from 'nookies';
 import { useCallback, useEffect, useState } from 'react';
@@ -11,7 +11,6 @@ import ImageList from '@mui/material/ImageList';
 import ImageListItem from '@mui/material/ImageListItem';
 import { WEB } from 'data/web';
 import { addParams } from 'ui/utils';
-import { useAuth } from 'ui/contexts';
 import { useLocalFilesystem } from 'ui/hooks';
 import { useRouter } from 'next/router';
 
@@ -20,6 +19,7 @@ interface Props {
 }
 
 export function CreateSyncJobForm({ onSyncJobChange }: Props) {
+  const [jobName, setJobName] = useState<string>(DEFAULT_SYNC_JOB.jobName);
   const { firstPage, onLibraryChangeClick, onLibraryPickerClick } = useGooglePhotos();
   const { directoryHandle, getDirectoryHandle } = useLocalFilesystem();
 
@@ -27,23 +27,14 @@ export function CreateSyncJobForm({ onSyncJobChange }: Props) {
     if (directoryHandle) {
       const { accessToken, refreshToken } = parseCookies();
 
-      console.log({
-        accessToken,
-        refreshToken,
-        directoryHandle,
-        created: new Date(),
-        stage: JobStage.ready,
-      });
-
       const parsed = syncJobSchema.safeParse({
+        ...DEFAULT_SYNC_JOB,
+        jobName,
         accessToken,
         refreshToken,
         directoryHandle,
         created: new Date(),
-        stage: JobStage.ready,
       });
-
-      console.log({ parsed });
 
       if (parsed.success) {
         onSyncJobChange(parsed.data);
@@ -52,21 +43,25 @@ export function CreateSyncJobForm({ onSyncJobChange }: Props) {
         onSyncJobChange();
       }
     }
-  }, [directoryHandle, firstPage, onSyncJobChange]);
+  }, [directoryHandle, firstPage, jobName, onSyncJobChange]);
 
   return (
     <>
-      <Typography sx={{ paddingBottom: 4 }} variant='h6'>
-        Steps
-      </Typography>
       <Box sx={{ display: 'grid', gridGap: 16, gridTemplateColumns: ['1fr', '1fr 1fr'] }}>
-        <Typography variant='subtitle2'>1. Authorize Google Account</Typography>
+        <TextField
+          autoFocus
+          label='Job name'
+          onChange={(e) => setJobName(e.target.value)}
+          placeholder='Download main account'
+          sx={{ gridColumn: '1/-1' }}
+          value={jobName}
+        />
 
         {firstPage ? (
           <Button
             onClick={onLibraryChangeClick}
             startIcon={<Image alt='google photos icon' height={12} src='/icons/google-photos-icon.png' width={12} />}
-            variant='outlined'
+            variant={firstPage ? 'outlined' : 'contained'}
           >
             Change library
           </Button>
@@ -81,27 +76,43 @@ export function CreateSyncJobForm({ onSyncJobChange }: Props) {
           </Button>
         )}
 
-        {firstPage && (
-          <ImageList cols={3} rowHeight={164} sx={{ width: '100%', height: 350, gridColumn: '1/-1' }}>
-            {firstPage.map((mediaItem) => (
-              <ImageListItem key={mediaItem.baseUrl}>
-                <Image
-                  alt={mediaItem.description ?? 'preview image'}
-                  fill
-                  sizes='230px'
-                  src={mediaItem.baseUrl}
-                  sx={{ objectFit: 'cover' }}
-                />
-              </ImageListItem>
-            ))}
-          </ImageList>
+        <Button
+          onClick={getDirectoryHandle}
+          startIcon={<FolderIcon />}
+          sx={{ height: 45 }}
+          variant={directoryHandle ? 'outlined' : 'contained'}
+        >
+          {directoryHandle ? 'Change destination' : 'Pick a destination'}
+        </Button>
+
+        {directoryHandle && (
+          <Box sx={{ gridColumn: '1/-1', paddingTop: 2 }}>
+            <Typography variant='h6'>Selected destination</Typography>
+            <Box sx={{ display: 'flex', alignItems: 'center', gridGap: 16 }}>
+              <FolderIcon />
+              <Typography>{directoryHandle.name}</Typography>
+            </Box>
+          </Box>
         )}
 
-        <Typography variant='subtitle2'>2. Pick a sync destination</Typography>
-
-        <Button onClick={getDirectoryHandle} startIcon={<FolderIcon />} sx={{ height: 45 }} variant='outlined'>
-          Pick a destination
-        </Button>
+        {firstPage && (
+          <Box sx={{ gridColumn: '1/-1', paddingTop: 2 }}>
+            <Typography variant='h6'>Selected library sample</Typography>
+            <ImageList cols={3} rowHeight={164} sx={{ width: '100%', height: 500 }}>
+              {firstPage.map((mediaItem) => (
+                <ImageListItem key={mediaItem.baseUrl}>
+                  <Image
+                    alt={mediaItem.description ?? 'preview image'}
+                    fill
+                    sizes='230px'
+                    src={mediaItem.baseUrl}
+                    sx={{ objectFit: 'cover' }}
+                  />
+                </ImageListItem>
+              ))}
+            </ImageList>
+          </Box>
+        )}
       </Box>
     </>
   );

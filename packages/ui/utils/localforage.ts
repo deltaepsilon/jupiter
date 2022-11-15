@@ -36,13 +36,16 @@ export async function addSyncJob(id: string, job: SyncJob) {
 export async function removeSyncJob(id: string) {
   const syncJobs = await getSyncJobs();
 
-  if (syncJobs) {
-    console.log(id, { syncJobs });
+  if (syncJobs && syncJobs[id]) {
+    const { [id]: _, ...newSyncJobs } = syncJobs;
 
-    debugger;
-    delete syncJobs[id];
+    setSyncJobs(newSyncJobs);
 
-    setSyncJobs(syncJobs);
+    return true;
+  } else {
+    console.warn(`Could not find sync job with id ${id}`);
+
+    return false;
   }
 }
 export async function clearSyncJobs() {

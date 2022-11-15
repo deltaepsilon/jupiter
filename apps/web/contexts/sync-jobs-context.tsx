@@ -64,29 +64,24 @@ export function SyncJobsProvider({ children, userId }: Props) {
     async (jobId: string) => {
       if (database && jobId) {
         const jobRef = ref(database, getSyncJobRefPath(userId, jobId));
+        const success = await localforage.removeSyncJob(jobId);
 
-        await remove(jobRef);
-
-        localforage.removeSyncJob(jobId);
+        if (success) {
+          await remove(jobRef);
+        }
       }
     },
     [database, userId]
   );
   const startSyncJob = useCallback(
     async (jobId: string) => {
-      const job = await localforage.getSyncJob(jobId);
+      const message = syncJobStartMessageSchema.parse({
+        jobId,
+        action: SyncJobAction.start,
+        type: MessageType.syncJob,
+      });
 
-      if (job) {
-        const message = syncJobStartMessageSchema.parse({
-          accessToken: job.accessToken,
-          jobId,
-          directoryHandle: job.directoryHandle,
-          action: SyncJobAction.start,
-          type: MessageType.syncJob,
-        });
-
-        sendMessage(message);
-      }
+      sendMessage(message);
     },
     [sendMessage]
   );

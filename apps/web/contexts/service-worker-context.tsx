@@ -22,7 +22,6 @@ export function ServiceWorkerProvider({ children }: Props) {
   const [registration, setRegistration] = useState<ServiceWorkerRegistration>();
   const sendMessage = useCallback(
     (message: ServiceWorkerMessage) => {
-      console.log({ message });
       registration?.active?.postMessage(message);
     },
     [registration]

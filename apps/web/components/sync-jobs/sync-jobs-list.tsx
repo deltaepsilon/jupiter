@@ -13,26 +13,40 @@ import {
   Paper,
   Typography,
 } from '@mui/material';
-import { Stage, SyncJobRecord, SyncJobRecords } from 'data/sync';
+import { SyncJobRecord, SyncJobRecords, SyncStage } from 'data/sync';
 
 import { CreateSyncJobButton } from 'web/components/sync-jobs';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import FolderIcon from '@mui/icons-material/Folder';
 import { MenuTrigger } from 'ui/components';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
+import PlayCircleOutlineIcon from '@mui/icons-material/PlayCircleOutline';
 import { useSyncJobs } from 'web/contexts/sync-jobs-context';
+
+const SYNC_STAGE_DETAILS: Record<SyncStage, { color: string; icon: React.ReactNode }> = {
+  [SyncStage.ready]: { color: 'var(--color-pastel-blue)', icon: <PlayCircleOutlineIcon /> },
+  [SyncStage.reading]: { color: 'var(--color-miami-blue)', icon: <PlayCircleOutlineIcon /> },
+  [SyncStage.writing]: { color: 'var(--color-jade-green)', icon: <PlayCircleOutlineIcon /> },
+};
 
 export function SyncJobsList({ syncJobRecords }: { syncJobRecords: SyncJobRecords }) {
   return (
     <Paper elevation={0} sx={{ display: 'flex', flexDirection: 'column', gridGap: 1, width: 400 }}>
       <List sx={{ flex: 1 }}>
-        {Object.entries(syncJobRecords).map(([jobId, syncJobRecord]) => {
+        {Object.entries(syncJobRecords).map(([jobId, syncJobRecord], i, records) => {
+          const isLast = i === records.length - 1;
+          const { color, icon } = SYNC_STAGE_DETAILS[syncJobRecord.stage];
+
           return (
             <>
-              <Box sx={{ display: 'flex', alignItmes: 'center', gridGap: 8, padding: 2 }}>
+              <Box key={`${jobId}-box`} sx={{ display: 'flex', alignItems: 'center', gridGap: 8, padding: 2 }}>
                 <Box sx={{ flex: 1 }}>
-                  <Typography variant='subtitle1'>{syncJobRecord.directoryName}</Typography>
-                  <Typography variant='body2'>Processing: </Typography>
+                  <Typography variant='subtitle1'>{syncJobRecord.jobName}</Typography>
+                  <Typography sx={{ display: 'flex', alignItems: 'center', gridGap: 8 }} variant='subtitle2'>
+                    <FolderIcon /> {syncJobRecord.directoryName}
+                  </Typography>
                 </Box>
+                <Box sx={{ display: 'flex', alignItems: 'center', paddingX: 1, color }}>{icon}</Box>
                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
                   <SyncJobAction jobId={jobId} syncJobRecord={syncJobRecord} />
                 </Box>
@@ -40,7 +54,7 @@ export function SyncJobsList({ syncJobRecords }: { syncJobRecords: SyncJobRecord
                   <SyncJobOptionsMenu jobId={jobId} />
                 </Box>
               </Box>
-              <Divider />
+              {!isLast && <Divider key={`${jobId}-divider`} />}
             </>
           );
         })}
@@ -54,7 +68,7 @@ function SyncJobAction({ jobId, syncJobRecord }: { jobId: string; syncJobRecord:
   const { startSyncJob } = useSyncJobs();
 
   switch (syncJobRecord.stage) {
-    case Stage.ready:
+    case SyncStage.ready:
       return (
         <Button onClick={() => startSyncJob(jobId)} variant='outlined'>
           Start

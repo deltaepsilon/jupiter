@@ -59,7 +59,7 @@ function Footer({ canSave, onSubmitCallback }: { canSave: boolean; onSubmitCallb
 
   return (
     <ModalDrawerFooter>
-      <Button disabled={!canSave} onClick={onSubmit} variant='contained'>
+      <Button disabled={!canSave} onClick={onSubmit} type='submit' variant='contained'>
         Save
       </Button>
 
