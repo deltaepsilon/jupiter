@@ -5,7 +5,10 @@ export enum Cookie {
   refreshToken = 'refreshToken',
 }
 
-enum SyncJobKey {
+export enum SyncJobKey {
+  accessToken = 'accessToken',
+  accessTokenCreated = 'accessTokenCreated',
+  refreshToken = 'refreshToken',
   jobName = 'jobName',
   directoryHandle = 'directoryHandle',
   directoryName = 'directoryName',
@@ -14,7 +17,9 @@ enum SyncJobKey {
   importedCount = 'importedCount',
   processedCount = 'processedCount',
   exportedCount = 'exportedCount',
+  paused = 'paused',
   stage = 'stage',
+  previousPageToken = 'previousPageToken',
   nextPageToken = 'nextPageToken',
 }
 
@@ -25,8 +30,9 @@ export enum SyncStage {
 }
 
 export const syncJobSchema = z.object({
-  [Cookie.accessToken]: z.string(),
-  [Cookie.refreshToken]: z.string(),
+  [SyncJobKey.accessToken]: z.string(),
+  [SyncJobKey.accessTokenCreated]: z.number(),
+  [SyncJobKey.refreshToken]: z.string(),
   [SyncJobKey.jobName]: z.string(),
   [SyncJobKey.directoryHandle]: z
     .any()
@@ -37,12 +43,18 @@ export const syncJobSchema = z.object({
   [SyncJobKey.exportedCount]: z.number(),
   [SyncJobKey.created]: z.date(),
   [SyncJobKey.stage]: z.nativeEnum(SyncStage),
+  [SyncJobKey.paused]: z
+    .boolean()
+    .optional()
+    .transform((val) => val ?? false),
+  [SyncJobKey.previousPageToken]: z.string().nullable().optional(),
   [SyncJobKey.nextPageToken]: z.string().nullable().optional(),
 });
 
 export const syncJobRecordSchema = z.object({
-  [Cookie.accessToken]: z.string(),
-  [Cookie.refreshToken]: z.string(),
+  [SyncJobKey.accessToken]: z.string(),
+  [SyncJobKey.accessTokenCreated]: z.number(),
+  [SyncJobKey.refreshToken]: z.string(),
   [SyncJobKey.jobName]: z.string(),
   [SyncJobKey.fileCount]: z.number(),
   [SyncJobKey.importedCount]: z.number(),
@@ -51,6 +63,11 @@ export const syncJobRecordSchema = z.object({
   [SyncJobKey.directoryName]: z.string(),
   [SyncJobKey.created]: z.string(),
   [SyncJobKey.stage]: z.nativeEnum(SyncStage),
+  [SyncJobKey.paused]: z
+    .boolean()
+    .optional()
+    .transform((val) => val ?? false),
+  [SyncJobKey.previousPageToken]: z.string().nullable().optional(),
   [SyncJobKey.nextPageToken]: z.string().nullable().optional(),
 });
 
@@ -76,8 +93,9 @@ export function getSyncJobRefPath(userId: string, jobId: string) {
 }
 
 export const DEFAULT_SYNC_JOB: SyncJob = {
-  [Cookie.accessToken]: '',
-  [Cookie.refreshToken]: '',
+  [SyncJobKey.accessToken]: '',
+  [SyncJobKey.accessTokenCreated]: Date.now(),
+  [SyncJobKey.refreshToken]: '',
   [SyncJobKey.jobName]: '',
   [SyncJobKey.fileCount]: 0,
   [SyncJobKey.importedCount]: 0,
@@ -85,5 +103,6 @@ export const DEFAULT_SYNC_JOB: SyncJob = {
   [SyncJobKey.exportedCount]: 0,
   [SyncJobKey.created]: new Date(),
   [SyncJobKey.stage]: SyncStage.ready,
+  [SyncJobKey.paused]: false,
   [SyncJobKey.nextPageToken]: null,
 };

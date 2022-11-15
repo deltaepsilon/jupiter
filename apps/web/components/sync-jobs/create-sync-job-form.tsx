@@ -61,7 +61,7 @@ export function CreateSyncJobForm({ onSyncJobChange }: Props) {
           <Button
             onClick={onLibraryChangeClick}
             startIcon={<Image alt='google photos icon' height={12} src='/icons/google-photos-icon.png' width={12} />}
-            variant={firstPage ? 'outlined' : 'contained'}
+            variant={firstPage.length ? 'outlined' : 'contained'}
           >
             Change library
           </Button>
@@ -122,7 +122,10 @@ function useGooglePhotos() {
   const [firstPage, setFirstPage] = useState<MediaItems>();
   const router = useRouter();
   const onLibraryPickerClick = useCallback(async () => {
-    const response = await fetch(WEB.API.MEDIA_ITEMS);
+    const { accessToken, refreshToken } = parseCookies();
+    const response = await fetch(
+      addParams(`${location.origin}${WEB.API.MEDIA_ITEMS}`, { accessToken, refreshToken, pageSize: 9 })
+    );
 
     if (response.status === 401) {
       const response = await fetch(

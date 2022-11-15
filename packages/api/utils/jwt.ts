@@ -58,7 +58,7 @@ export async function getAccessToken(req: NextApiRequest, res: NextApiResponse) 
   }
 }
 
-async function refreshAccessToken(refreshToken: string) {
+export async function refreshAccessToken(refreshToken: string) {
   const response = await axios.post(
     'https://oauth2.googleapis.com/token',
     {

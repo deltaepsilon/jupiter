@@ -26,7 +26,7 @@ export function getProcessingJobsRefPath(userId: string, syncJobId: string): str
   return `processing/${userId}/${syncJobId}`;
 }
 
-export function getSyncJobRefPath(userId: string, syncJobId: string, jobId: string) {
+export function getProcessingJobRefPath(userId: string, syncJobId: string, jobId: string) {
   return `${getProcessingJobsRefPath(userId, syncJobId)}/${jobId}`;
 }
 

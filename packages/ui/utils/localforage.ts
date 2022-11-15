@@ -1,4 +1,4 @@
-import { SyncJob, SyncJobs } from 'data/sync';
+import { SyncJob, SyncJobs, syncJobSchema } from 'data/sync';
 import { enableMapSet, immerable, produce } from 'immer';
 import { isClient, isServer } from 'ui/utils';
 
@@ -31,7 +31,16 @@ export async function getSyncJob(id: string) {
 export async function addSyncJob(id: string, job: SyncJob) {
   const syncJobs = await getSyncJobs();
 
-  setSyncJobs({ ...syncJobs, [id]: job });
+  return setSyncJobs({ ...syncJobs, [id]: job });
+}
+export async function updateSyncJob(id: string, updates: Partial<SyncJob>) {
+  const syncJobs = await getSyncJobs();
+  const syncJob = syncJobs ? syncJobs[id] : null;
+  const updatedSyncJob = syncJobSchema.parse({ ...syncJob, ...updates });
+
+  await setSyncJobs({ ...syncJobs, [id]: updatedSyncJob });
+
+  return updatedSyncJob;
 }
 export async function removeSyncJob(id: string) {
   const syncJobs = await getSyncJobs();

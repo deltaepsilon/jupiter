@@ -6318,6 +6318,20 @@
       throw new Error("INTERNAL ERROR: innerPath (" + innerPath + ") is not within outerPath (" + outerPath + ")");
     }
   }
+  function pathCompare(left, right) {
+    const leftKeys = pathSlice(left, 0);
+    const rightKeys = pathSlice(right, 0);
+    for (let i2 = 0; i2 < leftKeys.length && i2 < rightKeys.length; i2++) {
+      const cmp = nameCompare(leftKeys[i2], rightKeys[i2]);
+      if (cmp !== 0) {
+        return cmp;
+      }
+    }
+    if (leftKeys.length === rightKeys.length) {
+      return 0;
+    }
+    return leftKeys.length < rightKeys.length ? -1 : 1;
+  }
   function pathEquals(path, other) {
     if (pathGetLength(path) !== pathGetLength(other)) {
       return false;
@@ -6355,12 +6369,12 @@
       validationPathCheckValid(this);
     }
   };
-  function validationPathPush(validationPath, child) {
+  function validationPathPush(validationPath, child2) {
     if (validationPath.parts_.length > 0) {
       validationPath.byteLength_ += 1;
     }
-    validationPath.parts_.push(child);
-    validationPath.byteLength_ += stringLength(child);
+    validationPath.parts_.push(child2);
+    validationPath.byteLength_ += stringLength(child2);
     validationPathCheckValid(validationPath);
   }
   function validationPathPop(validationPath) {
@@ -7952,8 +7966,8 @@
       if (childName === ".priority") {
         return this.getPriority();
       } else {
-        const child = this.children_.get(childName);
-        return child === null ? EMPTY_NODE : child;
+        const child2 = this.children_.get(childName);
+        return child2 === null ? EMPTY_NODE : child2;
       }
     }
     getChild(path) {
@@ -8252,9 +8266,9 @@
       const children = [];
       let childrenHavePriority = false;
       const hinzeJsonObj = json;
-      each(hinzeJsonObj, (key, child) => {
+      each(hinzeJsonObj, (key, child2) => {
         if (key.substring(0, 1) !== ".") {
-          const childNode = nodeFromJSON(child);
+          const childNode = nodeFromJSON(child2);
           if (!childNode.isEmpty()) {
             childrenHavePriority = childrenHavePriority || !childNode.getPriority().isEmpty();
             children.push(new NamedNode(key, childNode));
@@ -8717,9 +8731,9 @@
       if (!sparseSnapshotTree.children.has(childKey)) {
         sparseSnapshotTree.children.set(childKey, newSparseSnapshotTree());
       }
-      const child = sparseSnapshotTree.children.get(childKey);
+      const child2 = sparseSnapshotTree.children.get(childKey);
       path = pathPopFront(path);
-      sparseSnapshotTreeRemember(child, path, data);
+      sparseSnapshotTreeRemember(child2, path, data);
     }
   }
   function sparseSnapshotTreeForEachTree(sparseSnapshotTree, prefixPath, func) {
@@ -8988,9 +9002,9 @@
           return null;
         } else {
           const front = pathGetFront(relativePath);
-          const child = this.children.get(front);
-          if (child !== null) {
-            const childExistingPathAndValue = child.findRootMostMatchingPathAndValue(pathPopFront(relativePath), predicate);
+          const child2 = this.children.get(front);
+          if (child2 !== null) {
+            const childExistingPathAndValue = child2.findRootMostMatchingPathAndValue(pathPopFront(relativePath), predicate);
             if (childExistingPathAndValue != null) {
               const fullPath = pathChild(new Path(front), childExistingPathAndValue.path);
               return { path: fullPath, value: childExistingPathAndValue.value };
@@ -9024,8 +9038,8 @@
         return new ImmutableTree(toSet, this.children);
       } else {
         const front = pathGetFront(relativePath);
-        const child = this.children.get(front) || new ImmutableTree(null);
-        const newChild = child.set(pathPopFront(relativePath), toSet);
+        const child2 = this.children.get(front) || new ImmutableTree(null);
+        const newChild = child2.set(pathPopFront(relativePath), toSet);
         const newChildren = this.children.insert(front, newChild);
         return new ImmutableTree(this.value, newChildren);
       }
@@ -9039,9 +9053,9 @@
         }
       } else {
         const front = pathGetFront(relativePath);
-        const child = this.children.get(front);
-        if (child) {
-          const newChild = child.remove(pathPopFront(relativePath));
+        const child2 = this.children.get(front);
+        if (child2) {
+          const newChild = child2.remove(pathPopFront(relativePath));
           let newChildren;
           if (newChild.isEmpty()) {
             newChildren = this.children.remove(front);
@@ -9063,9 +9077,9 @@
         return this.value;
       } else {
         const front = pathGetFront(relativePath);
-        const child = this.children.get(front);
-        if (child) {
-          return child.get(pathPopFront(relativePath));
+        const child2 = this.children.get(front);
+        if (child2) {
+          return child2.get(pathPopFront(relativePath));
         } else {
           return null;
         }
@@ -9076,8 +9090,8 @@
         return newTree;
       } else {
         const front = pathGetFront(relativePath);
-        const child = this.children.get(front) || new ImmutableTree(null);
-        const newChild = child.setTree(pathPopFront(relativePath), newTree);
+        const child2 = this.children.get(front) || new ImmutableTree(null);
+        const newChild = child2.setTree(pathPopFront(relativePath), newTree);
         let newChildren;
         if (newChild.isEmpty()) {
           newChildren = this.children.remove(front);
@@ -9282,6 +9296,17 @@
     }
     writeTree.lastWriteId = writeId;
   }
+  function writeTreeAddMerge(writeTree, path, changedChildren, writeId) {
+    assert(writeId > writeTree.lastWriteId, "Stacking an older merge on top of newer ones");
+    writeTree.allWrites.push({
+      path,
+      children: changedChildren,
+      writeId,
+      visible: true
+    });
+    writeTree.visibleWrites = compoundWriteAddWrites(writeTree.visibleWrites, path, changedChildren);
+    writeTree.lastWriteId = writeId;
+  }
   function writeTreeGetWrite(writeTree, writeId) {
     for (let i2 = 0; i2 < writeTree.allWrites.length; i2++) {
       const record = writeTree.allWrites[i2];
@@ -9377,9 +9402,9 @@
             if (pathIsEmpty(relativePath)) {
               compoundWrite = compoundWriteAddWrites(compoundWrite, newEmptyPath(), write.children);
             } else {
-              const child = safeGet(write.children, pathGetFront(relativePath));
-              if (child) {
-                const deepNode = child.getChild(pathPopFront(relativePath));
+              const child2 = safeGet(write.children, pathGetFront(relativePath));
+              if (child2) {
+                const deepNode = child2.getChild(pathPopFront(relativePath));
                 compoundWrite = compoundWriteAddWrite(compoundWrite, newEmptyPath(), deepNode);
               }
             }
@@ -9584,7 +9609,7 @@
     getCompleteChild(childKey) {
       return null;
     }
-    getChildAfterChild(index, child, reverse) {
+    getChildAfterChild(index, child2, reverse) {
       return null;
     }
   };
@@ -9604,9 +9629,9 @@
         return writeTreeRefCalcCompleteChild(this.writes_, childKey, serverNode);
       }
     }
-    getChildAfterChild(index, child, reverse) {
+    getChildAfterChild(index, child2, reverse) {
       const completeServerData = this.optCompleteServerCache_ != null ? this.optCompleteServerCache_ : viewCacheGetCompleteServerSnap(this.viewCache_);
-      const nodes = writeTreeRefCalcIndexedSlice(this.writes_, completeServerData, child, 1, reverse, index);
+      const nodes = writeTreeRefCalcIndexedSlice(this.writes_, completeServerData, child2, 1, reverse, index);
       if (nodes.length === 0) {
         return null;
       } else {
@@ -9989,6 +10014,11 @@
       return syncTreeApplyOperationToSyncPoints_(syncTree, new Overwrite(newOperationSourceUser(), path, newData));
     }
   }
+  function syncTreeApplyUserMerge(syncTree, path, changedChildren, writeId) {
+    writeTreeAddMerge(syncTree.pendingWriteTree_, path, changedChildren, writeId);
+    const changeTree = ImmutableTree.fromObject(changedChildren);
+    return syncTreeApplyOperationToSyncPoints_(syncTree, new Merge(newOperationSourceUser(), path, changeTree));
+  }
   function syncTreeAckUserWrite(syncTree, writeId, revert = false) {
     const write = writeTreeGetWrite(syncTree.pendingWriteTree_, writeId);
     const needToReevaluate = writeTreeRemoveWrite(syncTree.pendingWriteTree_, writeId);
@@ -10122,8 +10152,8 @@
       this.node_ = node_;
     }
     getImmediateChild(childName) {
-      const child = this.node_.getImmediateChild(childName);
-      return new ExistingValueProvider(child);
+      const child2 = this.node_.getImmediateChild(childName);
+      return new ExistingValueProvider(child2);
     }
     node() {
       return this.node_;
@@ -10230,17 +10260,17 @@
   };
   function treeSubTree(tree, pathObj) {
     let path = pathObj instanceof Path ? pathObj : new Path(pathObj);
-    let child = tree, next = pathGetFront(path);
+    let child2 = tree, next = pathGetFront(path);
     while (next !== null) {
-      const childNode = safeGet(child.node.children, next) || {
+      const childNode = safeGet(child2.node.children, next) || {
         children: {},
         childCount: 0
       };
-      child = new Tree(next, child, childNode);
+      child2 = new Tree(next, child2, childNode);
       path = pathPopFront(path);
       next = pathGetFront(path);
     }
-    return child;
+    return child2;
   }
   function treeGetValue(tree) {
     return tree.node.value;
@@ -10256,16 +10286,16 @@
     return treeGetValue(tree) === void 0 && !treeHasChildren(tree);
   }
   function treeForEachChild(tree, action) {
-    each(tree.node.children, (child, childTree) => {
-      action(new Tree(child, tree, childTree));
+    each(tree.node.children, (child2, childTree) => {
+      action(new Tree(child2, tree, childTree));
     });
   }
   function treeForEachDescendant(tree, action, includeSelf, childrenFirst) {
     if (includeSelf && !childrenFirst) {
       action(tree);
     }
-    treeForEachChild(tree, (child) => {
-      treeForEachDescendant(child, action, true, childrenFirst);
+    treeForEachChild(tree, (child2) => {
+      treeForEachDescendant(child2, action, true, childrenFirst);
     });
     if (includeSelf && childrenFirst) {
       action(tree);
@@ -10289,15 +10319,15 @@
       treeUpdateChild(tree.parent, tree.name, tree);
     }
   }
-  function treeUpdateChild(tree, childName, child) {
-    const childEmpty = treeIsEmpty(child);
+  function treeUpdateChild(tree, childName, child2) {
+    const childEmpty = treeIsEmpty(child2);
     const childExists = contains(tree.node.children, childName);
     if (childEmpty && childExists) {
       delete tree.node.children[childName];
       tree.node.childCount--;
       treeUpdateParents(tree);
     } else if (!childEmpty && !childExists) {
-      tree.node.children[childName] = child.node;
+      tree.node.children[childName] = child2.node;
       tree.node.childCount++;
       treeUpdateParents(tree);
     }
@@ -10316,6 +10346,9 @@
       pathString = pathString.replace(/^\/*\.info(\/|$)/, "/");
     }
     return isValidPathString(pathString);
+  };
+  var isValidPriority = function(priority) {
+    return priority === null || typeof priority === "string" || typeof priority === "number" && !isInvalidJSONNumber(priority) || priority && typeof priority === "object" && contains(priority, ".sv");
   };
   var validateFirebaseData = function(errorPrefix2, data, path_) {
     const path = path_ instanceof Path ? new ValidationPath(path_, errorPrefix2) : path_;
@@ -10351,6 +10384,64 @@
         throw new Error(errorPrefix2 + ' contains ".value" child ' + validationPathToErrorString(path) + " in addition to actual children.");
       }
     }
+  };
+  var validateFirebaseMergePaths = function(errorPrefix2, mergePaths) {
+    let i2, curPath;
+    for (i2 = 0; i2 < mergePaths.length; i2++) {
+      curPath = mergePaths[i2];
+      const keys = pathSlice(curPath);
+      for (let j2 = 0; j2 < keys.length; j2++) {
+        if (keys[j2] === ".priority" && j2 === keys.length - 1)
+          ;
+        else if (!isValidKey2(keys[j2])) {
+          throw new Error(errorPrefix2 + "contains an invalid key (" + keys[j2] + ") in path " + curPath.toString() + `. Keys must be non-empty strings and can't contain ".", "#", "$", "/", "[", or "]"`);
+        }
+      }
+    }
+    mergePaths.sort(pathCompare);
+    let prevPath = null;
+    for (i2 = 0; i2 < mergePaths.length; i2++) {
+      curPath = mergePaths[i2];
+      if (prevPath !== null && pathContains(prevPath, curPath)) {
+        throw new Error(errorPrefix2 + "contains a path " + prevPath.toString() + " that is ancestor of another path " + curPath.toString());
+      }
+      prevPath = curPath;
+    }
+  };
+  var validateFirebaseMergeDataArg = function(fnName, data, path, optional) {
+    if (optional && data === void 0) {
+      return;
+    }
+    const errorPrefix$1 = errorPrefix(fnName, "values");
+    if (!(data && typeof data === "object") || Array.isArray(data)) {
+      throw new Error(errorPrefix$1 + " must be an object containing the children to replace.");
+    }
+    const mergePaths = [];
+    each(data, (key, value) => {
+      const curPath = new Path(key);
+      validateFirebaseData(errorPrefix$1, value, pathChild(path, curPath));
+      if (pathGetBack(curPath) === ".priority") {
+        if (!isValidPriority(value)) {
+          throw new Error(errorPrefix$1 + "contains an invalid value for '" + curPath.toString() + "', which must be a valid Firebase priority (a string, finite number, server value, or null).");
+        }
+      }
+      mergePaths.push(curPath);
+    });
+    validateFirebaseMergePaths(errorPrefix$1, mergePaths);
+  };
+  var validatePathString = function(fnName, argumentName, pathString, optional) {
+    if (optional && pathString === void 0) {
+      return;
+    }
+    if (!isValidPathString(pathString)) {
+      throw new Error(errorPrefix(fnName, argumentName) + 'was an invalid path = "' + pathString + `". Paths must be non-empty strings and can't contain ".", "#", "$", "[", or "]"`);
+    }
+  };
+  var validateRootPathString = function(fnName, argumentName, pathString, optional) {
+    if (pathString) {
+      pathString = pathString.replace(/^\/*\.info(\/|$)/, "/");
+    }
+    validatePathString(fnName, argumentName, pathString, optional);
   };
   var validateUrl = function(fnName, parsedUrl) {
     const pathString = parsedUrl.path.toString();
@@ -10562,6 +10653,39 @@
   function repoGetNextWriteId(repo) {
     return repo.nextWriteId_++;
   }
+  function repoUpdate(repo, path, childrenToMerge, onComplete) {
+    repoLog(repo, "update", { path: path.toString(), value: childrenToMerge });
+    let empty = true;
+    const serverValues = repoGenerateServerValues(repo);
+    const changedChildren = {};
+    each(childrenToMerge, (changedKey, changedValue) => {
+      empty = false;
+      changedChildren[changedKey] = resolveDeferredValueTree(pathChild(path, changedKey), nodeFromJSON(changedValue), repo.serverSyncTree_, serverValues);
+    });
+    if (!empty) {
+      const writeId = repoGetNextWriteId(repo);
+      const events = syncTreeApplyUserMerge(repo.serverSyncTree_, path, changedChildren, writeId);
+      eventQueueQueueEvents(repo.eventQueue_, events);
+      repo.server_.merge(path.toString(), childrenToMerge, (status, errorReason) => {
+        const success = status === "ok";
+        if (!success) {
+          warn("update at " + path + " failed: " + status);
+        }
+        const clearEvents = syncTreeAckUserWrite(repo.serverSyncTree_, writeId, !success);
+        const affectedPath = clearEvents.length > 0 ? repoRerunTransactions(repo, path) : path;
+        eventQueueRaiseEventsForChangedPath(repo.eventQueue_, affectedPath, clearEvents);
+        repoCallOnCompleteCallback(repo, onComplete, status, errorReason);
+      });
+      each(childrenToMerge, (changedPath) => {
+        const affectedPath = repoAbortTransactions(repo, pathChild(path, changedPath));
+        repoRerunTransactions(repo, affectedPath);
+      });
+      eventQueueRaiseEventsForChangedPath(repo.eventQueue_, path, []);
+    } else {
+      log("update() called with empty data.  Don't do anything.");
+      repoCallOnCompleteCallback(repo, onComplete, "ok", void 0);
+    }
+  }
   function repoRunOnDisconnectEvents(repo) {
     repoLog(repo, "onDisconnectEvents");
     const serverValues = repoGenerateServerValues(repo);
@@ -10590,6 +10714,24 @@
       prefix = repo.persistentConnection_.id + ":";
     }
     log(prefix, ...varArgs);
+  }
+  function repoCallOnCompleteCallback(repo, callback, status, errorReason) {
+    if (callback) {
+      exceptionGuard(() => {
+        if (status === "ok") {
+          callback(null);
+        } else {
+          const code = (status || "error").toUpperCase();
+          let message = code;
+          if (errorReason) {
+            message += ": " + errorReason;
+          }
+          const error2 = new Error(message);
+          error2.code = code;
+          callback(error2);
+        }
+      });
+    }
   }
   function repoGetLatestState(repo, path, excludeSets) {
     return syncTreeCalcCompleteEventCache(repo.serverSyncTree_, path, excludeSets) || ChildrenNode.EMPTY_NODE;
@@ -10776,8 +10918,8 @@
         queue.push(nodeQueue[i2]);
       }
     }
-    treeForEachChild(node, (child) => {
-      repoAggregateTransactionQueuesForNode(repo, child, queue);
+    treeForEachChild(node, (child2) => {
+      repoAggregateTransactionQueuesForNode(repo, child2, queue);
     });
   }
   function repoPruneCompletedTransactionsBelowNode(repo, node) {
@@ -11014,6 +11156,27 @@
       return ref2;
     }
   };
+  function ref(db, path) {
+    db = getModularInstance(db);
+    db._checkNotDeleted("ref");
+    return path !== void 0 ? child(db._root, path) : db._root;
+  }
+  function child(parent, path) {
+    parent = getModularInstance(parent);
+    if (pathGetFront(parent._path) === null) {
+      validateRootPathString("child", "path", path, false);
+    } else {
+      validatePathString("child", "path", path, false);
+    }
+    return new ReferenceImpl(parent._repo, pathChild(parent._path, path));
+  }
+  function update(ref2, values) {
+    validateFirebaseMergeDataArg("update", values, ref2._path, false);
+    const deferred = new Deferred();
+    repoUpdate(ref2._repo, ref2._path, values, deferred.wrapCallback(() => {
+    }));
+    return deferred.promise;
+  }
   syncPointSetReferenceConstructor(ReferenceImpl);
   syncTreeSetReferenceConstructor(ReferenceImpl);
   var FIREBASE_DATABASE_EMULATOR_HOST_VAR = "FIREBASE_DATABASE_EMULATOR_HOST";
@@ -11161,6 +11324,13 @@
     registerVersion(name2, version2, variant);
     registerVersion(name2, version2, "esm2017");
   }
+  function increment(delta) {
+    return {
+      ".sv": {
+        "increment": delta
+      }
+    };
+  }
   PersistentConnection.prototype.simpleListen = function(pathString, onComplete) {
     this.sendRequest("q", { p: pathString }, onComplete);
   };
@@ -11168,6 +11338,11 @@
     this.sendRequest("echo", { d: data }, onEcho);
   };
   registerDatabase();
+
+  // ../../node_modules/firebase/app/dist/index.esm.js
+  var name3 = "firebase";
+  var version3 = "9.14.0";
+  registerVersion(name3, version3, "app");
 
   // ../../node_modules/zod/lib/index.mjs
   var util;
@@ -14101,6 +14276,66 @@
     action: mod.nativeEnum(SyncJobAction),
     type: mod.enum(["syncJob" /* syncJob */])
   });
+
+  // ../../packages/data/sync.ts
+  var SyncStage = /* @__PURE__ */ ((SyncStage2) => {
+    SyncStage2["ready"] = "ready";
+    SyncStage2["reading"] = "reading";
+    SyncStage2["writing"] = "writing";
+    return SyncStage2;
+  })(SyncStage || {});
+  var syncJobSchema = mod.object({
+    ["accessToken" /* accessToken */]: mod.string(),
+    ["accessTokenCreated" /* accessTokenCreated */]: mod.number(),
+    ["refreshToken" /* refreshToken */]: mod.string(),
+    ["jobName" /* jobName */]: mod.string(),
+    ["directoryHandle" /* directoryHandle */]: mod.any().refine((obj) => obj instanceof FileSystemDirectoryHandle, { message: "Must be a FileSystemDirectoryHandle" }),
+    ["fileCount" /* fileCount */]: mod.number(),
+    ["importedCount" /* importedCount */]: mod.number(),
+    ["processedCount" /* processedCount */]: mod.number(),
+    ["exportedCount" /* exportedCount */]: mod.number(),
+    ["created" /* created */]: mod.date(),
+    ["stage" /* stage */]: mod.nativeEnum(SyncStage),
+    ["paused" /* paused */]: mod.boolean().optional().transform((val) => val ?? false),
+    ["previousPageToken" /* previousPageToken */]: mod.string().nullable().optional(),
+    ["nextPageToken" /* nextPageToken */]: mod.string().nullable().optional()
+  });
+  var syncJobRecordSchema = mod.object({
+    ["accessToken" /* accessToken */]: mod.string(),
+    ["accessTokenCreated" /* accessTokenCreated */]: mod.number(),
+    ["refreshToken" /* refreshToken */]: mod.string(),
+    ["jobName" /* jobName */]: mod.string(),
+    ["fileCount" /* fileCount */]: mod.number(),
+    ["importedCount" /* importedCount */]: mod.number(),
+    ["processedCount" /* processedCount */]: mod.number(),
+    ["exportedCount" /* exportedCount */]: mod.number(),
+    ["directoryName" /* directoryName */]: mod.string(),
+    ["created" /* created */]: mod.string(),
+    ["stage" /* stage */]: mod.nativeEnum(SyncStage),
+    ["paused" /* paused */]: mod.boolean().optional().transform((val) => val ?? false),
+    ["previousPageToken" /* previousPageToken */]: mod.string().nullable().optional(),
+    ["nextPageToken" /* nextPageToken */]: mod.string().nullable().optional()
+  });
+  function getSyncJobsRefPath(userId) {
+    return `sync-jobs/${userId}`;
+  }
+  function getSyncJobRefPath(userId, jobId) {
+    return `${getSyncJobsRefPath(userId)}/${jobId}`;
+  }
+  var DEFAULT_SYNC_JOB = {
+    ["accessToken" /* accessToken */]: "",
+    ["accessTokenCreated" /* accessTokenCreated */]: Date.now(),
+    ["refreshToken" /* refreshToken */]: "",
+    ["jobName" /* jobName */]: "",
+    ["fileCount" /* fileCount */]: 0,
+    ["importedCount" /* importedCount */]: 0,
+    ["processedCount" /* processedCount */]: 0,
+    ["exportedCount" /* exportedCount */]: 0,
+    ["created" /* created */]: new Date(),
+    ["stage" /* stage */]: "ready" /* ready */,
+    ["paused" /* paused */]: false,
+    ["nextPageToken" /* nextPageToken */]: null
+  };
 
   // ../../node_modules/tslib/modules/index.js
   var import_tslib = __toESM(require_tslib(), 1);
@@ -17756,8 +17991,8 @@
     }
   };
   PhoneMultiFactorGenerator.FACTOR_ID = "phone";
-  var name3 = "@firebase/auth";
-  var version3 = "0.20.11";
+  var name4 = "@firebase/auth";
+  var version4 = "0.20.11";
   var AuthInterop = class {
     constructor(auth) {
       this.auth = auth;
@@ -17855,8 +18090,8 @@
       const auth = _castAuth(container.getProvider("auth").getImmediate());
       return ((auth2) => new AuthInterop(auth2))(auth);
     }, "PRIVATE").setInstantiationMode("EXPLICIT"));
-    registerVersion(name3, version3, getVersionForPlatform(clientPlatform));
-    registerVersion(name3, version3, "esm2017");
+    registerVersion(name4, version4, getVersionForPlatform(clientPlatform));
+    registerVersion(name4, version4, "esm2017");
   }
   var DEFAULT_ID_TOKEN_MAX_AGE = 5 * 60;
   var authIdTokenMaxAge = getExperimentalSetting("authIdTokenMaxAge") || DEFAULT_ID_TOKEN_MAX_AGE;
@@ -17906,38 +18141,6 @@
   }
   registerAuth("Browser");
 
-  // ../../node_modules/firebase/app/dist/index.esm.js
-  var name4 = "firebase";
-  var version4 = "9.14.0";
-  registerVersion(name4, version4, "app");
-
-  // ../../packages/data/web.ts
-  var WEB = {
-    API: {
-      MEDIA_ITEMS: "/api/media-items",
-      OAUTH2: "/api/oauth2"
-    },
-    DATABASE: {
-      PATHS: {
-        SYNC_JOBS: (userId) => `sync-jobs/${userId}`
-      }
-    },
-    FIREBASE: {
-      APP_NAME: "google-photos",
-      apiKey: "AIzaSyCwCbnCcsSyqLdpMGygRFGp-xMfdZDVSEA",
-      authDomain: "photos-tools-2022.firebaseapp.com",
-      projectId: "photos-tools-2022",
-      storageBucket: "photos-tools-2022.appspot.com",
-      messagingSenderId: "550579950350",
-      appId: "1:550579950350:web:d32a68a214c5c58a273d5f",
-      measurementId: "G-5M5ME2ZH0R"
-    },
-    ROUTES: {
-      ROOT: "/",
-      SYNC: "/photos/sync"
-    }
-  };
-
   // ../../packages/ui/utils/app.ts
   function isServer() {
     return typeof window === "undefined" && !isServiceWorker();
@@ -17950,6 +18153,18 @@
     return typeof self !== "undefined";
   }
 
+  // ../../packages/ui/utils/url.ts
+  function addParams(uri, params) {
+    const url = new URL(uri);
+    const keys = Object.keys(params);
+    keys.forEach((key) => {
+      const value = params[key];
+      const isDefined = typeof value !== "undefined";
+      isDefined && url.searchParams.append(key, String(value));
+    });
+    return url.toString();
+  }
+
   // ../../packages/ui/utils/localforage.ts
   var localforage_exports = {};
   __export(localforage_exports, {
@@ -17958,7 +18173,8 @@
     clear: () => clear,
     clearSyncJobs: () => clearSyncJobs,
     getSyncJob: () => getSyncJob,
-    removeSyncJob: () => removeSyncJob
+    removeSyncJob: () => removeSyncJob,
+    updateSyncJob: () => updateSyncJob
   });
 
   // ../../node_modules/immer/dist/immer.esm.mjs
@@ -18503,7 +18719,16 @@
   function addSyncJob(id, job) {
     return __async(this, null, function* () {
       const syncJobs = yield getSyncJobs();
-      setSyncJobs(__spreadProps(__spreadValues({}, syncJobs), { [id]: job }));
+      return setSyncJobs(__spreadProps(__spreadValues({}, syncJobs), { [id]: job }));
+    });
+  }
+  function updateSyncJob(id, updates) {
+    return __async(this, null, function* () {
+      const syncJobs = yield getSyncJobs();
+      const syncJob = syncJobs ? syncJobs[id] : null;
+      const updatedSyncJob = syncJobSchema.parse(__spreadValues(__spreadValues({}, syncJob), updates));
+      yield setSyncJobs(__spreadProps(__spreadValues({}, syncJobs), { [id]: updatedSyncJob }));
+      return updatedSyncJob;
     });
   }
   function removeSyncJob(id) {
@@ -18592,7 +18817,94 @@
   }
   var clear = () => import_localforage.default.clear();
 
+  // ../../packages/data/web.ts
+  var WEB = {
+    API: {
+      MEDIA_ITEMS: "/api/media-items",
+      OAUTH2: "/api/oauth2"
+    },
+    DATABASE: {
+      PATHS: {
+        SYNC_JOBS: (userId) => `sync-jobs/${userId}`
+      }
+    },
+    FIREBASE: {
+      APP_NAME: "google-photos",
+      apiKey: "AIzaSyCwCbnCcsSyqLdpMGygRFGp-xMfdZDVSEA",
+      authDomain: "photos-tools-2022.firebaseapp.com",
+      projectId: "photos-tools-2022",
+      storageBucket: "photos-tools-2022.appspot.com",
+      messagingSenderId: "550579950350",
+      appId: "1:550579950350:web:d32a68a214c5c58a273d5f",
+      measurementId: "G-5M5ME2ZH0R"
+    },
+    ROUTES: {
+      ROOT: "/",
+      SYNC: "/photos/sync"
+    }
+  };
+
+  // ../../packages/data/media-items.ts
+  var mediaItemSchema = mod.object({
+    id: mod.string(),
+    description: mod.string().optional(),
+    productUrl: mod.string(),
+    baseUrl: mod.string(),
+    mimeType: mod.string(),
+    filename: mod.string(),
+    mediaMetadata: mod.object({
+      creationTime: mod.string(),
+      width: mod.string(),
+      height: mod.string(),
+      video: mod.object({
+        cameraMake: mod.string().optional(),
+        cameraModel: mod.string().optional(),
+        fps: mod.number().optional(),
+        status: mod.enum(["UNSPECIFIED", "PROCESSING", "FAILED", "READY"])
+      }).optional(),
+      photo: mod.object({
+        cameraMake: mod.string().optional(),
+        cameraModel: mod.string().optional(),
+        focalLength: mod.number().optional(),
+        apertureFNumber: mod.number().optional(),
+        isoEquivalent: mod.number().optional(),
+        exposureTime: mod.string().optional()
+      }).optional()
+    }),
+    contributorInfo: mod.object({ profilePictureBaseUrl: mod.string().optional(), displayName: mod.string().optional() }).optional()
+  });
+  var mediaItemsResponseSchema = mod.object({
+    accessToken: mod.string(),
+    refreshToken: mod.string(),
+    mediaItems: mod.array(mediaItemSchema),
+    nextPageToken: mod.string().optional()
+  });
+
+  // ../../packages/data/processing.ts
+  var ProcessingStage = /* @__PURE__ */ ((ProcessingStage2) => {
+    ProcessingStage2["ready"] = "ready";
+    ProcessingStage2["reading"] = "reading";
+    ProcessingStage2["writing"] = "writing";
+    return ProcessingStage2;
+  })(ProcessingStage || {});
+  var processingJobRecordSchema = mod.object({
+    ["mediaItem" /* mediaItem */]: mediaItemSchema.optional(),
+    ["created" /* created */]: mod.date(),
+    ["stage" /* stage */]: mod.nativeEnum(ProcessingStage)
+  });
+  function getProcessingJobsRefPath(userId, syncJobId) {
+    return `processing/${userId}/${syncJobId}`;
+  }
+  function getProcessingJobRefPath(userId, syncJobId, jobId) {
+    return `${getProcessingJobsRefPath(userId, syncJobId)}/${jobId}`;
+  }
+  var DEFAULT_PROCESSING_JOB = {
+    ["created" /* created */]: new Date(),
+    ["stage" /* stage */]: "ready" /* ready */
+  };
+
   // service-worker.ts
+  var ONE_HOUR_IN_MS = 36e5;
   var app = initializeApp(WEB.FIREBASE, WEB.FIREBASE.APP_NAME);
   var database = getDatabase(app);
   var user = null;
@@ -18615,8 +18927,50 @@
     }
   }
   async function startSyncJob(jobId) {
+    const nextJob = await queueNextMediaItems(jobId);
+    console.log({ nextJob });
+  }
+  async function queueNextMediaItems(jobId) {
     const job = await localforage_exports.getSyncJob(jobId);
-    console.log("start sync job", job);
+    const userId = user?.uid;
+    if (userId && job && !job?.paused) {
+      const syncJobRefPath = getSyncJobRefPath(userId, jobId);
+      const isExpiredAccessToken = Date.now() - job.accessTokenCreated > ONE_HOUR_IN_MS;
+      const url = addParams(`${location.origin}${WEB.API.MEDIA_ITEMS}`, {
+        pageSize: 100,
+        pageToken: job.nextPageToken,
+        accessToken: isExpiredAccessToken ? void 0 : job.accessToken,
+        refreshToken: job.refreshToken
+      });
+      const response = await fetch(url);
+      const data = await response.json();
+      const { mediaItems, accessToken, nextPageToken } = mediaItemsResponseSchema.parse(data);
+      const count = mediaItems.length;
+      const accessTokenCreated = isExpiredAccessToken ? Date.now() : job.accessTokenCreated;
+      const updates = mediaItems.reduce(
+        (acc, mediaItem) => {
+          acc[getProcessingJobRefPath(userId, jobId, mediaItem.id)] = mediaItem;
+          return acc;
+        },
+        {
+          [`${syncJobRefPath}/${"accessToken" /* accessToken */}`]: accessToken,
+          [`${syncJobRefPath}/${"accessTokenCreated" /* accessTokenCreated */}`]: accessTokenCreated,
+          [`${syncJobRefPath}/${"fileCount" /* fileCount */}`]: increment(count),
+          [`${syncJobRefPath}/${"importedCount" /* importedCount */}`]: increment(count),
+          [`${syncJobRefPath}/${"previousPageToken" /* previousPageToken */}`]: job.nextPageToken,
+          [`${syncJobRefPath}/${"nextPageToken" /* nextPageToken */}`]: nextPageToken,
+          [`${syncJobRefPath}/${"stage" /* stage */}`]: "reading" /* reading */
+        }
+      );
+      await update(ref(database), updates);
+      return localforage_exports.updateSyncJob(jobId, {
+        accessToken,
+        accessTokenCreated,
+        fileCount: job.fileCount + count,
+        importedCount: job.importedCount + count,
+        nextPageToken
+      });
+    }
   }
 })();
 /*!
