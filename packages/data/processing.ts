@@ -8,6 +8,7 @@ enum ProcessingKey {
 }
 
 export enum ProcessingStage {
+  error = 'error',
   ready = 'ready',
   reading = 'reading',
   writing = 'writing',

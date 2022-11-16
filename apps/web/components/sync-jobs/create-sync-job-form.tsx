@@ -26,20 +26,21 @@ export function CreateSyncJobForm({ onSyncJobChange }: Props) {
   useEffect(() => {
     if (directoryHandle) {
       const { accessToken, refreshToken } = parseCookies();
-
-      const parsed = syncJobSchema.safeParse({
+      const payload = {
         ...DEFAULT_SYNC_JOB,
         jobName,
         accessToken,
         refreshToken,
         directoryHandle,
         created: new Date(),
-      });
+      };
+
+      const parsed = syncJobSchema.safeParse(payload);
 
       if (parsed.success) {
         onSyncJobChange(parsed.data);
       } else {
-        console.info(parsed.error);
+        console.info(payload, parsed.error);
         onSyncJobChange();
       }
     }
@@ -100,7 +101,7 @@ export function CreateSyncJobForm({ onSyncJobChange }: Props) {
             <Typography variant='h6'>Selected library sample</Typography>
             <ImageList cols={3} rowHeight={164} sx={{ width: '100%', height: 500 }}>
               {firstPage.map((mediaItem) => (
-                <ImageListItem key={mediaItem.baseUrl}>
+                <ImageListItem key={mediaItem.baseUrl} sx={{ position: 'relative' }}>
                   <Image
                     alt={mediaItem.description ?? 'preview image'}
                     fill

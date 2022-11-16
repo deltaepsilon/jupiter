@@ -10,9 +10,10 @@ import {
   syncJobRecordSchema,
 } from 'data/sync';
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
-import { push, ref, remove } from 'firebase/database';
+import { push, ref, remove, update } from 'firebase/database';
 
 import { WEB } from 'data/web';
+import { getProcessingJobsRefPath } from 'data/processing';
 import { localforage } from 'ui/utils';
 import { useRtdb } from 'ui/hooks';
 import { useServiceWorker } from 'web/contexts/service-worker-context';
@@ -63,11 +64,13 @@ export function SyncJobsProvider({ children, userId }: Props) {
   const removeSyncJob = useCallback(
     async (jobId: string) => {
       if (database && jobId) {
-        const jobRef = ref(database, getSyncJobRefPath(userId, jobId));
         const success = await localforage.removeSyncJob(jobId);
 
         if (success) {
-          await remove(jobRef);
+          await update(ref(database), {
+            [getSyncJobRefPath(userId, jobId)]: null,
+            [getProcessingJobsRefPath(userId, jobId)]: null,
+          });
         }
       }
     },

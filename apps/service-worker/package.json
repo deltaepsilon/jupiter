@@ -8,8 +8,8 @@
     "firebase": "^9.14.0"
   },
   "scripts": {
-    "dev": "chokidar \"./*.ts\" -c \"yarn build\"",
-    "build": "esbuild service-worker.ts --bundle --sourcemap --outfile=../web/public/service-worker.js"
+    "dev": "chokidar \"./src/*.ts\" -c \"yarn build\"",
+    "build": "esbuild src/service-worker.ts --bundle --sourcemap --outfile=../web/public/service-worker.js"
   },
   "devDependencies": {
     "chokidar-cli": "3.0.0"

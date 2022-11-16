@@ -38,8 +38,8 @@ export function SyncJobsList({ syncJobRecords }: { syncJobRecords: SyncJobRecord
           const { color, icon } = SYNC_STAGE_DETAILS[syncJobRecord.stage];
 
           return (
-            <>
-              <Box key={`${jobId}-box`} sx={{ display: 'flex', alignItems: 'center', gridGap: 8, padding: 2 }}>
+            <Box key={jobId}>
+              <Box sx={{ display: 'flex', alignItems: 'center', gridGap: 8, padding: 2 }}>
                 <Box sx={{ flex: 1 }}>
                   <Typography variant='subtitle1'>{syncJobRecord.jobName}</Typography>
                   <Typography sx={{ display: 'flex', alignItems: 'center', gridGap: 8 }} variant='subtitle2'>
@@ -54,8 +54,8 @@ export function SyncJobsList({ syncJobRecords }: { syncJobRecords: SyncJobRecord
                   <SyncJobOptionsMenu jobId={jobId} />
                 </Box>
               </Box>
-              {!isLast && <Divider key={`${jobId}-divider`} />}
-            </>
+              {!isLast && <Divider />}
+            </Box>
           );
         })}
       </List>
