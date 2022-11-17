@@ -25,7 +25,7 @@ import { useSyncJobs } from 'web/contexts/sync-jobs-context';
 
 const SYNC_STAGE_DETAILS: Record<SyncStage, { color: string; icon: React.ReactNode }> = {
   [SyncStage.ready]: { color: 'var(--color-pastel-blue)', icon: <PlayCircleOutlineIcon /> },
-  [SyncStage.reading]: { color: 'var(--color-miami-blue)', icon: <PlayCircleOutlineIcon /> },
+  [SyncStage.processing]: { color: 'var(--color-miami-blue)', icon: <PlayCircleOutlineIcon /> },
   [SyncStage.writing]: { color: 'var(--color-jade-green)', icon: <PlayCircleOutlineIcon /> },
 };
 

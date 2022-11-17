@@ -69,7 +69,7 @@ export function SyncJobsProvider({ children, userId }: Props) {
         if (success) {
           await update(ref(database), {
             [getSyncJobRefPath(userId, jobId)]: null,
-            [getProcessingJobsRefPath(userId, jobId)]: null,
+            [getProcessingJobsRefPath({ userId, syncJobId: jobId })]: null,
           });
         }
       }

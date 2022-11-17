@@ -1,6 +1,6 @@
 import { Box, Button, Divider, TextField, Typography } from '@mui/material';
-import { DEFAULT_SYNC_JOB, SyncJob, syncJobSchema } from 'data/sync';
 import { MediaItems, mediaItemsResponseSchema } from 'data/media-items';
+import { SyncJob, getDefaultSyncJob, syncJobSchema } from 'data/sync';
 import nookies, { parseCookies } from 'nookies';
 import { useCallback, useEffect, useState } from 'react';
 
@@ -19,7 +19,7 @@ interface Props {
 }
 
 export function CreateSyncJobForm({ onSyncJobChange }: Props) {
-  const [jobName, setJobName] = useState<string>(DEFAULT_SYNC_JOB.jobName);
+  const [jobName, setJobName] = useState<string>(getDefaultSyncJob().jobName);
   const { firstPage, onLibraryChangeClick, onLibraryPickerClick } = useGooglePhotos();
   const { directoryHandle, getDirectoryHandle } = useLocalFilesystem();
 
@@ -27,7 +27,7 @@ export function CreateSyncJobForm({ onSyncJobChange }: Props) {
     if (directoryHandle) {
       const { accessToken, refreshToken } = parseCookies();
       const payload = {
-        ...DEFAULT_SYNC_JOB,
+        ...getDefaultSyncJob(),
         jobName,
         accessToken,
         refreshToken,
@@ -137,7 +137,10 @@ function useGooglePhotos() {
       router.replace(authUrl);
     } else {
       const data = await response.json();
-      const { mediaItems } = mediaItemsResponseSchema.parse(data);
+      const { accessToken, refreshToken, mediaItems } = mediaItemsResponseSchema.parse(data);
+
+      nookies.set(null, Cookie.accessToken, accessToken, { path: '/' });
+      nookies.set(null, Cookie.refreshToken, refreshToken, { path: '/' });
 
       setFirstPage(mediaItems);
     }

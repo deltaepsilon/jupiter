@@ -1,6 +1,6 @@
 import { ServiceWorkerMessage, SyncJobAction } from 'data/service-worker';
-import { User, getAuth, getIdToken, onAuthStateChanged } from 'firebase/auth';
-import { handleSyncJob, listenToSyncJobs, queueNextMediaItems, startSyncJob } from './sync-jobs';
+import { User, getAuth, onAuthStateChanged } from 'firebase/auth';
+import { handleSyncJob, listenToSyncJobs, startSyncJob } from './sync-jobs';
 
 import { WEB } from 'data/web';
 import { getDatabase } from 'firebase/database';
@@ -8,13 +8,16 @@ import { initializeApp } from 'firebase/app';
 
 const app = initializeApp(WEB.FIREBASE, WEB.FIREBASE.APP_NAME);
 const database = getDatabase(app);
+const unlisteners = [];
 
 let user: User | null = null;
 onAuthStateChanged(getAuth(app), async (u) => {
   user = u;
 
   if (user) {
-    listenToSyncJobs({ callback: handleSyncJob, database, userId: user.uid });
+    const unlistenSyncJobs = await listenToSyncJobs({ callback: handleSyncJob, database, userId: user.uid });
+
+    unlisteners.push(unlistenSyncJobs);
   }
 });
 

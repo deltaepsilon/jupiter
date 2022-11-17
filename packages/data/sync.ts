@@ -25,8 +25,7 @@ export enum SyncJobKey {
 
 export enum SyncStage {
   ready = 'ready',
-  reading = 'reading',
-  writing = 'writing',
+  processing = 'processing',
 }
 
 export const syncJobSchema = z.object({
@@ -73,6 +72,7 @@ export const syncJobRecordSchema = z.object({
 
 export type SyncJob = z.infer<typeof syncJobSchema>;
 export type SyncJobRecord = z.infer<typeof syncJobRecordSchema>;
+export type SyncJobRecordTuple = [string | null, SyncJobRecord | null];
 export type SyncJobs = Record<string, SyncJob>;
 export type SyncJobRecords = Record<string, SyncJobRecord>;
 
@@ -92,17 +92,19 @@ export function getSyncJobRefPath(userId: string, jobId: string) {
   return `${getSyncJobsRefPath(userId)}/${jobId}`;
 }
 
-export const DEFAULT_SYNC_JOB: SyncJob = {
-  [SyncJobKey.accessToken]: '',
-  [SyncJobKey.accessTokenCreated]: Date.now(),
-  [SyncJobKey.refreshToken]: '',
-  [SyncJobKey.jobName]: '',
-  [SyncJobKey.fileCount]: 0,
-  [SyncJobKey.importedCount]: 0,
-  [SyncJobKey.processedCount]: 0,
-  [SyncJobKey.exportedCount]: 0,
-  [SyncJobKey.created]: new Date(),
-  [SyncJobKey.stage]: SyncStage.ready,
-  [SyncJobKey.paused]: false,
-  [SyncJobKey.nextPageToken]: null,
-};
+export function getDefaultSyncJob(): SyncJob {
+  return {
+    [SyncJobKey.accessToken]: '',
+    [SyncJobKey.accessTokenCreated]: Date.now(),
+    [SyncJobKey.refreshToken]: '',
+    [SyncJobKey.jobName]: '',
+    [SyncJobKey.fileCount]: 0,
+    [SyncJobKey.importedCount]: 0,
+    [SyncJobKey.processedCount]: 0,
+    [SyncJobKey.exportedCount]: 0,
+    [SyncJobKey.created]: new Date(),
+    [SyncJobKey.stage]: SyncStage.ready,
+    [SyncJobKey.paused]: false,
+    [SyncJobKey.nextPageToken]: null,
+  };
+}
