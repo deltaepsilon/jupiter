@@ -1,6 +1,5 @@
 ## In Progress
 
-- [ ] Repair bulk error requeue process. It doesn't recurse to the second page.
 - [ ] Start processing images
 - [ ] Build a drawer to track progress
 ## Next actions
@@ -28,6 +27,7 @@
 
 ## Archive
 
+- [x] Repair bulk error requeue process. It doesn't recurse to the second page.
 - [x] Requeue single items
 - [x] Log all errors to a separate data structure
 - [x] Repair requeue

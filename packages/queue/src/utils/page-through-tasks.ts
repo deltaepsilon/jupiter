@@ -6,6 +6,7 @@ import {
   get,
   limitToFirst,
   orderByChild,
+  orderByKey,
   query,
   startAfter,
 } from 'firebase/database';
@@ -27,10 +28,10 @@ export async function pageThroughTasks({
 }) {
   /**
    * Firebase doesn't support pagination on two fields, so the first call can filter on equalTo(taskState),
-   * but the subsequent calls must filter on startAfter(lastKey) and manually clean out task that don't match.
+   * but the subsequent calls must filter on startAfter(lastKey) and manually clean out tasks that don't match.
    */
   const tasksQuery = startAfterKey
-    ? query(tasksRef, orderByChild(TaskKey.state), limitToFirst(batchSize), startAfter(startAfterKey))
+    ? query(tasksRef, orderByKey(), limitToFirst(batchSize), startAfter(startAfterKey))
     : query(tasksRef, orderByChild(TaskKey.state), limitToFirst(batchSize), equalTo(taskState));
   const snapshot = await get(tasksQuery);
   const queueTasks = mapTasks(snapshot);
@@ -42,8 +43,8 @@ export async function pageThroughTasks({
     return acc;
   }, {} as QueueTasks);
   const existMatchingTasks = Object.keys(matchingTasks).length > 0;
-  const isLastPage = Object.keys(queueTasks).length < batchSize;
   const lastKey = Object.keys(queueTasks).pop();
+  const isLastPage = !lastKey;
 
   if (existMatchingTasks) {
     await callback(matchingTasks);
