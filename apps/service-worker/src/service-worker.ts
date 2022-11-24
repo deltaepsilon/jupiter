@@ -14,11 +14,11 @@ let user: User | null = null;
 onAuthStateChanged(getAuth(app), async (u) => {
   user = u;
 
-  if (user) {
-    const unlistenSyncJobs = await listenToSyncJobs({ callback: handleSyncJob, database, userId: user.uid });
+  // if (user) {
+  //   const unlistenSyncJobs = await listenToSyncJobs({ callback: handleSyncJob, database, userId: user.uid });
 
-    unlisteners.push(unlistenSyncJobs);
-  }
+  //   unlisteners.push(unlistenSyncJobs);
+  // }
 });
 
 self.addEventListener('install', function (event) {

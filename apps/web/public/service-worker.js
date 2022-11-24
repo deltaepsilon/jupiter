@@ -2,27 +2,10 @@
 (() => {
   var __create = Object.create;
   var __defProp = Object.defineProperty;
-  var __defProps = Object.defineProperties;
   var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
-  var __getOwnPropDescs = Object.getOwnPropertyDescriptors;
   var __getOwnPropNames = Object.getOwnPropertyNames;
-  var __getOwnPropSymbols = Object.getOwnPropertySymbols;
   var __getProtoOf = Object.getPrototypeOf;
   var __hasOwnProp = Object.prototype.hasOwnProperty;
-  var __propIsEnum = Object.prototype.propertyIsEnumerable;
-  var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
-  var __spreadValues = (a2, b2) => {
-    for (var prop in b2 ||= {})
-      if (__hasOwnProp.call(b2, prop))
-        __defNormalProp(a2, prop, b2[prop]);
-    if (__getOwnPropSymbols)
-      for (var prop of __getOwnPropSymbols(b2)) {
-        if (__propIsEnum.call(b2, prop))
-          __defNormalProp(a2, prop, b2[prop]);
-      }
-    return a2;
-  };
-  var __spreadProps = (a2, b2) => __defProps(a2, __getOwnPropDescs(b2));
   var __require = /* @__PURE__ */ ((x2) => typeof require !== "undefined" ? require : typeof Proxy !== "undefined" ? new Proxy(x2, {
     get: (a2, b2) => (typeof require !== "undefined" ? require : a2)[b2]
   }) : x2)(function(x2) {
@@ -30,25 +13,8 @@
       return require.apply(this, arguments);
     throw new Error('Dynamic require of "' + x2 + '" is not supported');
   });
-  var __restKey = (key) => typeof key === "symbol" ? key : key + "";
-  var __objRest = (source, exclude) => {
-    var target = {};
-    for (var prop in source)
-      if (__hasOwnProp.call(source, prop) && exclude.indexOf(prop) < 0)
-        target[prop] = source[prop];
-    if (source != null && __getOwnPropSymbols)
-      for (var prop of __getOwnPropSymbols(source)) {
-        if (exclude.indexOf(prop) < 0 && __propIsEnum.call(source, prop))
-          target[prop] = source[prop];
-      }
-    return target;
-  };
   var __commonJS = (cb, mod2) => function __require2() {
     return mod2 || (0, cb[__getOwnPropNames(cb)[0]])((mod2 = { exports: {} }).exports, mod2), mod2.exports;
-  };
-  var __export = (target, all) => {
-    for (var name5 in all)
-      __defProp(target, name5, { get: all[name5], enumerable: true });
   };
   var __copyProps = (to, from, except, desc) => {
     if (from && typeof from === "object" || typeof from === "function") {
@@ -1411,7 +1377,7 @@
             executeCallback(promise, callback);
             return promise;
           }
-          function clear2(callback) {
+          function clear(callback) {
             var self2 = this;
             var promise = new Promise$1(function(resolve, reject) {
               self2.ready().then(function() {
@@ -1665,7 +1631,7 @@
             getItem,
             setItem,
             removeItem,
-            clear: clear2,
+            clear,
             length,
             key,
             keys,
@@ -11602,19 +11568,6 @@
   var isWindowsStoreApp = function() {
     return typeof Windows === "object" && typeof Windows.UI === "object";
   };
-  function errorForServerCode(code, query2) {
-    let reason = "Unknown Error";
-    if (code === "too_big") {
-      reason = "The data requested exceeds the maximum size that can be accessed with a single request.";
-    } else if (code === "permission_denied") {
-      reason = "Client doesn't have permission to access the desired data.";
-    } else if (code === "unavailable") {
-      reason = "The service is unavailable";
-    }
-    const error2 = new Error(code + " at " + query2._path.toString() + ": " + reason);
-    error2.code = code.toUpperCase();
-    return error2;
-  }
   var INTEGER_REGEXP_ = new RegExp("^-?(0*)\\d{1,10}$");
   var INTEGER_32_MIN = -2147483648;
   var INTEGER_32_MAX = 2147483647;
@@ -15168,298 +15121,6 @@
   function changeChildMoved(childName, snapshotNode) {
     return { type: "child_moved", snapshotNode, childName };
   }
-  var IndexedFilter = class {
-    constructor(index_) {
-      this.index_ = index_;
-    }
-    updateChild(snap, key, newChild, affectedPath, source, optChangeAccumulator) {
-      assert(snap.isIndexed(this.index_), "A node must be indexed if only a child is updated");
-      const oldChild = snap.getImmediateChild(key);
-      if (oldChild.getChild(affectedPath).equals(newChild.getChild(affectedPath))) {
-        if (oldChild.isEmpty() === newChild.isEmpty()) {
-          return snap;
-        }
-      }
-      if (optChangeAccumulator != null) {
-        if (newChild.isEmpty()) {
-          if (snap.hasChild(key)) {
-            optChangeAccumulator.trackChildChange(changeChildRemoved(key, oldChild));
-          } else {
-            assert(snap.isLeafNode(), "A child remove without an old child only makes sense on a leaf node");
-          }
-        } else if (oldChild.isEmpty()) {
-          optChangeAccumulator.trackChildChange(changeChildAdded(key, newChild));
-        } else {
-          optChangeAccumulator.trackChildChange(changeChildChanged(key, newChild, oldChild));
-        }
-      }
-      if (snap.isLeafNode() && newChild.isEmpty()) {
-        return snap;
-      } else {
-        return snap.updateImmediateChild(key, newChild).withIndex(this.index_);
-      }
-    }
-    updateFullNode(oldSnap, newSnap, optChangeAccumulator) {
-      if (optChangeAccumulator != null) {
-        if (!oldSnap.isLeafNode()) {
-          oldSnap.forEachChild(PRIORITY_INDEX, (key, childNode) => {
-            if (!newSnap.hasChild(key)) {
-              optChangeAccumulator.trackChildChange(changeChildRemoved(key, childNode));
-            }
-          });
-        }
-        if (!newSnap.isLeafNode()) {
-          newSnap.forEachChild(PRIORITY_INDEX, (key, childNode) => {
-            if (oldSnap.hasChild(key)) {
-              const oldChild = oldSnap.getImmediateChild(key);
-              if (!oldChild.equals(childNode)) {
-                optChangeAccumulator.trackChildChange(changeChildChanged(key, childNode, oldChild));
-              }
-            } else {
-              optChangeAccumulator.trackChildChange(changeChildAdded(key, childNode));
-            }
-          });
-        }
-      }
-      return newSnap.withIndex(this.index_);
-    }
-    updatePriority(oldSnap, newPriority) {
-      if (oldSnap.isEmpty()) {
-        return ChildrenNode.EMPTY_NODE;
-      } else {
-        return oldSnap.updatePriority(newPriority);
-      }
-    }
-    filtersNodes() {
-      return false;
-    }
-    getIndexedFilter() {
-      return this;
-    }
-    getIndex() {
-      return this.index_;
-    }
-  };
-  var RangedFilter = class {
-    constructor(params) {
-      this.indexedFilter_ = new IndexedFilter(params.getIndex());
-      this.index_ = params.getIndex();
-      this.startPost_ = RangedFilter.getStartPost_(params);
-      this.endPost_ = RangedFilter.getEndPost_(params);
-    }
-    getStartPost() {
-      return this.startPost_;
-    }
-    getEndPost() {
-      return this.endPost_;
-    }
-    matches(node) {
-      return this.index_.compare(this.getStartPost(), node) <= 0 && this.index_.compare(node, this.getEndPost()) <= 0;
-    }
-    updateChild(snap, key, newChild, affectedPath, source, optChangeAccumulator) {
-      if (!this.matches(new NamedNode(key, newChild))) {
-        newChild = ChildrenNode.EMPTY_NODE;
-      }
-      return this.indexedFilter_.updateChild(snap, key, newChild, affectedPath, source, optChangeAccumulator);
-    }
-    updateFullNode(oldSnap, newSnap, optChangeAccumulator) {
-      if (newSnap.isLeafNode()) {
-        newSnap = ChildrenNode.EMPTY_NODE;
-      }
-      let filtered = newSnap.withIndex(this.index_);
-      filtered = filtered.updatePriority(ChildrenNode.EMPTY_NODE);
-      const self2 = this;
-      newSnap.forEachChild(PRIORITY_INDEX, (key, childNode) => {
-        if (!self2.matches(new NamedNode(key, childNode))) {
-          filtered = filtered.updateImmediateChild(key, ChildrenNode.EMPTY_NODE);
-        }
-      });
-      return this.indexedFilter_.updateFullNode(oldSnap, filtered, optChangeAccumulator);
-    }
-    updatePriority(oldSnap, newPriority) {
-      return oldSnap;
-    }
-    filtersNodes() {
-      return true;
-    }
-    getIndexedFilter() {
-      return this.indexedFilter_;
-    }
-    getIndex() {
-      return this.index_;
-    }
-    static getStartPost_(params) {
-      if (params.hasStart()) {
-        const startName = params.getIndexStartName();
-        return params.getIndex().makePost(params.getIndexStartValue(), startName);
-      } else {
-        return params.getIndex().minPost();
-      }
-    }
-    static getEndPost_(params) {
-      if (params.hasEnd()) {
-        const endName = params.getIndexEndName();
-        return params.getIndex().makePost(params.getIndexEndValue(), endName);
-      } else {
-        return params.getIndex().maxPost();
-      }
-    }
-  };
-  var LimitedFilter = class {
-    constructor(params) {
-      this.rangedFilter_ = new RangedFilter(params);
-      this.index_ = params.getIndex();
-      this.limit_ = params.getLimit();
-      this.reverse_ = !params.isViewFromLeft();
-    }
-    updateChild(snap, key, newChild, affectedPath, source, optChangeAccumulator) {
-      if (!this.rangedFilter_.matches(new NamedNode(key, newChild))) {
-        newChild = ChildrenNode.EMPTY_NODE;
-      }
-      if (snap.getImmediateChild(key).equals(newChild)) {
-        return snap;
-      } else if (snap.numChildren() < this.limit_) {
-        return this.rangedFilter_.getIndexedFilter().updateChild(snap, key, newChild, affectedPath, source, optChangeAccumulator);
-      } else {
-        return this.fullLimitUpdateChild_(snap, key, newChild, source, optChangeAccumulator);
-      }
-    }
-    updateFullNode(oldSnap, newSnap, optChangeAccumulator) {
-      let filtered;
-      if (newSnap.isLeafNode() || newSnap.isEmpty()) {
-        filtered = ChildrenNode.EMPTY_NODE.withIndex(this.index_);
-      } else {
-        if (this.limit_ * 2 < newSnap.numChildren() && newSnap.isIndexed(this.index_)) {
-          filtered = ChildrenNode.EMPTY_NODE.withIndex(this.index_);
-          let iterator;
-          if (this.reverse_) {
-            iterator = newSnap.getReverseIteratorFrom(this.rangedFilter_.getEndPost(), this.index_);
-          } else {
-            iterator = newSnap.getIteratorFrom(this.rangedFilter_.getStartPost(), this.index_);
-          }
-          let count = 0;
-          while (iterator.hasNext() && count < this.limit_) {
-            const next = iterator.getNext();
-            let inRange;
-            if (this.reverse_) {
-              inRange = this.index_.compare(this.rangedFilter_.getStartPost(), next) <= 0;
-            } else {
-              inRange = this.index_.compare(next, this.rangedFilter_.getEndPost()) <= 0;
-            }
-            if (inRange) {
-              filtered = filtered.updateImmediateChild(next.name, next.node);
-              count++;
-            } else {
-              break;
-            }
-          }
-        } else {
-          filtered = newSnap.withIndex(this.index_);
-          filtered = filtered.updatePriority(ChildrenNode.EMPTY_NODE);
-          let startPost;
-          let endPost;
-          let cmp;
-          let iterator;
-          if (this.reverse_) {
-            iterator = filtered.getReverseIterator(this.index_);
-            startPost = this.rangedFilter_.getEndPost();
-            endPost = this.rangedFilter_.getStartPost();
-            const indexCompare = this.index_.getCompare();
-            cmp = (a2, b2) => indexCompare(b2, a2);
-          } else {
-            iterator = filtered.getIterator(this.index_);
-            startPost = this.rangedFilter_.getStartPost();
-            endPost = this.rangedFilter_.getEndPost();
-            cmp = this.index_.getCompare();
-          }
-          let count = 0;
-          let foundStartPost = false;
-          while (iterator.hasNext()) {
-            const next = iterator.getNext();
-            if (!foundStartPost && cmp(startPost, next) <= 0) {
-              foundStartPost = true;
-            }
-            const inRange = foundStartPost && count < this.limit_ && cmp(next, endPost) <= 0;
-            if (inRange) {
-              count++;
-            } else {
-              filtered = filtered.updateImmediateChild(next.name, ChildrenNode.EMPTY_NODE);
-            }
-          }
-        }
-      }
-      return this.rangedFilter_.getIndexedFilter().updateFullNode(oldSnap, filtered, optChangeAccumulator);
-    }
-    updatePriority(oldSnap, newPriority) {
-      return oldSnap;
-    }
-    filtersNodes() {
-      return true;
-    }
-    getIndexedFilter() {
-      return this.rangedFilter_.getIndexedFilter();
-    }
-    getIndex() {
-      return this.index_;
-    }
-    fullLimitUpdateChild_(snap, childKey, childSnap, source, changeAccumulator) {
-      let cmp;
-      if (this.reverse_) {
-        const indexCmp = this.index_.getCompare();
-        cmp = (a2, b2) => indexCmp(b2, a2);
-      } else {
-        cmp = this.index_.getCompare();
-      }
-      const oldEventCache = snap;
-      assert(oldEventCache.numChildren() === this.limit_, "");
-      const newChildNamedNode = new NamedNode(childKey, childSnap);
-      const windowBoundary = this.reverse_ ? oldEventCache.getFirstChild(this.index_) : oldEventCache.getLastChild(this.index_);
-      const inRange = this.rangedFilter_.matches(newChildNamedNode);
-      if (oldEventCache.hasChild(childKey)) {
-        const oldChildSnap = oldEventCache.getImmediateChild(childKey);
-        let nextChild = source.getChildAfterChild(this.index_, windowBoundary, this.reverse_);
-        while (nextChild != null && (nextChild.name === childKey || oldEventCache.hasChild(nextChild.name))) {
-          nextChild = source.getChildAfterChild(this.index_, nextChild, this.reverse_);
-        }
-        const compareNext = nextChild == null ? 1 : cmp(nextChild, newChildNamedNode);
-        const remainsInWindow = inRange && !childSnap.isEmpty() && compareNext >= 0;
-        if (remainsInWindow) {
-          if (changeAccumulator != null) {
-            changeAccumulator.trackChildChange(changeChildChanged(childKey, childSnap, oldChildSnap));
-          }
-          return oldEventCache.updateImmediateChild(childKey, childSnap);
-        } else {
-          if (changeAccumulator != null) {
-            changeAccumulator.trackChildChange(changeChildRemoved(childKey, oldChildSnap));
-          }
-          const newEventCache = oldEventCache.updateImmediateChild(childKey, ChildrenNode.EMPTY_NODE);
-          const nextChildInRange = nextChild != null && this.rangedFilter_.matches(nextChild);
-          if (nextChildInRange) {
-            if (changeAccumulator != null) {
-              changeAccumulator.trackChildChange(changeChildAdded(nextChild.name, nextChild.node));
-            }
-            return newEventCache.updateImmediateChild(nextChild.name, nextChild.node);
-          } else {
-            return newEventCache;
-          }
-        }
-      } else if (childSnap.isEmpty()) {
-        return snap;
-      } else if (inRange) {
-        if (cmp(windowBoundary, newChildNamedNode) >= 0) {
-          if (changeAccumulator != null) {
-            changeAccumulator.trackChildChange(changeChildRemoved(windowBoundary.name, windowBoundary.node));
-            changeAccumulator.trackChildChange(changeChildAdded(childKey, childSnap));
-          }
-          return oldEventCache.updateImmediateChild(childKey, childSnap).updateImmediateChild(windowBoundary.name, ChildrenNode.EMPTY_NODE);
-        } else {
-          return snap;
-        }
-      } else {
-        return snap;
-      }
-    }
-  };
   var QueryParams = class {
     constructor() {
       this.limitSet_ = false;
@@ -15556,22 +15217,6 @@
       return copy;
     }
   };
-  function queryParamsGetNodeFilter(queryParams) {
-    if (queryParams.loadsAllData()) {
-      return new IndexedFilter(queryParams.getIndex());
-    } else if (queryParams.hasLimit()) {
-      return new LimitedFilter(queryParams);
-    } else {
-      return new RangedFilter(queryParams);
-    }
-  }
-  function queryParamsLimitToLast(queryParams, newLimit) {
-    const newParams = queryParams.copy();
-    newParams.limitSet_ = true;
-    newParams.limit_ = newLimit;
-    newParams.viewFrom_ = "r";
-    return newParams;
-  }
   function queryParamsToRestQueryStringParameters(queryParams) {
     const qs = {};
     if (queryParams.isDefault()) {
@@ -15905,20 +15550,6 @@
       }
     }
   };
-  var ListenComplete = class {
-    constructor(source, path) {
-      this.source = source;
-      this.path = path;
-      this.type = OperationType2.LISTEN_COMPLETE;
-    }
-    operationForChild(childName) {
-      if (pathIsEmpty(this.path)) {
-        return new ListenComplete(this.source, newEmptyPath());
-      } else {
-        return new ListenComplete(this.source, pathPopFront(this.path));
-      }
-    }
-  };
   var Overwrite = class {
     constructor(source, path, snap) {
       this.source = source;
@@ -15984,12 +15615,6 @@
     }
     getNode() {
       return this.node_;
-    }
-  };
-  var EventGenerator = class {
-    constructor(query_) {
-      this.query_ = query_;
-      this.index_ = this.query_._queryParams.getIndex();
     }
   };
   function eventGeneratorGenerateEventsForChanges(eventGenerator, changes, eventCache, eventRegistrations) {
@@ -16717,9 +16342,6 @@
       }
     }
   };
-  function newViewProcessor(filter) {
-    return { filter };
-  }
   function viewProcessorAssertIndexed(viewProcessor, viewCache) {
     assert(viewCache.eventCache.getNode().isIndexed(viewProcessor.filter.getIndex()), "Event snap not indexed");
     assert(viewCache.serverCache.getNode().isIndexed(viewProcessor.filter.getIndex()), "Server snap not indexed");
@@ -17022,30 +16644,6 @@
       return viewCacheUpdateEventSnap(viewCache, newEventCache, complete, viewProcessor.filter.filtersNodes());
     }
   }
-  var View = class {
-    constructor(query_, initialViewCache) {
-      this.query_ = query_;
-      this.eventRegistrations_ = [];
-      const params = this.query_._queryParams;
-      const indexFilter = new IndexedFilter(params.getIndex());
-      const filter = queryParamsGetNodeFilter(params);
-      this.processor_ = newViewProcessor(filter);
-      const initialServerCache = initialViewCache.serverCache;
-      const initialEventCache = initialViewCache.eventCache;
-      const serverSnap = indexFilter.updateFullNode(ChildrenNode.EMPTY_NODE, initialServerCache.getNode(), null);
-      const eventSnap = filter.updateFullNode(ChildrenNode.EMPTY_NODE, initialEventCache.getNode(), null);
-      const newServerCache = new CacheNode(serverSnap, initialServerCache.isFullyInitialized(), indexFilter.filtersNodes());
-      const newEventCache = new CacheNode(eventSnap, initialEventCache.isFullyInitialized(), filter.filtersNodes());
-      this.viewCache_ = newViewCache(newEventCache, newServerCache);
-      this.eventGenerator_ = new EventGenerator(this.query_);
-    }
-    get query() {
-      return this.query_;
-    }
-  };
-  function viewGetServerCache(view) {
-    return view.viewCache_.serverCache.getNode();
-  }
   function viewGetCompleteServerCache(view, path) {
     const cache = viewCacheGetCompleteServerSnap(view.viewCache_);
     if (cache) {
@@ -17054,41 +16652,6 @@
       }
     }
     return null;
-  }
-  function viewIsEmpty(view) {
-    return view.eventRegistrations_.length === 0;
-  }
-  function viewAddEventRegistration(view, eventRegistration) {
-    view.eventRegistrations_.push(eventRegistration);
-  }
-  function viewRemoveEventRegistration(view, eventRegistration, cancelError) {
-    const cancelEvents = [];
-    if (cancelError) {
-      assert(eventRegistration == null, "A cancel should cancel all event registrations.");
-      const path = view.query._path;
-      view.eventRegistrations_.forEach((registration) => {
-        const maybeEvent = registration.createCancelEvent(cancelError, path);
-        if (maybeEvent) {
-          cancelEvents.push(maybeEvent);
-        }
-      });
-    }
-    if (eventRegistration) {
-      let remaining = [];
-      for (let i2 = 0; i2 < view.eventRegistrations_.length; ++i2) {
-        const existing = view.eventRegistrations_[i2];
-        if (!existing.matches(eventRegistration)) {
-          remaining.push(existing);
-        } else if (eventRegistration.hasAnyCallback()) {
-          remaining = remaining.concat(view.eventRegistrations_.slice(i2 + 1));
-          break;
-        }
-      }
-      view.eventRegistrations_ = remaining;
-    } else {
-      view.eventRegistrations_ = [];
-    }
-    return cancelEvents;
   }
   function viewApplyOperation(view, operation, writesCache, completeServerCache) {
     if (operation.type === OperationType2.MERGE && operation.source.queryId !== null) {
@@ -17102,40 +16665,14 @@
     view.viewCache_ = result.viewCache;
     return viewGenerateEventsForChanges_(view, result.changes, result.viewCache.eventCache.getNode(), null);
   }
-  function viewGetInitialEvents(view, registration) {
-    const eventSnap = view.viewCache_.eventCache;
-    const initialChanges = [];
-    if (!eventSnap.getNode().isLeafNode()) {
-      const eventNode = eventSnap.getNode();
-      eventNode.forEachChild(PRIORITY_INDEX, (key, childNode) => {
-        initialChanges.push(changeChildAdded(key, childNode));
-      });
-    }
-    if (eventSnap.isFullyInitialized()) {
-      initialChanges.push(changeValue(eventSnap.getNode()));
-    }
-    return viewGenerateEventsForChanges_(view, initialChanges, eventSnap.getNode(), registration);
-  }
   function viewGenerateEventsForChanges_(view, changes, eventCache, eventRegistration) {
     const registrations = eventRegistration ? [eventRegistration] : view.eventRegistrations_;
     return eventGeneratorGenerateEventsForChanges(view.eventGenerator_, changes, eventCache, registrations);
   }
   var referenceConstructor$1;
-  var SyncPoint = class {
-    constructor() {
-      this.views = /* @__PURE__ */ new Map();
-    }
-  };
   function syncPointSetReferenceConstructor(val) {
     assert(!referenceConstructor$1, "__referenceConstructor has already been defined");
     referenceConstructor$1 = val;
-  }
-  function syncPointGetReferenceConstructor() {
-    assert(referenceConstructor$1, "Reference.ts has not been loaded");
-    return referenceConstructor$1;
-  }
-  function syncPointIsEmpty(syncPoint) {
-    return syncPoint.views.size === 0;
   }
   function syncPointApplyOperation(syncPoint, operation, writesCache, optCompleteServerCache) {
     const queryId = operation.source.queryId;
@@ -17151,75 +16688,6 @@
       return events;
     }
   }
-  function syncPointGetView(syncPoint, query2, writesCache, serverCache, serverCacheComplete) {
-    const queryId = query2._queryIdentifier;
-    const view = syncPoint.views.get(queryId);
-    if (!view) {
-      let eventCache = writeTreeRefCalcCompleteEventCache(writesCache, serverCacheComplete ? serverCache : null);
-      let eventCacheComplete = false;
-      if (eventCache) {
-        eventCacheComplete = true;
-      } else if (serverCache instanceof ChildrenNode) {
-        eventCache = writeTreeRefCalcCompleteEventChildren(writesCache, serverCache);
-        eventCacheComplete = false;
-      } else {
-        eventCache = ChildrenNode.EMPTY_NODE;
-        eventCacheComplete = false;
-      }
-      const viewCache = newViewCache(new CacheNode(eventCache, eventCacheComplete, false), new CacheNode(serverCache, serverCacheComplete, false));
-      return new View(query2, viewCache);
-    }
-    return view;
-  }
-  function syncPointAddEventRegistration(syncPoint, query2, eventRegistration, writesCache, serverCache, serverCacheComplete) {
-    const view = syncPointGetView(syncPoint, query2, writesCache, serverCache, serverCacheComplete);
-    if (!syncPoint.views.has(query2._queryIdentifier)) {
-      syncPoint.views.set(query2._queryIdentifier, view);
-    }
-    viewAddEventRegistration(view, eventRegistration);
-    return viewGetInitialEvents(view, eventRegistration);
-  }
-  function syncPointRemoveEventRegistration(syncPoint, query2, eventRegistration, cancelError) {
-    const queryId = query2._queryIdentifier;
-    const removed = [];
-    let cancelEvents = [];
-    const hadCompleteView = syncPointHasCompleteView(syncPoint);
-    if (queryId === "default") {
-      for (const [viewQueryId, view] of syncPoint.views.entries()) {
-        cancelEvents = cancelEvents.concat(viewRemoveEventRegistration(view, eventRegistration, cancelError));
-        if (viewIsEmpty(view)) {
-          syncPoint.views.delete(viewQueryId);
-          if (!view.query._queryParams.loadsAllData()) {
-            removed.push(view.query);
-          }
-        }
-      }
-    } else {
-      const view = syncPoint.views.get(queryId);
-      if (view) {
-        cancelEvents = cancelEvents.concat(viewRemoveEventRegistration(view, eventRegistration, cancelError));
-        if (viewIsEmpty(view)) {
-          syncPoint.views.delete(queryId);
-          if (!view.query._queryParams.loadsAllData()) {
-            removed.push(view.query);
-          }
-        }
-      }
-    }
-    if (hadCompleteView && !syncPointHasCompleteView(syncPoint)) {
-      removed.push(new (syncPointGetReferenceConstructor())(query2._repo, query2._path));
-    }
-    return { removed, events: cancelEvents };
-  }
-  function syncPointGetQueryViews(syncPoint) {
-    const result = [];
-    for (const view of syncPoint.views.values()) {
-      if (!view.query._queryParams.loadsAllData()) {
-        result.push(view);
-      }
-    }
-    return result;
-  }
   function syncPointGetCompleteServerCache(syncPoint, path) {
     let serverCache = null;
     for (const view of syncPoint.views.values()) {
@@ -17227,39 +16695,11 @@
     }
     return serverCache;
   }
-  function syncPointViewForQuery(syncPoint, query2) {
-    const params = query2._queryParams;
-    if (params.loadsAllData()) {
-      return syncPointGetCompleteView(syncPoint);
-    } else {
-      const queryId = query2._queryIdentifier;
-      return syncPoint.views.get(queryId);
-    }
-  }
-  function syncPointViewExistsForQuery(syncPoint, query2) {
-    return syncPointViewForQuery(syncPoint, query2) != null;
-  }
-  function syncPointHasCompleteView(syncPoint) {
-    return syncPointGetCompleteView(syncPoint) != null;
-  }
-  function syncPointGetCompleteView(syncPoint) {
-    for (const view of syncPoint.views.values()) {
-      if (view.query._queryParams.loadsAllData()) {
-        return view;
-      }
-    }
-    return null;
-  }
   var referenceConstructor;
   function syncTreeSetReferenceConstructor(val) {
     assert(!referenceConstructor, "__referenceConstructor has already been defined");
     referenceConstructor = val;
   }
-  function syncTreeGetReferenceConstructor() {
-    assert(referenceConstructor, "Reference.ts has not been loaded");
-    return referenceConstructor;
-  }
-  var syncTreeNextQueryTag_ = 1;
   var SyncTree = class {
     constructor(listenProvider_) {
       this.listenProvider_ = listenProvider_;
@@ -17306,64 +16746,6 @@
     const changeTree = ImmutableTree.fromObject(changedChildren);
     return syncTreeApplyOperationToSyncPoints_(syncTree, new Merge(newOperationSourceServer(), path, changeTree));
   }
-  function syncTreeApplyListenComplete(syncTree, path) {
-    return syncTreeApplyOperationToSyncPoints_(syncTree, new ListenComplete(newOperationSourceServer(), path));
-  }
-  function syncTreeApplyTaggedListenComplete(syncTree, path, tag) {
-    const queryKey = syncTreeQueryKeyForTag_(syncTree, tag);
-    if (queryKey) {
-      const r2 = syncTreeParseQueryKey_(queryKey);
-      const queryPath = r2.path, queryId = r2.queryId;
-      const relativePath = newRelativePath(queryPath, path);
-      const op = new ListenComplete(newOperationSourceServerTaggedQuery(queryId), relativePath);
-      return syncTreeApplyTaggedOperation_(syncTree, queryPath, op);
-    } else {
-      return [];
-    }
-  }
-  function syncTreeRemoveEventRegistration(syncTree, query2, eventRegistration, cancelError, skipListenerDedup = false) {
-    const path = query2._path;
-    const maybeSyncPoint = syncTree.syncPointTree_.get(path);
-    let cancelEvents = [];
-    if (maybeSyncPoint && (query2._queryIdentifier === "default" || syncPointViewExistsForQuery(maybeSyncPoint, query2))) {
-      const removedAndEvents = syncPointRemoveEventRegistration(maybeSyncPoint, query2, eventRegistration, cancelError);
-      if (syncPointIsEmpty(maybeSyncPoint)) {
-        syncTree.syncPointTree_ = syncTree.syncPointTree_.remove(path);
-      }
-      const removed = removedAndEvents.removed;
-      cancelEvents = removedAndEvents.events;
-      if (!skipListenerDedup) {
-        const removingDefault = -1 !== removed.findIndex((query3) => {
-          return query3._queryParams.loadsAllData();
-        });
-        const covered = syncTree.syncPointTree_.findOnPath(path, (relativePath, parentSyncPoint) => syncPointHasCompleteView(parentSyncPoint));
-        if (removingDefault && !covered) {
-          const subtree = syncTree.syncPointTree_.subtree(path);
-          if (!subtree.isEmpty()) {
-            const newViews = syncTreeCollectDistinctViewsForSubTree_(subtree);
-            for (let i2 = 0; i2 < newViews.length; ++i2) {
-              const view = newViews[i2], newQuery = view.query;
-              const listener = syncTreeCreateListenerForView_(syncTree, view);
-              syncTree.listenProvider_.startListening(syncTreeQueryForListening_(newQuery), syncTreeTagForQuery(syncTree, newQuery), listener.hashFn, listener.onComplete);
-            }
-          }
-        }
-        if (!covered && removed.length > 0 && !cancelError) {
-          if (removingDefault) {
-            const defaultTag = null;
-            syncTree.listenProvider_.stopListening(syncTreeQueryForListening_(query2), defaultTag);
-          } else {
-            removed.forEach((queryToRemove) => {
-              const tagToRemove = syncTree.queryToTagMap.get(syncTreeMakeQueryKey_(queryToRemove));
-              syncTree.listenProvider_.stopListening(syncTreeQueryForListening_(queryToRemove), tagToRemove);
-            });
-          }
-        }
-      }
-      syncTreeRemoveTags_(syncTree, removed);
-    }
-    return cancelEvents;
-  }
   function syncTreeApplyTaggedQueryOverwrite(syncTree, path, snap, tag) {
     const queryKey = syncTreeQueryKeyForTag_(syncTree, tag);
     if (queryKey != null) {
@@ -17388,53 +16770,6 @@
     } else {
       return [];
     }
-  }
-  function syncTreeAddEventRegistration(syncTree, query2, eventRegistration, skipSetupListener = false) {
-    const path = query2._path;
-    let serverCache = null;
-    let foundAncestorDefaultView = false;
-    syncTree.syncPointTree_.foreachOnPath(path, (pathToSyncPoint, sp) => {
-      const relativePath = newRelativePath(pathToSyncPoint, path);
-      serverCache = serverCache || syncPointGetCompleteServerCache(sp, relativePath);
-      foundAncestorDefaultView = foundAncestorDefaultView || syncPointHasCompleteView(sp);
-    });
-    let syncPoint = syncTree.syncPointTree_.get(path);
-    if (!syncPoint) {
-      syncPoint = new SyncPoint();
-      syncTree.syncPointTree_ = syncTree.syncPointTree_.set(path, syncPoint);
-    } else {
-      foundAncestorDefaultView = foundAncestorDefaultView || syncPointHasCompleteView(syncPoint);
-      serverCache = serverCache || syncPointGetCompleteServerCache(syncPoint, newEmptyPath());
-    }
-    let serverCacheComplete;
-    if (serverCache != null) {
-      serverCacheComplete = true;
-    } else {
-      serverCacheComplete = false;
-      serverCache = ChildrenNode.EMPTY_NODE;
-      const subtree = syncTree.syncPointTree_.subtree(path);
-      subtree.foreachChild((childName, childSyncPoint) => {
-        const completeCache = syncPointGetCompleteServerCache(childSyncPoint, newEmptyPath());
-        if (completeCache) {
-          serverCache = serverCache.updateImmediateChild(childName, completeCache);
-        }
-      });
-    }
-    const viewAlreadyExists = syncPointViewExistsForQuery(syncPoint, query2);
-    if (!viewAlreadyExists && !query2._queryParams.loadsAllData()) {
-      const queryKey = syncTreeMakeQueryKey_(query2);
-      assert(!syncTree.queryToTagMap.has(queryKey), "View does not exist, but we have a tag");
-      const tag = syncTreeGetNextQueryTag_();
-      syncTree.queryToTagMap.set(queryKey, tag);
-      syncTree.tagToQueryMap.set(tag, queryKey);
-    }
-    const writesCache = writeTreeChildWrites(syncTree.pendingWriteTree_, path);
-    let events = syncPointAddEventRegistration(syncPoint, query2, eventRegistration, writesCache, serverCache, serverCacheComplete);
-    if (!viewAlreadyExists && !foundAncestorDefaultView && !skipSetupListener) {
-      const view = syncPointViewForQuery(syncPoint, query2);
-      events = events.concat(syncTreeSetupListener_(syncTree, query2, view));
-    }
-    return events;
   }
   function syncTreeCalcCompleteEventCache(syncTree, path, writeIdsToExclude) {
     const includeHiddenSets = true;
@@ -17498,40 +16833,6 @@
     }
     return events;
   }
-  function syncTreeCreateListenerForView_(syncTree, view) {
-    const query2 = view.query;
-    const tag = syncTreeTagForQuery(syncTree, query2);
-    return {
-      hashFn: () => {
-        const cache = viewGetServerCache(view) || ChildrenNode.EMPTY_NODE;
-        return cache.hash();
-      },
-      onComplete: (status) => {
-        if (status === "ok") {
-          if (tag) {
-            return syncTreeApplyTaggedListenComplete(syncTree, query2._path, tag);
-          } else {
-            return syncTreeApplyListenComplete(syncTree, query2._path);
-          }
-        } else {
-          const error2 = errorForServerCode(status, query2);
-          return syncTreeRemoveEventRegistration(
-            syncTree,
-            query2,
-            null,
-            error2
-          );
-        }
-      }
-    };
-  }
-  function syncTreeTagForQuery(syncTree, query2) {
-    const queryKey = syncTreeMakeQueryKey_(query2);
-    return syncTree.queryToTagMap.get(queryKey);
-  }
-  function syncTreeMakeQueryKey_(query2) {
-    return query2._path.toString() + "$" + query2._queryIdentifier;
-  }
   function syncTreeQueryKeyForTag_(syncTree, tag) {
     return syncTree.tagToQueryMap.get(tag);
   }
@@ -17548,74 +16849,6 @@
     assert(syncPoint, "Missing sync point for query tag that we're tracking");
     const writesCache = writeTreeChildWrites(syncTree.pendingWriteTree_, queryPath);
     return syncPointApplyOperation(syncPoint, operation, writesCache, null);
-  }
-  function syncTreeCollectDistinctViewsForSubTree_(subtree) {
-    return subtree.fold((relativePath, maybeChildSyncPoint, childMap) => {
-      if (maybeChildSyncPoint && syncPointHasCompleteView(maybeChildSyncPoint)) {
-        const completeView = syncPointGetCompleteView(maybeChildSyncPoint);
-        return [completeView];
-      } else {
-        let views = [];
-        if (maybeChildSyncPoint) {
-          views = syncPointGetQueryViews(maybeChildSyncPoint);
-        }
-        each(childMap, (_key, childViews) => {
-          views = views.concat(childViews);
-        });
-        return views;
-      }
-    });
-  }
-  function syncTreeQueryForListening_(query2) {
-    if (query2._queryParams.loadsAllData() && !query2._queryParams.isDefault()) {
-      return new (syncTreeGetReferenceConstructor())(query2._repo, query2._path);
-    } else {
-      return query2;
-    }
-  }
-  function syncTreeRemoveTags_(syncTree, queries) {
-    for (let j2 = 0; j2 < queries.length; ++j2) {
-      const removedQuery = queries[j2];
-      if (!removedQuery._queryParams.loadsAllData()) {
-        const removedQueryKey = syncTreeMakeQueryKey_(removedQuery);
-        const removedQueryTag = syncTree.queryToTagMap.get(removedQueryKey);
-        syncTree.queryToTagMap.delete(removedQueryKey);
-        syncTree.tagToQueryMap.delete(removedQueryTag);
-      }
-    }
-  }
-  function syncTreeGetNextQueryTag_() {
-    return syncTreeNextQueryTag_++;
-  }
-  function syncTreeSetupListener_(syncTree, query2, view) {
-    const path = query2._path;
-    const tag = syncTreeTagForQuery(syncTree, query2);
-    const listener = syncTreeCreateListenerForView_(syncTree, view);
-    const events = syncTree.listenProvider_.startListening(syncTreeQueryForListening_(query2), tag, listener.hashFn, listener.onComplete);
-    const subtree = syncTree.syncPointTree_.subtree(path);
-    if (tag) {
-      assert(!syncPointHasCompleteView(subtree.value), "If we're adding a query, it shouldn't be shadowed");
-    } else {
-      const queriesToStop = subtree.fold((relativePath, maybeChildSyncPoint, childMap) => {
-        if (!pathIsEmpty(relativePath) && maybeChildSyncPoint && syncPointHasCompleteView(maybeChildSyncPoint)) {
-          return [syncPointGetCompleteView(maybeChildSyncPoint).query];
-        } else {
-          let queries = [];
-          if (maybeChildSyncPoint) {
-            queries = queries.concat(syncPointGetQueryViews(maybeChildSyncPoint).map((view2) => view2.query));
-          }
-          each(childMap, (_key, childQueries) => {
-            queries = queries.concat(childQueries);
-          });
-          return queries;
-        }
-      });
-      for (let i2 = 0; i2 < queriesToStop.length; ++i2) {
-        const queryToStop = queriesToStop[i2];
-        syncTree.listenProvider_.stopListening(syncTreeQueryForListening_(queryToStop), syncTreeTagForQuery(syncTree, queryToStop));
-      }
-    }
-    return events;
   }
   var ExistingValueProvider = class {
     constructor(node_) {
@@ -17943,10 +17176,6 @@
       eventQueue.eventLists_.push(currList);
     }
   }
-  function eventQueueRaiseEventsAtPath(eventQueue, path, eventDataList) {
-    eventQueueQueueEvents(eventQueue, eventDataList);
-    eventQueueRaiseQueuedEventsMatchingPredicate(eventQueue, (eventPath) => pathEquals(eventPath, path));
-  }
   function eventQueueRaiseEventsForChangedPath(eventQueue, changedPath, eventDataList) {
     eventQueueQueueEvents(eventQueue, eventDataList);
     eventQueueRaiseQueuedEventsMatchingPredicate(eventQueue, (eventPath) => pathContains(eventPath, changedPath) || pathContains(changedPath, eventPath));
@@ -18176,24 +17405,6 @@
     });
     repo.onDisconnect_ = newSparseSnapshotTree();
     eventQueueRaiseEventsForChangedPath(repo.eventQueue_, newEmptyPath(), events);
-  }
-  function repoAddEventCallbackForQuery(repo, query2, eventRegistration) {
-    let events;
-    if (pathGetFront(query2._path) === ".info") {
-      events = syncTreeAddEventRegistration(repo.infoSyncTree_, query2, eventRegistration);
-    } else {
-      events = syncTreeAddEventRegistration(repo.serverSyncTree_, query2, eventRegistration);
-    }
-    eventQueueRaiseEventsAtPath(repo.eventQueue_, query2._path, events);
-  }
-  function repoRemoveEventCallbackForQuery(repo, query2, eventRegistration) {
-    let events;
-    if (pathGetFront(query2._path) === ".info") {
-      events = syncTreeRemoveEventRegistration(repo.infoSyncTree_, query2, eventRegistration);
-    } else {
-      events = syncTreeRemoveEventRegistration(repo.serverSyncTree_, query2, eventRegistration);
-    }
-    eventQueueRaiseEventsAtPath(repo.eventQueue_, query2._path, events);
   }
   function repoInterrupt(repo) {
     if (repo.persistentConnection_) {
@@ -18590,69 +17801,6 @@
       namespace
     };
   };
-  var DataEvent = class {
-    constructor(eventType, eventRegistration, snapshot, prevName) {
-      this.eventType = eventType;
-      this.eventRegistration = eventRegistration;
-      this.snapshot = snapshot;
-      this.prevName = prevName;
-    }
-    getPath() {
-      const ref2 = this.snapshot.ref;
-      if (this.eventType === "value") {
-        return ref2._path;
-      } else {
-        return ref2.parent._path;
-      }
-    }
-    getEventType() {
-      return this.eventType;
-    }
-    getEventRunner() {
-      return this.eventRegistration.getEventRunner(this);
-    }
-    toString() {
-      return this.getPath().toString() + ":" + this.eventType + ":" + stringify(this.snapshot.exportVal());
-    }
-  };
-  var CancelEvent = class {
-    constructor(eventRegistration, error2, path) {
-      this.eventRegistration = eventRegistration;
-      this.error = error2;
-      this.path = path;
-    }
-    getPath() {
-      return this.path;
-    }
-    getEventType() {
-      return "cancel";
-    }
-    getEventRunner() {
-      return this.eventRegistration.getEventRunner(this);
-    }
-    toString() {
-      return this.path.toString() + ":cancel";
-    }
-  };
-  var CallbackContext = class {
-    constructor(snapshotCallback, cancelCallback) {
-      this.snapshotCallback = snapshotCallback;
-      this.cancelCallback = cancelCallback;
-    }
-    onValue(expDataSnapshot, previousChildName) {
-      this.snapshotCallback.call(null, expDataSnapshot, previousChildName);
-    }
-    onCancel(error2) {
-      assert(this.hasCancelCallback, "Raising a cancel event on a listener with no cancel callback");
-      return this.cancelCallback.call(null, error2);
-    }
-    get hasCancelCallback() {
-      return !!this.cancelCallback;
-    }
-    matches(other) {
-      return this.snapshotCallback === other.snapshotCallback || this.snapshotCallback.userCallback !== void 0 && this.snapshotCallback.userCallback === other.snapshotCallback.userCallback && this.snapshotCallback.context === other.snapshotCallback.context;
-    }
-  };
   var QueryImpl = class {
     constructor(_repo, _path, _queryParams, _orderByCalled) {
       this._repo = _repo;
@@ -18711,59 +17859,6 @@
       return ref2;
     }
   };
-  var DataSnapshot = class {
-    constructor(_node, ref2, _index) {
-      this._node = _node;
-      this.ref = ref2;
-      this._index = _index;
-    }
-    get priority() {
-      return this._node.getPriority().val();
-    }
-    get key() {
-      return this.ref.key;
-    }
-    get size() {
-      return this._node.numChildren();
-    }
-    child(path) {
-      const childPath = new Path(path);
-      const childRef = child(this.ref, path);
-      return new DataSnapshot(this._node.getChild(childPath), childRef, PRIORITY_INDEX);
-    }
-    exists() {
-      return !this._node.isEmpty();
-    }
-    exportVal() {
-      return this._node.val(true);
-    }
-    forEach(action) {
-      if (this._node.isLeafNode()) {
-        return false;
-      }
-      const childrenNode = this._node;
-      return !!childrenNode.forEachChild(this._index, (key, node) => {
-        return action(new DataSnapshot(node, child(this.ref, key), PRIORITY_INDEX));
-      });
-    }
-    hasChild(path) {
-      const childPath = new Path(path);
-      return !this._node.getChild(childPath).isEmpty();
-    }
-    hasChildren() {
-      if (this._node.isLeafNode()) {
-        return false;
-      } else {
-        return !this._node.isEmpty();
-      }
-    }
-    toJSON() {
-      return this.exportVal();
-    }
-    val() {
-      return this._node.val();
-    }
-  };
   function ref(db, path) {
     db = getModularInstance(db);
     db._checkNotDeleted("ref");
@@ -18784,138 +17879,6 @@
     repoUpdate(ref2._repo, ref2._path, values, deferred.wrapCallback(() => {
     }));
     return deferred.promise;
-  }
-  var ValueEventRegistration = class {
-    constructor(callbackContext) {
-      this.callbackContext = callbackContext;
-    }
-    respondsTo(eventType) {
-      return eventType === "value";
-    }
-    createEvent(change, query2) {
-      const index = query2._queryParams.getIndex();
-      return new DataEvent("value", this, new DataSnapshot(change.snapshotNode, new ReferenceImpl(query2._repo, query2._path), index));
-    }
-    getEventRunner(eventData) {
-      if (eventData.getEventType() === "cancel") {
-        return () => this.callbackContext.onCancel(eventData.error);
-      } else {
-        return () => this.callbackContext.onValue(eventData.snapshot, null);
-      }
-    }
-    createCancelEvent(error2, path) {
-      if (this.callbackContext.hasCancelCallback) {
-        return new CancelEvent(this, error2, path);
-      } else {
-        return null;
-      }
-    }
-    matches(other) {
-      if (!(other instanceof ValueEventRegistration)) {
-        return false;
-      } else if (!other.callbackContext || !this.callbackContext) {
-        return true;
-      } else {
-        return other.callbackContext.matches(this.callbackContext);
-      }
-    }
-    hasAnyCallback() {
-      return this.callbackContext !== null;
-    }
-  };
-  var ChildEventRegistration = class {
-    constructor(eventType, callbackContext) {
-      this.eventType = eventType;
-      this.callbackContext = callbackContext;
-    }
-    respondsTo(eventType) {
-      let eventToCheck = eventType === "children_added" ? "child_added" : eventType;
-      eventToCheck = eventToCheck === "children_removed" ? "child_removed" : eventToCheck;
-      return this.eventType === eventToCheck;
-    }
-    createCancelEvent(error2, path) {
-      if (this.callbackContext.hasCancelCallback) {
-        return new CancelEvent(this, error2, path);
-      } else {
-        return null;
-      }
-    }
-    createEvent(change, query2) {
-      assert(change.childName != null, "Child events should have a childName.");
-      const childRef = child(new ReferenceImpl(query2._repo, query2._path), change.childName);
-      const index = query2._queryParams.getIndex();
-      return new DataEvent(change.type, this, new DataSnapshot(change.snapshotNode, childRef, index), change.prevName);
-    }
-    getEventRunner(eventData) {
-      if (eventData.getEventType() === "cancel") {
-        return () => this.callbackContext.onCancel(eventData.error);
-      } else {
-        return () => this.callbackContext.onValue(eventData.snapshot, eventData.prevName);
-      }
-    }
-    matches(other) {
-      if (other instanceof ChildEventRegistration) {
-        return this.eventType === other.eventType && (!this.callbackContext || !other.callbackContext || this.callbackContext.matches(other.callbackContext));
-      }
-      return false;
-    }
-    hasAnyCallback() {
-      return !!this.callbackContext;
-    }
-  };
-  function addEventListener(query2, eventType, callback, cancelCallbackOrListenOptions, options) {
-    let cancelCallback;
-    if (typeof cancelCallbackOrListenOptions === "object") {
-      cancelCallback = void 0;
-      options = cancelCallbackOrListenOptions;
-    }
-    if (typeof cancelCallbackOrListenOptions === "function") {
-      cancelCallback = cancelCallbackOrListenOptions;
-    }
-    if (options && options.onlyOnce) {
-      const userCallback = callback;
-      const onceCallback = (dataSnapshot, previousChildName) => {
-        repoRemoveEventCallbackForQuery(query2._repo, query2, container);
-        userCallback(dataSnapshot, previousChildName);
-      };
-      onceCallback.userCallback = callback.userCallback;
-      onceCallback.context = callback.context;
-      callback = onceCallback;
-    }
-    const callbackContext = new CallbackContext(callback, cancelCallback || void 0);
-    const container = eventType === "value" ? new ValueEventRegistration(callbackContext) : new ChildEventRegistration(eventType, callbackContext);
-    repoAddEventCallbackForQuery(query2._repo, query2, container);
-    return () => repoRemoveEventCallbackForQuery(query2._repo, query2, container);
-  }
-  function onValue(query2, callback, cancelCallbackOrListenOptions, options) {
-    return addEventListener(query2, "value", callback, cancelCallbackOrListenOptions, options);
-  }
-  var QueryConstraint = class {
-  };
-  var QueryLimitToLastConstraint = class extends QueryConstraint {
-    constructor(_limit) {
-      super();
-      this._limit = _limit;
-    }
-    _apply(query2) {
-      if (query2._queryParams.hasLimit()) {
-        throw new Error("limitToLast: Limit was already set (by another call to limitToFirst or limitToLast).");
-      }
-      return new QueryImpl(query2._repo, query2._path, queryParamsLimitToLast(query2._queryParams, this._limit), query2._orderByCalled);
-    }
-  };
-  function limitToLast(limit) {
-    if (typeof limit !== "number" || Math.floor(limit) !== limit || limit <= 0) {
-      throw new Error("limitToLast: First argument must be a positive integer.");
-    }
-    return new QueryLimitToLastConstraint(limit);
-  }
-  function query(query2, ...queryConstraints) {
-    let queryImpl = getModularInstance(query2);
-    for (const constraint of queryConstraints) {
-      queryImpl = constraint._apply(queryImpl);
-    }
-    return queryImpl;
   }
   syncPointSetReferenceConstructor(ReferenceImpl);
   syncTreeSetReferenceConstructor(ReferenceImpl);
@@ -19064,13 +18027,6 @@
     registerVersion(name3, version3, variant);
     registerVersion(name3, version3, "esm2017");
   }
-  function increment(delta) {
-    return {
-      ".sv": {
-        "increment": delta
-      }
-    };
-  }
   PersistentConnection.prototype.simpleListen = function(pathString, onComplete) {
     this.sendRequest("q", { p: pathString }, onComplete);
   };
@@ -19123,30 +18079,6 @@
     ["started" /* started */]: mod.date().optional(),
     ["completed" /* completed */]: mod.date().optional()
   });
-  function getProcessingJobsRefPath({ userId, syncJobId }) {
-    return `processing/${userId}/${syncJobId}`;
-  }
-  function getProcessingStageRefPath({
-    userId,
-    syncJobId,
-    stage
-  }) {
-    return `${getProcessingJobsRefPath({ userId, syncJobId })}/${stage}`;
-  }
-  function getProcessingJobRefPath({
-    userId,
-    syncJobId,
-    jobId,
-    stage
-  }) {
-    return `${getProcessingStageRefPath({ userId, stage, syncJobId })}/${jobId}`;
-  }
-  function getDefaultProcessingJob() {
-    return {
-      ["isActive" /* isActive */]: false,
-      ["created" /* created */]: new Date()
-    };
-  }
 
   // ../../packages/data/sync.ts
   var SyncStage = /* @__PURE__ */ ((SyncStage2) => {
@@ -19204,30 +18136,6 @@
   function isServiceWorker() {
     return typeof self !== "undefined";
   }
-
-  // ../../packages/ui/utils/url.ts
-  function addParams(uri, params) {
-    const url = new URL(uri);
-    const keys = Object.keys(params);
-    keys.forEach((key) => {
-      const value = params[key];
-      const isDefined = typeof value !== "undefined";
-      isDefined && url.searchParams.append(key, String(value));
-    });
-    return url.toString();
-  }
-
-  // ../../packages/ui/utils/localforage.ts
-  var localforage_exports = {};
-  __export(localforage_exports, {
-    LocalforageDataType: () => LocalforageDataType,
-    addSyncJob: () => addSyncJob,
-    clear: () => clear,
-    clearSyncJobs: () => clearSyncJobs,
-    getSyncJob: () => getSyncJob,
-    removeSyncJob: () => removeSyncJob,
-    updateSyncJob: () => updateSyncJob
-  });
 
   // ../../node_modules/immer/dist/immer.esm.mjs
   function n(n2) {
@@ -19758,49 +18666,6 @@
       name: "jupiter-storage"
     });
   });
-  var LocalforageDataType = /* @__PURE__ */ ((LocalforageDataType2) => {
-    LocalforageDataType2["SyncJobs"] = "sync-jobs";
-    return LocalforageDataType2;
-  })(LocalforageDataType || {});
-  function getSyncJob(id) {
-    return __async(this, null, function* () {
-      const syncJobs = yield getSyncJobs();
-      return syncJobs ? syncJobs[id] : null;
-    });
-  }
-  function addSyncJob(id, job) {
-    return __async(this, null, function* () {
-      const syncJobs = yield getSyncJobs();
-      return setSyncJobs(__spreadProps(__spreadValues({}, syncJobs), { [id]: job }));
-    });
-  }
-  function updateSyncJob(id, updates) {
-    return __async(this, null, function* () {
-      const syncJobs = yield getSyncJobs();
-      const syncJob = syncJobs ? syncJobs[id] : null;
-      const updatedSyncJob = syncJobSchema.parse(__spreadValues(__spreadValues({}, syncJob), updates));
-      yield setSyncJobs(__spreadProps(__spreadValues({}, syncJobs), { [id]: updatedSyncJob }));
-      return updatedSyncJob;
-    });
-  }
-  function removeSyncJob(id) {
-    return __async(this, null, function* () {
-      const syncJobs = yield getSyncJobs();
-      if (syncJobs && syncJobs[id]) {
-        const _a = syncJobs, { [id]: _2 } = _a, newSyncJobs = __objRest(_a, [__restKey(id)]);
-        setSyncJobs(newSyncJobs);
-        return true;
-      } else {
-        console.warn(`Could not find sync job with id ${id}`);
-        return false;
-      }
-    });
-  }
-  function clearSyncJobs() {
-    return __async(this, null, function* () {
-      return import_localforage.default.removeItem("sync-jobs" /* SyncJobs */);
-    });
-  }
   var getSyncJobs = createGetter("sync-jobs" /* SyncJobs */, null);
   var setSyncJobs = createSetter("sync-jobs" /* SyncJobs */);
   function createGetter(key, defaultValue) {
@@ -19867,7 +18732,6 @@
     const isImmerable = !!object && object[L] === true;
     return isPlainObject || isMap || isSet || isImmerable;
   }
-  var clear = () => import_localforage.default.clear();
 
   // ../../packages/data/web.ts
   var WEB = {
@@ -19896,99 +18760,11 @@
     }
   };
 
-  // src/process-jobs.ts
-  function processJobs({ database: database2, limit = 1, queueNextMediaItems, syncJobId, userId }) {
-    const readyJobsRef = ref(database2, getProcessingStageRefPath({ stage: "active" /* active */, syncJobId, userId }));
-    const lastJobQuery = query(readyJobsRef, limitToLast(limit));
-    let pages = 0;
-    return onValue(lastJobQuery, (snapshot) => {
-      const val = snapshot.val();
-      const jobs = val ? Object.entries(val).map(([key, j2]) => [
-        key,
-        processingJobRecordSchema.parse({
-          ["mediaItem" /* mediaItem */]: j2.mediaItem,
-          ["isActive" /* isActive */]: j2.isActive,
-          ["created" /* created */]: new Date(j2.created),
-          ["started" /* started */]: j2.started ? new Date(j2.started) : void 0,
-          ["completed" /* completed */]: j2.completed ? new Date(j2.completed) : void 0
-        })
-      ]) : [];
-      const inactiveJobs = jobs.filter(([, j2]) => j2?.["isActive" /* isActive */] === false);
-      if (!jobs.length) {
-        if (pages < 1) {
-          console.log("queuing next media items.");
-          queueNextMediaItems();
-          pages++;
-        } else {
-          console.log("processing first page only for now");
-        }
-      }
-    });
-  }
-
   // src/sync-jobs.ts
-  var ONE_HOUR_IN_MS = 36e5;
-  async function listenToSyncJobs({
-    callback,
-    database: database2,
-    userId
-  }) {
-    const syncJobsRef = ref(database2, getSyncJobsRefPath(userId));
-    const callbackUnsubscribers = {};
-    function unsubscribeByKey(key) {
-      callbackUnsubscribers[key]?.();
-      delete callbackUnsubscribers[key];
-    }
-    let previous = [null, null];
-    const jobUnsubscriber = onValue(syncJobsRef, (snapshot) => {
-      const syncJobs = snapshot.val();
-      syncJobs && Object.entries(syncJobs).forEach(([key, job]) => {
-        const parsedJob = syncJobRecordSchema.parse(job);
-        const current = [key, parsedJob];
-        const alreadySubscribed = !!callbackUnsubscribers[key];
-        const isPaused = parsedJob["paused" /* paused */];
-        console.log({ alreadySubscribed, isPaused });
-        if (!alreadySubscribed) {
-          const unsubscribe = callback({ current, database: database2, previous, userId });
-          if (key) {
-            callbackUnsubscribers[key] = unsubscribe;
-          }
-        }
-        if (alreadySubscribed && isPaused) {
-          unsubscribeByKey(key);
-        }
-        previous = [key, parsedJob];
-      });
-    });
-    return () => {
-      jobUnsubscriber();
-      Object.keys(callbackUnsubscribers).forEach(unsubscribeByKey);
-    };
-  }
-  function handleSyncJob({
-    current,
-    database: database2,
-    userId
-  }) {
-    const [currentKey, currentJob] = current;
-    if (currentKey && currentJob) {
-      const isProcessing = currentJob?.stage === "processing" /* processing */;
-      const isPaused = currentJob?.paused;
-      const isActive = !isPaused && isProcessing;
-      if (isActive) {
-        return processJobs({
-          database: database2,
-          queueNextMediaItems: getQueueNextMediaItems({ database: database2, jobId: currentKey, userId }),
-          syncJobId: currentKey,
-          userId
-        });
-      }
-    }
-  }
   function startSyncJob({ database: database2, jobId, userId }) {
-    return updateSyncJob2({ database: database2, jobId, userId, updates: { ["stage" /* stage */]: "processing" /* processing */ } });
+    return updateSyncJob({ database: database2, jobId, userId, updates: { ["stage" /* stage */]: "processing" /* processing */ } });
   }
-  function updateSyncJob2({
+  function updateSyncJob({
     database: database2,
     jobId,
     userId,
@@ -19996,55 +18772,6 @@
   }) {
     const syncJobRef = ref(database2, getSyncJobRefPath(userId, jobId));
     return update(syncJobRef, updates);
-  }
-  function getQueueNextMediaItems({ database: database2, jobId, userId }) {
-    return async function queueNextMediaItems() {
-      const job = await localforage_exports.getSyncJob(jobId);
-      let result = 0;
-      if (userId && job && !job?.paused) {
-        const syncJobRefPath = getSyncJobRefPath(userId, jobId);
-        const isExpiredAccessToken = Date.now() - job.accessTokenCreated > ONE_HOUR_IN_MS;
-        const url = addParams(`${location.origin}${WEB.API.MEDIA_ITEMS}`, {
-          pageSize: 100,
-          pageToken: job.nextPageToken,
-          accessToken: isExpiredAccessToken ? void 0 : job.accessToken,
-          refreshToken: job.refreshToken
-        });
-        const response = await fetch(url);
-        const data = await response.json();
-        const { mediaItems, accessToken, nextPageToken } = mediaItemsResponseSchema.parse(data);
-        const count = mediaItems.length;
-        const accessTokenCreated = isExpiredAccessToken ? Date.now() : job.accessTokenCreated;
-        const updates = mediaItems.reduce(
-          (acc, mediaItem) => {
-            acc[getProcessingJobRefPath({ userId, syncJobId: jobId, jobId: mediaItem.id, stage: "active" /* active */ })] = processingJobRecordSchema.parse({
-              ...getDefaultProcessingJob(),
-              ["mediaItem" /* mediaItem */]: mediaItem
-            });
-            return acc;
-          },
-          {
-            [`${syncJobRefPath}/${"accessToken" /* accessToken */}`]: accessToken,
-            [`${syncJobRefPath}/${"accessTokenCreated" /* accessTokenCreated */}`]: accessTokenCreated,
-            [`${syncJobRefPath}/${"fileCount" /* fileCount */}`]: increment(count),
-            [`${syncJobRefPath}/${"importedCount" /* importedCount */}`]: increment(count),
-            [`${syncJobRefPath}/${"previousPageToken" /* previousPageToken */}`]: job.nextPageToken,
-            [`${syncJobRefPath}/${"nextPageToken" /* nextPageToken */}`]: nextPageToken,
-            [`${syncJobRefPath}/${"stage" /* stage */}`]: "processing" /* processing */
-          }
-        );
-        await update(ref(database2), updates);
-        await localforage_exports.updateSyncJob(jobId, {
-          accessToken,
-          accessTokenCreated,
-          fileCount: job.fileCount + count,
-          importedCount: job.importedCount + count,
-          nextPageToken
-        });
-        result = count;
-      }
-      return result;
-    };
   }
 
   // ../../node_modules/firebase/app/dist/index.esm.js
@@ -20055,14 +18782,9 @@
   // src/service-worker.ts
   var app = initializeApp(WEB.FIREBASE, WEB.FIREBASE.APP_NAME);
   var database = getDatabase(app);
-  var unlisteners = [];
   var user = null;
   onAuthStateChanged(getAuth(app), async (u2) => {
     user = u2;
-    if (user) {
-      const unlistenSyncJobs = await listenToSyncJobs({ callback: handleSyncJob, database, userId: user.uid });
-      unlisteners.push(unlistenSyncJobs);
-    }
   });
   self.addEventListener("install", function(event) {
     console.log("Service worker installing...", event);

@@ -3,7 +3,10 @@
     "$unspecified": {
       "$userId": {
         ".read": "$userId === auth.uid",
-        ".write": "$userId === auth.uid"
+        ".write": "$userId === auth.uid",
+        "task": {
+          ".indexOn": ["state"]
+        }
       }
     }
   }
