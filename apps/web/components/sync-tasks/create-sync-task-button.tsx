@@ -1,50 +1,50 @@
 import { Box, Button } from '@mui/material';
 import { FormEventHandler, useCallback, useState } from 'react';
 import { ModalDrawer, ModalDrawerFooter, useModalDrawer } from 'ui/components';
-import { SyncJobsProvider, useSyncJobs } from 'web/contexts/sync-jobs-context';
 
 import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
-import { CreateSyncJobForm } from './create-sync-job-form';
-import { SyncJob } from 'data/sync';
+import { CreateSyncTaskForm } from './create-sync-task-form';
+import { SyncTask } from 'data/sync';
 import { stopPropagation } from 'ui/utils';
 import { useAuth } from 'ui/contexts';
 import { useModalState } from 'ui/hooks';
+import { useSyncTasks } from 'web/contexts/sync-tasks-context';
 
-export function CreateSyncJobButton() {
-  const { createSyncJob } = useSyncJobs();
-  const [syncJob, setSyncJob] = useState<SyncJob>();
-  const { isOpen, onOpen, onClose } = useModalState({ autoOpenHash: 'create-sync-job' });
+export function CreateSyncTaskButton() {
+  const { createSyncTask } = useSyncTasks();
+  const [syncTask, setSyncTask] = useState<SyncTask>();
+  const { isOpen, onOpen, onClose } = useModalState({ autoOpenHash: 'create-sync-task' });
   const onSubmitCallback = useCallback(
     (e?: Event) => {
       e?.preventDefault();
 
-      syncJob && createSyncJob(syncJob);
+      syncTask && createSyncTask(syncTask);
 
       onClose();
     },
-    [createSyncJob, onClose, syncJob]
+    [createSyncTask, onClose, syncTask]
   );
-  const onSyncJobChange = useCallback((syncJob?: SyncJob) => setSyncJob(syncJob), []);
+  const onSyncTaskChange = useCallback((syncTask?: SyncTask) => setSyncTask(syncTask), []);
 
   return (
     <>
       <ModalDrawer
-        aria-describedby='create sync job'
-        aria-labelledby='create sync job'
+        aria-describedby='create sync task'
+        aria-labelledby='create sync task'
         isOpen={isOpen}
         onClose={onClose}
-        title='Create Sync Job'
+        title='Create Sync Task'
       >
         <Box onClick={stopPropagation} sx={{ padding: [1, 2] }}>
           <form onSubmit={onSubmitCallback as unknown as FormEventHandler}>
-            <CreateSyncJobForm onSyncJobChange={onSyncJobChange} />
-            <Footer canSave={!!syncJob} onSubmitCallback={onSubmitCallback} />
+            <CreateSyncTaskForm onSyncTaskChange={onSyncTaskChange} />
+            <Footer canSave={!!syncTask} onSubmitCallback={onSubmitCallback} />
           </form>
         </Box>
       </ModalDrawer>
 
       <Button onClick={onOpen} startIcon={<CloudDownloadIcon />} variant='contained'>
-        Create Sync Job
+        Create Sync Task
       </Button>
     </>
   );

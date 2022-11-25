@@ -14,7 +14,7 @@ import {
   ProcessingStage,
   getDefaultProcessingJob,
   getProcessingJobRefPath,
-  processingJobRecordSchema,
+  processingTaskRecordSchema,
 } from 'data/processing';
 import {
   SyncJobKey,
@@ -29,7 +29,7 @@ import { addParams, localforage } from 'ui/utils';
 
 import { WEB } from 'data/web';
 import { mediaItemsResponseSchema } from 'data/media-items';
-import { processJobs } from './process-jobs';
+import { processJobs } from './process-jobs-DEPRECATED';
 
 const ONE_HOUR_IN_MS = 3600000;
 
@@ -99,7 +99,7 @@ export function handleSyncJob({
   // const [, previousJob] = previous;
 
   if (currentKey && currentJob) {
-    const isProcessing = currentJob?.stage === SyncStage.processing;
+    const isProcessing = currentJob?.stage === SyncStage.downloading;
     const isPaused = currentJob?.paused;
     const isActive = !isPaused && isProcessing;
 
@@ -118,7 +118,7 @@ export function handleSyncJob({
 }
 
 export function startSyncJob({ database, jobId, userId }: { database: Database; jobId: string; userId: string }) {
-  return updateSyncJob({ database, jobId, userId, updates: { [SyncJobKey.stage]: SyncStage.processing } });
+  return updateSyncJob({ database, jobId, userId, updates: { [SyncJobKey.stage]: SyncStage.downloading } });
 }
 
 export function updateSyncJob({
@@ -168,7 +168,7 @@ export function getQueueNextMediaItems({ database, jobId, userId }: QueueNextMed
         (acc, mediaItem) => {
           acc[
             getProcessingJobRefPath({ userId, syncJobId: jobId, jobId: mediaItem.id, stage: ProcessingStage.active })
-          ] = processingJobRecordSchema.parse({
+          ] = processingTaskRecordSchema.parse({
             ...getDefaultProcessingJob(),
             [ProcessingKey.mediaItem]: mediaItem,
           });
@@ -182,7 +182,7 @@ export function getQueueNextMediaItems({ database, jobId, userId }: QueueNextMed
           [`${syncJobRefPath}/${SyncJobKey.importedCount}`]: increment(count),
           [`${syncJobRefPath}/${SyncJobKey.previousPageToken}`]: job.nextPageToken,
           [`${syncJobRefPath}/${SyncJobKey.nextPageToken}`]: nextPageToken,
-          [`${syncJobRefPath}/${SyncJobKey.stage}`]: SyncStage.processing,
+          [`${syncJobRefPath}/${SyncJobKey.stage}`]: SyncStage.downloading,
         } as Record<string, any>
       );
 

@@ -1,0 +1,9 @@
+{
+  "name": "@quiver/post-message",
+  "packageManager": "yarn@3.2.4",
+  "main": "index.ts",
+  "dependencies": {
+    "typescript": "latest",
+    "zod": "^3.19.1"
+  }
+}

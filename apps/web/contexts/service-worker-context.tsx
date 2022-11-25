@@ -1,6 +1,5 @@
+import { ServiceWorkerMessage, parseClientMessage } from 'data/service-worker';
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
-
-import { ServiceWorkerMessage } from 'data/service-worker';
 
 interface ServiceWorkerValue {
   isLoading: boolean;
@@ -30,10 +29,13 @@ export function ServiceWorkerProvider({ children }: Props) {
   useEffect(() => {
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('/service-worker.js');
+      navigator.serviceWorker.ready.then((registration) => setRegistration(registration));
 
-      navigator.serviceWorker.ready.then((registration) => {
-        setRegistration(registration);
-      });
+      navigator.serviceWorker.addEventListener('message', handleServiceWorkerMessage);
+
+      return () => {
+        navigator.serviceWorker.removeEventListener('message', handleServiceWorkerMessage);
+      };
     }
   }, []);
 
@@ -42,4 +44,10 @@ export function ServiceWorkerProvider({ children }: Props) {
       {children}
     </ServiceWorkerContext.Provider>
   );
+}
+
+function handleServiceWorkerMessage(event: MessageEvent) {
+  const message = parseClientMessage(event.data.type, event.data);
+
+  console.log({ message });
 }

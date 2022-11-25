@@ -1,4 +1,4 @@
-import { SyncJob, SyncJobs, syncJobSchema } from 'data/sync';
+import { SyncTask, SyncTasks, syncTaskSchema } from 'data/sync';
 import { enableMapSet, immerable, produce } from 'immer';
 import { isClient, isServer } from 'ui/utils';
 
@@ -15,53 +15,53 @@ isClient &&
   });
 
 export enum LocalforageDataType {
-  SyncJobs = 'sync-jobs',
+  SyncTasks = 'sync-tasks',
 }
 
 export interface LocalforageDataTypeMapping {
-  [LocalforageDataType.SyncJobs]: SyncJobs;
+  [LocalforageDataType.SyncTasks]: SyncTasks;
 }
 
-// Sync Jobs
-export async function getSyncJob(id: string) {
-  const syncJobs = await getSyncJobs();
+// Sync Tasks
+export async function getSyncTask(id: string) {
+  const syncTasks = await getSyncTasks();
 
-  return syncJobs ? syncJobs[id] : null;
+  return syncTasks ? syncTasks[id] : null;
 }
-export async function addSyncJob(id: string, job: SyncJob) {
-  const syncJobs = await getSyncJobs();
+export async function addSyncTask(id: string, task: SyncTask) {
+  const syncTasks = await getSyncTasks();
 
-  return setSyncJobs({ ...syncJobs, [id]: job });
+  return setSyncTasks({ ...syncTasks, [id]: task });
 }
-export async function updateSyncJob(id: string, updates: Partial<SyncJob>) {
-  const syncJobs = await getSyncJobs();
-  const syncJob = syncJobs ? syncJobs[id] : null;
-  const updatedSyncJob = syncJobSchema.parse({ ...syncJob, ...updates });
+export async function updateSyncTask(id: string, updates: Partial<SyncTask>) {
+  const syncTasks = await getSyncTasks();
+  const syncTask = syncTasks ? syncTasks[id] : null;
+  const updatedSyncTask = syncTaskSchema.parse({ ...syncTask, ...updates });
 
-  await setSyncJobs({ ...syncJobs, [id]: updatedSyncJob });
+  await setSyncTasks({ ...syncTasks, [id]: updatedSyncTask });
 
-  return updatedSyncJob;
+  return updatedSyncTask;
 }
-export async function removeSyncJob(id: string) {
-  const syncJobs = await getSyncJobs();
+export async function removeSyncTask(id: string) {
+  const syncTasks = await getSyncTasks();
 
-  if (syncJobs && syncJobs[id]) {
-    const { [id]: _, ...newSyncJobs } = syncJobs;
+  if (syncTasks && syncTasks[id]) {
+    const { [id]: _, ...newSyncTasks } = syncTasks;
 
-    setSyncJobs(newSyncJobs);
+    setSyncTasks(newSyncTasks);
 
     return true;
   } else {
-    console.warn(`Could not find sync job with id ${id}`);
+    console.warn(`Could not find sync task with id ${id}`);
 
     return false;
   }
 }
-export async function clearSyncJobs() {
-  return localforage.removeItem(LocalforageDataType.SyncJobs);
+export async function clearSyncTasks() {
+  return localforage.removeItem(LocalforageDataType.SyncTasks);
 }
-const getSyncJobs = createGetter<SyncJobs | null>(LocalforageDataType.SyncJobs, null);
-const setSyncJobs = createSetter<SyncJobs>(LocalforageDataType.SyncJobs);
+const getSyncTasks = createGetter<SyncTasks | null>(LocalforageDataType.SyncTasks, null);
+const setSyncTasks = createSetter<SyncTasks>(LocalforageDataType.SyncTasks);
 
 // Create getters and setters
 function createGetter<Type>(key: string, defaultValue: Type): () => Promise<Type> {

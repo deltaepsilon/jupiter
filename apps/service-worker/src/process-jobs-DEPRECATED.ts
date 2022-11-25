@@ -6,7 +6,7 @@ import {
   ProcessingStage,
   getProcessingJobRefPath,
   getProcessingStageRefPath,
-  processingJobRecordSchema,
+  processingTaskRecordSchema,
 } from 'data/processing';
 
 interface ProcessJobsArgs {
@@ -27,7 +27,7 @@ export function processJobs({ database, limit = 1, queueNextMediaItems, syncJobI
     const jobs: ProcessingJobRecordTuple[] = val
       ? Object.entries(val).map(([key, j]) => [
           key,
-          processingJobRecordSchema.parse({
+          processingTaskRecordSchema.parse({
             [ProcessingKey.mediaItem]: j.mediaItem,
             [ProcessingKey.isActive]: j.isActive,
             [ProcessingKey.created]: new Date(j.created),

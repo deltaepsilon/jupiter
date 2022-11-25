@@ -5,11 +5,11 @@ export enum Cookie {
   refreshToken = 'refreshToken',
 }
 
-export enum SyncJobKey {
+export enum SyncTaskKey {
   accessToken = 'accessToken',
   accessTokenCreated = 'accessTokenCreated',
   refreshToken = 'refreshToken',
-  jobName = 'jobName',
+  taskName = 'taskName',
   directoryHandle = 'directoryHandle',
   directoryName = 'directoryName',
   created = 'created',
@@ -25,86 +25,86 @@ export enum SyncJobKey {
 
 export enum SyncStage {
   ready = 'ready',
-  processing = 'processing',
+  downloading = 'downloading',
 }
 
-export const syncJobSchema = z.object({
-  [SyncJobKey.accessToken]: z.string(),
-  [SyncJobKey.accessTokenCreated]: z.number(),
-  [SyncJobKey.refreshToken]: z.string(),
-  [SyncJobKey.jobName]: z.string(),
-  [SyncJobKey.directoryHandle]: z
+export const syncTaskSchema = z.object({
+  [SyncTaskKey.accessToken]: z.string(),
+  [SyncTaskKey.accessTokenCreated]: z.number(),
+  [SyncTaskKey.refreshToken]: z.string(),
+  [SyncTaskKey.taskName]: z.string(),
+  [SyncTaskKey.directoryHandle]: z
     .any()
     .refine((obj) => obj instanceof FileSystemDirectoryHandle, { message: 'Must be a FileSystemDirectoryHandle' }),
-  [SyncJobKey.fileCount]: z.number(),
-  [SyncJobKey.importedCount]: z.number(),
-  [SyncJobKey.processedCount]: z.number(),
-  [SyncJobKey.exportedCount]: z.number(),
-  [SyncJobKey.created]: z.date(),
-  [SyncJobKey.stage]: z.nativeEnum(SyncStage),
-  [SyncJobKey.paused]: z
+  [SyncTaskKey.fileCount]: z.number(),
+  [SyncTaskKey.importedCount]: z.number(),
+  [SyncTaskKey.processedCount]: z.number(),
+  [SyncTaskKey.exportedCount]: z.number(),
+  [SyncTaskKey.created]: z.date(),
+  [SyncTaskKey.stage]: z.nativeEnum(SyncStage),
+  [SyncTaskKey.paused]: z
     .boolean()
     .optional()
     .transform((val) => val ?? false),
-  [SyncJobKey.previousPageToken]: z.string().nullable().optional(),
-  [SyncJobKey.nextPageToken]: z.string().nullable().optional(),
+  [SyncTaskKey.previousPageToken]: z.string().nullable().optional(),
+  [SyncTaskKey.nextPageToken]: z.string().nullable().optional(),
 });
 
-export const syncJobRecordSchema = z.object({
-  [SyncJobKey.accessToken]: z.string(),
-  [SyncJobKey.accessTokenCreated]: z.number(),
-  [SyncJobKey.refreshToken]: z.string(),
-  [SyncJobKey.jobName]: z.string(),
-  [SyncJobKey.fileCount]: z.number(),
-  [SyncJobKey.importedCount]: z.number(),
-  [SyncJobKey.processedCount]: z.number(),
-  [SyncJobKey.exportedCount]: z.number(),
-  [SyncJobKey.directoryName]: z.string(),
-  [SyncJobKey.created]: z.string(),
-  [SyncJobKey.stage]: z.nativeEnum(SyncStage),
-  [SyncJobKey.paused]: z
+export const syncTaskRecordSchema = z.object({
+  [SyncTaskKey.accessToken]: z.string(),
+  [SyncTaskKey.accessTokenCreated]: z.number(),
+  [SyncTaskKey.refreshToken]: z.string(),
+  [SyncTaskKey.taskName]: z.string(),
+  [SyncTaskKey.fileCount]: z.number(),
+  [SyncTaskKey.importedCount]: z.number(),
+  [SyncTaskKey.processedCount]: z.number(),
+  [SyncTaskKey.exportedCount]: z.number(),
+  [SyncTaskKey.directoryName]: z.string(),
+  [SyncTaskKey.created]: z.string(),
+  [SyncTaskKey.stage]: z.nativeEnum(SyncStage),
+  [SyncTaskKey.paused]: z
     .boolean()
     .optional()
     .transform((val) => val ?? false),
-  [SyncJobKey.previousPageToken]: z.string().nullable().optional(),
-  [SyncJobKey.nextPageToken]: z.string().nullable().optional(),
+  [SyncTaskKey.previousPageToken]: z.string().nullable().optional(),
+  [SyncTaskKey.nextPageToken]: z.string().nullable().optional(),
 });
 
-export type SyncJob = z.infer<typeof syncJobSchema>;
-export type SyncJobRecord = z.infer<typeof syncJobRecordSchema>;
-export type SyncJobRecordTuple = [string | null, SyncJobRecord | null];
-export type SyncJobs = Record<string, SyncJob>;
-export type SyncJobRecords = Record<string, SyncJobRecord>;
+export type SyncTask = z.infer<typeof syncTaskSchema>;
+export type SyncTaskRecord = z.infer<typeof syncTaskRecordSchema>;
+export type SyncTaskRecordTuple = [string | null, SyncTaskRecord | null];
+export type SyncTasks = Record<string, SyncTask>;
+export type SyncTaskRecords = Record<string, SyncTaskRecord>;
 
-export function serializeSyncJob(job: SyncJob): SyncJobRecord {
-  return syncJobRecordSchema.parse({
-    ...job,
-    [SyncJobKey.created]: job.created.toISOString(),
-    [SyncJobKey.directoryName]: job.directoryHandle.name,
+export function serializeSyncTask(task: SyncTask): SyncTaskRecord {
+  return syncTaskRecordSchema.parse({
+    ...task,
+    [SyncTaskKey.created]: task.created.toISOString(),
+    [SyncTaskKey.directoryName]: task.directoryHandle.name,
   });
 }
 
-export function getSyncJobsRefPath(userId: string) {
-  return `sync-jobs/${userId}`;
+export function getSyncTasksRefPath(userId: string) {
+  return `sync-tasks/${userId}`;
 }
 
-export function getSyncJobRefPath(userId: string, jobId: string) {
-  return `${getSyncJobsRefPath(userId)}/${jobId}`;
+export function getSyncTaskRefPath({ taskId, userId }: { taskId: string; userId: string }) {
+  return `${getSyncTasksRefPath(userId)}/${taskId}`;
 }
 
-export function getDefaultSyncJob(): SyncJob {
+export function getDefaultSyncTask(): SyncTask {
   return {
-    [SyncJobKey.accessToken]: '',
-    [SyncJobKey.accessTokenCreated]: Date.now(),
-    [SyncJobKey.refreshToken]: '',
-    [SyncJobKey.jobName]: '',
-    [SyncJobKey.fileCount]: 0,
-    [SyncJobKey.importedCount]: 0,
-    [SyncJobKey.processedCount]: 0,
-    [SyncJobKey.exportedCount]: 0,
-    [SyncJobKey.created]: new Date(),
-    [SyncJobKey.stage]: SyncStage.ready,
-    [SyncJobKey.paused]: false,
-    [SyncJobKey.nextPageToken]: null,
+    [SyncTaskKey.accessToken]: '',
+    [SyncTaskKey.accessTokenCreated]: Date.now(),
+    [SyncTaskKey.refreshToken]: '',
+    [SyncTaskKey.taskName]: '',
+    [SyncTaskKey.fileCount]: 0,
+    [SyncTaskKey.importedCount]: 0,
+    [SyncTaskKey.processedCount]: 0,
+    [SyncTaskKey.exportedCount]: 0,
+    [SyncTaskKey.created]: new Date(),
+    [SyncTaskKey.stage]: SyncStage.ready,
+    [SyncTaskKey.paused]: false,
+    [SyncTaskKey.nextPageToken]: null,
   };
 }

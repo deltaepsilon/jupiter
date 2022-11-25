@@ -1,6 +1,6 @@
 import { Box, Button, Divider, TextField, Typography } from '@mui/material';
 import { MediaItems, mediaItemsResponseSchema } from 'data/media-items';
-import { SyncJob, getDefaultSyncJob, syncJobSchema } from 'data/sync';
+import { SyncTask, getDefaultSyncTask, syncTaskSchema } from 'data/sync';
 import nookies, { parseCookies } from 'nookies';
 import { useCallback, useEffect, useState } from 'react';
 
@@ -15,11 +15,11 @@ import { useLocalFilesystem } from 'ui/hooks';
 import { useRouter } from 'next/router';
 
 interface Props {
-  onSyncJobChange: (syncJob?: SyncJob) => void;
+  onSyncTaskChange: (syncTask?: SyncTask) => void;
 }
 
-export function CreateSyncJobForm({ onSyncJobChange }: Props) {
-  const [jobName, setJobName] = useState<string>(getDefaultSyncJob().jobName);
+export function CreateSyncTaskForm({ onSyncTaskChange }: Props) {
+  const [taskName, setTaskName] = useState<string>(getDefaultSyncTask().taskName);
   const { firstPage, onLibraryChangeClick, onLibraryPickerClick } = useGooglePhotos();
   const { directoryHandle, getDirectoryHandle } = useLocalFilesystem();
 
@@ -27,35 +27,35 @@ export function CreateSyncJobForm({ onSyncJobChange }: Props) {
     if (directoryHandle) {
       const { accessToken, refreshToken } = parseCookies();
       const payload = {
-        ...getDefaultSyncJob(),
-        jobName,
+        ...getDefaultSyncTask(),
+        taskName,
         accessToken,
         refreshToken,
         directoryHandle,
         created: new Date(),
       };
 
-      const parsed = syncJobSchema.safeParse(payload);
+      const parsed = syncTaskSchema.safeParse(payload);
 
       if (parsed.success) {
-        onSyncJobChange(parsed.data);
+        onSyncTaskChange(parsed.data);
       } else {
         console.info(payload, parsed.error);
-        onSyncJobChange();
+        onSyncTaskChange();
       }
     }
-  }, [directoryHandle, firstPage, jobName, onSyncJobChange]);
+  }, [directoryHandle, firstPage, taskName, onSyncTaskChange]);
 
   return (
     <>
       <Box sx={{ display: 'grid', gridGap: 16, gridTemplateColumns: ['1fr', '1fr 1fr'] }}>
         <TextField
           autoFocus
-          label='Job name'
-          onChange={(e) => setJobName(e.target.value)}
+          label='Task name'
+          onChange={(e) => setTaskName(e.target.value)}
           placeholder='Download main account'
           sx={{ gridColumn: '1/-1' }}
-          value={jobName}
+          value={taskName}
         />
 
         {firstPage ? (

@@ -6,7 +6,7 @@ export const WEB = {
   },
   DATABASE: {
     PATHS: {
-      SYNC_JOBS: (userId: string) => `sync-jobs/${userId}`,
+      SYNC_TASKS: (userId: string) => `sync-tasks/${userId}`,
     },
   },
   FIREBASE: {

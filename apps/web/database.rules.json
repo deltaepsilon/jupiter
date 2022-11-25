@@ -3,7 +3,26 @@
     "$unspecified": {
       "$userId": {
         ".read": "$userId === auth.uid",
+        ".write": "$userId === auth.uid"
+      }
+    },
+    "download-queue": {
+      "$userId": {
+        ".read": "$userId === auth.uid",
         ".write": "$userId === auth.uid",
+
+        "$taskId": {
+          "task": {
+            ".indexOn": ["state"]
+          }
+        }
+      }
+    },
+    "queue-test": {
+      "$userId": {
+        ".read": "$userId === auth.uid",
+        ".write": "$userId === auth.uid",
+
         "task": {
           ".indexOn": ["state"]
         }

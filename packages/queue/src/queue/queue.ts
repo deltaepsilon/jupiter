@@ -10,6 +10,8 @@ interface QueueArgs {
   callback: Callback;
 }
 
+export type QueueValue<Data> = ReturnType<typeof Queue<Data>>;
+
 export function Queue<Data>({ batchSize = 1, callback, ref: queueRef }: QueueArgs) {
   const metadataRef = child(queueRef, QueueKey.metadata);
   const tasksRef = child(queueRef, QueueKey.task);
