@@ -17,14 +17,16 @@
     "@emotion/styled": "^11.10.5",
     "@mui/icons-material": "^5.10.9",
     "@mui/material": "^5.10.13",
-    "@quiver/firebase-queue": "*",
     "axios": "^1.1.3",
     "googleapis": "^109.0.1",
     "next": "13.0.3",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "ui": "*"
+    "react-dom": "^18.2.0"
   },
+  "bundledDependencies": [
+    "ui",
+    "queue"
+  ],
   "devDependencies": {
     "@babel/core": "^7.20.2",
     "@types/node": "^18.11.9",
