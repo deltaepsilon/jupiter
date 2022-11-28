@@ -31,14 +31,22 @@ export default async function OAuth2(req: NextApiRequest, res: NextApiResponse) 
 
   if (isCallback) {
     const { tokens } = await oauth2Client.getToken(req.query.code as string);
+    const { access_token, refresh_token } = tokens;
 
-    setCookie({ res }, Cookie.accessToken, tokens.access_token ?? '', { maxAge: ONE_HOUR, path: '/' });
-    setCookie({ res }, Cookie.refreshToken, tokens.refresh_token ?? '', { maxAge: ONE_YEAR, path: '/' });
+    if (!access_token) {
+      throw new Error('access_token missing');
+    } else if (!refresh_token) {
+      throw new Error('refresh_token missing');
+    } else {
+      setCookie({ res }, Cookie.accessToken, access_token, { maxAge: ONE_HOUR, path: '/' });
+      setCookie({ res }, Cookie.refreshToken, refresh_token, { maxAge: ONE_YEAR, path: '/' });
 
-    typeof redirect === 'string' ? res.redirect(redirect) : res.status(200).send('OK');
+      typeof redirect === 'string' ? res.redirect(redirect) : res.status(200).send('OK');
+    }
   } else {
     const authUrl = oauth2Client.generateAuthUrl({
       access_type: 'offline',
+      prompt: 'consent',
       scope: SCOPES,
       include_granted_scopes: true,
     });

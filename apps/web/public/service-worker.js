@@ -43,6 +43,9 @@
       }
     return target;
   };
+  var __esm = (fn2, res) => function __init() {
+    return fn2 && (res = (0, fn2[__getOwnPropNames(fn2)[0]])(fn2 = 0)), res;
+  };
   var __commonJS = (cb, mod2) => function __require2() {
     return mod2 || (0, cb[__getOwnPropNames(cb)[0]])((mod2 = { exports: {} }).exports, mod2), mod2.exports;
   };
@@ -62,6 +65,7 @@
     isNodeMode || !mod2 || !mod2.__esModule ? __defProp(target, "default", { value: mod2, enumerable: true }) : target,
     mod2
   ));
+  var __toCommonJS = (mod2) => __copyProps(__defProp({}, "__esModule", { value: true }), mod2);
   var __async = (__this, __arguments, generator) => {
     return new Promise((resolve, reject) => {
       var fulfilled = (value) => {
@@ -83,14 +87,682 @@
     });
   };
 
+  // ../../node_modules/uuid/dist/esm-browser/rng.js
+  function rng() {
+    if (!getRandomValues) {
+      getRandomValues = typeof crypto !== "undefined" && crypto.getRandomValues && crypto.getRandomValues.bind(crypto) || typeof msCrypto !== "undefined" && typeof msCrypto.getRandomValues === "function" && msCrypto.getRandomValues.bind(msCrypto);
+      if (!getRandomValues) {
+        throw new Error("crypto.getRandomValues() not supported. See https://github.com/uuidjs/uuid#getrandomvalues-not-supported");
+      }
+    }
+    return getRandomValues(rnds8);
+  }
+  var getRandomValues, rnds8;
+  var init_rng = __esm({
+    "../../node_modules/uuid/dist/esm-browser/rng.js"() {
+      rnds8 = new Uint8Array(16);
+    }
+  });
+
+  // ../../node_modules/uuid/dist/esm-browser/regex.js
+  var regex_default;
+  var init_regex = __esm({
+    "../../node_modules/uuid/dist/esm-browser/regex.js"() {
+      regex_default = /^(?:[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}|00000000-0000-0000-0000-000000000000)$/i;
+    }
+  });
+
+  // ../../node_modules/uuid/dist/esm-browser/validate.js
+  function validate(uuid) {
+    return typeof uuid === "string" && regex_default.test(uuid);
+  }
+  var validate_default;
+  var init_validate = __esm({
+    "../../node_modules/uuid/dist/esm-browser/validate.js"() {
+      init_regex();
+      validate_default = validate;
+    }
+  });
+
+  // ../../node_modules/uuid/dist/esm-browser/stringify.js
+  function stringify(arr) {
+    var offset = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : 0;
+    var uuid = (byteToHex[arr[offset + 0]] + byteToHex[arr[offset + 1]] + byteToHex[arr[offset + 2]] + byteToHex[arr[offset + 3]] + "-" + byteToHex[arr[offset + 4]] + byteToHex[arr[offset + 5]] + "-" + byteToHex[arr[offset + 6]] + byteToHex[arr[offset + 7]] + "-" + byteToHex[arr[offset + 8]] + byteToHex[arr[offset + 9]] + "-" + byteToHex[arr[offset + 10]] + byteToHex[arr[offset + 11]] + byteToHex[arr[offset + 12]] + byteToHex[arr[offset + 13]] + byteToHex[arr[offset + 14]] + byteToHex[arr[offset + 15]]).toLowerCase();
+    if (!validate_default(uuid)) {
+      throw TypeError("Stringified UUID is invalid");
+    }
+    return uuid;
+  }
+  var byteToHex, i2, stringify_default;
+  var init_stringify = __esm({
+    "../../node_modules/uuid/dist/esm-browser/stringify.js"() {
+      init_validate();
+      byteToHex = [];
+      for (i2 = 0; i2 < 256; ++i2) {
+        byteToHex.push((i2 + 256).toString(16).substr(1));
+      }
+      stringify_default = stringify;
+    }
+  });
+
+  // ../../node_modules/uuid/dist/esm-browser/v1.js
+  function v1(options, buf, offset) {
+    var i2 = buf && offset || 0;
+    var b2 = buf || new Array(16);
+    options = options || {};
+    var node = options.node || _nodeId;
+    var clockseq = options.clockseq !== void 0 ? options.clockseq : _clockseq;
+    if (node == null || clockseq == null) {
+      var seedBytes = options.random || (options.rng || rng)();
+      if (node == null) {
+        node = _nodeId = [seedBytes[0] | 1, seedBytes[1], seedBytes[2], seedBytes[3], seedBytes[4], seedBytes[5]];
+      }
+      if (clockseq == null) {
+        clockseq = _clockseq = (seedBytes[6] << 8 | seedBytes[7]) & 16383;
+      }
+    }
+    var msecs = options.msecs !== void 0 ? options.msecs : Date.now();
+    var nsecs = options.nsecs !== void 0 ? options.nsecs : _lastNSecs + 1;
+    var dt = msecs - _lastMSecs + (nsecs - _lastNSecs) / 1e4;
+    if (dt < 0 && options.clockseq === void 0) {
+      clockseq = clockseq + 1 & 16383;
+    }
+    if ((dt < 0 || msecs > _lastMSecs) && options.nsecs === void 0) {
+      nsecs = 0;
+    }
+    if (nsecs >= 1e4) {
+      throw new Error("uuid.v1(): Can't create more than 10M uuids/sec");
+    }
+    _lastMSecs = msecs;
+    _lastNSecs = nsecs;
+    _clockseq = clockseq;
+    msecs += 122192928e5;
+    var tl = ((msecs & 268435455) * 1e4 + nsecs) % 4294967296;
+    b2[i2++] = tl >>> 24 & 255;
+    b2[i2++] = tl >>> 16 & 255;
+    b2[i2++] = tl >>> 8 & 255;
+    b2[i2++] = tl & 255;
+    var tmh = msecs / 4294967296 * 1e4 & 268435455;
+    b2[i2++] = tmh >>> 8 & 255;
+    b2[i2++] = tmh & 255;
+    b2[i2++] = tmh >>> 24 & 15 | 16;
+    b2[i2++] = tmh >>> 16 & 255;
+    b2[i2++] = clockseq >>> 8 | 128;
+    b2[i2++] = clockseq & 255;
+    for (var n2 = 0; n2 < 6; ++n2) {
+      b2[i2 + n2] = node[n2];
+    }
+    return buf || stringify_default(b2);
+  }
+  var _nodeId, _clockseq, _lastMSecs, _lastNSecs, v1_default;
+  var init_v1 = __esm({
+    "../../node_modules/uuid/dist/esm-browser/v1.js"() {
+      init_rng();
+      init_stringify();
+      _lastMSecs = 0;
+      _lastNSecs = 0;
+      v1_default = v1;
+    }
+  });
+
+  // ../../node_modules/uuid/dist/esm-browser/parse.js
+  function parse(uuid) {
+    if (!validate_default(uuid)) {
+      throw TypeError("Invalid UUID");
+    }
+    var v2;
+    var arr = new Uint8Array(16);
+    arr[0] = (v2 = parseInt(uuid.slice(0, 8), 16)) >>> 24;
+    arr[1] = v2 >>> 16 & 255;
+    arr[2] = v2 >>> 8 & 255;
+    arr[3] = v2 & 255;
+    arr[4] = (v2 = parseInt(uuid.slice(9, 13), 16)) >>> 8;
+    arr[5] = v2 & 255;
+    arr[6] = (v2 = parseInt(uuid.slice(14, 18), 16)) >>> 8;
+    arr[7] = v2 & 255;
+    arr[8] = (v2 = parseInt(uuid.slice(19, 23), 16)) >>> 8;
+    arr[9] = v2 & 255;
+    arr[10] = (v2 = parseInt(uuid.slice(24, 36), 16)) / 1099511627776 & 255;
+    arr[11] = v2 / 4294967296 & 255;
+    arr[12] = v2 >>> 24 & 255;
+    arr[13] = v2 >>> 16 & 255;
+    arr[14] = v2 >>> 8 & 255;
+    arr[15] = v2 & 255;
+    return arr;
+  }
+  var parse_default;
+  var init_parse = __esm({
+    "../../node_modules/uuid/dist/esm-browser/parse.js"() {
+      init_validate();
+      parse_default = parse;
+    }
+  });
+
+  // ../../node_modules/uuid/dist/esm-browser/v35.js
+  function stringToBytes(str) {
+    str = unescape(encodeURIComponent(str));
+    var bytes = [];
+    for (var i2 = 0; i2 < str.length; ++i2) {
+      bytes.push(str.charCodeAt(i2));
+    }
+    return bytes;
+  }
+  function v35_default(name5, version6, hashfunc) {
+    function generateUUID(value, namespace, buf, offset) {
+      if (typeof value === "string") {
+        value = stringToBytes(value);
+      }
+      if (typeof namespace === "string") {
+        namespace = parse_default(namespace);
+      }
+      if (namespace.length !== 16) {
+        throw TypeError("Namespace must be array-like (16 iterable integer values, 0-255)");
+      }
+      var bytes = new Uint8Array(16 + value.length);
+      bytes.set(namespace);
+      bytes.set(value, namespace.length);
+      bytes = hashfunc(bytes);
+      bytes[6] = bytes[6] & 15 | version6;
+      bytes[8] = bytes[8] & 63 | 128;
+      if (buf) {
+        offset = offset || 0;
+        for (var i2 = 0; i2 < 16; ++i2) {
+          buf[offset + i2] = bytes[i2];
+        }
+        return buf;
+      }
+      return stringify_default(bytes);
+    }
+    try {
+      generateUUID.name = name5;
+    } catch (err) {
+    }
+    generateUUID.DNS = DNS;
+    generateUUID.URL = URL2;
+    return generateUUID;
+  }
+  var DNS, URL2;
+  var init_v35 = __esm({
+    "../../node_modules/uuid/dist/esm-browser/v35.js"() {
+      init_stringify();
+      init_parse();
+      DNS = "6ba7b810-9dad-11d1-80b4-00c04fd430c8";
+      URL2 = "6ba7b811-9dad-11d1-80b4-00c04fd430c8";
+    }
+  });
+
+  // ../../node_modules/uuid/dist/esm-browser/md5.js
+  function md5(bytes) {
+    if (typeof bytes === "string") {
+      var msg = unescape(encodeURIComponent(bytes));
+      bytes = new Uint8Array(msg.length);
+      for (var i2 = 0; i2 < msg.length; ++i2) {
+        bytes[i2] = msg.charCodeAt(i2);
+      }
+    }
+    return md5ToHexEncodedArray(wordsToMd5(bytesToWords(bytes), bytes.length * 8));
+  }
+  function md5ToHexEncodedArray(input) {
+    var output = [];
+    var length32 = input.length * 32;
+    var hexTab = "0123456789abcdef";
+    for (var i2 = 0; i2 < length32; i2 += 8) {
+      var x2 = input[i2 >> 5] >>> i2 % 32 & 255;
+      var hex = parseInt(hexTab.charAt(x2 >>> 4 & 15) + hexTab.charAt(x2 & 15), 16);
+      output.push(hex);
+    }
+    return output;
+  }
+  function getOutputLength(inputLength8) {
+    return (inputLength8 + 64 >>> 9 << 4) + 14 + 1;
+  }
+  function wordsToMd5(x2, len) {
+    x2[len >> 5] |= 128 << len % 32;
+    x2[getOutputLength(len) - 1] = len;
+    var a2 = 1732584193;
+    var b2 = -271733879;
+    var c2 = -1732584194;
+    var d2 = 271733878;
+    for (var i2 = 0; i2 < x2.length; i2 += 16) {
+      var olda = a2;
+      var oldb = b2;
+      var oldc = c2;
+      var oldd = d2;
+      a2 = md5ff(a2, b2, c2, d2, x2[i2], 7, -680876936);
+      d2 = md5ff(d2, a2, b2, c2, x2[i2 + 1], 12, -389564586);
+      c2 = md5ff(c2, d2, a2, b2, x2[i2 + 2], 17, 606105819);
+      b2 = md5ff(b2, c2, d2, a2, x2[i2 + 3], 22, -1044525330);
+      a2 = md5ff(a2, b2, c2, d2, x2[i2 + 4], 7, -176418897);
+      d2 = md5ff(d2, a2, b2, c2, x2[i2 + 5], 12, 1200080426);
+      c2 = md5ff(c2, d2, a2, b2, x2[i2 + 6], 17, -1473231341);
+      b2 = md5ff(b2, c2, d2, a2, x2[i2 + 7], 22, -45705983);
+      a2 = md5ff(a2, b2, c2, d2, x2[i2 + 8], 7, 1770035416);
+      d2 = md5ff(d2, a2, b2, c2, x2[i2 + 9], 12, -1958414417);
+      c2 = md5ff(c2, d2, a2, b2, x2[i2 + 10], 17, -42063);
+      b2 = md5ff(b2, c2, d2, a2, x2[i2 + 11], 22, -1990404162);
+      a2 = md5ff(a2, b2, c2, d2, x2[i2 + 12], 7, 1804603682);
+      d2 = md5ff(d2, a2, b2, c2, x2[i2 + 13], 12, -40341101);
+      c2 = md5ff(c2, d2, a2, b2, x2[i2 + 14], 17, -1502002290);
+      b2 = md5ff(b2, c2, d2, a2, x2[i2 + 15], 22, 1236535329);
+      a2 = md5gg(a2, b2, c2, d2, x2[i2 + 1], 5, -165796510);
+      d2 = md5gg(d2, a2, b2, c2, x2[i2 + 6], 9, -1069501632);
+      c2 = md5gg(c2, d2, a2, b2, x2[i2 + 11], 14, 643717713);
+      b2 = md5gg(b2, c2, d2, a2, x2[i2], 20, -373897302);
+      a2 = md5gg(a2, b2, c2, d2, x2[i2 + 5], 5, -701558691);
+      d2 = md5gg(d2, a2, b2, c2, x2[i2 + 10], 9, 38016083);
+      c2 = md5gg(c2, d2, a2, b2, x2[i2 + 15], 14, -660478335);
+      b2 = md5gg(b2, c2, d2, a2, x2[i2 + 4], 20, -405537848);
+      a2 = md5gg(a2, b2, c2, d2, x2[i2 + 9], 5, 568446438);
+      d2 = md5gg(d2, a2, b2, c2, x2[i2 + 14], 9, -1019803690);
+      c2 = md5gg(c2, d2, a2, b2, x2[i2 + 3], 14, -187363961);
+      b2 = md5gg(b2, c2, d2, a2, x2[i2 + 8], 20, 1163531501);
+      a2 = md5gg(a2, b2, c2, d2, x2[i2 + 13], 5, -1444681467);
+      d2 = md5gg(d2, a2, b2, c2, x2[i2 + 2], 9, -51403784);
+      c2 = md5gg(c2, d2, a2, b2, x2[i2 + 7], 14, 1735328473);
+      b2 = md5gg(b2, c2, d2, a2, x2[i2 + 12], 20, -1926607734);
+      a2 = md5hh(a2, b2, c2, d2, x2[i2 + 5], 4, -378558);
+      d2 = md5hh(d2, a2, b2, c2, x2[i2 + 8], 11, -2022574463);
+      c2 = md5hh(c2, d2, a2, b2, x2[i2 + 11], 16, 1839030562);
+      b2 = md5hh(b2, c2, d2, a2, x2[i2 + 14], 23, -35309556);
+      a2 = md5hh(a2, b2, c2, d2, x2[i2 + 1], 4, -1530992060);
+      d2 = md5hh(d2, a2, b2, c2, x2[i2 + 4], 11, 1272893353);
+      c2 = md5hh(c2, d2, a2, b2, x2[i2 + 7], 16, -155497632);
+      b2 = md5hh(b2, c2, d2, a2, x2[i2 + 10], 23, -1094730640);
+      a2 = md5hh(a2, b2, c2, d2, x2[i2 + 13], 4, 681279174);
+      d2 = md5hh(d2, a2, b2, c2, x2[i2], 11, -358537222);
+      c2 = md5hh(c2, d2, a2, b2, x2[i2 + 3], 16, -722521979);
+      b2 = md5hh(b2, c2, d2, a2, x2[i2 + 6], 23, 76029189);
+      a2 = md5hh(a2, b2, c2, d2, x2[i2 + 9], 4, -640364487);
+      d2 = md5hh(d2, a2, b2, c2, x2[i2 + 12], 11, -421815835);
+      c2 = md5hh(c2, d2, a2, b2, x2[i2 + 15], 16, 530742520);
+      b2 = md5hh(b2, c2, d2, a2, x2[i2 + 2], 23, -995338651);
+      a2 = md5ii(a2, b2, c2, d2, x2[i2], 6, -198630844);
+      d2 = md5ii(d2, a2, b2, c2, x2[i2 + 7], 10, 1126891415);
+      c2 = md5ii(c2, d2, a2, b2, x2[i2 + 14], 15, -1416354905);
+      b2 = md5ii(b2, c2, d2, a2, x2[i2 + 5], 21, -57434055);
+      a2 = md5ii(a2, b2, c2, d2, x2[i2 + 12], 6, 1700485571);
+      d2 = md5ii(d2, a2, b2, c2, x2[i2 + 3], 10, -1894986606);
+      c2 = md5ii(c2, d2, a2, b2, x2[i2 + 10], 15, -1051523);
+      b2 = md5ii(b2, c2, d2, a2, x2[i2 + 1], 21, -2054922799);
+      a2 = md5ii(a2, b2, c2, d2, x2[i2 + 8], 6, 1873313359);
+      d2 = md5ii(d2, a2, b2, c2, x2[i2 + 15], 10, -30611744);
+      c2 = md5ii(c2, d2, a2, b2, x2[i2 + 6], 15, -1560198380);
+      b2 = md5ii(b2, c2, d2, a2, x2[i2 + 13], 21, 1309151649);
+      a2 = md5ii(a2, b2, c2, d2, x2[i2 + 4], 6, -145523070);
+      d2 = md5ii(d2, a2, b2, c2, x2[i2 + 11], 10, -1120210379);
+      c2 = md5ii(c2, d2, a2, b2, x2[i2 + 2], 15, 718787259);
+      b2 = md5ii(b2, c2, d2, a2, x2[i2 + 9], 21, -343485551);
+      a2 = safeAdd(a2, olda);
+      b2 = safeAdd(b2, oldb);
+      c2 = safeAdd(c2, oldc);
+      d2 = safeAdd(d2, oldd);
+    }
+    return [a2, b2, c2, d2];
+  }
+  function bytesToWords(input) {
+    if (input.length === 0) {
+      return [];
+    }
+    var length8 = input.length * 8;
+    var output = new Uint32Array(getOutputLength(length8));
+    for (var i2 = 0; i2 < length8; i2 += 8) {
+      output[i2 >> 5] |= (input[i2 / 8] & 255) << i2 % 32;
+    }
+    return output;
+  }
+  function safeAdd(x2, y2) {
+    var lsw = (x2 & 65535) + (y2 & 65535);
+    var msw = (x2 >> 16) + (y2 >> 16) + (lsw >> 16);
+    return msw << 16 | lsw & 65535;
+  }
+  function bitRotateLeft(num, cnt) {
+    return num << cnt | num >>> 32 - cnt;
+  }
+  function md5cmn(q2, a2, b2, x2, s2, t2) {
+    return safeAdd(bitRotateLeft(safeAdd(safeAdd(a2, q2), safeAdd(x2, t2)), s2), b2);
+  }
+  function md5ff(a2, b2, c2, d2, x2, s2, t2) {
+    return md5cmn(b2 & c2 | ~b2 & d2, a2, b2, x2, s2, t2);
+  }
+  function md5gg(a2, b2, c2, d2, x2, s2, t2) {
+    return md5cmn(b2 & d2 | c2 & ~d2, a2, b2, x2, s2, t2);
+  }
+  function md5hh(a2, b2, c2, d2, x2, s2, t2) {
+    return md5cmn(b2 ^ c2 ^ d2, a2, b2, x2, s2, t2);
+  }
+  function md5ii(a2, b2, c2, d2, x2, s2, t2) {
+    return md5cmn(c2 ^ (b2 | ~d2), a2, b2, x2, s2, t2);
+  }
+  var md5_default;
+  var init_md5 = __esm({
+    "../../node_modules/uuid/dist/esm-browser/md5.js"() {
+      md5_default = md5;
+    }
+  });
+
+  // ../../node_modules/uuid/dist/esm-browser/v3.js
+  var v3, v3_default;
+  var init_v3 = __esm({
+    "../../node_modules/uuid/dist/esm-browser/v3.js"() {
+      init_v35();
+      init_md5();
+      v3 = v35_default("v3", 48, md5_default);
+      v3_default = v3;
+    }
+  });
+
+  // ../../node_modules/uuid/dist/esm-browser/v4.js
+  function v4(options, buf, offset) {
+    options = options || {};
+    var rnds = options.random || (options.rng || rng)();
+    rnds[6] = rnds[6] & 15 | 64;
+    rnds[8] = rnds[8] & 63 | 128;
+    if (buf) {
+      offset = offset || 0;
+      for (var i2 = 0; i2 < 16; ++i2) {
+        buf[offset + i2] = rnds[i2];
+      }
+      return buf;
+    }
+    return stringify_default(rnds);
+  }
+  var v4_default;
+  var init_v4 = __esm({
+    "../../node_modules/uuid/dist/esm-browser/v4.js"() {
+      init_rng();
+      init_stringify();
+      v4_default = v4;
+    }
+  });
+
+  // ../../node_modules/uuid/dist/esm-browser/sha1.js
+  function f(s2, x2, y2, z2) {
+    switch (s2) {
+      case 0:
+        return x2 & y2 ^ ~x2 & z2;
+      case 1:
+        return x2 ^ y2 ^ z2;
+      case 2:
+        return x2 & y2 ^ x2 & z2 ^ y2 & z2;
+      case 3:
+        return x2 ^ y2 ^ z2;
+    }
+  }
+  function ROTL(x2, n2) {
+    return x2 << n2 | x2 >>> 32 - n2;
+  }
+  function sha1(bytes) {
+    var K = [1518500249, 1859775393, 2400959708, 3395469782];
+    var H2 = [1732584193, 4023233417, 2562383102, 271733878, 3285377520];
+    if (typeof bytes === "string") {
+      var msg = unescape(encodeURIComponent(bytes));
+      bytes = [];
+      for (var i2 = 0; i2 < msg.length; ++i2) {
+        bytes.push(msg.charCodeAt(i2));
+      }
+    } else if (!Array.isArray(bytes)) {
+      bytes = Array.prototype.slice.call(bytes);
+    }
+    bytes.push(128);
+    var l2 = bytes.length / 4 + 2;
+    var N = Math.ceil(l2 / 16);
+    var M2 = new Array(N);
+    for (var _i = 0; _i < N; ++_i) {
+      var arr = new Uint32Array(16);
+      for (var j2 = 0; j2 < 16; ++j2) {
+        arr[j2] = bytes[_i * 64 + j2 * 4] << 24 | bytes[_i * 64 + j2 * 4 + 1] << 16 | bytes[_i * 64 + j2 * 4 + 2] << 8 | bytes[_i * 64 + j2 * 4 + 3];
+      }
+      M2[_i] = arr;
+    }
+    M2[N - 1][14] = (bytes.length - 1) * 8 / Math.pow(2, 32);
+    M2[N - 1][14] = Math.floor(M2[N - 1][14]);
+    M2[N - 1][15] = (bytes.length - 1) * 8 & 4294967295;
+    for (var _i2 = 0; _i2 < N; ++_i2) {
+      var W2 = new Uint32Array(80);
+      for (var t2 = 0; t2 < 16; ++t2) {
+        W2[t2] = M2[_i2][t2];
+      }
+      for (var _t = 16; _t < 80; ++_t) {
+        W2[_t] = ROTL(W2[_t - 3] ^ W2[_t - 8] ^ W2[_t - 14] ^ W2[_t - 16], 1);
+      }
+      var a2 = H2[0];
+      var b2 = H2[1];
+      var c2 = H2[2];
+      var d2 = H2[3];
+      var e = H2[4];
+      for (var _t2 = 0; _t2 < 80; ++_t2) {
+        var s2 = Math.floor(_t2 / 20);
+        var T = ROTL(a2, 5) + f(s2, b2, c2, d2) + e + K[s2] + W2[_t2] >>> 0;
+        e = d2;
+        d2 = c2;
+        c2 = ROTL(b2, 30) >>> 0;
+        b2 = a2;
+        a2 = T;
+      }
+      H2[0] = H2[0] + a2 >>> 0;
+      H2[1] = H2[1] + b2 >>> 0;
+      H2[2] = H2[2] + c2 >>> 0;
+      H2[3] = H2[3] + d2 >>> 0;
+      H2[4] = H2[4] + e >>> 0;
+    }
+    return [H2[0] >> 24 & 255, H2[0] >> 16 & 255, H2[0] >> 8 & 255, H2[0] & 255, H2[1] >> 24 & 255, H2[1] >> 16 & 255, H2[1] >> 8 & 255, H2[1] & 255, H2[2] >> 24 & 255, H2[2] >> 16 & 255, H2[2] >> 8 & 255, H2[2] & 255, H2[3] >> 24 & 255, H2[3] >> 16 & 255, H2[3] >> 8 & 255, H2[3] & 255, H2[4] >> 24 & 255, H2[4] >> 16 & 255, H2[4] >> 8 & 255, H2[4] & 255];
+  }
+  var sha1_default;
+  var init_sha1 = __esm({
+    "../../node_modules/uuid/dist/esm-browser/sha1.js"() {
+      sha1_default = sha1;
+    }
+  });
+
+  // ../../node_modules/uuid/dist/esm-browser/v5.js
+  var v5, v5_default;
+  var init_v5 = __esm({
+    "../../node_modules/uuid/dist/esm-browser/v5.js"() {
+      init_v35();
+      init_sha1();
+      v5 = v35_default("v5", 80, sha1_default);
+      v5_default = v5;
+    }
+  });
+
+  // ../../node_modules/uuid/dist/esm-browser/nil.js
+  var nil_default;
+  var init_nil = __esm({
+    "../../node_modules/uuid/dist/esm-browser/nil.js"() {
+      nil_default = "00000000-0000-0000-0000-000000000000";
+    }
+  });
+
+  // ../../node_modules/uuid/dist/esm-browser/version.js
+  function version(uuid) {
+    if (!validate_default(uuid)) {
+      throw TypeError("Invalid UUID");
+    }
+    return parseInt(uuid.substr(14, 1), 16);
+  }
+  var version_default;
+  var init_version = __esm({
+    "../../node_modules/uuid/dist/esm-browser/version.js"() {
+      init_validate();
+      version_default = version;
+    }
+  });
+
+  // ../../node_modules/uuid/dist/esm-browser/index.js
+  var esm_browser_exports = {};
+  __export(esm_browser_exports, {
+    NIL: () => nil_default,
+    parse: () => parse_default,
+    stringify: () => stringify_default,
+    v1: () => v1_default,
+    v3: () => v3_default,
+    v4: () => v4_default,
+    v5: () => v5_default,
+    validate: () => validate_default,
+    version: () => version_default
+  });
+  var init_esm_browser = __esm({
+    "../../node_modules/uuid/dist/esm-browser/index.js"() {
+      init_v1();
+      init_v3();
+      init_v4();
+      init_v5();
+      init_nil();
+      init_version();
+      init_validate();
+      init_stringify();
+      init_parse();
+    }
+  });
+
+  // ../../node_modules/any-base/src/converter.js
+  var require_converter = __commonJS({
+    "../../node_modules/any-base/src/converter.js"(exports, module) {
+      "use strict";
+      function Converter(srcAlphabet, dstAlphabet) {
+        if (!srcAlphabet || !dstAlphabet || !srcAlphabet.length || !dstAlphabet.length) {
+          throw new Error("Bad alphabet");
+        }
+        this.srcAlphabet = srcAlphabet;
+        this.dstAlphabet = dstAlphabet;
+      }
+      Converter.prototype.convert = function(number) {
+        var i2, divide, newlen, numberMap = {}, fromBase = this.srcAlphabet.length, toBase = this.dstAlphabet.length, length = number.length, result = typeof number === "string" ? "" : [];
+        if (!this.isValid(number)) {
+          throw new Error('Number "' + number + '" contains of non-alphabetic digits (' + this.srcAlphabet + ")");
+        }
+        if (this.srcAlphabet === this.dstAlphabet) {
+          return number;
+        }
+        for (i2 = 0; i2 < length; i2++) {
+          numberMap[i2] = this.srcAlphabet.indexOf(number[i2]);
+        }
+        do {
+          divide = 0;
+          newlen = 0;
+          for (i2 = 0; i2 < length; i2++) {
+            divide = divide * fromBase + numberMap[i2];
+            if (divide >= toBase) {
+              numberMap[newlen++] = parseInt(divide / toBase, 10);
+              divide = divide % toBase;
+            } else if (newlen > 0) {
+              numberMap[newlen++] = 0;
+            }
+          }
+          length = newlen;
+          result = this.dstAlphabet.slice(divide, divide + 1).concat(result);
+        } while (newlen !== 0);
+        return result;
+      };
+      Converter.prototype.isValid = function(number) {
+        var i2 = 0;
+        for (; i2 < number.length; ++i2) {
+          if (this.srcAlphabet.indexOf(number[i2]) === -1) {
+            return false;
+          }
+        }
+        return true;
+      };
+      module.exports = Converter;
+    }
+  });
+
+  // ../../node_modules/any-base/index.js
+  var require_any_base = __commonJS({
+    "../../node_modules/any-base/index.js"(exports, module) {
+      var Converter = require_converter();
+      function anyBase(srcAlphabet, dstAlphabet) {
+        var converter = new Converter(srcAlphabet, dstAlphabet);
+        return function(number) {
+          return converter.convert(number);
+        };
+      }
+      anyBase.BIN = "01";
+      anyBase.OCT = "01234567";
+      anyBase.DEC = "0123456789";
+      anyBase.HEX = "0123456789abcdef";
+      module.exports = anyBase;
+    }
+  });
+
+  // ../../node_modules/short-uuid/index.js
+  var require_short_uuid = __commonJS({
+    "../../node_modules/short-uuid/index.js"(exports, module) {
+      var { v4: uuidv4 } = (init_esm_browser(), __toCommonJS(esm_browser_exports));
+      var anyBase = require_any_base();
+      var flickrBase58 = "123456789abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ";
+      var cookieBase90 = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!#$%&'()*+-./:<=>?@[]^_`{|}~";
+      var baseOptions = {
+        consistentLength: true
+      };
+      var toFlickr;
+      var shortenUUID = (longId, translator, paddingParams) => {
+        const translated = translator(longId.toLowerCase().replace(/-/g, ""));
+        if (!paddingParams || !paddingParams.consistentLength)
+          return translated;
+        return translated.padStart(
+          paddingParams.shortIdLength,
+          paddingParams.paddingChar
+        );
+      };
+      var enlargeUUID = (shortId, translator) => {
+        const uu1 = translator(shortId).padStart(32, "0");
+        const m2 = uu1.match(/(\w{8})(\w{4})(\w{4})(\w{4})(\w{12})/);
+        return [m2[1], m2[2], m2[3], m2[4], m2[5]].join("-");
+      };
+      var getShortIdLength = (alphabetLength) => Math.ceil(Math.log(2 ** 128) / Math.log(alphabetLength));
+      module.exports = (() => {
+        const makeConvertor = (toAlphabet, options) => {
+          const useAlphabet = toAlphabet || flickrBase58;
+          const selectedOptions = { ...baseOptions, ...options };
+          if ([...new Set(Array.from(useAlphabet))].length !== useAlphabet.length) {
+            throw new Error("The provided Alphabet has duplicate characters resulting in unreliable results");
+          }
+          const shortIdLength = getShortIdLength(useAlphabet.length);
+          const paddingParams = {
+            shortIdLength,
+            consistentLength: selectedOptions.consistentLength,
+            paddingChar: useAlphabet[0]
+          };
+          const fromHex = anyBase(anyBase.HEX, useAlphabet);
+          const toHex = anyBase(useAlphabet, anyBase.HEX);
+          const generate = () => shortenUUID(uuidv4(), fromHex, paddingParams);
+          const translator = {
+            new: generate,
+            generate,
+            uuid: uuidv4,
+            fromUUID: (uuid) => shortenUUID(uuid, fromHex, paddingParams),
+            toUUID: (shortUuid) => enlargeUUID(shortUuid, toHex),
+            alphabet: useAlphabet,
+            maxLength: shortIdLength
+          };
+          Object.freeze(translator);
+          return translator;
+        };
+        makeConvertor.constants = {
+          flickrBase58,
+          cookieBase90
+        };
+        makeConvertor.uuid = uuidv4;
+        makeConvertor.generate = () => {
+          if (!toFlickr) {
+            toFlickr = makeConvertor(flickrBase58).generate;
+          }
+          return toFlickr();
+        };
+        return makeConvertor;
+      })();
+    }
+  });
+
   // ../../node_modules/localforage/dist/localforage.js
   var require_localforage = __commonJS({
     "../../node_modules/localforage/dist/localforage.js"(exports, module) {
-      (function(f2) {
+      (function(f3) {
         if (typeof exports === "object" && typeof module !== "undefined") {
-          module.exports = f2();
+          module.exports = f3();
         } else if (typeof define === "function" && define.amd) {
-          define([], f2);
+          define([], f3);
         } else {
           var g2;
           if (typeof window !== "undefined") {
@@ -102,7 +774,7 @@
           } else {
             g2 = this;
           }
-          g2.localforage = f2();
+          g2.localforage = f3();
         }
       })(function() {
         var define2, module2, exports2;
@@ -115,8 +787,8 @@
                   return a2(o3, true);
                 if (i2)
                   return i2(o3, true);
-                var f2 = new Error("Cannot find module '" + o3 + "'");
-                throw f2.code = "MODULE_NOT_FOUND", f2;
+                var f3 = new Error("Cannot find module '" + o3 + "'");
+                throw f3.code = "MODULE_NOT_FOUND", f3;
               }
               var l2 = n2[o3] = { exports: {} };
               t2[o3][0].call(l2.exports, function(e2) {
@@ -2360,7 +3032,7 @@
             if (t2[0] & 1)
               throw t2[1];
             return t2[1];
-          }, trys: [], ops: [] }, f2, y2, t2, g2;
+          }, trys: [], ops: [] }, f3, y2, t2, g2;
           return g2 = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g2[Symbol.iterator] = function() {
             return this;
           }), g2;
@@ -2370,11 +3042,11 @@
             };
           }
           function step(op) {
-            if (f2)
+            if (f3)
               throw new TypeError("Generator is already executing.");
             while (g2 && (g2 = 0, op[0] && (_2 = 0)), _2)
               try {
-                if (f2 = 1, y2 && (t2 = op[0] & 2 ? y2["return"] : op[0] ? y2["throw"] || ((t2 = y2["return"]) && t2.call(y2), 0) : y2.next) && !(t2 = t2.call(y2, op[1])).done)
+                if (f3 = 1, y2 && (t2 = op[0] & 2 ? y2["return"] : op[0] ? y2["throw"] || ((t2 = y2["return"]) && t2.call(y2), 0) : y2.next) && !(t2 = t2.call(y2, op[1])).done)
                   return t2;
                 if (y2 = 0, t2)
                   op = [op[0] & 2, t2.value];
@@ -2424,7 +3096,7 @@
                 op = [6, e];
                 y2 = 0;
               } finally {
-                f2 = t2 = 0;
+                f3 = t2 = 0;
               }
             if (op[0] & 5)
               throw op[1];
@@ -2544,8 +3216,8 @@
           function reject(value) {
             resume("throw", value);
           }
-          function settle(f2, v2) {
-            if (f2(v2), q2.shift(), q2.length)
+          function settle(f3, v2) {
+            if (f3(v2), q2.shift(), q2.length)
               resume(q2[0][0], q2[0][1]);
           }
         };
@@ -2556,10 +3228,10 @@
           }), verb("return"), i2[Symbol.iterator] = function() {
             return this;
           }, i2;
-          function verb(n2, f2) {
+          function verb(n2, f3) {
             i2[n2] = o2[n2] ? function(v2) {
-              return (p2 = !p2) ? { value: __await2(o2[n2](v2)), done: n2 === "return" } : f2 ? f2(v2) : v2;
-            } : f2;
+              return (p2 = !p2) ? { value: __await2(o2[n2](v2)), done: n2 === "return" } : f3 ? f3(v2) : v2;
+            } : f3;
           }
         };
         __asyncValues2 = function(o2) {
@@ -2577,8 +3249,8 @@
             };
           }
           function settle(resolve, reject, d2, v2) {
-            Promise.resolve(v2).then(function(v3) {
-              resolve({ value: v3, done: d2 });
+            Promise.resolve(v2).then(function(v6) {
+              resolve({ value: v6, done: d2 });
             }, reject);
           }
         };
@@ -2610,21 +3282,21 @@
         __importDefault2 = function(mod2) {
           return mod2 && mod2.__esModule ? mod2 : { "default": mod2 };
         };
-        __classPrivateFieldGet2 = function(receiver, state, kind, f2) {
-          if (kind === "a" && !f2)
+        __classPrivateFieldGet2 = function(receiver, state, kind, f3) {
+          if (kind === "a" && !f3)
             throw new TypeError("Private accessor was defined without a getter");
-          if (typeof state === "function" ? receiver !== state || !f2 : !state.has(receiver))
+          if (typeof state === "function" ? receiver !== state || !f3 : !state.has(receiver))
             throw new TypeError("Cannot read private member from an object whose class did not declare it");
-          return kind === "m" ? f2 : kind === "a" ? f2.call(receiver) : f2 ? f2.value : state.get(receiver);
+          return kind === "m" ? f3 : kind === "a" ? f3.call(receiver) : f3 ? f3.value : state.get(receiver);
         };
-        __classPrivateFieldSet2 = function(receiver, state, value, kind, f2) {
+        __classPrivateFieldSet2 = function(receiver, state, value, kind, f3) {
           if (kind === "m")
             throw new TypeError("Private method is not writable");
-          if (kind === "a" && !f2)
+          if (kind === "a" && !f3)
             throw new TypeError("Private accessor was defined without a setter");
-          if (typeof state === "function" ? receiver !== state || !f2 : !state.has(receiver))
+          if (typeof state === "function" ? receiver !== state || !f3 : !state.has(receiver))
             throw new TypeError("Cannot write private member to an object whose class did not declare it");
-          return kind === "a" ? f2.call(receiver, value) : f2 ? f2.value = value : state.set(receiver, value), value;
+          return kind === "a" ? f3.call(receiver, value) : f3 ? f3.value = value : state.set(receiver, value), value;
         };
         __classPrivateFieldIn2 = function(state, receiver) {
           if (receiver === null || typeof receiver !== "object" && typeof receiver !== "function")
@@ -2659,6 +3331,9 @@
       });
     }
   });
+
+  // ../../packages/post-message/src/schema.ts
+  var import_short_uuid = __toESM(require_short_uuid());
 
   // ../../node_modules/zod/lib/index.mjs
   var util;
@@ -5582,36 +6257,122 @@
     ZodError
   });
 
+  // ../../packages/post-message/src/schema.ts
+  var payloadSchema = mod.object({ error: mod.string().optional(), data: mod.any().optional() });
+  var postMessageSchema = mod.object({
+    uuid: mod.string().default(() => import_short_uuid.default.uuid()),
+    success: mod.boolean().default(true),
+    payload: payloadSchema
+  });
+  function getMessage({ payload, success, uuid }) {
+    return postMessageSchema.parse({ payload, success, uuid });
+  }
+
+  // ../../packages/post-message/src/worker-client.ts
+  var NATIVE_EVENT_TYPES = /* @__PURE__ */ new Set(["ping", "keyChanged"]);
+  function initWorkerClient() {
+    const pendingMessages = /* @__PURE__ */ new Map();
+    function listener(event) {
+      const parsed = postMessageSchema.safeParse(event.data);
+      const isNativeMessage = NATIVE_EVENT_TYPES.has(event.data.eventType);
+      if (isNativeMessage) {
+      } else if (parsed.success) {
+        const { uuid } = parsed.data;
+        const handler = pendingMessages.get(uuid);
+        if (handler) {
+          pendingMessages.delete(uuid);
+          handler(parsed.data);
+        }
+      } else {
+        console.warn("event failed to parse", event);
+        console.error(parsed.error);
+        throw new Error("Invalid message");
+      }
+    }
+    function unsubscribe() {
+      self.removeEventListener("message", listener);
+    }
+    self.addEventListener("message", listener);
+    async function sendMessageToClients2({
+      expectResult,
+      payload,
+      success,
+      ttlSeconds = 10,
+      uuid
+    }) {
+      const message = getMessage({ payload, success, uuid });
+      const clients = await self.clients.matchAll();
+      clients.forEach((client) => {
+        client.postMessage(message);
+      });
+      return expectResult ? new Promise((resolve, reject) => {
+        let timedOut = false;
+        const timer = setTimeout(() => {
+          timedOut = true;
+          reject(`Timeout of ${ttlSeconds} seconds exceeded`);
+        }, ttlSeconds * 1e3);
+        pendingMessages.set(message.uuid, function handler(message2) {
+          if (timedOut) {
+            const { payload: payload2, success: success2 } = message2;
+            clearTimeout(timer);
+            success2 ? resolve(payload2) : reject(payload2);
+          }
+        });
+      }) : Promise.resolve({ data: { success: true } });
+    }
+    return { sendMessageToClients: sendMessageToClients2, unsubscribe };
+  }
+
   // ../../packages/data/service-worker.ts
-  var SyncTaskAction = /* @__PURE__ */ ((SyncTaskAction2) => {
-    SyncTaskAction2["status"] = "status";
-    SyncTaskAction2["start"] = "start";
-    SyncTaskAction2["stop"] = "stop";
-    SyncTaskAction2["empty"] = "empty";
-    SyncTaskAction2["requeue"] = "requeue";
-    SyncTaskAction2["getRefs"] = "getRefs";
-    return SyncTaskAction2;
-  })(SyncTaskAction || {});
-  var syncTaskMessageSchema = mod.object({
+  var ackMessageSchema = mod.boolean();
+  var syncStatusMessageSchema = mod.object({
     taskId: mod.string(),
-    action: mod.nativeEnum(SyncTaskAction),
-    type: mod.enum(["syncTask" /* syncTask */])
+    isActive: mod.boolean().optional()
   });
-  var syncTaskStatusMessageSchema = mod.object({
-    isActive: mod.boolean(),
-    type: mod.enum(["syncTaskStatus" /* syncTaskStatus */])
-  });
-  var queueRefsMessageSchema = mod.object({
+  var syncGetRefsMessageSchema = mod.object({
     metadataRefPath: mod.string(),
-    tasksRefPath: mod.string(),
-    type: mod.enum(["queueRefs" /* queueRefs */])
+    tasksRefPath: mod.string()
   });
-  function parseSwMessage(type, message) {
-    switch (type) {
-      case "syncTask" /* syncTask */:
-        return syncTaskMessageSchema.parse(message);
+  var syncTaskMessageSchema = mod.object({
+    taskId: mod.string()
+  });
+  var MessageAction = /* @__PURE__ */ ((MessageAction2) => {
+    MessageAction2["ack"] = "ack";
+    MessageAction2["syncStatus"] = "syncStatus";
+    MessageAction2["syncStart"] = "syncStart";
+    MessageAction2["syncStop"] = "syncStop";
+    MessageAction2["syncEmpty"] = "syncEmpty";
+    MessageAction2["syncRequeue"] = "syncRequeue";
+    MessageAction2["syncGetRefs"] = "syncGetRefs";
+    MessageAction2["syncTaskStatus"] = "syncTaskStatus";
+    MessageAction2["syncQueueRefs"] = "syncQueueRefs";
+    return MessageAction2;
+  })(MessageAction || {});
+  function encodePostMessage({ action, data, error: error2, uuid }) {
+    const payload = { error: error2, data: { action, ...data } };
+    return postMessageSchema.parse({
+      payload,
+      success: !error2,
+      uuid
+    });
+  }
+  var messageActionSchema = mod.nativeEnum(MessageAction);
+  function decodePostMessage(message) {
+    const { payload, uuid } = postMessageSchema.parse(message);
+    const { data, error: error2 } = payload;
+    const action = messageActionSchema.parse(data.action);
+    switch (action) {
+      case "syncStatus" /* syncStatus */:
+        return { action, data: syncStatusMessageSchema.parse(data), error: error2, uuid };
+      case "syncGetRefs" /* syncGetRefs */:
+        return { action, data: syncGetRefsMessageSchema.parse(data), error: error2, uuid };
+      case "syncStart" /* syncStart */:
+      case "syncStop" /* syncStop */:
+      case "syncEmpty" /* syncEmpty */:
+      case "syncRequeue" /* syncRequeue */:
+        return { action, data: syncTaskMessageSchema.parse(data), error: error2, uuid };
       default:
-        return false;
+        return { action, data: false, error: error2, uuid };
     }
   }
 
@@ -6054,7 +6815,7 @@
   function jsonEval(str) {
     return JSON.parse(str);
   }
-  function stringify(data) {
+  function stringify2(data) {
     return JSON.stringify(data);
   }
   var decode = function(token) {
@@ -6221,26 +6982,26 @@
       let c2 = this.chain_[2];
       let d2 = this.chain_[3];
       let e = this.chain_[4];
-      let f2, k2;
+      let f3, k2;
       for (let i2 = 0; i2 < 80; i2++) {
         if (i2 < 40) {
           if (i2 < 20) {
-            f2 = d2 ^ b2 & (c2 ^ d2);
+            f3 = d2 ^ b2 & (c2 ^ d2);
             k2 = 1518500249;
           } else {
-            f2 = b2 ^ c2 ^ d2;
+            f3 = b2 ^ c2 ^ d2;
             k2 = 1859775393;
           }
         } else {
           if (i2 < 60) {
-            f2 = b2 & c2 | d2 & (b2 | c2);
+            f3 = b2 & c2 | d2 & (b2 | c2);
             k2 = 2400959708;
           } else {
-            f2 = b2 ^ c2 ^ d2;
+            f3 = b2 ^ c2 ^ d2;
             k2 = 3395469782;
           }
         }
-        const t2 = (a2 << 5 | a2 >>> 27) + f2 + e + k2 + W2[i2] & 4294967295;
+        const t2 = (a2 << 5 | a2 >>> 27) + f3 + e + k2 + W2[i2] & 4294967295;
         e = d2;
         d2 = c2;
         c2 = (b2 << 30 | b2 >>> 2) & 4294967295;
@@ -7006,8 +7767,8 @@
   var unwrap = (value) => reverseTransformCache.get(value);
 
   // ../../node_modules/idb/build/index.js
-  function openDB(name5, version5, { blocked, upgrade, blocking, terminated } = {}) {
-    const request = indexedDB.open(name5, version5);
+  function openDB(name5, version6, { blocked, upgrade, blocking, terminated } = {}) {
+    const request = indexedDB.open(name5, version6);
     const openPromise = wrap(request);
     if (upgrade) {
       request.addEventListener("upgradeneeded", (event) => {
@@ -7107,7 +7868,7 @@
   var name$2 = "@firebase/firestore";
   var name$1 = "@firebase/firestore-compat";
   var name = "firebase";
-  var version = "9.14.0";
+  var version2 = "9.14.0";
   var DEFAULT_ENTRY_NAME2 = "[DEFAULT]";
   var PLATFORM_LOG_STRING = {
     [name$o]: "fire-core",
@@ -7224,7 +7985,7 @@
       }
     }
   };
-  var SDK_VERSION = version;
+  var SDK_VERSION = version2;
   function initializeApp(_options, rawConfig = {}) {
     let options = _options;
     if (typeof rawConfig !== "object") {
@@ -7268,17 +8029,17 @@
     }
     return app2;
   }
-  function registerVersion(libraryKeyOrName, version5, variant) {
+  function registerVersion(libraryKeyOrName, version6, variant) {
     var _a;
     let library = (_a = PLATFORM_LOG_STRING[libraryKeyOrName]) !== null && _a !== void 0 ? _a : libraryKeyOrName;
     if (variant) {
       library += `-${variant}`;
     }
     const libraryMismatch = library.match(/\s|\//);
-    const versionMismatch = version5.match(/\s|\//);
+    const versionMismatch = version6.match(/\s|\//);
     if (libraryMismatch || versionMismatch) {
       const warning = [
-        `Unable to register library "${library}" with version "${version5}":`
+        `Unable to register library "${library}" with version "${version6}":`
       ];
       if (libraryMismatch) {
         warning.push(`library name "${library}" contains illegal characters (whitespace or "/")`);
@@ -7287,12 +8048,12 @@
         warning.push("and");
       }
       if (versionMismatch) {
-        warning.push(`version name "${version5}" contains illegal characters (whitespace or "/")`);
+        warning.push(`version name "${version6}" contains illegal characters (whitespace or "/")`);
       }
       logger.warn(warning.join(" "));
       return;
     }
-    _registerComponent(new Component(`${library}-version`, () => ({ library, version: version5 }), "VERSION"));
+    _registerComponent(new Component(`${library}-version`, () => ({ library, version: version6 }), "VERSION"));
   }
   var DB_NAME = "firebase-heartbeat-database";
   var DB_VERSION = 1;
@@ -7505,10 +8266,10 @@
 
   // ../../node_modules/@firebase/database/dist/index.esm2017.js
   var name2 = "@firebase/database";
-  var version2 = "0.13.10";
+  var version3 = "0.13.10";
   var SDK_VERSION2 = "";
-  function setSDKVersion(version5) {
-    SDK_VERSION2 = version5;
+  function setSDKVersion(version6) {
+    SDK_VERSION2 = version6;
   }
   var DOMStorageWrapper = class {
     constructor(domStorage_) {
@@ -7519,7 +8280,7 @@
       if (value == null) {
         this.domStorage_.removeItem(this.prefixedName_(key));
       } else {
-        this.domStorage_.setItem(this.prefixedName_(key), stringify(value));
+        this.domStorage_.setItem(this.prefixedName_(key), stringify2(value));
       }
     }
     get(key) {
@@ -7583,11 +8344,11 @@
       return id++;
     };
   }();
-  var sha1 = function(str) {
+  var sha12 = function(str) {
     const utf8Bytes = stringToByteArray(str);
-    const sha12 = new Sha1();
-    sha12.update(utf8Bytes);
-    const sha1Bytes = sha12.digest();
+    const sha13 = new Sha1();
+    sha13.update(utf8Bytes);
+    const sha1Bytes = sha13.digest();
     return base64.encodeByteArray(sha1Bytes);
   };
   var buildLogMessage_ = function(...varArgs) {
@@ -7597,7 +8358,7 @@
       if (Array.isArray(arg) || arg && typeof arg === "object" && typeof arg.length === "number") {
         message += buildLogMessage_.apply(null, arg);
       } else if (typeof arg === "object") {
-        message += stringify(arg);
+        message += stringify2(arg);
       } else {
         message += arg;
       }
@@ -7725,12 +8486,12 @@
     if (obj && key in obj) {
       return obj[key];
     } else {
-      throw new Error("Missing required key (" + key + ") in object: " + stringify(obj));
+      throw new Error("Missing required key (" + key + ") in object: " + stringify2(obj));
     }
   };
   var ObjectToUniqueKey = function(obj) {
     if (typeof obj !== "object" || obj === null) {
-      return stringify(obj);
+      return stringify2(obj);
     }
     const keys = [];
     for (const k2 in obj) {
@@ -7742,7 +8503,7 @@
       if (i2 !== 0) {
         key += ",";
       }
-      key += stringify(keys[i2]);
+      key += stringify2(keys[i2]);
       key += ":";
       key += ObjectToUniqueKey(obj[keys[i2]]);
     }
@@ -7775,10 +8536,10 @@
     assert(!isInvalidJSONNumber(v2), "Invalid JSON number");
     const ebits = 11, fbits = 52;
     const bias = (1 << ebits - 1) - 1;
-    let s2, e, f2, ln2, i2;
+    let s2, e, f3, ln2, i2;
     if (v2 === 0) {
       e = 0;
-      f2 = 0;
+      f3 = 0;
       s2 = 1 / v2 === -Infinity ? 1 : 0;
     } else {
       s2 = v2 < 0;
@@ -7786,16 +8547,16 @@
       if (v2 >= Math.pow(2, 1 - bias)) {
         ln2 = Math.min(Math.floor(Math.log(v2) / Math.LN2), bias);
         e = ln2 + bias;
-        f2 = Math.round(v2 * Math.pow(2, fbits - ln2) - Math.pow(2, fbits));
+        f3 = Math.round(v2 * Math.pow(2, fbits - ln2) - Math.pow(2, fbits));
       } else {
         e = 0;
-        f2 = Math.round(v2 / Math.pow(2, 1 - bias - fbits));
+        f3 = Math.round(v2 / Math.pow(2, 1 - bias - fbits));
       }
     }
     const bits = [];
     for (i2 = fbits; i2; i2 -= 1) {
-      bits.push(f2 % 2 ? 1 : 0);
-      f2 = Math.floor(f2 / 2);
+      bits.push(f3 % 2 ? 1 : 0);
+      f3 = Math.floor(f3 / 2);
     }
     for (i2 = ebits; i2; i2 -= 1) {
       bits.push(e % 2 ? 1 : 0);
@@ -8283,7 +9044,7 @@
       }
     }
     send(data) {
-      const dataStr = stringify(data);
+      const dataStr = stringify2(data);
       this.bytesSent += dataStr.length;
       this.stats_.incrementCounter("bytes_sent", dataStr.length);
       const base64data = base64Encode(dataStr);
@@ -8307,7 +9068,7 @@
       document.body.appendChild(this.myDisconnFrame);
     }
     incrementIncomingBytes_(args) {
-      const bytesReceived = stringify(args).length;
+      const bytesReceived = stringify2(args).length;
       this.bytesReceived += bytesReceived;
       this.stats_.incrementCounter("bytes_received", bytesReceived);
     }
@@ -8649,7 +9410,7 @@
     }
     send(data) {
       this.resetKeepAlive();
-      const dataStr = stringify(data);
+      const dataStr = stringify2(data);
       this.bytesSent += dataStr.length;
       this.stats_.incrementCounter("bytes_sent", dataStr.length);
       const dataSegs = splitStringBySize(dataStr, WEBSOCKET_MAX_FRAME_SIZE);
@@ -8962,14 +9723,14 @@
     }
     onHandshake_(handshake) {
       const timestamp = handshake.ts;
-      const version5 = handshake.v;
+      const version6 = handshake.v;
       const host = handshake.h;
       this.sessionId = handshake.s;
       this.repoInfo_.host = host;
       if (this.state_ === 0) {
         this.conn_.start();
         this.onConnectionEstablished_(this.conn_, timestamp);
-        if (PROTOCOL_VERSION !== version5) {
+        if (PROTOCOL_VERSION !== version6) {
           warn("Protocol version mismatch detected");
         }
         this.tryStartUpgrade_();
@@ -9461,7 +10222,7 @@
     sendRequest(action, body, onResponse) {
       const curReqNum = ++this.requestNumber_;
       const msg = { r: curReqNum, a: action, b: body };
-      this.log_(stringify(msg));
+      this.log_(stringify2(msg));
       assert(this.connected_, "sendRequest call when we're not connected not allowed.");
       this.realtime_.sendRequest(msg);
       if (onResponse) {
@@ -9765,7 +10526,7 @@
     }
     onDataMessage_(message) {
       if ("r" in message) {
-        this.log_("from server: " + stringify(message));
+        this.log_("from server: " + stringify2(message));
         const reqNum = message["r"];
         const onResponse = this.requestCBHash_[reqNum];
         if (onResponse) {
@@ -9803,7 +10564,7 @@
       } else if (action === "sd") {
         this.onSecurityDebugPacket_(body);
       } else {
-        error("Unrecognized action received from server: " + stringify(action) + "\nAre you using the latest client?");
+        error("Unrecognized action received from server: " + stringify2(action) + "\nAre you using the latest client?");
       }
     }
     onReady_(timestamp, sessionId) {
@@ -10630,7 +11391,7 @@
         } else {
           toHash += this.value_;
         }
-        this.lazyHash_ = sha1(toHash);
+        this.lazyHash_ = sha12(toHash);
       }
       return this.lazyHash_;
     }
@@ -11022,7 +11783,7 @@
             toHash += ":" + key + ":" + childHash;
           }
         });
-        this.lazyHash_ = toHash === "" ? "" : sha1(toHash);
+        this.lazyHash_ = toHash === "" ? "" : sha12(toHash);
       }
       return this.lazyHash_;
     }
@@ -11893,17 +12654,17 @@
       assert(queryParams.index_ instanceof PathIndex, "Unrecognized index type!");
       orderBy = queryParams.index_.toString();
     }
-    qs["orderBy"] = stringify(orderBy);
+    qs["orderBy"] = stringify2(orderBy);
     if (queryParams.startSet_) {
-      qs["startAt"] = stringify(queryParams.indexStartValue_);
+      qs["startAt"] = stringify2(queryParams.indexStartValue_);
       if (queryParams.startNameSet_) {
-        qs["startAt"] += "," + stringify(queryParams.indexStartName_);
+        qs["startAt"] += "," + stringify2(queryParams.indexStartName_);
       }
     }
     if (queryParams.endSet_) {
-      qs["endAt"] = stringify(queryParams.indexEndValue_);
+      qs["endAt"] = stringify2(queryParams.indexEndValue_);
       if (queryParams.endNameSet_) {
-        qs["endAt"] += "," + stringify(queryParams.indexEndName_);
+        qs["endAt"] += "," + stringify2(queryParams.indexEndName_);
       }
     }
     if (queryParams.limitSet_) {
@@ -12494,11 +13255,11 @@
       });
       return fn2(pathSoFar, this.value, accum);
     }
-    findOnPath(path, f2) {
-      return this.findOnPath_(path, newEmptyPath(), f2);
+    findOnPath(path, f3) {
+      return this.findOnPath_(path, newEmptyPath(), f3);
     }
-    findOnPath_(pathToFollow, pathSoFar, f2) {
-      const result = this.value ? f2(pathSoFar, this.value) : false;
+    findOnPath_(pathToFollow, pathSoFar, f3) {
+      const result = this.value ? f3(pathSoFar, this.value) : false;
       if (result) {
         return result;
       } else {
@@ -12508,47 +13269,47 @@
           const front = pathGetFront(pathToFollow);
           const nextChild = this.children.get(front);
           if (nextChild) {
-            return nextChild.findOnPath_(pathPopFront(pathToFollow), pathChild(pathSoFar, front), f2);
+            return nextChild.findOnPath_(pathPopFront(pathToFollow), pathChild(pathSoFar, front), f3);
           } else {
             return null;
           }
         }
       }
     }
-    foreachOnPath(path, f2) {
-      return this.foreachOnPath_(path, newEmptyPath(), f2);
+    foreachOnPath(path, f3) {
+      return this.foreachOnPath_(path, newEmptyPath(), f3);
     }
-    foreachOnPath_(pathToFollow, currentRelativePath, f2) {
+    foreachOnPath_(pathToFollow, currentRelativePath, f3) {
       if (pathIsEmpty(pathToFollow)) {
         return this;
       } else {
         if (this.value) {
-          f2(currentRelativePath, this.value);
+          f3(currentRelativePath, this.value);
         }
         const front = pathGetFront(pathToFollow);
         const nextChild = this.children.get(front);
         if (nextChild) {
-          return nextChild.foreachOnPath_(pathPopFront(pathToFollow), pathChild(currentRelativePath, front), f2);
+          return nextChild.foreachOnPath_(pathPopFront(pathToFollow), pathChild(currentRelativePath, front), f3);
         } else {
           return new ImmutableTree(null);
         }
       }
     }
-    foreach(f2) {
-      this.foreach_(newEmptyPath(), f2);
+    foreach(f3) {
+      this.foreach_(newEmptyPath(), f3);
     }
-    foreach_(currentRelativePath, f2) {
+    foreach_(currentRelativePath, f3) {
       this.children.inorderTraversal((childName, childTree) => {
-        childTree.foreach_(pathChild(currentRelativePath, childName), f2);
+        childTree.foreach_(pathChild(currentRelativePath, childName), f3);
       });
       if (this.value) {
-        f2(currentRelativePath, this.value);
+        f3(currentRelativePath, this.value);
       }
     }
-    foreachChild(f2) {
+    foreachChild(f3) {
       this.children.inorderTraversal((childName, childTree) => {
         if (childTree.value) {
-          f2(childName, childTree.value);
+          f3(childName, childTree.value);
         }
       });
     }
@@ -14366,7 +15127,7 @@
           throw new Error("Only objects are supported for option databaseAuthVariableOverride");
         }
         try {
-          stringify(authOverride);
+          stringify2(authOverride);
         } catch (e) {
           throw new Error("Invalid authOverride provided: " + e);
         }
@@ -14493,7 +15254,7 @@
       syncTreeRemoveEventRegistration(repo.serverSyncTree_, query2, eventRegistration, null, true);
       return node;
     }, (err) => {
-      repoLog(repo, "get for query " + stringify(query2) + " failed: " + err);
+      repoLog(repo, "get for query " + stringify2(query2) + " failed: " + err);
       return Promise.reject(new Error(err));
     });
   }
@@ -15008,7 +15769,7 @@
       return this.eventRegistration.getEventRunner(this);
     }
     toString() {
-      return this.getPath().toString() + ":" + this.eventType + ":" + stringify(this.snapshot.exportVal());
+      return this.getPath().toString() + ":" + this.eventType + ":" + stringify2(this.snapshot.exportVal());
     }
   };
   var CancelEvent = class {
@@ -15680,8 +16441,8 @@
       const appCheckProvider = container.getProvider("app-check-internal");
       return repoManagerDatabaseFromApp(app2, authProvider, appCheckProvider, url);
     }, "PUBLIC").setMultipleInstances(true));
-    registerVersion(name2, version2, variant);
-    registerVersion(name2, version2, "esm2017");
+    registerVersion(name2, version3, variant);
+    registerVersion(name2, version3, "esm2017");
   }
   function increment(delta) {
     return {
@@ -16206,7 +16967,7 @@
   function a(n2, r2) {
     return 2 === o(n2) ? n2.get(r2) : n2[r2];
   }
-  function f(n2, r2, t2) {
+  function f2(n2, r2, t2) {
     var e = o(n2);
     2 === e ? n2.set(r2, t2) : 3 === e ? (n2.delete(r2), n2.add(t2)) : n2[r2] = t2;
   }
@@ -16299,7 +17060,7 @@
   function A(e, i2, o2, a2, c2, s2) {
     if (c2 === o2 && n(5), r(c2)) {
       var v2 = M(e, c2, s2 && i2 && 3 !== i2.i && !u(i2.D, a2) ? s2.concat(a2) : void 0);
-      if (f(o2, a2, v2), !r(v2))
+      if (f2(o2, a2, v2), !r(v2))
         return;
       e.m = false;
     }
@@ -16335,8 +17096,8 @@
     var e = s(r2) ? b("MapSet").N(r2, t2) : v(r2) ? b("MapSet").T(r2, t2) : n2.g ? function(n3, r3) {
       var t3 = Array.isArray(n3), e2 = { i: t3 ? 1 : 0, A: r3 ? r3.A : _(), P: false, I: false, D: {}, l: r3, t: n3, k: null, o: null, j: null, C: false }, i2 = e2, o2 = en;
       t3 && (i2 = [e2], o2 = on);
-      var u2 = Proxy.revocable(i2, o2), a2 = u2.revoke, f2 = u2.proxy;
-      return e2.k = f2, e2.j = a2, f2;
+      var u2 = Proxy.revocable(i2, o2), a2 = u2.revoke, f3 = u2.proxy;
+      return e2.k = f3, e2.j = a2, f3;
     }(r2, t2) : b("ES5").J(r2, t2);
     return (t2 ? t2.A : _()).p.push(e), e;
   }
@@ -16352,7 +17113,7 @@
       } else
         e2 = F(r2, c2);
       return i(e2, function(r3, t2) {
-        u2 && a(u2.t, r3) === t2 || f(e2, r3, n2(t2));
+        u2 && a(u2.t, r3) === t2 || f2(e2, r3, n2(t2));
       }), 3 === c2 ? new Set(e2) : e2;
     }(e);
   }
@@ -16394,7 +17155,7 @@
         for (var t2 in r4)
           r4.hasOwnProperty(t2) && (n3[t2] = r4[t2]);
       })(n2, r3);
-    }, f2 = function() {
+    }, f3 = function() {
       function n2(n3, r3) {
         return this[Q] = { i: 2, l: r3, A: r3 ? r3.A : _(), P: false, I: false, o: void 0, D: void 0, t: n3, k: this, C: false, O: false }, this;
       }
@@ -16494,7 +17255,7 @@
       }, n2;
     }();
     m("MapSet", { N: function(n2, r3) {
-      return new f2(n2, r3);
+      return new f3(n2, r3);
     }, T: function(n2, r3) {
       return new c2(n2, r3);
     } });
@@ -16604,26 +17365,26 @@
             });
           };
         }
-        var f2;
+        var f3;
         if ("function" != typeof i3 && n(6), void 0 !== o2 && "function" != typeof o2 && n(7), t(r3)) {
           var c2 = w(e2), s2 = R(e2, r3, void 0), v2 = true;
           try {
-            f2 = i3(s2), v2 = false;
+            f3 = i3(s2), v2 = false;
           } finally {
             v2 ? O(c2) : g(c2);
           }
-          return "undefined" != typeof Promise && f2 instanceof Promise ? f2.then(function(n2) {
+          return "undefined" != typeof Promise && f3 instanceof Promise ? f3.then(function(n2) {
             return j(c2, o2), P(n2, c2);
           }, function(n2) {
             throw O(c2), n2;
-          }) : (j(c2, o2), P(f2, c2));
+          }) : (j(c2, o2), P(f3, c2));
         }
         if (!r3 || "object" != typeof r3) {
-          if (void 0 === (f2 = i3(r3)) && (f2 = r3), f2 === H && (f2 = void 0), e2.F && d(f2, true), o2) {
+          if (void 0 === (f3 = i3(r3)) && (f3 = r3), f3 === H && (f3 = void 0), e2.F && d(f3, true), o2) {
             var p2 = [], l2 = [];
-            b("Patches").M(r3, f2, p2, l2), o2(p2, l2);
+            b("Patches").M(r3, f3, p2, l2), o2(p2, l2);
           }
-          return f2;
+          return f3;
         }
         n(21, r3);
       }, this.produceWithPatches = function(n2, r3) {
@@ -16823,8 +17584,15 @@
       appId: "1:550579950350:web:d32a68a214c5c58a273d5f",
       measurementId: "G-5M5ME2ZH0R"
     },
+    FIRESTORE: {
+      COLLECTIONS: {
+        LIBRARIES: (userId) => `users/${userId}/libraries'`,
+        LIBRARY: (userId, libraryId) => `users/${userId}/libraries/${libraryId}`
+      }
+    },
     ROUTES: {
       ROOT: "/",
+      PHOTOS: "/photos",
       SYNC: "/photos/sync"
     }
   };
@@ -20570,7 +21338,7 @@
   };
   PhoneMultiFactorGenerator.FACTOR_ID = "phone";
   var name3 = "@firebase/auth";
-  var version3 = "0.20.11";
+  var version4 = "0.20.11";
   var AuthInterop = class {
     constructor(auth) {
       this.auth = auth;
@@ -20668,8 +21436,8 @@
       const auth = _castAuth(container.getProvider("auth").getImmediate());
       return ((auth2) => new AuthInterop(auth2))(auth);
     }, "PRIVATE").setInstantiationMode("EXPLICIT"));
-    registerVersion(name3, version3, getVersionForPlatform(clientPlatform));
-    registerVersion(name3, version3, "esm2017");
+    registerVersion(name3, version4, getVersionForPlatform(clientPlatform));
+    registerVersion(name3, version4, "esm2017");
   }
   var DEFAULT_ID_TOKEN_MAX_AGE = 5 * 60;
   var authIdTokenMaxAge = getExperimentalSetting("authIdTokenMaxAge") || DEFAULT_ID_TOKEN_MAX_AGE;
@@ -20721,23 +21489,16 @@
 
   // ../../node_modules/firebase/app/dist/index.esm.js
   var name4 = "firebase";
-  var version4 = "9.14.0";
-  registerVersion(name4, version4, "app");
-
-  // src/utils/send-message-to-client.ts
-  function sendMessageToClients(message) {
-    self.clients.matchAll().then((clients) => {
-      clients.forEach((client) => {
-        client.postMessage(message);
-      });
-    });
-  }
+  var version5 = "9.14.0";
+  registerVersion(name4, version5, "app");
 
   // src/service-worker.ts
   var app = initializeApp(WEB.FIREBASE, WEB.FIREBASE.APP_NAME);
   var database = getDatabase(app);
   var unsubscribers = [];
-  var syncTaskResult = null;
+  var syncTasksMap = /* @__PURE__ */ new Map();
+  var { sendMessageToClients } = initWorkerClient();
+  var NATIVE_EVENT_TYPES2 = /* @__PURE__ */ new Set(["ping", "keyChanged"]);
   var user = null;
   onAuthStateChanged(getAuth(app), async (u2) => {
     user = u2;
@@ -20745,77 +21506,81 @@
   self.addEventListener("install", function(event) {
     console.info("Service worker installing...", event);
   });
-  self.addEventListener("message", function(event) {
-    const data = parseSwMessage(event.data.type, event.data);
-    if (!data) {
-      console.error(event.data);
-      throw new Error("Invalid message");
-    } else {
-      switch (data.type) {
-        case "syncTask" /* syncTask */:
-          return handleSyncTaskMessage(data);
+  self.addEventListener("message", async function(event) {
+    if (NATIVE_EVENT_TYPES2.has(event.data.eventType)) {
+      return;
+    }
+    const userId = user?.uid;
+    console.log("event", event);
+    const message = decodePostMessage(event.data);
+    const uuid = message.uuid;
+    switch (message.action) {
+      case "syncGetRefs" /* syncGetRefs */: {
+        const { syncTask } = getSyncTask2(message.data);
+        return sendMessageToClients(
+          encodePostMessage({
+            action: "syncGetRefs" /* syncGetRefs */,
+            data: {
+              metadataRefPath: getPath(syncTask.queue.metadataRef),
+              tasksRefPath: getPath(syncTask.queue.tasksRef)
+            },
+            uuid
+          })
+        );
       }
+      case "syncStatus" /* syncStatus */: {
+        const { taskId } = message.data;
+        const syncTaskResult = syncTasksMap.get(taskId);
+        return sendMessageToClients(
+          encodePostMessage({
+            action: "syncStatus" /* syncStatus */,
+            data: { taskId, isActive: !!syncTaskResult },
+            uuid
+          })
+        );
+      }
+      case "syncStart" /* syncStart */: {
+        const { syncTask, taskId } = getSyncTask2(message.data);
+        if (syncTask) {
+          syncTask.queue.start();
+        } else if (userId) {
+          const result = await startSyncTask({ database, taskId, userId });
+          unsubscribers.push(result.unsubscribe);
+          syncTasksMap.set(taskId, result);
+        }
+        return ack(uuid);
+      }
+      case "syncStop" /* syncStop */: {
+        const { syncTask } = getSyncTask2(message.data);
+        await syncTask.queue.stop();
+        return ack(uuid);
+      }
+      case "syncEmpty" /* syncEmpty */: {
+        const { syncTask } = getSyncTask2(message.data);
+        await syncTask.queue.empty();
+        return ack(uuid);
+      }
+      case "syncRequeue" /* syncRequeue */: {
+        const { syncTask } = getSyncTask2(message.data);
+        await syncTask.queue.requeueByState("error" /* error */);
+        return ack(uuid);
+      }
+      default:
+        console.warn("Unhandled message", message);
+        return;
     }
   });
-  async function handleSyncTaskMessage(data) {
-    if (!user) {
-      throw new Error("User not logged in");
+  function getSyncTask2(syncTaskMessage) {
+    const { taskId } = syncTaskMessageSchema.parse(syncTaskMessage);
+    const syncTask = syncTasksMap.get(taskId);
+    if (syncTask) {
+      return { syncTask, taskId };
+    } else {
+      throw new Error("Sync task not started");
     }
-    switch (data.action) {
-      case "status" /* status */: {
-        sendMessageToClients(
-          syncTaskStatusMessageSchema.parse({ isActive: !!syncTaskResult, type: "syncTaskStatus" /* syncTaskStatus */ })
-        );
-        break;
-      }
-      case "start" /* start */: {
-        if (syncTaskResult) {
-          syncTaskResult.queue.start();
-        } else {
-          syncTaskResult = await startSyncTask({ database, taskId: data.taskId, userId: user.uid });
-          unsubscribers.push(syncTaskResult.unsubscribe);
-        }
-        break;
-      }
-      case "stop" /* stop */: {
-        if (syncTaskResult) {
-          await syncTaskResult.queue.stop();
-        } else {
-          throw new Error("Sync task not started");
-        }
-        break;
-      }
-      case "empty" /* empty */: {
-        if (syncTaskResult) {
-          await syncTaskResult.queue.empty();
-        } else {
-          throw new Error("Sync task not started");
-        }
-        break;
-      }
-      case "requeue" /* requeue */: {
-        if (syncTaskResult) {
-          await syncTaskResult.queue.requeueByState("error" /* error */);
-        } else {
-          throw new Error("Sync task not started");
-        }
-        break;
-      }
-      case "getRefs" /* getRefs */: {
-        if (syncTaskResult) {
-          sendMessageToClients(
-            queueRefsMessageSchema.parse({
-              metadataRefPath: getPath(syncTaskResult.queue.metadataRef),
-              tasksRefPath: getPath(syncTaskResult.queue.tasksRef),
-              type: "queueRefs" /* queueRefs */
-            })
-          );
-        } else {
-          throw new Error("Sync task not started");
-        }
-        break;
-      }
-    }
+  }
+  function ack(uuid) {
+    sendMessageToClients(encodePostMessage({ action: "syncStart" /* syncStart */, data: true, uuid }));
   }
 })();
 /*!

@@ -25,9 +25,16 @@ export const theme = responsiveFontSizes(
         },
         variants: [
           {
-            props: { elevation: 0 },
+            props: { elevation: 1 },
             style: {
               border: '1px solid var(--color-gentian-blue-metallic)',
+              boxShadow: '4px 4px 0px 2px var(--color-gentian-blue-metallic)',
+            },
+          },
+          {
+            props: { elevation: 2 },
+            style: {
+              border: '1px solid var(--color-rubystone-red)',
               boxShadow: '4px 4px 0px 2px var(--color-rubystone-red)',
             },
           },

@@ -20,9 +20,9 @@ import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import FolderIcon from '@mui/icons-material/Folder';
 import { ManageSyncTasksButton } from './manage-sync-task-button';
 import { MenuTrigger } from 'ui/components';
+import { MessageAction } from 'data/service-worker';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import PlayCircleOutlineIcon from '@mui/icons-material/PlayCircleOutline';
-import { SyncTaskAction } from 'data/service-worker';
 import { useMemo } from 'react';
 import { useSyncTasks } from 'web/contexts/sync-tasks-context';
 
@@ -31,17 +31,25 @@ interface Props {
 }
 
 export function SyncTaskManager({ taskId }: Props) {
-  const { manageSyncTask, removeSyncTask, syncTaskRecords } = useSyncTasks();
+  const { isActive, manageSyncTask, removeSyncTask, syncTaskRecords } = useSyncTasks();
   const taskRecord = useMemo(() => syncTaskRecords?.[taskId], [syncTaskRecords, taskId]);
 
   return (
     <Box>
       <Box sx={{ display: 'flex', alignItems: 'center', gridGap: 8, padding: 2 }}>
-        <Button onClick={() => manageSyncTask({ action: SyncTaskAction.start, taskId })}>Start</Button>
-        <Button onClick={() => manageSyncTask({ action: SyncTaskAction.stop, taskId })}>Stop</Button>
-        <Button onClick={() => manageSyncTask({ action: SyncTaskAction.empty, taskId })}>Empty queue</Button>
-        <Button onClick={() => manageSyncTask({ action: SyncTaskAction.requeue, taskId })}>Restart errors</Button>
-        <Button onClick={() => manageSyncTask({ action: SyncTaskAction.getRefs, taskId })}>Get refs</Button>
+        <Button onClick={() => manageSyncTask({ action: MessageAction.syncStart, taskId })}>Start</Button>
+        <Button disabled={!isActive} onClick={() => manageSyncTask({ action: MessageAction.syncStop, taskId })}>
+          Stop
+        </Button>
+        <Button disabled={!isActive} onClick={() => manageSyncTask({ action: MessageAction.syncEmpty, taskId })}>
+          Empty queue
+        </Button>
+        <Button disabled={!isActive} onClick={() => manageSyncTask({ action: MessageAction.syncRequeue, taskId })}>
+          Restart errors
+        </Button>
+        <Button disabled={!isActive} onClick={() => manageSyncTask({ action: MessageAction.syncGetRefs, taskId })}>
+          Get refs
+        </Button>
       </Box>
     </Box>
   );

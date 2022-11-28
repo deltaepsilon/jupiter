@@ -11,7 +11,7 @@ export function LogInOrContinue() {
 
   return user ? (
     isRoot ? (
-      <Link button href={WEB.ROUTES.SYNC}>
+      <Link button href={WEB.ROUTES.PHOTOS}>
         <Button>Go to app</Button>
       </Link>
     ) : null

@@ -1,4 +1,5 @@
-import { SwMessageType, SyncTaskAction, syncTaskMessageSchema, syncTaskStatusMessageSchema } from 'data/service-worker';
+import { MessageAction, SyncStatusMessage, encodePostMessage } from 'data/service-worker';
+import { SendMessage, useServiceWorker } from 'web/contexts/service-worker-context';
 import {
   SyncTask,
   SyncTaskRecord,
@@ -12,26 +13,31 @@ import {
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { push, ref, remove, update } from 'firebase/database';
 
+import { Payload } from '@quiver/post-message';
 import { WEB } from 'data/web';
 import { getDownloadQueueRefPath } from 'data/download';
 import { localforage } from 'ui/utils';
 import { useRtdb } from 'ui/hooks';
-import { useServiceWorker } from 'web/contexts/service-worker-context';
 
-type ManageSyncTaskArgs = { action: SyncTaskAction; taskId: string };
+type ManageSyncTaskArgs = { action: MessageAction; taskId: string };
 
 interface SyncTasksValue {
   createSyncTask: (syncTask: SyncTask) => void;
   removeSyncTask: (taskId: string) => Promise<void>;
-  manageSyncTask: (args: ManageSyncTaskArgs) => Promise<void>;
+  manageSyncTask: (args: ManageSyncTaskArgs) => Promise<Payload<any>>;
+  isActive: boolean;
   isLoading: boolean;
   syncTaskRecords?: SyncTaskRecords;
 }
 
 const SyncTasksContext = createContext<SyncTasksValue>({
   createSyncTask: () => {},
-  manageSyncTask: async (_: ManageSyncTaskArgs) => {},
+  manageSyncTask: async (_: ManageSyncTaskArgs) => ({
+    success: false,
+    data: false,
+  }),
   removeSyncTask: async (_: string) => {},
+  isActive: true,
   isLoading: true,
 });
 
@@ -48,6 +54,7 @@ export function SyncTasksProvider({ children, userId }: Props) {
   const { sendMessage } = useServiceWorker();
   const { database, listen } = useRtdb();
   const [isLoading, setIsLoading] = useState<SyncTasksValue['isLoading']>(true);
+  const [isActive, setIsActive] = useState<boolean>(false);
   const [syncTaskRecords, setSyncTaskRecords] = useState<SyncTasksValue['syncTaskRecords']>();
   const syncTasksRef = useMemo(
     () => userId && database && ref(database, getSyncTasksRefPath(userId)),
@@ -79,23 +86,21 @@ export function SyncTasksProvider({ children, userId }: Props) {
     [database, userId]
   );
   const manageSyncTask = useCallback(
-    async ({ action, taskId }: { taskId: string; action: SyncTaskAction }) => {
-      /**
-       * TODO: Figure out an ack system
-       * Each outgoing message should get queued and acked. This will enable message responses if it all goes
-       * in order.
-       */
-      const statusResult = await sendMessage(
-        syncTaskMessageSchema.parse({ action: SyncTaskAction.status, taskId, type: SwMessageType.syncTask })
+    async ({ action, taskId }: { taskId: string; action: MessageAction }) => {
+      const sendSyncStatusMessage = sendMessage as SendMessage<SyncStatusMessage>;
+      const statusResult = await sendSyncStatusMessage(
+        encodePostMessage<SyncStatusMessage>({ action: MessageAction.syncStatus, data: { taskId } })
       );
+      const isActive = !!statusResult.data.isActive;
+      const isStart = action === MessageAction.syncStart;
 
-      const message = syncTaskMessageSchema.parse({
-        action,
-        taskId,
-        type: SwMessageType.syncTask,
-      });
+      setIsActive(isActive);
 
-      sendMessage(message);
+      if (isActive || isStart) {
+        return sendMessage(encodePostMessage({ action, data: { taskId } }));
+      } else {
+        return { success: false, data: false };
+      }
     },
     [sendMessage]
   );
@@ -125,7 +130,9 @@ export function SyncTasksProvider({ children, userId }: Props) {
   }, [listen, userId]);
 
   return (
-    <SyncTasksContext.Provider value={{ createSyncTask, isLoading, removeSyncTask, manageSyncTask, syncTaskRecords }}>
+    <SyncTasksContext.Provider
+      value={{ createSyncTask, isActive, isLoading, removeSyncTask, manageSyncTask, syncTaskRecords }}
+    >
       {children}
     </SyncTasksContext.Provider>
   );

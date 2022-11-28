@@ -9,9 +9,12 @@ export const postMessageSchema = z.object({
   payload: payloadSchema,
 });
 
+export type Payload<T> = Omit<z.infer<typeof payloadSchema>, 'data'> & { data: T };
+export type PostMessage = z.infer<typeof postMessageSchema>;
+
 export interface GetMessageArgs {
   payload: z.infer<typeof postMessageSchema>['payload'];
-  success: boolean;
+  success?: boolean;
   uuid?: string;
 }
 

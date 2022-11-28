@@ -24,7 +24,7 @@ export default async function MediaItems(req: NextApiRequest, res: NextApiRespon
         res.status(422).json(error);
       } else {
         // @ts-ignore
-        res.status(error.response.status || 500).json(error.response.data);
+        res.status(error?.response?.status || 500).json(error?.response?.data || { error: error.toString() });
       }
     }
   }

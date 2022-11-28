@@ -1,15 +1,16 @@
 /// <reference lib="webworker" />
 
 import {
-  ClientMessageType,
-  SwMessageType,
-  SyncTaskAction,
+  AckMessage,
+  MessageAction,
+  SyncGetRefsMessage,
+  SyncStatusMessage,
   SyncTaskMessage,
-  SyncTaskStatusMessage,
-  parseSwMessage,
-  queueRefsMessageSchema,
-  syncTaskStatusMessageSchema,
+  decodePostMessage,
+  encodePostMessage,
+  syncTaskMessageSchema,
 } from 'data/service-worker';
+import { SendMessageToClientsArgs, initWorkerClient } from '@quiver/post-message';
 import { StartSyncTaskResult, startSyncTask } from './sync-task';
 import { User, getAuth, onAuthStateChanged } from 'firebase/auth';
 
@@ -18,14 +19,15 @@ import { WEB } from 'data/web';
 import { getDatabase } from 'firebase/database';
 import { getPath } from 'ui/utils';
 import { initializeApp } from 'firebase/app';
-import { sendMessageToClients } from './utils/send-message-to-client';
 
 declare let self: ServiceWorkerGlobalScope;
 
 const app = initializeApp(WEB.FIREBASE, WEB.FIREBASE.APP_NAME);
 const database = getDatabase(app);
 const unsubscribers: (() => void)[] = [];
-let syncTaskResult: StartSyncTaskResult | null = null;
+const syncTasksMap: Map<string, StartSyncTaskResult> = new Map();
+const { sendMessageToClients } = initWorkerClient();
+const NATIVE_EVENT_TYPES = new Set(['ping', 'keyChanged']);
 
 let user: User | null = null;
 onAuthStateChanged(getAuth(app), async (u) => {
@@ -36,89 +38,101 @@ self.addEventListener('install', function (event) {
   console.info('Service worker installing...', event);
 });
 
-self.addEventListener('message', function (event: ExtendableMessageEvent) {
-  const data = parseSwMessage(event.data.type, event.data);
+self.addEventListener('message', async function (event: ExtendableMessageEvent) {
+  if (NATIVE_EVENT_TYPES.has(event.data.eventType)) {
+    return;
+  }
 
-  if (!data) {
-    console.error(event.data);
-    throw new Error('Invalid message');
-  } else {
-    switch (data.type) {
-      case SwMessageType.syncTask:
-        return handleSyncTaskMessage(data);
+  const userId = user?.uid;
+  console.log('event', event);
+  const message = decodePostMessage(event.data);
+  const uuid = message.uuid;
+
+  switch (message.action) {
+    case MessageAction.syncGetRefs: {
+      const { syncTask } = getSyncTask(message.data);
+
+      return sendMessageToClients(
+        encodePostMessage<SyncGetRefsMessage>({
+          action: MessageAction.syncGetRefs,
+          data: {
+            metadataRefPath: getPath(syncTask.queue.metadataRef),
+            tasksRefPath: getPath(syncTask.queue.tasksRef),
+          },
+          uuid,
+        })
+      );
     }
+
+    case MessageAction.syncStatus: {
+      const { taskId } = message.data as SyncStatusMessage;
+      const syncTaskResult = syncTasksMap.get(taskId);
+
+      return sendMessageToClients(
+        encodePostMessage<SyncStatusMessage>({
+          action: MessageAction.syncStatus,
+          data: { taskId, isActive: !!syncTaskResult },
+          uuid,
+        })
+      );
+    }
+
+    case MessageAction.syncStart: {
+      const { syncTask, taskId } = getSyncTask(message.data);
+
+      if (syncTask) {
+        syncTask.queue.start();
+      } else if (userId) {
+        const result = await startSyncTask({ database, taskId, userId });
+
+        unsubscribers.push(result.unsubscribe);
+        syncTasksMap.set(taskId, result);
+      }
+
+      return ack(uuid);
+    }
+
+    case MessageAction.syncStop: {
+      const { syncTask } = getSyncTask(message.data);
+
+      await syncTask.queue.stop();
+
+      return ack(uuid);
+    }
+
+    case MessageAction.syncEmpty: {
+      const { syncTask } = getSyncTask(message.data);
+
+      await syncTask.queue.empty();
+
+      return ack(uuid);
+    }
+
+    case MessageAction.syncRequeue: {
+      const { syncTask } = getSyncTask(message.data);
+
+      await syncTask.queue.requeueByState(TaskState.error);
+
+      return ack(uuid);
+    }
+
+    default:
+      console.warn('Unhandled message', message);
+      return;
   }
 });
 
-async function handleSyncTaskMessage(data: SyncTaskMessage) {
-  if (!user) {
-    throw new Error('User not logged in');
+function getSyncTask(syncTaskMessage: unknown) {
+  const { taskId } = syncTaskMessageSchema.parse(syncTaskMessage);
+  const syncTask = syncTasksMap.get(taskId);
+
+  if (syncTask) {
+    return { syncTask, taskId };
+  } else {
+    throw new Error('Sync task not started');
   }
+}
 
-  switch (data.action) {
-    case SyncTaskAction.status: {
-      sendMessageToClients(
-        syncTaskStatusMessageSchema.parse({ isActive: !!syncTaskResult, type: ClientMessageType.syncTaskStatus })
-      );
-
-      break;
-    }
-
-    case SyncTaskAction.start: {
-      if (syncTaskResult) {
-        syncTaskResult.queue.start();
-      } else {
-        syncTaskResult = await startSyncTask({ database, taskId: data.taskId, userId: user.uid });
-        unsubscribers.push(syncTaskResult.unsubscribe);
-      }
-
-      break;
-    }
-
-    case SyncTaskAction.stop: {
-      if (syncTaskResult) {
-        await syncTaskResult.queue.stop();
-      } else {
-        throw new Error('Sync task not started');
-      }
-
-      break;
-    }
-
-    case SyncTaskAction.empty: {
-      if (syncTaskResult) {
-        await syncTaskResult.queue.empty();
-      } else {
-        throw new Error('Sync task not started');
-      }
-
-      break;
-    }
-
-    case SyncTaskAction.requeue: {
-      if (syncTaskResult) {
-        await syncTaskResult.queue.requeueByState(TaskState.error);
-      } else {
-        throw new Error('Sync task not started');
-      }
-
-      break;
-    }
-
-    case SyncTaskAction.getRefs: {
-      if (syncTaskResult) {
-        sendMessageToClients(
-          queueRefsMessageSchema.parse({
-            metadataRefPath: getPath(syncTaskResult.queue.metadataRef),
-            tasksRefPath: getPath(syncTaskResult.queue.tasksRef),
-            type: ClientMessageType.queueRefs,
-          })
-        );
-      } else {
-        throw new Error('Sync task not started');
-      }
-
-      break;
-    }
-  }
+function ack(uuid: string) {
+  sendMessageToClients(encodePostMessage<AckMessage>({ action: MessageAction.syncStart, data: true, uuid }));
 }

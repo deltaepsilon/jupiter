@@ -19,8 +19,15 @@ export const WEB = {
     appId: '1:550579950350:web:d32a68a214c5c58a273d5f',
     measurementId: 'G-5M5ME2ZH0R',
   },
+  FIRESTORE: {
+    COLLECTIONS: {
+      LIBRARIES: (userId: string) => `users/${userId}/libraries'`,
+      LIBRARY: (userId: string, libraryId: string) => `users/${userId}/libraries/${libraryId}`,
+    },
+  },
   ROUTES: {
     ROOT: '/',
+    PHOTOS: '/photos',
     SYNC: '/photos/sync',
   },
 };

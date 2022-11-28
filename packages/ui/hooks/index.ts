@@ -1,3 +1,4 @@
+export * from './use-firestore';
 export * from './use-hash';
 export * from './use-keydown';
 export * from './use-local-filesystem';

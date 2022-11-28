@@ -1,13 +1,20 @@
-import { ServiceWorkerMessage, parseClientMessage } from 'data/service-worker';
+import { Payload, SendMessageToSwArgs, sendMessageToSw } from '@quiver/post-message';
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
+
+type SendMessageArgs = Omit<SendMessageToSwArgs, 'registration'>;
+
+export type SendMessage<T> = (args: SendMessageArgs) => Promise<Payload<T>>;
 
 interface ServiceWorkerValue {
   isLoading: boolean;
   registration?: ServiceWorkerRegistration;
-  sendMessage: (message: ServiceWorkerMessage) => void;
+  sendMessage: SendMessage<any>;
 }
 
-const ServiceWorkerContext = createContext<ServiceWorkerValue>({ isLoading: true, sendMessage: () => {} });
+const ServiceWorkerContext = createContext<ServiceWorkerValue>({
+  isLoading: true,
+  sendMessage: async (_: SendMessageArgs) => ({ error: 'uninitialized', data: false }),
+});
 
 export function useServiceWorker() {
   return useContext(ServiceWorkerContext);
@@ -20,8 +27,12 @@ interface Props {
 export function ServiceWorkerProvider({ children }: Props) {
   const [registration, setRegistration] = useState<ServiceWorkerRegistration>();
   const sendMessage = useCallback(
-    (message: ServiceWorkerMessage) => {
-      registration?.active?.postMessage(message);
+    (args: SendMessageArgs) => {
+      if (!registration) {
+        throw new Error('Service worker registration not found');
+      }
+
+      return sendMessageToSw<any>({ ...args, registration });
     },
     [registration]
   );
@@ -30,12 +41,6 @@ export function ServiceWorkerProvider({ children }: Props) {
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('/service-worker.js');
       navigator.serviceWorker.ready.then((registration) => setRegistration(registration));
-
-      navigator.serviceWorker.addEventListener('message', handleServiceWorkerMessage);
-
-      return () => {
-        navigator.serviceWorker.removeEventListener('message', handleServiceWorkerMessage);
-      };
     }
   }, []);
 
@@ -44,10 +49,4 @@ export function ServiceWorkerProvider({ children }: Props) {
       {children}
     </ServiceWorkerContext.Provider>
   );
-}
-
-function handleServiceWorkerMessage(event: MessageEvent) {
-  const message = parseClientMessage(event.data.type, event.data);
-
-  console.log({ message });
 }

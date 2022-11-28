@@ -38,7 +38,11 @@ export const mediaItemSchema = z.object({
 export const mediaItemsResponseSchema = z.object({
   accessToken: z.string(),
   refreshToken: z.string(),
-  mediaItems: z.array(mediaItemSchema),
+  mediaItems: z.preprocess(
+    (args) => (Array.isArray(args) ? args : []),
+    z.array(mediaItemSchema),
+    z.array(mediaItemSchema)
+  ),
   nextPageToken: z.string().optional(),
 });
 

@@ -1,20 +1,20 @@
 /// <reference lib="dom" />
 
-import { GetMessageArgs, getMessage, postMessageSchema } from './schema';
+import { GetMessageArgs, Payload, getMessage, postMessageSchema } from './schema';
 
-interface SendMessageArgs extends GetMessageArgs {
+export interface SendMessageToSwArgs extends GetMessageArgs {
   registration: ServiceWorkerRegistration;
   ttlSeconds?: number;
 }
 
-export function sendMessageToSw({ payload, registration, success, ttlSeconds = 10, uuid }: SendMessageArgs) {
+export function sendMessageToSw<T>({ payload, registration, success, ttlSeconds = 10, uuid }: SendMessageToSwArgs) {
   const message = getMessage({ payload, success, uuid });
 
   registration?.active?.postMessage(message);
 
-  return new Promise<GetMessageArgs['payload']>((resolve, reject) => {
+  return new Promise<Payload<T>>((resolve, reject) => {
     const timer = setTimeout(() => {
-      window.removeEventListener('message', listener);
+      navigator.serviceWorker.removeEventListener('message', listener);
 
       reject(`Timeout of ${ttlSeconds} seconds exceeded`);
     }, ttlSeconds * 1000);
@@ -26,7 +26,7 @@ export function sendMessageToSw({ payload, registration, success, ttlSeconds = 1
         const { uuid: incomingUuid, payload: incomingPayload, success: incomingSuccess } = parsed.data;
 
         if (incomingUuid === message.uuid) {
-          incomingSuccess ? resolve(incomingPayload) : reject(incomingPayload);
+          incomingSuccess ? resolve(incomingPayload as Payload<T>) : reject(incomingPayload as Payload<T>);
         }
       } else if (event.data.uuid === message.uuid) {
         reject(parsed.error);
@@ -34,10 +34,10 @@ export function sendMessageToSw({ payload, registration, success, ttlSeconds = 1
 
       if (event.data.uuid === message.uuid) {
         clearTimeout(timer);
-        window.removeEventListener('message', listener);
+        navigator.serviceWorker.removeEventListener('message', listener);
       }
     }
 
-    window.addEventListener('message', listener);
+    navigator.serviceWorker.addEventListener('message', listener);
   });
 }

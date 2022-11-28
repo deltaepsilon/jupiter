@@ -1,48 +1,82 @@
 /// <reference lib="webworker" />
 
-import { GetMessageArgs, getMessage, postMessageSchema } from './schema';
+import { GetMessageArgs, PostMessage, getMessage, postMessageSchema } from './schema';
 
 declare let self: ServiceWorkerGlobalScope;
 
-interface SendMessageArgs extends GetMessageArgs {
+const NATIVE_EVENT_TYPES = new Set(['ping', 'keyChanged']);
+
+export interface SendMessageToClientsArgs extends GetMessageArgs {
+  expectResult?: boolean;
   ttlSeconds?: number;
 }
 
-export function sendMessageToClients({ payload, success, ttlSeconds = 10, uuid }: SendMessageArgs) {
-  const message = getMessage({ payload, success, uuid });
+export function initWorkerClient() {
+  const pendingMessages: Map<string, (message: PostMessage) => void> = new Map();
 
-  self.clients.matchAll().then((clients) => {
+  function listener(event: ExtendableMessageEvent) {
+    const parsed = postMessageSchema.safeParse(event.data);
+    const isNativeMessage = NATIVE_EVENT_TYPES.has(event.data.eventType);
+
+    if (isNativeMessage) {
+    } else if (parsed.success) {
+      const { uuid } = parsed.data;
+      const handler = pendingMessages.get(uuid);
+
+      if (handler) {
+        pendingMessages.delete(uuid);
+
+        handler(parsed.data);
+      }
+    } else {
+      console.warn('event failed to parse', event);
+      console.error(parsed.error);
+      throw new Error('Invalid message');
+    }
+  }
+
+  function unsubscribe() {
+    self.removeEventListener('message', listener);
+  }
+
+  self.addEventListener('message', listener);
+
+  async function sendMessageToClients({
+    expectResult,
+    payload,
+    success,
+    ttlSeconds = 10,
+    uuid,
+  }: SendMessageToClientsArgs) {
+    const message = getMessage({ payload, success, uuid });
+
+    const clients = await self.clients.matchAll();
+
     clients.forEach((client) => {
       client.postMessage(message);
     });
-  });
 
-  return new Promise<GetMessageArgs['payload']>((resolve, reject) => {
-    const timer = setTimeout(() => {
-      self.removeEventListener('message', listener);
+    return expectResult
+      ? new Promise<GetMessageArgs['payload']>((resolve, reject) => {
+          let timedOut = false;
 
-      reject(`Timeout of ${ttlSeconds} seconds exceeded`);
-    }, ttlSeconds * 1000);
+          const timer = setTimeout(() => {
+            timedOut = true;
 
-    function listener(event: ExtendableMessageEvent) {
-      const parsed = postMessageSchema.safeParse(event.data);
+            reject(`Timeout of ${ttlSeconds} seconds exceeded`);
+          }, ttlSeconds * 1000);
 
-      if (parsed.success) {
-        const { uuid: incomingUuid, payload: incomingPayload, success: incomingSuccess } = parsed.data;
+          pendingMessages.set(message.uuid, function handler(message) {
+            if (timedOut) {
+              const { payload, success } = message;
 
-        if (incomingUuid === message.uuid) {
-          incomingSuccess ? resolve(incomingPayload) : reject(incomingPayload);
-        }
-      } else if (event.data.uuid === message.uuid) {
-        reject(parsed.error);
-      }
+              clearTimeout(timer);
+              success ? resolve(payload) : reject(payload);
+            }
+          });
+        })
+      : Promise.resolve({ data: { success: true } });
+  }
 
-      if (event.data.uuid === message.uuid) {
-        clearTimeout(timer);
-        self.removeEventListener('message', listener);
-      }
-    }
-
-    self.addEventListener('message', listener);
-  });
+  return { sendMessageToClients, unsubscribe };
 }
