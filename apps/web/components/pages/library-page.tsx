@@ -1,31 +1,38 @@
+import { Box, CircularProgress, Paper, Typography } from '@mui/material';
 import { LibrariesProvider, useLibraries } from 'web/contexts/libraries-context';
+import { LibraryDetail, LibraryMissing } from 'web/components/libraries';
 
-import { CircularProgress } from '@mui/material';
 import { Container } from 'ui/components';
-import { LibrariesList } from 'web/components/libraries';
 import { useAuth } from 'ui/contexts';
 
-export function PhotosPage() {
+interface Props {
+  libraryId: string;
+}
+
+export function LibraryPage({ libraryId }: Props) {
   const { user } = useAuth({ forceRedirect: true });
   const userId = user?.uid;
 
   return userId ? (
-    <LibrariesProvider userId={user?.uid}>
+    <LibrariesProvider libraryId={libraryId} userId={user?.uid}>
       <Container sx={{ display: 'flex', justifyContent: 'center' }}>
-        <PhotosPageConnected />
+        <LibraryPageConnected />
       </Container>
     </LibrariesProvider>
   ) : null;
 }
 
-function PhotosPageConnected() {
-  const { isLoading } = useLibraries();
+function LibraryPageConnected() {
+  const { isLoading, libraries } = useLibraries();
 
   switch (true) {
     case isLoading:
       return <CircularProgress sx={{ alignSelf: 'center' }} />;
 
+    case !libraries.length:
+      return <LibraryMissing />;
+
     default:
-      return <LibrariesList />;
+      return <LibraryDetail />;
   }
 }

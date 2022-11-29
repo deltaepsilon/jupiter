@@ -13,7 +13,7 @@ export function useGooglePhotos() {
   const [refreshToken, setRefreshToken] = useState<string>('');
   const router = useRouter();
   const getFirstPage = useCallback(
-    async ({ accessToken, refreshToken }: { accessToken: string; refreshToken: string }) => {
+    async ({ accessToken, refreshToken }: { accessToken?: string; refreshToken: string }) => {
       const response = await fetch(
         addParams(`${location.origin}${WEB.API.MEDIA_ITEMS}`, { accessToken, refreshToken, pageSize: 9 })
       );

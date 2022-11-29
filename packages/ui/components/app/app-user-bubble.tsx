@@ -1,4 +1,4 @@
-import { Button, ListItemIcon, ListItemText, MenuItem, MenuList } from '@mui/material';
+import { Button, ListItemIcon, ListItemText, MenuItem, MenuList, Typography } from '@mui/material';
 import { MenuTrigger, useMenuTrigger } from 'ui/components';
 
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
@@ -23,12 +23,16 @@ function UserBubbleList() {
   const { close } = useMenuTrigger();
 
   return (
-    <MenuList onClick={close}>
+    <MenuList onClick={close} sx={{ padding: 0 }}>
       <MenuItem onClick={signOut}>
         <ListItemIcon>
-          <LogoutIcon />
+          <LogoutIcon fontSize='small' />
         </ListItemIcon>
-        <ListItemText>Sign Out</ListItemText>
+        <ListItemText>
+          <Typography sx={{ marginTop: -0.5 }} variant='body2'>
+            Sign Out
+          </Typography>
+        </ListItemText>
       </MenuItem>
     </MenuList>
   );

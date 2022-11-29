@@ -27,7 +27,7 @@ export function LandingPage() {
           sx={{ textAlign: 'center', background: 'var(--color-gentian-blue-metallic)', color: 'white' }}
           variant='h2'
         >
-          master your photos
+          Master Your Photos
         </Typography>
 
         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gridGap: 8, padding: 1 }}>

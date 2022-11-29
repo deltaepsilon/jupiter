@@ -1,3 +1,4 @@
+import { addParams } from 'ui/utils';
 import { z } from 'zod';
 
 export const mediaItemSchema = z.object({
@@ -48,3 +49,10 @@ export const mediaItemsResponseSchema = z.object({
 
 export type MediaItem = z.infer<typeof mediaItemSchema>;
 export type MediaItems = MediaItem[];
+
+export function decorateImageBaseUrl(
+  baseUrl: string,
+  { width, height, crop, description }: { width?: number; height?: number; crop?: true; description?: true }
+) {
+  return addParams(baseUrl, { w: width, h: height, c: crop, d: description });
+}

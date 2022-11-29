@@ -3,8 +3,12 @@ import {
   QueryDocumentSnapshot,
   addDoc,
   collection,
+  doc,
+  getDoc,
   getDocs,
   getFirestore,
+  setDoc,
+  updateDoc,
 } from 'firebase/firestore/lite';
 import { useCallback, useMemo } from 'react';
 
@@ -17,11 +21,20 @@ export function useFirestore() {
   const getDocTuples = useCallback(
     async (path: string) => {
       if (db) {
-        console.log({ path });
         const c = collection(db, path);
         const querySnapshot = await getDocs(c);
 
         return querySnapshot.docs.map((doc) => [doc.id, doc.data()]) as [string, QueryDocumentSnapshot<DocumentData>][];
+      }
+    },
+    [db]
+  );
+  const getDocTuple = useCallback(
+    async (path: string) => {
+      if (db) {
+        const querySnapshot = await getDoc(doc(db, path));
+
+        return [querySnapshot.id, querySnapshot.data()] as [string, QueryDocumentSnapshot<DocumentData>];
       }
     },
     [db]
@@ -31,6 +44,13 @@ export function useFirestore() {
       db ? Promise.all(docs.map(async (doc) => addDoc(collection(db, path), doc))) : Promise.reject('No db'),
     [db]
   );
+  const updateDocs = useCallback(
+    (updates: [string, object][]) =>
+      db
+        ? Promise.all(updates.map(async ([path, updates]) => setDoc(doc(db, path), updates)))
+        : Promise.reject('No db'),
+    [db]
+  );
 
-  return { addDocs, getDocTuples, db };
+  return { isLoading: !db, addDocs, getDocTuple, getDocTuples, updateDocs, db };
 }

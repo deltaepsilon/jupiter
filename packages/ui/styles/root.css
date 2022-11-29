@@ -9,12 +9,12 @@
   --color-light-gray: #eeeeee;
   --color-dark-gray: #222222;
 
-  --font-body-family: rival-sans, serif;
-  --font-body-weight: 300;
+  --font-body-family: skolar-sans-latin-condensed, serif;
+  --font-body-weight: 600;
   --font-body-style: normal;
 
-  --font-secondary-family: filicudi-solid, sans-serif;
-  --font-secondary-weight: 400;
+  --font-secondary-family: ff-brokenscript-bc-web, sans-serif;
+  --font-secondary-weight: 700;
 
   --font-light-weight: 400;
   --font-regular-weight: 400;
@@ -26,6 +26,8 @@ body {
   font-family: var(--font-body-family);
   font-weight: var(--font-body-weight);
   font-style: var(--font-body-style);
+
+  color: var(--color-gentian-blue-metallic);
 
   padding: 0;
   margin: 0;

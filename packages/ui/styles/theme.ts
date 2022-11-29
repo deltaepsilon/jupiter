@@ -1,8 +1,18 @@
 import { createTheme, responsiveFontSizes } from '@mui/material';
 
 const FONT_BOLD = {
-  fontFamily: 'oskar, sans-serif', // TODO: remove filicudi-solid
+  fontFamily: 'ff-brokenscript-bc-web, sans-serif', // TODO: remove filicudi-solid
+  fontWeight: 700,
+};
+
+const FONT_SEMIBOLD = {
+  fontFamily: 'skolar-sans-latin-condensed, sans-serif', // TODO: remove filicudi-solid
   fontWeight: 600,
+};
+
+const FONT_BLACK = {
+  fontFamily: 'skolar-sans-latin-condensed, sans-serif', // TODO: remove filicudi-solid
+  fontWeight: 900,
 };
 
 export const theme = responsiveFontSizes(
@@ -34,8 +44,8 @@ export const theme = responsiveFontSizes(
           {
             props: { elevation: 2 },
             style: {
-              border: '1px solid var(--color-rubystone-red)',
-              boxShadow: '4px 4px 0px 2px var(--color-rubystone-red)',
+              border: '1px solid var(--color-pastel-blue)',
+              boxShadow: '4px 4px 0px 2px var(--color-pastel-blue)',
             },
           },
         ],
@@ -53,13 +63,13 @@ export const theme = responsiveFontSizes(
       },
     },
     typography: {
-      fontFamily: 'rival-sans, serif',
+      fontFamily: 'skolar-sans-latin-condensed, serif',
       h1: FONT_BOLD,
       h2: FONT_BOLD,
-      h3: FONT_BOLD,
-      h4: FONT_BOLD,
-      h5: FONT_BOLD,
-      h6: FONT_BOLD,
+      h3: FONT_BLACK,
+      h4: FONT_BLACK,
+      h5: FONT_SEMIBOLD,
+      h6: FONT_SEMIBOLD,
     },
   })
 );

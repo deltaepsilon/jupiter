@@ -6,6 +6,7 @@ export const WEB = {
   },
   DATABASE: {
     PATHS: {
+      LIBRARY_MEDIA_ITEMS: (userId: string, libraryId: string) => `library/${userId}/media-items/${libraryId}`,
       SYNC_TASKS: (userId: string) => `sync-tasks/${userId}`,
     },
   },
@@ -21,13 +22,14 @@ export const WEB = {
   },
   FIRESTORE: {
     COLLECTIONS: {
-      LIBRARIES: (userId: string) => `users/${userId}/libraries'`,
+      LIBRARIES: (userId: string) => `users/${userId}/libraries`,
       LIBRARY: (userId: string, libraryId: string) => `users/${userId}/libraries/${libraryId}`,
     },
   },
   ROUTES: {
     ROOT: '/',
     PHOTOS: '/photos',
+    LIBRARY: (libraryId: string) => `/photos/library/${libraryId}`,
     SYNC: '/photos/sync',
   },
 };

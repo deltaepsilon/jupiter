@@ -1,4 +1,5 @@
 export * from './app';
+export * from './auth';
 export * from './events';
 export * from './firebase';
 export * from './noop';
