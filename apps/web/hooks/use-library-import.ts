@@ -12,12 +12,13 @@ export function useLibraryImport(libraryId: string) {
   const { listen } = useRtdb();
   const [libraryImport, setLibraryImport] = useState<LibraryImport | null | undefined>();
   const { sendMessage } = useServiceWorker();
-  const { start, pause, cancel, destroy } = useMemo(() => {
+  const { init, start, pause, cancel, destroy } = useMemo(() => {
     function createSender(action: MessageAction) {
       return () => sendMessage(encodePostMessage({ action, data: { libraryId } }));
     }
 
     return {
+      init: createSender(MessageAction.libraryImportInit),
       start: createSender(MessageAction.libraryImportStart),
       pause: createSender(MessageAction.libraryImportPause),
       cancel: createSender(MessageAction.libraryImportCancel),
@@ -40,7 +41,11 @@ export function useLibraryImport(libraryId: string) {
         setLibraryImport(null);
       }
     });
-  }, [libraryId, listen, user]);
+  }, [init, libraryId, listen, user]);
+
+  useEffect(() => {
+    user && init();
+  }, [init, user]);
 
   return { isLoading, libraryImport, start, pause, cancel, destroy };
 }

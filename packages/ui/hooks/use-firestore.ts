@@ -8,11 +8,9 @@ import {
   getDocs,
   getFirestore,
   setDoc,
-  updateDoc,
 } from 'firebase/firestore/lite';
 import { useCallback, useMemo } from 'react';
 
-import { NOOP } from 'ui/utils';
 import { useFirebase } from 'ui/contexts';
 
 export function useFirestore() {

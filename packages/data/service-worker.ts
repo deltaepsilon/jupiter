@@ -31,6 +31,7 @@ export type SyncGetRefsMessage = z.infer<typeof syncGetRefsMessageSchema>;
 export enum MessageAction {
   ack = 'ack',
 
+  libraryImportInit = 'libraryImportInit',
   libraryImportStart = 'libraryImportStart',
   libraryImportPause = 'libraryImportPause',
   libraryImportCancel = 'libraryImportCancel',
@@ -69,6 +70,10 @@ export const messageSchemasByAction = {
   [MessageAction.syncStatus]: postMessageBaseSchema.extend({
     action: z.literal(MessageAction.syncStatus),
     data: syncStatusMessageSchema,
+  }),
+  [MessageAction.libraryImportInit]: postMessageBaseSchema.extend({
+    action: z.literal(MessageAction.libraryImportInit),
+    data: libraryMessageSchema,
   }),
   [MessageAction.libraryImportStart]: postMessageBaseSchema.extend({
     action: z.literal(MessageAction.libraryImportStart),
@@ -109,6 +114,7 @@ export const messageSchemasByAction = {
 };
 const discriminatedMessageSchema = z.discriminatedUnion('action', [
   messageSchemasByAction[MessageAction.syncStatus],
+  messageSchemasByAction[MessageAction.libraryImportInit],
   messageSchemasByAction[MessageAction.libraryImportStart],
   messageSchemasByAction[MessageAction.libraryImportPause],
   messageSchemasByAction[MessageAction.libraryImportCancel],

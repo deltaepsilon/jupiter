@@ -6341,6 +6341,7 @@
   });
   var MessageAction = /* @__PURE__ */ ((MessageAction2) => {
     MessageAction2["ack"] = "ack";
+    MessageAction2["libraryImportInit"] = "libraryImportInit";
     MessageAction2["libraryImportStart"] = "libraryImportStart";
     MessageAction2["libraryImportPause"] = "libraryImportPause";
     MessageAction2["libraryImportCancel"] = "libraryImportCancel";
@@ -6369,6 +6370,10 @@
     ["syncStatus" /* syncStatus */]: postMessageBaseSchema.extend({
       action: mod.literal("syncStatus" /* syncStatus */),
       data: syncStatusMessageSchema
+    }),
+    ["libraryImportInit" /* libraryImportInit */]: postMessageBaseSchema.extend({
+      action: mod.literal("libraryImportInit" /* libraryImportInit */),
+      data: libraryMessageSchema
     }),
     ["libraryImportStart" /* libraryImportStart */]: postMessageBaseSchema.extend({
       action: mod.literal("libraryImportStart" /* libraryImportStart */),
@@ -6409,6 +6414,7 @@
   };
   var discriminatedMessageSchema = mod.discriminatedUnion("action", [
     messageSchemasByAction["syncStatus" /* syncStatus */],
+    messageSchemasByAction["libraryImportInit" /* libraryImportInit */],
     messageSchemasByAction["libraryImportStart" /* libraryImportStart */],
     messageSchemasByAction["libraryImportPause" /* libraryImportPause */],
     messageSchemasByAction["libraryImportCancel" /* libraryImportCancel */],
@@ -12946,10 +12952,10 @@
   var FIRST_STATS_MAX_TIME = 30 * 1e3;
   var REPORT_STATS_INTERVAL = 5 * 60 * 1e3;
   var StatsReporter = class {
-    constructor(collection2, server_) {
+    constructor(collection, server_) {
       this.server_ = server_;
       this.statsToReport_ = {};
-      this.statsListener_ = new StatsListener(collection2);
+      this.statsListener_ = new StatsListener(collection);
       const timeout = FIRST_STATS_MIN_TIME + (FIRST_STATS_MAX_TIME - FIRST_STATS_MIN_TIME) * Math.random();
       setTimeoutNonBlocking(this.reportStats_.bind(this), Math.floor(timeout));
     }
@@ -24000,79 +24006,53 @@ Length provided: ${this.length}. Number of dictionaries provided: ${this.diction
     mediaItem: mediaItemSchema
   });
 
-  // src/library-import.ts
-  var libraryImportsMap = /* @__PURE__ */ new Map();
-  async function handleLibraryImportMessage({
-    ack: ack2,
-    database: database2,
-    db: db2,
-    message,
-    user: user2
-  }) {
-    const userId = user2.uid;
-    const uuid = message.uuid;
-    const libraryImport = await getLibraryImportInstance({ database: database2, db: db2, libraryId: message.data.libraryId, userId });
-    switch (message.action) {
-      case "libraryImportStart" /* libraryImportStart */:
-        libraryImport.start();
-        break;
-      case "libraryImportPause" /* libraryImportPause */:
-        libraryImport.pause();
-        break;
-      case "libraryImportCancel" /* libraryImportCancel */:
-        libraryImport.cancel();
-        break;
-      case "libraryImportDestroy" /* libraryImportDestroy */:
-        libraryImport.destroy();
-        break;
-    }
-    return ack2(uuid);
-  }
-  function initLibraryImport({ database: database2, db: db2, libraryId, userId }) {
+  // src/library-import/init-library-import.ts
+  async function initLibraryImport({ database: database2, db: db2, libraryId, userId }) {
     const libraryImportRef = ref(database2, WEB.DATABASE.PATHS.LIBRARY_IMPORT(userId, libraryId));
     const libraryMediaItemsRef = ref(database2, WEB.DATABASE.PATHS.LIBRARY_MEDIA_ITEMS(userId, libraryId));
-    let status = "idle" /* idle */;
+    const setStatus = getSetStatus({ libraryId, libraryImportRef });
+    const getStatus = getGetStatus(libraryId);
+    const libraryImport = await getLibraryImport(libraryImportRef);
+    await setStatus(libraryImport.status);
     async function start() {
-      const libraryImport = await getLibraryImport();
+      const libraryImport2 = await getLibraryImport(libraryImportRef);
       const { library, librarySnapshot } = await getLibrary({ db: db2, libraryId, userId });
-      const { pageSize } = libraryImport;
-      let nextPageToken = libraryImport.nextPageToken;
-      status = "running" /* running */;
-      while (status === "running" /* running */) {
+      const { pageSize } = libraryImport2;
+      let nextPageToken = libraryImport2.nextPageToken;
+      await setStatus("running" /* running */);
+      while (getStatus() === "running" /* running */) {
         const { mediaItems, nextPageToken: maybeNextPageToken } = await getPage({
           library,
           librarySnapshot,
           pageSize,
           nextPageToken
         });
-        const updates = mediaItems.reduce((acc, mediaItem) => {
+        const mediaItemsUpdates = mediaItems.reduce((acc, mediaItem) => {
           acc[`date:${mediaItem.mediaMetadata.creationTime}|id:${mediaItem.id}`] = mediaItem;
           return acc;
         }, {});
-        await update(libraryMediaItemsRef, updates);
+        const isLastPage = !maybeNextPageToken;
+        if (isLastPage)
+          await setStatus("complete" /* complete */);
+        nextPageToken = maybeNextPageToken;
+        await update(libraryMediaItemsRef, mediaItemsUpdates);
         await update(libraryImportRef, {
           count: increment(mediaItems.length),
-          nextPageToken: maybeNextPageToken,
-          status: !!maybeNextPageToken ? "running" /* running */ : "complete" /* complete */,
-          updated: new Date()
+          nextPageToken: nextPageToken || null,
+          updated: new Date(),
+          status: getStatus()
         });
-        if (!maybeNextPageToken) {
-          status = "complete" /* complete */;
+        if (isLastPage)
           await Sr(librarySnapshot.ref, { imported: true, updated: new Date() });
-        }
-        nextPageToken = maybeNextPageToken;
       }
     }
     async function pause() {
-      status = "paused" /* paused */;
       await setStatus("paused" /* paused */);
     }
     async function cancel() {
-      status = "canceled" /* canceled */;
       await setStatus("canceled" /* canceled */);
     }
     async function destroy() {
-      status = "idle" /* idle */;
       await setStatus("idle" /* idle */);
       await update(libraryImportRef, {
         nextPageToken: null,
@@ -24082,20 +24062,28 @@ Length provided: ${this.length}. Number of dictionaries provided: ${this.diction
       });
       await remove(libraryMediaItemsRef);
     }
-    async function setStatus(status2) {
-      const libraryImport = await getLibraryImport();
-      const updates = libraryImportSchema.parse({ ...libraryImport, status: status2, updated: new Date() });
-      await update(libraryImportRef, updates);
-      return updates;
-    }
-    async function getLibraryImport() {
-      const snapshot = await get(libraryImportRef);
-      const value = snapshot.val();
-      const libraryImport = libraryImportSchema.parse(value || {});
-      return libraryImport;
-    }
-    return { start, pause, cancel, destroy, setStatus };
+    return { start, pause, cancel, destroy, getStatus, setStatus };
   }
+  var statusMap = /* @__PURE__ */ new Map();
+  function getSetStatus({ libraryId, libraryImportRef }) {
+    return async (status) => {
+      const libraryImport = await getLibraryImport(libraryImportRef);
+      const updates = libraryImportSchema.parse({ ...libraryImport, status, updated: new Date() });
+      await update(libraryImportRef, updates);
+      statusMap.set(libraryId, status);
+      return updates;
+    };
+  }
+  function getGetStatus(libraryId) {
+    return () => statusMap.get(libraryId);
+  }
+  async function getLibraryImport(libraryImportRef) {
+    const snapshot = await get(libraryImportRef);
+    const value = snapshot.val();
+    const libraryImport = libraryImportSchema.parse(value || {});
+    return libraryImport;
+  }
+  var libraryImportsMap = /* @__PURE__ */ new Map();
   async function getLibraryImportInstance({ database: database2, db: db2, libraryId, userId }) {
     return libraryImportsMap.get(libraryId) || await initLibraryImport({ database: database2, db: db2, libraryId, userId });
   }
@@ -24129,6 +24117,37 @@ Length provided: ${this.length}. Number of dictionaries provided: ${this.diction
     return { library, librarySnapshot };
   }
 
+  // src/library-import/handle-library-import-message.ts
+  async function handleLibraryImportMessage({
+    ack: ack2,
+    database: database2,
+    db: db2,
+    message,
+    user: user2
+  }) {
+    const userId = user2.uid;
+    const uuid = message.uuid;
+    const libraryImport = await getLibraryImportInstance({ database: database2, db: db2, libraryId: message.data.libraryId, userId });
+    switch (message.action) {
+      case "libraryImportInit" /* libraryImportInit */:
+        console.info("forcing initialization of library import");
+        break;
+      case "libraryImportStart" /* libraryImportStart */:
+        libraryImport.start();
+        break;
+      case "libraryImportPause" /* libraryImportPause */:
+        libraryImport.pause();
+        break;
+      case "libraryImportCancel" /* libraryImportCancel */:
+        libraryImport.cancel();
+        break;
+      case "libraryImportDestroy" /* libraryImportDestroy */:
+        libraryImport.destroy();
+        break;
+    }
+    return ack2(uuid);
+  }
+
   // ../../node_modules/firebase/app/dist/index.esm.js
   var name4 = "firebase";
   var version5 = "9.14.0";
@@ -24147,7 +24166,7 @@ Length provided: ${this.length}. Number of dictionaries provided: ${this.diction
     user = u2;
   });
   self.addEventListener("install", function(event) {
-    console.info("Service worker installing.....", event);
+    console.info("Service worker installing..", event);
   });
   self.addEventListener("message", async function(event) {
     if (NATIVE_EVENT_TYPES2.has(event.data.eventType)) {
@@ -24157,6 +24176,7 @@ Length provided: ${this.length}. Number of dictionaries provided: ${this.diction
     const message = decodePostMessage(event.data);
     const uuid = message.uuid;
     switch (message.action) {
+      case "libraryImportInit" /* libraryImportInit */:
       case "libraryImportStart" /* libraryImportStart */:
       case "libraryImportPause" /* libraryImportPause */:
       case "libraryImportCancel" /* libraryImportCancel */:

@@ -1,33 +1,10 @@
-import { Ack, LibraryMessage, MessageAction, messageSchemasByAction } from 'data/service-worker';
-import { DataSnapshot, Database, get, increment, ref, remove, update } from 'firebase/database';
-import {
-  DocumentData,
-  DocumentSnapshot,
-  Firestore,
-  QueryDocumentSnapshot,
-  addDoc,
-  collection,
-  doc,
-  getDoc,
-  getDocs,
-  getFirestore,
-  setDoc,
-  updateDoc,
-} from 'firebase/firestore/lite';
+import { Database, DatabaseReference, get, increment, ref, remove, update } from 'firebase/database';
+import { DocumentSnapshot, Firestore, doc, getDoc, updateDoc } from 'firebase/firestore/lite';
 import { Library, LibraryImportStatus, libraryImportSchema, librarySchema } from 'data/library';
 import { MediaItem, mediaItemsResponseSchema } from 'data/media-items';
 
-import { User } from 'firebase/auth';
 import { WEB } from 'data/web';
 import { addParams } from 'ui/utils';
-import { z } from 'zod';
-
-// Handler
-const libraryImportsMap: Map<string, InitLibraryImportResult> = new Map();
-
-
-
-// Library Import
 
 export interface InitLibraryImportArgs {
   database: Database;
@@ -38,65 +15,61 @@ export interface InitLibraryImportArgs {
 
 export type InitLibraryImportResult = ReturnType<typeof initLibraryImport>;
 
-export function initLibraryImport({ database, db, libraryId, userId }: InitLibraryImportArgs) {
+export async function initLibraryImport({ database, db, libraryId, userId }: InitLibraryImportArgs) {
   const libraryImportRef = ref(database, WEB.DATABASE.PATHS.LIBRARY_IMPORT(userId, libraryId));
   const libraryMediaItemsRef = ref(database, WEB.DATABASE.PATHS.LIBRARY_MEDIA_ITEMS(userId, libraryId));
+  const setStatus = getSetStatus({ libraryId, libraryImportRef });
+  const getStatus = getGetStatus(libraryId);
+  const libraryImport = await getLibraryImport(libraryImportRef);
 
-  let status = LibraryImportStatus.idle;
+  await setStatus(libraryImport.status); // Set initial status. The worker tends to sleep itself.
+
   async function start() {
-    const libraryImport = await getLibraryImport();
+    const libraryImport = await getLibraryImport(libraryImportRef);
     const { library, librarySnapshot } = await getLibrary({ db, libraryId, userId });
     const { pageSize } = libraryImport;
     let nextPageToken = libraryImport.nextPageToken;
 
-    status = LibraryImportStatus.running;
+    await setStatus(LibraryImportStatus.running);
 
-    while (status === LibraryImportStatus.running) {
+    while (getStatus() === LibraryImportStatus.running) {
       const { mediaItems, nextPageToken: maybeNextPageToken } = await getPage({
         library,
         librarySnapshot,
         pageSize,
         nextPageToken,
       });
-      const updates = mediaItems.reduce((acc, mediaItem) => {
+      const mediaItemsUpdates = mediaItems.reduce((acc, mediaItem) => {
         acc[`date:${mediaItem.mediaMetadata.creationTime}|id:${mediaItem.id}`] = mediaItem;
 
         return acc;
       }, {} as Record<string, MediaItem>);
+      const isLastPage = !maybeNextPageToken;
 
-      await update(libraryMediaItemsRef, updates);
+      if (isLastPage) await setStatus(LibraryImportStatus.complete);
+      nextPageToken = maybeNextPageToken;
+
+      await update(libraryMediaItemsRef, mediaItemsUpdates);
       await update(libraryImportRef, {
         count: increment(mediaItems.length),
-        nextPageToken: maybeNextPageToken,
-        status: !!maybeNextPageToken ? LibraryImportStatus.running : LibraryImportStatus.complete,
+        nextPageToken: nextPageToken || null,
         updated: new Date(),
+        status: getStatus(),
       });
 
-      if (!maybeNextPageToken) {
-        status = LibraryImportStatus.complete;
-
-        await updateDoc(librarySnapshot.ref, { imported: true, updated: new Date() });
-      }
-
-      nextPageToken = maybeNextPageToken;
+      if (isLastPage) await updateDoc(librarySnapshot.ref, { imported: true, updated: new Date() });
     }
   }
 
   async function pause() {
-    status = LibraryImportStatus.paused;
-
     await setStatus(LibraryImportStatus.paused);
   }
 
   async function cancel() {
-    status = LibraryImportStatus.canceled;
-
     await setStatus(LibraryImportStatus.canceled);
   }
 
   async function destroy() {
-    status = LibraryImportStatus.idle;
-
     await setStatus(LibraryImportStatus.idle);
     await update(libraryImportRef, {
       nextPageToken: null,
@@ -107,33 +80,47 @@ export function initLibraryImport({ database, db, libraryId, userId }: InitLibra
     await remove(libraryMediaItemsRef);
   }
 
-  async function setStatus(status: LibraryImportStatus) {
-    const libraryImport = await getLibraryImport();
+  return { start, pause, cancel, destroy, getStatus, setStatus };
+}
+
+const statusMap: Map<string, LibraryImportStatus> = new Map();
+interface SetStatusArgs {
+  libraryId: string;
+  libraryImportRef: DatabaseReference;
+}
+function getSetStatus({ libraryId, libraryImportRef }: SetStatusArgs) {
+  return async (status: LibraryImportStatus) => {
+    const libraryImport = await getLibraryImport(libraryImportRef);
     const updates = libraryImportSchema.parse({ ...libraryImport, status, updated: new Date() });
 
     await update(libraryImportRef, updates);
 
+    statusMap.set(libraryId, status);
+
     return updates;
-  }
-
-  async function getLibraryImport() {
-    const snapshot = await get(libraryImportRef);
-    const value = snapshot.val();
-    const libraryImport = libraryImportSchema.parse(value || {});
-
-    return libraryImport;
-  }
-
-  return { start, pause, cancel, destroy, setStatus };
+  };
 }
 
+function getGetStatus(libraryId: string) {
+  return () => statusMap.get(libraryId);
+}
+
+async function getLibraryImport(libraryImportRef: DatabaseReference) {
+  const snapshot = await get(libraryImportRef);
+  const value = snapshot.val();
+  const libraryImport = libraryImportSchema.parse(value || {});
+
+  return libraryImport;
+}
+
+const libraryImportsMap: Map<string, InitLibraryImportResult> = new Map();
 interface GetLibraryImportArgs {
   database: Database;
   db: Firestore;
   libraryId: string;
   userId: string;
 }
-async function getLibraryImportInstance({ database, db, libraryId, userId }: GetLibraryImportArgs) {
+export async function getLibraryImportInstance({ database, db, libraryId, userId }: GetLibraryImportArgs) {
   return libraryImportsMap.get(libraryId) || (await initLibraryImport({ database, db, libraryId, userId }));
 }
 

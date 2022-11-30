@@ -37,7 +37,7 @@ onAuthStateChanged(getAuth(app), async (u) => {
 });
 
 self.addEventListener('install', function (event) {
-  console.info('Service worker installing.....', event);
+  console.info('Service worker installing..', event);
 });
 
 self.addEventListener('message', async function (event: ExtendableMessageEvent) {
@@ -50,6 +50,7 @@ self.addEventListener('message', async function (event: ExtendableMessageEvent) 
   const uuid = message.uuid;
 
   switch (message.action) {
+    case MessageAction.libraryImportInit:
     case MessageAction.libraryImportStart:
     case MessageAction.libraryImportPause:
     case MessageAction.libraryImportCancel:
