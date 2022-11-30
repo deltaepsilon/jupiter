@@ -4,6 +4,10 @@ import { z } from 'zod';
 
 const ackMessageSchema = z.boolean();
 
+export const libraryMessageSchema = z.object({
+  libraryId: z.string(),
+});
+
 const syncStatusMessageSchema = z.object({
   taskId: z.string(),
   isActive: z.boolean().optional(),
@@ -19,12 +23,19 @@ export const syncTaskMessageSchema = z.object({
 });
 
 export type AckMessage = z.infer<typeof ackMessageSchema>;
+export type LibraryMessage = z.infer<typeof libraryMessageSchema>;
 export type SyncTaskMessage = z.infer<typeof syncTaskMessageSchema>;
 export type SyncStatusMessage = z.infer<typeof syncStatusMessageSchema>;
 export type SyncGetRefsMessage = z.infer<typeof syncGetRefsMessageSchema>;
 
 export enum MessageAction {
   ack = 'ack',
+
+  libraryImportStart = 'libraryImportStart',
+  libraryImportPause = 'libraryImportPause',
+  libraryImportCancel = 'libraryImportCancel',
+  libraryImportDestroy = 'libraryImportDestroy',
+
   syncStatus = 'syncStatus',
   syncStart = 'syncStart',
   syncStop = 'syncStop',
@@ -51,32 +62,70 @@ export function encodePostMessage<Data>({ action, data, error, uuid }: EncodePos
 }
 
 const messageActionSchema = z.nativeEnum(MessageAction);
-type Data = SyncTaskMessage | SyncStatusMessage | SyncGetRefsMessage | false;
+type Data = LibraryMessage | SyncTaskMessage | SyncStatusMessage | SyncGetRefsMessage | false;
 
-export function decodePostMessage(message: unknown): {
-  action: MessageAction;
-  data: Data;
-  error?: string;
-  uuid: string;
-} {
+const postMessageBaseSchema = z.object({ error: z.string().optional(), uuid: z.string() });
+export const messageSchemasByAction = {
+  [MessageAction.syncStatus]: postMessageBaseSchema.extend({
+    action: z.literal(MessageAction.syncStatus),
+    data: syncStatusMessageSchema,
+  }),
+  [MessageAction.libraryImportStart]: postMessageBaseSchema.extend({
+    action: z.literal(MessageAction.libraryImportStart),
+    data: libraryMessageSchema,
+  }),
+  [MessageAction.libraryImportPause]: postMessageBaseSchema.extend({
+    action: z.literal(MessageAction.libraryImportPause),
+    data: libraryMessageSchema,
+  }),
+  [MessageAction.libraryImportCancel]: postMessageBaseSchema.extend({
+    action: z.literal(MessageAction.libraryImportCancel),
+    data: libraryMessageSchema,
+  }),
+  [MessageAction.libraryImportDestroy]: postMessageBaseSchema.extend({
+    action: z.literal(MessageAction.libraryImportDestroy),
+    data: libraryMessageSchema,
+  }),
+  [MessageAction.syncGetRefs]: postMessageBaseSchema.extend({
+    action: z.literal(MessageAction.syncGetRefs),
+    data: syncGetRefsMessageSchema,
+  }),
+  [MessageAction.syncStart]: postMessageBaseSchema.extend({
+    action: z.literal(MessageAction.syncStart),
+    data: syncTaskMessageSchema,
+  }),
+  [MessageAction.syncStop]: postMessageBaseSchema.extend({
+    action: z.literal(MessageAction.syncStop),
+    data: syncTaskMessageSchema,
+  }),
+  [MessageAction.syncEmpty]: postMessageBaseSchema.extend({
+    action: z.literal(MessageAction.syncEmpty),
+    data: syncTaskMessageSchema,
+  }),
+  [MessageAction.syncRequeue]: postMessageBaseSchema.extend({
+    action: z.literal(MessageAction.syncRequeue),
+    data: syncTaskMessageSchema,
+  }),
+};
+const discriminatedMessageSchema = z.discriminatedUnion('action', [
+  messageSchemasByAction[MessageAction.syncStatus],
+  messageSchemasByAction[MessageAction.libraryImportStart],
+  messageSchemasByAction[MessageAction.libraryImportPause],
+  messageSchemasByAction[MessageAction.libraryImportCancel],
+  messageSchemasByAction[MessageAction.libraryImportDestroy],
+  messageSchemasByAction[MessageAction.syncGetRefs],
+  messageSchemasByAction[MessageAction.syncStart],
+  messageSchemasByAction[MessageAction.syncStop],
+  messageSchemasByAction[MessageAction.syncEmpty],
+  messageSchemasByAction[MessageAction.syncRequeue],
+]);
+
+export function decodePostMessage(message: unknown) {
   const { payload, uuid } = postMessageSchema.parse(message);
   const { data, error } = payload;
   const action = messageActionSchema.parse(data.action);
 
-  switch (action) {
-    case MessageAction.syncStatus:
-      return { action, data: syncStatusMessageSchema.parse(data), error, uuid };
-
-    case MessageAction.syncGetRefs:
-      return { action, data: syncGetRefsMessageSchema.parse(data), error, uuid };
-
-    case MessageAction.syncStart:
-    case MessageAction.syncStop:
-    case MessageAction.syncEmpty:
-    case MessageAction.syncRequeue:
-      return { action, data: syncTaskMessageSchema.parse(data), error, uuid };
-
-    default:
-      return { action, data: false, error, uuid };
-  }
+  return discriminatedMessageSchema.parse({ action, data, error, uuid });
 }
+
+export type Ack = (uuid: string, success?: boolean) => void;

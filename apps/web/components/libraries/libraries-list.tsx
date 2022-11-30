@@ -29,7 +29,7 @@ const CARD_SX: SxProps = {
 };
 
 export function LibrariesList({}: Props) {
-  const { isLoading, libraries } = useLibraries();
+  const { libraries } = useLibraries();
 
   return (
     <Container sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: 660 }}>

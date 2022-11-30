@@ -1,6 +1,6 @@
 {
   "rules": {
-    "$unspecified": {
+    "user-owned": {
       "$userId": {
         ".read": "$userId === auth.uid",
         ".write": "$userId === auth.uid"

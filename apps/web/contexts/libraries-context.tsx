@@ -92,8 +92,6 @@ export function LibrariesProvider({ children, libraryId, userId }: Props) {
         (!library.mediaItems || library.updated.getTime() < Date.now() - MEDIA_ITEMS_TTL_MS)
     );
 
-    console.table(staleLibraries);
-
     Promise.all(
       staleLibraries.map(async ([key, library]) => {
         const isStaleAccessToken = getIsStaleAccessToken(library.updated);

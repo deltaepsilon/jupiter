@@ -5,25 +5,27 @@ import {
   MessageAction,
   SyncGetRefsMessage,
   SyncStatusMessage,
-  SyncTaskMessage,
   decodePostMessage,
   encodePostMessage,
   syncTaskMessageSchema,
 } from 'data/service-worker';
-import { SendMessageToClientsArgs, initWorkerClient } from '@quiver/post-message';
 import { StartSyncTaskResult, startSyncTask } from './sync-task';
 import { User, getAuth, onAuthStateChanged } from 'firebase/auth';
 
 import { TaskState } from '@quiver/firebase-queue';
 import { WEB } from 'data/web';
 import { getDatabase } from 'firebase/database';
+import { getFirestore } from 'firebase/firestore/lite';
 import { getPath } from 'ui/utils';
+import { handleLibraryImportMessage } from './library-import';
+import { initWorkerClient } from '@quiver/post-message';
 import { initializeApp } from 'firebase/app';
 
 declare let self: ServiceWorkerGlobalScope;
 
 const app = initializeApp(WEB.FIREBASE, WEB.FIREBASE.APP_NAME);
 const database = getDatabase(app);
+const db = getFirestore(app);
 const unsubscribers: (() => void)[] = [];
 const syncTasksMap: Map<string, StartSyncTaskResult> = new Map();
 const { sendMessageToClients } = initWorkerClient();
@@ -35,7 +37,7 @@ onAuthStateChanged(getAuth(app), async (u) => {
 });
 
 self.addEventListener('install', function (event) {
-  console.info('Service worker installing...', event);
+  console.info('Service worker installing.....', event);
 });
 
 self.addEventListener('message', async function (event: ExtendableMessageEvent) {
@@ -44,11 +46,18 @@ self.addEventListener('message', async function (event: ExtendableMessageEvent) 
   }
 
   const userId = user?.uid;
-  console.log('event', event);
   const message = decodePostMessage(event.data);
   const uuid = message.uuid;
 
   switch (message.action) {
+    case MessageAction.libraryImportStart:
+    case MessageAction.libraryImportPause:
+    case MessageAction.libraryImportCancel:
+    case MessageAction.libraryImportDestroy:
+      if (!user) throw new Error('User not found');
+
+      return handleLibraryImportMessage({ ack, database, db, message, user });
+
     case MessageAction.syncGetRefs: {
       const { syncTask } = getSyncTask(message.data);
 
@@ -133,6 +142,6 @@ function getSyncTask(syncTaskMessage: unknown) {
   }
 }
 
-function ack(uuid: string) {
-  sendMessageToClients(encodePostMessage<AckMessage>({ action: MessageAction.syncStart, data: true, uuid }));
+function ack(uuid: string, data = true) {
+  sendMessageToClients(encodePostMessage<AckMessage>({ action: MessageAction.ack, data, uuid }));
 }

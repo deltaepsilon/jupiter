@@ -6,8 +6,10 @@ export const WEB = {
   },
   DATABASE: {
     PATHS: {
-      LIBRARY_MEDIA_ITEMS: (userId: string, libraryId: string) => `library/${userId}/media-items/${libraryId}`,
-      SYNC_TASKS: (userId: string) => `sync-tasks/${userId}`,
+      LIBRARY_MEDIA_ITEMS: (userId: string, libraryId: string) =>
+        `user-owned/${userId}/library/${libraryId}/media-items`,
+      LIBRARY_IMPORT: (userId: string, libraryId: string) => `user-owned/${userId}/library/${libraryId}/import`,
+      SYNC_TASKS: (userId: string) => `user-owned/${userId}/sync-tasks`,
     },
   },
   FIREBASE: {

@@ -12,22 +12,6 @@ export function useGooglePhotos() {
   const [accessToken, setAccessToken] = useState<string>('');
   const [refreshToken, setRefreshToken] = useState<string>('');
   const router = useRouter();
-  const getFirstPage = useCallback(
-    async ({ accessToken, refreshToken }: { accessToken?: string; refreshToken: string }) => {
-      const response = await fetch(
-        addParams(`${location.origin}${WEB.API.MEDIA_ITEMS}`, { accessToken, refreshToken, pageSize: 9 })
-      );
-
-      if (response.ok) {
-        const data = await response.json();
-
-        return mediaItemsResponseSchema.parse(data);
-      } else {
-        throw response;
-      }
-    },
-    []
-  );
   const selectLibrary = useCallback(async () => {
     const cookies = parseCookies();
     try {
@@ -55,7 +39,7 @@ export function useGooglePhotos() {
         throw res;
       }
     }
-  }, [getFirstPage, router]);
+  }, [router]);
   const clearLibrary = useCallback(async () => {
     nookies.set(null, Cookie.accessToken, '', { path: '/' });
     nookies.set(null, Cookie.refreshToken, '', { path: '/' });
@@ -69,4 +53,18 @@ export function useGooglePhotos() {
   }, [clearLibrary, selectLibrary]);
 
   return { accessToken, refreshToken, firstPage, changeLibrary, clearLibrary, getFirstPage, selectLibrary };
+}
+
+async function getFirstPage({ accessToken, refreshToken }: { accessToken?: string; refreshToken: string }) {
+  const response = await fetch(
+    addParams(`${location.origin}${WEB.API.MEDIA_ITEMS}`, { accessToken, refreshToken, pageSize: 9 })
+  );
+
+  if (response.ok) {
+    const data = await response.json();
+
+    return mediaItemsResponseSchema.parse(data);
+  } else {
+    throw response;
+  }
 }
