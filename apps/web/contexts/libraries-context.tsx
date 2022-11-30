@@ -13,6 +13,7 @@ interface LibrariesValue {
   getLibraries: () => Promise<void>;
   isLoading: boolean;
   libraries: Libraries;
+  refreshLibrary: (libraryId: string) => Promise<void>;
 }
 
 const LibrariesContext = createContext<LibrariesValue>({
@@ -20,6 +21,7 @@ const LibrariesContext = createContext<LibrariesValue>({
   getLibraries: async () => {},
   isLoading: true,
   libraries: [],
+  refreshLibrary: async () => {},
 });
 
 const MEDIA_ITEMS_TTL_MS = 1000 * 60 * 60; // 1 Hour
@@ -84,6 +86,31 @@ export function LibrariesProvider({ children, libraryId, userId }: Props) {
     },
     [updateDocs, userId]
   );
+  const refreshRecords = useCallback(() => {
+    libraryId ? getLibrary(libraryId) : getLibraries();
+  }, [getLibraries, getLibrary, libraryId]);
+  const refreshLibrary = useCallback(
+    async (libraryId: string, shouldRefreshRecords: boolean = true) => {
+      const [, maybeLibrary] = libraries.find(([key]) => key === libraryId) || [];
+      const library = maybeLibrary && librarySchema.parse(maybeLibrary);
+      const hasBeenRefreshedAlready = updateKeysRef.current.has(libraryId);
+
+      if (library && !hasBeenRefreshedAlready) {
+        const isStaleAccessToken = getIsStaleAccessToken(library.updated);
+        const { accessToken, mediaItems } = await getFirstPage({
+          accessToken: isStaleAccessToken ? undefined : library.accessToken,
+          refreshToken: library.refreshToken,
+        });
+
+        updateKeysRef.current.add(libraryId);
+
+        await updateLibrary(libraryId, { ...library, accessToken, mediaItems, updated: new Date() });
+
+        shouldRefreshRecords && refreshRecords();
+      }
+    },
+    [getFirstPage, libraries, refreshRecords, updateLibrary]
+  );
 
   useEffect(() => {
     const staleLibraries = libraries.filter(
@@ -92,29 +119,19 @@ export function LibrariesProvider({ children, libraryId, userId }: Props) {
         (!library.mediaItems || library.updated.getTime() < Date.now() - MEDIA_ITEMS_TTL_MS)
     );
 
-    Promise.all(
-      staleLibraries.map(async ([key, library]) => {
-        const isStaleAccessToken = getIsStaleAccessToken(library.updated);
-        const { accessToken, mediaItems } = await getFirstPage({
-          accessToken: isStaleAccessToken ? undefined : library.accessToken,
-          refreshToken: library.refreshToken,
-        });
-
-        updateKeysRef.current.add(key);
-
-        await updateLibrary(key, { ...library, accessToken, mediaItems, updated: new Date() });
-      })
-    );
-  }, [getFirstPage, libraries, updateLibrary]);
+    Promise.all(staleLibraries.map(async ([key]) => refreshLibrary(key, false))).then(() => {
+      refreshRecords();
+    });
+  }, [libraries, refreshLibrary, refreshRecords]);
 
   useEffect(() => {
     if (!isFirestoreLoading) {
-      libraryId ? getLibrary(libraryId) : getLibraries();
+      refreshRecords();
     }
-  }, [getLibraries, getLibrary, libraryId, isFirestoreLoading]);
+  }, [isFirestoreLoading, refreshRecords]);
 
   return (
-    <LibrariesContext.Provider value={{ addLibrary, getLibraries, isLoading, libraries }}>
+    <LibrariesContext.Provider value={{ addLibrary, getLibraries, isLoading, libraries, refreshLibrary }}>
       {children}
     </LibrariesContext.Provider>
   );

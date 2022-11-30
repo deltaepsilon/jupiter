@@ -29,7 +29,7 @@ const CARD_SX: SxProps = {
 };
 
 export function LibrariesList({}: Props) {
-  const { libraries } = useLibraries();
+  const { libraries, refreshLibrary } = useLibraries();
 
   return (
     <Container sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: 660 }}>
@@ -54,6 +54,7 @@ export function LibrariesList({}: Props) {
                   <MediaItemImage
                     height={200}
                     mediaItem={mediaItem}
+                    onError={() => refreshLibrary(key)}
                     sx={{ position: 'absolute', inset: 0 }}
                     width={200}
                   />
