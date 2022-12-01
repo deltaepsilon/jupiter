@@ -7,6 +7,8 @@ import { useAuth } from 'ui/contexts';
 import { useRtdb } from 'ui/hooks';
 import { useServiceWorker } from 'web/contexts/service-worker-context';
 
+export type UseLibraryImportResult = ReturnType<typeof useLibraryImport>;
+
 export function useLibraryImport(libraryId: string) {
   const { user } = useAuth();
   const { listen } = useRtdb();
@@ -47,5 +49,5 @@ export function useLibraryImport(libraryId: string) {
     user && init();
   }, [init, user]);
 
-  return { isLoading, libraryImport, start, pause, cancel, destroy };
+  return { isLoading, libraryImport, actions: { start, pause, cancel, destroy } };
 }

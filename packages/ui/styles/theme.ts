@@ -39,6 +39,7 @@ export const theme = responsiveFontSizes(
             style: {
               border: '1px solid var(--color-gentian-blue-metallic)',
               boxShadow: '4px 4px 0px 2px var(--color-gentian-blue-metallic)',
+              marginRight: 6,
             },
           },
           {
@@ -46,9 +47,19 @@ export const theme = responsiveFontSizes(
             style: {
               border: '1px solid var(--color-pastel-blue)',
               boxShadow: '4px 4px 0px 2px var(--color-pastel-blue)',
+              marginRight: 6,
             },
           },
         ],
+      },
+      MuiTypography: {
+        styleOverrides: {
+          root: {
+            strong: {
+              color: 'var(--color-lava-orange)',
+            },
+          },
+        },
       },
     },
     palette: {
