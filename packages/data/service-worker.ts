@@ -8,25 +8,8 @@ export const libraryMessageSchema = z.object({
   libraryId: z.string(),
 });
 
-const syncStatusMessageSchema = z.object({
-  taskId: z.string(),
-  isActive: z.boolean().optional(),
-});
-
-const syncGetRefsMessageSchema = z.object({
-  metadataRefPath: z.string(),
-  tasksRefPath: z.string(),
-});
-
-export const syncTaskMessageSchema = z.object({
-  taskId: z.string(),
-});
-
 export type AckMessage = z.infer<typeof ackMessageSchema>;
 export type LibraryMessage = z.infer<typeof libraryMessageSchema>;
-export type SyncTaskMessage = z.infer<typeof syncTaskMessageSchema>;
-export type SyncStatusMessage = z.infer<typeof syncStatusMessageSchema>;
-export type SyncGetRefsMessage = z.infer<typeof syncGetRefsMessageSchema>;
 
 export enum MessageAction {
   ack = 'ack',
@@ -37,14 +20,11 @@ export enum MessageAction {
   libraryImportCancel = 'libraryImportCancel',
   libraryImportDestroy = 'libraryImportDestroy',
 
-  syncStatus = 'syncStatus',
-  syncStart = 'syncStart',
-  syncStop = 'syncStop',
-  syncEmpty = 'syncEmpty',
-  syncRequeue = 'syncRequeue',
-  syncGetRefs = 'syncGetRefs',
-  syncTaskStatus = 'syncTaskStatus',
-  syncQueueRefs = 'syncQueueRefs',
+  libraryDownloadInit = 'libraryDownloadInit',
+  libraryDownloadStart = 'libraryDownloadStart',
+  libraryDownloadPause = 'libraryDownloadPause',
+  libraryDownloadCancel = 'libraryDownloadCancel',
+  libraryDownloadDestroy = 'libraryDownloadDestroy',
 }
 interface EncodePostMessageArgs<Data> extends Pick<GetMessageArgs, 'uuid'> {
   error?: string;
@@ -63,14 +43,9 @@ export function encodePostMessage<Data>({ action, data, error, uuid }: EncodePos
 }
 
 const messageActionSchema = z.nativeEnum(MessageAction);
-type Data = LibraryMessage | SyncTaskMessage | SyncStatusMessage | SyncGetRefsMessage | false;
 
 const postMessageBaseSchema = z.object({ error: z.string().optional(), uuid: z.string() });
 export const messageSchemasByAction = {
-  [MessageAction.syncStatus]: postMessageBaseSchema.extend({
-    action: z.literal(MessageAction.syncStatus),
-    data: syncStatusMessageSchema,
-  }),
   [MessageAction.libraryImportInit]: postMessageBaseSchema.extend({
     action: z.literal(MessageAction.libraryImportInit),
     data: libraryMessageSchema,
@@ -91,39 +66,40 @@ export const messageSchemasByAction = {
     action: z.literal(MessageAction.libraryImportDestroy),
     data: libraryMessageSchema,
   }),
-  [MessageAction.syncGetRefs]: postMessageBaseSchema.extend({
-    action: z.literal(MessageAction.syncGetRefs),
-    data: syncGetRefsMessageSchema,
+
+  [MessageAction.libraryDownloadInit]: postMessageBaseSchema.extend({
+    action: z.literal(MessageAction.libraryDownloadInit),
+    data: libraryMessageSchema,
   }),
-  [MessageAction.syncStart]: postMessageBaseSchema.extend({
-    action: z.literal(MessageAction.syncStart),
-    data: syncTaskMessageSchema,
+  [MessageAction.libraryDownloadStart]: postMessageBaseSchema.extend({
+    action: z.literal(MessageAction.libraryDownloadStart),
+    data: libraryMessageSchema,
   }),
-  [MessageAction.syncStop]: postMessageBaseSchema.extend({
-    action: z.literal(MessageAction.syncStop),
-    data: syncTaskMessageSchema,
+  [MessageAction.libraryDownloadPause]: postMessageBaseSchema.extend({
+    action: z.literal(MessageAction.libraryDownloadPause),
+    data: libraryMessageSchema,
   }),
-  [MessageAction.syncEmpty]: postMessageBaseSchema.extend({
-    action: z.literal(MessageAction.syncEmpty),
-    data: syncTaskMessageSchema,
+  [MessageAction.libraryDownloadCancel]: postMessageBaseSchema.extend({
+    action: z.literal(MessageAction.libraryDownloadCancel),
+    data: libraryMessageSchema,
   }),
-  [MessageAction.syncRequeue]: postMessageBaseSchema.extend({
-    action: z.literal(MessageAction.syncRequeue),
-    data: syncTaskMessageSchema,
+  [MessageAction.libraryDownloadDestroy]: postMessageBaseSchema.extend({
+    action: z.literal(MessageAction.libraryDownloadDestroy),
+    data: libraryMessageSchema,
   }),
 };
 const discriminatedMessageSchema = z.discriminatedUnion('action', [
-  messageSchemasByAction[MessageAction.syncStatus],
   messageSchemasByAction[MessageAction.libraryImportInit],
   messageSchemasByAction[MessageAction.libraryImportStart],
   messageSchemasByAction[MessageAction.libraryImportPause],
   messageSchemasByAction[MessageAction.libraryImportCancel],
   messageSchemasByAction[MessageAction.libraryImportDestroy],
-  messageSchemasByAction[MessageAction.syncGetRefs],
-  messageSchemasByAction[MessageAction.syncStart],
-  messageSchemasByAction[MessageAction.syncStop],
-  messageSchemasByAction[MessageAction.syncEmpty],
-  messageSchemasByAction[MessageAction.syncRequeue],
+
+  messageSchemasByAction[MessageAction.libraryDownloadInit],
+  messageSchemasByAction[MessageAction.libraryDownloadStart],
+  messageSchemasByAction[MessageAction.libraryDownloadPause],
+  messageSchemasByAction[MessageAction.libraryDownloadCancel],
+  messageSchemasByAction[MessageAction.libraryDownloadDestroy],
 ]);
 
 export function decodePostMessage(message: unknown) {

@@ -1,22 +1,13 @@
 /// <reference lib="webworker" />
 
-import {
-  AckMessage,
-  MessageAction,
-  SyncGetRefsMessage,
-  SyncStatusMessage,
-  decodePostMessage,
-  encodePostMessage,
-  syncTaskMessageSchema,
-} from 'data/service-worker';
+import { AckMessage, MessageAction, decodePostMessage, encodePostMessage } from 'data/service-worker';
 import { StartSyncTaskResult, startSyncTask } from './sync-task';
 import { User, getAuth, onAuthStateChanged } from 'firebase/auth';
 
-import { TaskState } from '@quiver/firebase-queue';
 import { WEB } from 'data/web';
 import { getDatabase } from 'firebase/database';
 import { getFirestore } from 'firebase/firestore/lite';
-import { getPath } from 'ui/utils';
+import { handleLibraryDownloadMessage } from './library-download';
 import { handleLibraryImportMessage } from './library-import';
 import { initWorkerClient } from '@quiver/post-message';
 import { initializeApp } from 'firebase/app';
@@ -45,9 +36,7 @@ self.addEventListener('message', async function (event: ExtendableMessageEvent) 
     return;
   }
 
-  const userId = user?.uid;
   const message = decodePostMessage(event.data);
-  const uuid = message.uuid;
 
   switch (message.action) {
     case MessageAction.libraryImportInit:
@@ -57,91 +46,26 @@ self.addEventListener('message', async function (event: ExtendableMessageEvent) 
     case MessageAction.libraryImportDestroy:
       if (!user) throw new Error('User not found');
 
-      return handleLibraryImportMessage({ ack, database, db, message, user });
+      await handleLibraryImportMessage({ database, db, message, user });
 
-    case MessageAction.syncGetRefs: {
-      const { syncTask } = getSyncTask(message.data);
+      return ack(message.uuid);
 
-      return sendMessageToClients(
-        encodePostMessage<SyncGetRefsMessage>({
-          action: MessageAction.syncGetRefs,
-          data: {
-            metadataRefPath: getPath(syncTask.queue.metadataRef),
-            tasksRefPath: getPath(syncTask.queue.tasksRef),
-          },
-          uuid,
-        })
-      );
-    }
+    case MessageAction.libraryDownloadInit:
+    case MessageAction.libraryDownloadStart:
+    case MessageAction.libraryDownloadPause:
+    case MessageAction.libraryDownloadCancel:
+    case MessageAction.libraryDownloadDestroy:
+      if (!user) throw new Error('User not found');
 
-    case MessageAction.syncStatus: {
-      const { taskId } = message.data as SyncStatusMessage;
-      const syncTaskResult = syncTasksMap.get(taskId);
+      await handleLibraryDownloadMessage({ database, db, message, user });
 
-      return sendMessageToClients(
-        encodePostMessage<SyncStatusMessage>({
-          action: MessageAction.syncStatus,
-          data: { taskId, isActive: !!syncTaskResult },
-          uuid,
-        })
-      );
-    }
-
-    case MessageAction.syncStart: {
-      const { syncTask, taskId } = getSyncTask(message.data);
-
-      if (syncTask) {
-        syncTask.queue.start();
-      } else if (userId) {
-        const result = await startSyncTask({ database, taskId, userId });
-
-        unsubscribers.push(result.unsubscribe);
-        syncTasksMap.set(taskId, result);
-      }
-
-      return ack(uuid);
-    }
-
-    case MessageAction.syncStop: {
-      const { syncTask } = getSyncTask(message.data);
-
-      await syncTask.queue.stop();
-
-      return ack(uuid);
-    }
-
-    case MessageAction.syncEmpty: {
-      const { syncTask } = getSyncTask(message.data);
-
-      await syncTask.queue.empty();
-
-      return ack(uuid);
-    }
-
-    case MessageAction.syncRequeue: {
-      const { syncTask } = getSyncTask(message.data);
-
-      await syncTask.queue.requeueByState(TaskState.error);
-
-      return ack(uuid);
-    }
+      return ack(message.uuid);
 
     default:
       console.warn('Unhandled message', message);
       return;
   }
 });
-
-function getSyncTask(syncTaskMessage: unknown) {
-  const { taskId } = syncTaskMessageSchema.parse(syncTaskMessage);
-  const syncTask = syncTasksMap.get(taskId);
-
-  if (syncTask) {
-    return { syncTask, taskId };
-  } else {
-    throw new Error('Sync task not started');
-  }
-}
 
 function ack(uuid: string, data = true) {
   sendMessageToClients(encodePostMessage<AckMessage>({ action: MessageAction.ack, data, uuid }));

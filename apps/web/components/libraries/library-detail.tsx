@@ -2,17 +2,19 @@ import { Box, Typography } from '@mui/material';
 import { DownloadLibraryPanel, ImportLibraryPanel } from './panels';
 
 import { Container } from 'ui/components';
-import { LibraryImportStatus } from 'data/library';
+import { LibraryTaskStatus } from 'data/library';
 import { formatDate } from 'ui/utils';
 import { useLibraries } from 'web/contexts/libraries-context';
+import { useLibraryDownload } from 'web/hooks/use-library-download';
 import { useLibraryImport } from 'web/hooks/use-library-import';
 
 export function LibraryDetail() {
   const { libraries } = useLibraries();
   const [libraryId, library] = libraries[0];
-  const { actions, libraryImport } = useLibraryImport(libraryId);
-  const isComplete = libraryImport?.status === LibraryImportStatus.complete;
-  const isRunning = libraryImport?.status === LibraryImportStatus.running;
+  const { actions: importActions, libraryImport } = useLibraryImport(libraryId);
+  const { actions: downloadActions, libraryDownload } = useLibraryDownload(libraryId);
+  const isComplete = libraryImport?.status === LibraryTaskStatus.complete;
+  const isRunning = libraryImport?.status === LibraryTaskStatus.running;
   const hasLibraryRecords = !!libraryImport?.count;
 
   return (
@@ -64,7 +66,7 @@ export function LibraryDetail() {
             </Step>
           )}
 
-          <ImportLibraryPanel actions={actions} libraryImport={libraryImport} />
+          <ImportLibraryPanel actions={importActions} libraryImport={libraryImport} />
         </Box>
 
         <Box sx={{ pointerEvents: hasLibraryRecords ? 'all' : 'none', opacity: hasLibraryRecords ? 1 : 0.5 }}>
@@ -84,7 +86,7 @@ export function LibraryDetail() {
             </Typography>
           </Step>
 
-          <DownloadLibraryPanel actions={actions} libraryImport={libraryImport} />
+          <DownloadLibraryPanel actions={downloadActions} libraryDownload={libraryDownload} />
         </Box>
       </Box>
     </Container>

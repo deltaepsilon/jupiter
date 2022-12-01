@@ -1,4 +1,4 @@
-import { Ack, MessageAction, messageSchemasByAction } from 'data/service-worker';
+import { MessageAction, messageSchemasByAction } from 'data/service-worker';
 
 import { Database } from 'firebase/database';
 import { Firestore } from 'firebase/firestore/lite';
@@ -14,20 +14,17 @@ type Message =
   | z.infer<typeof messageSchemasByAction[MessageAction.libraryImportDestroy]>;
 
 export async function handleLibraryImportMessage({
-  ack,
   database,
   db,
   message,
   user,
 }: {
-  ack: Ack;
   database: Database;
   db: Firestore;
   message: Message;
   user: User;
 }) {
   const userId = user.uid;
-  const uuid = message.uuid;
   const libraryImport = await getLibraryImportInstance({ database, db, libraryId: message.data.libraryId, userId });
 
   switch (message.action) {
@@ -51,6 +48,4 @@ export async function handleLibraryImportMessage({
       libraryImport.destroy();
       break;
   }
-
-  return ack(uuid);
 }

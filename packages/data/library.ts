@@ -12,7 +12,6 @@ export const librarySchema = z.object({
     z.string()
   ),
   mediaItems: z.array(mediaItemSchema).optional(),
-  imported: firestoreDate.optional(),
   created: firestoreDate.default(() => new Date()),
   updated: firestoreDate.default(() => new Date()),
 });
@@ -20,8 +19,8 @@ export const librarySchema = z.object({
 export type Library = z.infer<typeof librarySchema>;
 export type Libraries = [string, Library][];
 
-// Library import
-export enum LibraryImportStatus {
+// All tasks
+export enum LibraryTaskStatus {
   idle = 'idle',
   running = 'running',
   paused = 'paused',
@@ -29,17 +28,26 @@ export enum LibraryImportStatus {
   complete = 'complete',
 }
 
-export const libraryImportSchema = z.object({
-  status: z.nativeEnum(LibraryImportStatus).default(LibraryImportStatus.idle),
+const libraryTaskSchema = z.object({
+  status: z.nativeEnum(LibraryTaskStatus).default(LibraryTaskStatus.idle),
   count: z.number().default(0),
-  bytes: z.number().default(0),
-  nextPageToken: z.string().optional(),
-  pageSize: z.number().default(100),
   created: firestoreDate.default(() => new Date()),
   updated: firestoreDate.default(() => new Date()),
 });
 
+// Library import
+export const libraryImportSchema = libraryTaskSchema.extend({
+  nextPageToken: z.string().optional(),
+  pageSize: z.number().default(100),
+});
 export type LibraryImport = z.infer<typeof libraryImportSchema>;
+
+// Library download
+export const libraryDownloadSchema = libraryTaskSchema.extend({
+  bytes: z.number().default(0),
+  lastKey: z.string().optional(),
+});
+export type LibraryDownload = z.infer<typeof libraryDownloadSchema>;
 
 // Media items
 export const libraryImportMediaItemSchema = z.object({

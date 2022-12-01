@@ -12,23 +12,23 @@ import {
 
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
-import { LibraryImportStatus } from 'data/library';
+import { LibraryTaskStatus } from 'data/library';
 import { MenuTrigger } from 'ui/components';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import PauseCircleOutlineIcon from '@mui/icons-material/PauseCircleOutline';
 import PlayCircleOutlineIcon from '@mui/icons-material/PlayCircleOutline';
-import { UseLibraryImportResult } from 'web/hooks/use-library-import';
+import { UseLibraryDownloadResult } from 'web/hooks/use-library-download';
 import { formatDate } from 'ui/utils';
 
 interface Props {
-  actions: UseLibraryImportResult['actions'];
-  libraryImport: UseLibraryImportResult['libraryImport'];
+  actions: UseLibraryDownloadResult['actions'];
+  libraryDownload: UseLibraryDownloadResult['libraryDownload'];
 }
 
-export function DownloadLibraryPanel({ actions, libraryImport }: Props) {
-  const isRunning = libraryImport?.status === LibraryImportStatus.running;
-  const isComplete = libraryImport?.status === LibraryImportStatus.complete;
-  const isEmpty = !libraryImport;
+export function DownloadLibraryPanel({ actions, libraryDownload }: Props) {
+  const isRunning = libraryDownload?.status === LibraryTaskStatus.running;
+  const isComplete = libraryDownload?.status === LibraryTaskStatus.complete;
+  const isEmpty = !libraryDownload;
 
   return (
     <Paper
@@ -37,18 +37,18 @@ export function DownloadLibraryPanel({ actions, libraryImport }: Props) {
     >
       <Box sx={{ position: 'relative' }}>
         <LinearProgress
-          value={isComplete ? 100 : Math.max(5, Math.min(50, (libraryImport?.count ?? 0) / 10000))}
+          value={isComplete ? 100 : Math.max(5, Math.min(50, (libraryDownload?.count ?? 0) / 10000))}
           variant={isRunning ? 'indeterminate' : 'determinate'}
         />
         <Typography sx={{ position: 'absolute', inset: '0 0 -5 0' }} variant='caption'>
-          {formatDate(libraryImport?.updated, 'MMM d, yyyy •  HH:mm:ss')}
+          {formatDate(libraryDownload?.updated, 'MMM d, yyyy •  HH:mm:ss')}
         </Typography>
       </Box>
       <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: -0.5 }}>
-        <Typography variant='body1'>{libraryImport?.count}</Typography>
+        <Typography variant='body1'>{libraryDownload?.count}</Typography>
       </Box>
       <Box>
-        <ActionButton actions={actions} libraryImport={libraryImport} />
+        <ActionButton actions={actions} libraryDownload={libraryDownload} />
       </Box>
 
       <Box sx={{ position: 'relative', pointerEvents: isEmpty ? 'none' : 'all', opacity: isEmpty ? 0.5 : 1 }}>
@@ -74,9 +74,9 @@ export function DownloadLibraryPanel({ actions, libraryImport }: Props) {
   );
 }
 
-function ActionButton({ actions, libraryImport }: Props) {
-  switch (libraryImport?.status) {
-    case LibraryImportStatus.complete:
+function ActionButton({ actions, libraryDownload }: Props) {
+  switch (libraryDownload?.status) {
+    case LibraryTaskStatus.complete:
       return (
         <CheckCircleOutlineIcon
           fontSize='large'
@@ -84,7 +84,7 @@ function ActionButton({ actions, libraryImport }: Props) {
         />
       );
 
-    case LibraryImportStatus.running:
+    case LibraryTaskStatus.running:
       return (
         <IconButton onClick={() => actions.pause()}>
           <PauseCircleOutlineIcon fontSize='large' sx={{ color: 'var(--color-gentian-blue-metallic)' }} />

@@ -1,6 +1,6 @@
 import { Database, DatabaseReference, get, increment, ref, remove, update } from 'firebase/database';
 import { DocumentSnapshot, Firestore, doc, getDoc, updateDoc } from 'firebase/firestore/lite';
-import { Library, LibraryImportStatus, libraryImportSchema, librarySchema } from 'data/library';
+import { Library, LibraryTaskStatus, libraryImportSchema, librarySchema } from 'data/library';
 import { MediaItem, mediaItemsResponseSchema } from 'data/media-items';
 
 import { WEB } from 'data/web';
@@ -30,9 +30,9 @@ export async function initLibraryImport({ database, db, libraryId, userId }: Ini
     const { pageSize } = libraryImport;
     let nextPageToken = libraryImport.nextPageToken;
 
-    await setStatus(LibraryImportStatus.running);
+    await setStatus(LibraryTaskStatus.running);
 
-    while (getStatus() === LibraryImportStatus.running) {
+    while (getStatus() === LibraryTaskStatus.running) {
       const { mediaItems, nextPageToken: maybeNextPageToken } = await getPage({
         library,
         librarySnapshot,
@@ -46,7 +46,7 @@ export async function initLibraryImport({ database, db, libraryId, userId }: Ini
       }, {} as Record<string, MediaItem>);
       const isLastPage = !maybeNextPageToken;
 
-      if (isLastPage) await setStatus(LibraryImportStatus.complete);
+      if (isLastPage) await setStatus(LibraryTaskStatus.complete);
       nextPageToken = maybeNextPageToken;
 
       await update(libraryMediaItemsRef, mediaItemsUpdates);
@@ -62,19 +62,19 @@ export async function initLibraryImport({ database, db, libraryId, userId }: Ini
   }
 
   async function pause() {
-    await setStatus(LibraryImportStatus.paused);
+    await setStatus(LibraryTaskStatus.paused);
   }
 
   async function cancel() {
-    await setStatus(LibraryImportStatus.canceled);
+    await setStatus(LibraryTaskStatus.canceled);
   }
 
   async function destroy() {
-    await setStatus(LibraryImportStatus.idle);
+    await setStatus(LibraryTaskStatus.idle);
     await update(libraryImportRef, {
       nextPageToken: null,
       count: 0,
-      status: LibraryImportStatus.idle,
+      status: LibraryTaskStatus.idle,
       updated: new Date(),
     });
     await remove(libraryMediaItemsRef);
@@ -83,13 +83,13 @@ export async function initLibraryImport({ database, db, libraryId, userId }: Ini
   return { start, pause, cancel, destroy, getStatus, setStatus };
 }
 
-const statusMap: Map<string, LibraryImportStatus> = new Map();
+const statusMap: Map<string, LibraryTaskStatus> = new Map();
 interface SetStatusArgs {
   libraryId: string;
   libraryImportRef: DatabaseReference;
 }
 function getSetStatus({ libraryId, libraryImportRef }: SetStatusArgs) {
-  return async (status: LibraryImportStatus) => {
+  return async (status: LibraryTaskStatus) => {
     const libraryImport = await getLibraryImport(libraryImportRef);
     const updates = libraryImportSchema.parse({ ...libraryImport, status, updated: new Date() });
 

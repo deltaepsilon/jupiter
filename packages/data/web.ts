@@ -9,6 +9,9 @@ export const WEB = {
       LIBRARY_MEDIA_ITEMS: (userId: string, libraryId: string) =>
         `user-owned/${userId}/library/${libraryId}/media-items`,
       LIBRARY_IMPORT: (userId: string, libraryId: string) => `user-owned/${userId}/library/${libraryId}/import`,
+      LIBRARY_DOWNLOAD: (userId: string, libraryId: string) => `user-owned/${userId}/library/${libraryId}/download`,
+      LIBRARY_DOWNLOAD_QUEUE: (userId: string, libraryId: string) =>
+        `user-owned/${userId}/library/${libraryId}/download-queue`,
       SYNC_TASKS: (userId: string) => `user-owned/${userId}/sync-tasks`,
     },
   },

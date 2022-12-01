@@ -2,27 +2,10 @@
 (() => {
   var __create = Object.create;
   var __defProp = Object.defineProperty;
-  var __defProps = Object.defineProperties;
   var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
-  var __getOwnPropDescs = Object.getOwnPropertyDescriptors;
   var __getOwnPropNames = Object.getOwnPropertyNames;
-  var __getOwnPropSymbols = Object.getOwnPropertySymbols;
   var __getProtoOf = Object.getPrototypeOf;
   var __hasOwnProp = Object.prototype.hasOwnProperty;
-  var __propIsEnum = Object.prototype.propertyIsEnumerable;
-  var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
-  var __spreadValues = (a3, b3) => {
-    for (var prop in b3 ||= {})
-      if (__hasOwnProp.call(b3, prop))
-        __defNormalProp(a3, prop, b3[prop]);
-    if (__getOwnPropSymbols)
-      for (var prop of __getOwnPropSymbols(b3)) {
-        if (__propIsEnum.call(b3, prop))
-          __defNormalProp(a3, prop, b3[prop]);
-      }
-    return a3;
-  };
-  var __spreadProps = (a3, b3) => __defProps(a3, __getOwnPropDescs(b3));
   var __require = /* @__PURE__ */ ((x3) => typeof require !== "undefined" ? require : typeof Proxy !== "undefined" ? new Proxy(x3, {
     get: (a3, b3) => (typeof require !== "undefined" ? require : a3)[b3]
   }) : x3)(function(x3) {
@@ -30,19 +13,6 @@
       return require.apply(this, arguments);
     throw new Error('Dynamic require of "' + x3 + '" is not supported');
   });
-  var __restKey = (key) => typeof key === "symbol" ? key : key + "";
-  var __objRest = (source, exclude) => {
-    var target = {};
-    for (var prop in source)
-      if (__hasOwnProp.call(source, prop) && exclude.indexOf(prop) < 0)
-        target[prop] = source[prop];
-    if (source != null && __getOwnPropSymbols)
-      for (var prop of __getOwnPropSymbols(source)) {
-        if (exclude.indexOf(prop) < 0 && __propIsEnum.call(source, prop))
-          target[prop] = source[prop];
-      }
-    return target;
-  };
   var __esm = (fn3, res) => function __init() {
     return fn3 && (res = (0, fn3[__getOwnPropNames(fn3)[0]])(fn3 = 0)), res;
   };
@@ -752,6 +722,446 @@
         };
         return makeConvertor;
       })();
+    }
+  });
+
+  // ../../node_modules/tslib/tslib.js
+  var require_tslib = __commonJS({
+    "../../node_modules/tslib/tslib.js"(exports, module) {
+      var __extends2;
+      var __assign2;
+      var __rest2;
+      var __decorate2;
+      var __param2;
+      var __metadata2;
+      var __awaiter2;
+      var __generator2;
+      var __exportStar2;
+      var __values2;
+      var __read2;
+      var __spread2;
+      var __spreadArrays2;
+      var __spreadArray2;
+      var __await2;
+      var __asyncGenerator2;
+      var __asyncDelegator2;
+      var __asyncValues2;
+      var __makeTemplateObject2;
+      var __importStar2;
+      var __importDefault2;
+      var __classPrivateFieldGet2;
+      var __classPrivateFieldSet2;
+      var __classPrivateFieldIn2;
+      var __createBinding2;
+      (function(factory) {
+        var root = typeof global === "object" ? global : typeof self === "object" ? self : typeof this === "object" ? this : {};
+        if (typeof define === "function" && define.amd) {
+          define("tslib", ["exports"], function(exports2) {
+            factory(createExporter(root, createExporter(exports2)));
+          });
+        } else if (typeof module === "object" && typeof module.exports === "object") {
+          factory(createExporter(root, createExporter(module.exports)));
+        } else {
+          factory(createExporter(root));
+        }
+        function createExporter(exports2, previous) {
+          if (exports2 !== root) {
+            if (typeof Object.create === "function") {
+              Object.defineProperty(exports2, "__esModule", { value: true });
+            } else {
+              exports2.__esModule = true;
+            }
+          }
+          return function(id, v6) {
+            return exports2[id] = previous ? previous(id, v6) : v6;
+          };
+        }
+      })(function(exporter) {
+        var extendStatics = Object.setPrototypeOf || { __proto__: [] } instanceof Array && function(d3, b3) {
+          d3.__proto__ = b3;
+        } || function(d3, b3) {
+          for (var p2 in b3)
+            if (Object.prototype.hasOwnProperty.call(b3, p2))
+              d3[p2] = b3[p2];
+        };
+        __extends2 = function(d3, b3) {
+          if (typeof b3 !== "function" && b3 !== null)
+            throw new TypeError("Class extends value " + String(b3) + " is not a constructor or null");
+          extendStatics(d3, b3);
+          function __() {
+            this.constructor = d3;
+          }
+          d3.prototype = b3 === null ? Object.create(b3) : (__.prototype = b3.prototype, new __());
+        };
+        __assign2 = Object.assign || function(t3) {
+          for (var s2, i3 = 1, n3 = arguments.length; i3 < n3; i3++) {
+            s2 = arguments[i3];
+            for (var p2 in s2)
+              if (Object.prototype.hasOwnProperty.call(s2, p2))
+                t3[p2] = s2[p2];
+          }
+          return t3;
+        };
+        __rest2 = function(s2, e2) {
+          var t3 = {};
+          for (var p2 in s2)
+            if (Object.prototype.hasOwnProperty.call(s2, p2) && e2.indexOf(p2) < 0)
+              t3[p2] = s2[p2];
+          if (s2 != null && typeof Object.getOwnPropertySymbols === "function")
+            for (var i3 = 0, p2 = Object.getOwnPropertySymbols(s2); i3 < p2.length; i3++) {
+              if (e2.indexOf(p2[i3]) < 0 && Object.prototype.propertyIsEnumerable.call(s2, p2[i3]))
+                t3[p2[i3]] = s2[p2[i3]];
+            }
+          return t3;
+        };
+        __decorate2 = function(decorators, target, key, desc) {
+          var c2 = arguments.length, r3 = c2 < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d3;
+          if (typeof Reflect === "object" && typeof Reflect.decorate === "function")
+            r3 = Reflect.decorate(decorators, target, key, desc);
+          else
+            for (var i3 = decorators.length - 1; i3 >= 0; i3--)
+              if (d3 = decorators[i3])
+                r3 = (c2 < 3 ? d3(r3) : c2 > 3 ? d3(target, key, r3) : d3(target, key)) || r3;
+          return c2 > 3 && r3 && Object.defineProperty(target, key, r3), r3;
+        };
+        __param2 = function(paramIndex, decorator) {
+          return function(target, key) {
+            decorator(target, key, paramIndex);
+          };
+        };
+        __metadata2 = function(metadataKey, metadataValue) {
+          if (typeof Reflect === "object" && typeof Reflect.metadata === "function")
+            return Reflect.metadata(metadataKey, metadataValue);
+        };
+        __awaiter2 = function(thisArg, _arguments, P3, generator) {
+          function adopt(value) {
+            return value instanceof P3 ? value : new P3(function(resolve) {
+              resolve(value);
+            });
+          }
+          return new (P3 || (P3 = Promise))(function(resolve, reject) {
+            function fulfilled(value) {
+              try {
+                step(generator.next(value));
+              } catch (e2) {
+                reject(e2);
+              }
+            }
+            function rejected(value) {
+              try {
+                step(generator["throw"](value));
+              } catch (e2) {
+                reject(e2);
+              }
+            }
+            function step(result) {
+              result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected);
+            }
+            step((generator = generator.apply(thisArg, _arguments || [])).next());
+          });
+        };
+        __generator2 = function(thisArg, body) {
+          var _3 = { label: 0, sent: function() {
+            if (t3[0] & 1)
+              throw t3[1];
+            return t3[1];
+          }, trys: [], ops: [] }, f3, y3, t3, g3;
+          return g3 = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g3[Symbol.iterator] = function() {
+            return this;
+          }), g3;
+          function verb(n3) {
+            return function(v6) {
+              return step([n3, v6]);
+            };
+          }
+          function step(op) {
+            if (f3)
+              throw new TypeError("Generator is already executing.");
+            while (g3 && (g3 = 0, op[0] && (_3 = 0)), _3)
+              try {
+                if (f3 = 1, y3 && (t3 = op[0] & 2 ? y3["return"] : op[0] ? y3["throw"] || ((t3 = y3["return"]) && t3.call(y3), 0) : y3.next) && !(t3 = t3.call(y3, op[1])).done)
+                  return t3;
+                if (y3 = 0, t3)
+                  op = [op[0] & 2, t3.value];
+                switch (op[0]) {
+                  case 0:
+                  case 1:
+                    t3 = op;
+                    break;
+                  case 4:
+                    _3.label++;
+                    return { value: op[1], done: false };
+                  case 5:
+                    _3.label++;
+                    y3 = op[1];
+                    op = [0];
+                    continue;
+                  case 7:
+                    op = _3.ops.pop();
+                    _3.trys.pop();
+                    continue;
+                  default:
+                    if (!(t3 = _3.trys, t3 = t3.length > 0 && t3[t3.length - 1]) && (op[0] === 6 || op[0] === 2)) {
+                      _3 = 0;
+                      continue;
+                    }
+                    if (op[0] === 3 && (!t3 || op[1] > t3[0] && op[1] < t3[3])) {
+                      _3.label = op[1];
+                      break;
+                    }
+                    if (op[0] === 6 && _3.label < t3[1]) {
+                      _3.label = t3[1];
+                      t3 = op;
+                      break;
+                    }
+                    if (t3 && _3.label < t3[2]) {
+                      _3.label = t3[2];
+                      _3.ops.push(op);
+                      break;
+                    }
+                    if (t3[2])
+                      _3.ops.pop();
+                    _3.trys.pop();
+                    continue;
+                }
+                op = body.call(thisArg, _3);
+              } catch (e2) {
+                op = [6, e2];
+                y3 = 0;
+              } finally {
+                f3 = t3 = 0;
+              }
+            if (op[0] & 5)
+              throw op[1];
+            return { value: op[0] ? op[1] : void 0, done: true };
+          }
+        };
+        __exportStar2 = function(m3, o2) {
+          for (var p2 in m3)
+            if (p2 !== "default" && !Object.prototype.hasOwnProperty.call(o2, p2))
+              __createBinding2(o2, m3, p2);
+        };
+        __createBinding2 = Object.create ? function(o2, m3, k3, k22) {
+          if (k22 === void 0)
+            k22 = k3;
+          var desc = Object.getOwnPropertyDescriptor(m3, k3);
+          if (!desc || ("get" in desc ? !m3.__esModule : desc.writable || desc.configurable)) {
+            desc = { enumerable: true, get: function() {
+              return m3[k3];
+            } };
+          }
+          Object.defineProperty(o2, k22, desc);
+        } : function(o2, m3, k3, k22) {
+          if (k22 === void 0)
+            k22 = k3;
+          o2[k22] = m3[k3];
+        };
+        __values2 = function(o2) {
+          var s2 = typeof Symbol === "function" && Symbol.iterator, m3 = s2 && o2[s2], i3 = 0;
+          if (m3)
+            return m3.call(o2);
+          if (o2 && typeof o2.length === "number")
+            return {
+              next: function() {
+                if (o2 && i3 >= o2.length)
+                  o2 = void 0;
+                return { value: o2 && o2[i3++], done: !o2 };
+              }
+            };
+          throw new TypeError(s2 ? "Object is not iterable." : "Symbol.iterator is not defined.");
+        };
+        __read2 = function(o2, n3) {
+          var m3 = typeof Symbol === "function" && o2[Symbol.iterator];
+          if (!m3)
+            return o2;
+          var i3 = m3.call(o2), r3, ar2 = [], e2;
+          try {
+            while ((n3 === void 0 || n3-- > 0) && !(r3 = i3.next()).done)
+              ar2.push(r3.value);
+          } catch (error2) {
+            e2 = { error: error2 };
+          } finally {
+            try {
+              if (r3 && !r3.done && (m3 = i3["return"]))
+                m3.call(i3);
+            } finally {
+              if (e2)
+                throw e2.error;
+            }
+          }
+          return ar2;
+        };
+        __spread2 = function() {
+          for (var ar2 = [], i3 = 0; i3 < arguments.length; i3++)
+            ar2 = ar2.concat(__read2(arguments[i3]));
+          return ar2;
+        };
+        __spreadArrays2 = function() {
+          for (var s2 = 0, i3 = 0, il = arguments.length; i3 < il; i3++)
+            s2 += arguments[i3].length;
+          for (var r3 = Array(s2), k3 = 0, i3 = 0; i3 < il; i3++)
+            for (var a3 = arguments[i3], j2 = 0, jl = a3.length; j2 < jl; j2++, k3++)
+              r3[k3] = a3[j2];
+          return r3;
+        };
+        __spreadArray2 = function(to, from, pack) {
+          if (pack || arguments.length === 2)
+            for (var i3 = 0, l2 = from.length, ar2; i3 < l2; i3++) {
+              if (ar2 || !(i3 in from)) {
+                if (!ar2)
+                  ar2 = Array.prototype.slice.call(from, 0, i3);
+                ar2[i3] = from[i3];
+              }
+            }
+          return to.concat(ar2 || Array.prototype.slice.call(from));
+        };
+        __await2 = function(v6) {
+          return this instanceof __await2 ? (this.v = v6, this) : new __await2(v6);
+        };
+        __asyncGenerator2 = function(thisArg, _arguments, generator) {
+          if (!Symbol.asyncIterator)
+            throw new TypeError("Symbol.asyncIterator is not defined.");
+          var g3 = generator.apply(thisArg, _arguments || []), i3, q3 = [];
+          return i3 = {}, verb("next"), verb("throw"), verb("return"), i3[Symbol.asyncIterator] = function() {
+            return this;
+          }, i3;
+          function verb(n3) {
+            if (g3[n3])
+              i3[n3] = function(v6) {
+                return new Promise(function(a3, b3) {
+                  q3.push([n3, v6, a3, b3]) > 1 || resume(n3, v6);
+                });
+              };
+          }
+          function resume(n3, v6) {
+            try {
+              step(g3[n3](v6));
+            } catch (e2) {
+              settle(q3[0][3], e2);
+            }
+          }
+          function step(r3) {
+            r3.value instanceof __await2 ? Promise.resolve(r3.value.v).then(fulfill, reject) : settle(q3[0][2], r3);
+          }
+          function fulfill(value) {
+            resume("next", value);
+          }
+          function reject(value) {
+            resume("throw", value);
+          }
+          function settle(f3, v6) {
+            if (f3(v6), q3.shift(), q3.length)
+              resume(q3[0][0], q3[0][1]);
+          }
+        };
+        __asyncDelegator2 = function(o2) {
+          var i3, p2;
+          return i3 = {}, verb("next"), verb("throw", function(e2) {
+            throw e2;
+          }), verb("return"), i3[Symbol.iterator] = function() {
+            return this;
+          }, i3;
+          function verb(n3, f3) {
+            i3[n3] = o2[n3] ? function(v6) {
+              return (p2 = !p2) ? { value: __await2(o2[n3](v6)), done: n3 === "return" } : f3 ? f3(v6) : v6;
+            } : f3;
+          }
+        };
+        __asyncValues2 = function(o2) {
+          if (!Symbol.asyncIterator)
+            throw new TypeError("Symbol.asyncIterator is not defined.");
+          var m3 = o2[Symbol.asyncIterator], i3;
+          return m3 ? m3.call(o2) : (o2 = typeof __values2 === "function" ? __values2(o2) : o2[Symbol.iterator](), i3 = {}, verb("next"), verb("throw"), verb("return"), i3[Symbol.asyncIterator] = function() {
+            return this;
+          }, i3);
+          function verb(n3) {
+            i3[n3] = o2[n3] && function(v6) {
+              return new Promise(function(resolve, reject) {
+                v6 = o2[n3](v6), settle(resolve, reject, v6.done, v6.value);
+              });
+            };
+          }
+          function settle(resolve, reject, d3, v6) {
+            Promise.resolve(v6).then(function(v7) {
+              resolve({ value: v7, done: d3 });
+            }, reject);
+          }
+        };
+        __makeTemplateObject2 = function(cooked, raw) {
+          if (Object.defineProperty) {
+            Object.defineProperty(cooked, "raw", { value: raw });
+          } else {
+            cooked.raw = raw;
+          }
+          return cooked;
+        };
+        var __setModuleDefault = Object.create ? function(o2, v6) {
+          Object.defineProperty(o2, "default", { enumerable: true, value: v6 });
+        } : function(o2, v6) {
+          o2["default"] = v6;
+        };
+        __importStar2 = function(mod2) {
+          if (mod2 && mod2.__esModule)
+            return mod2;
+          var result = {};
+          if (mod2 != null) {
+            for (var k3 in mod2)
+              if (k3 !== "default" && Object.prototype.hasOwnProperty.call(mod2, k3))
+                __createBinding2(result, mod2, k3);
+          }
+          __setModuleDefault(result, mod2);
+          return result;
+        };
+        __importDefault2 = function(mod2) {
+          return mod2 && mod2.__esModule ? mod2 : { "default": mod2 };
+        };
+        __classPrivateFieldGet2 = function(receiver, state, kind, f3) {
+          if (kind === "a" && !f3)
+            throw new TypeError("Private accessor was defined without a getter");
+          if (typeof state === "function" ? receiver !== state || !f3 : !state.has(receiver))
+            throw new TypeError("Cannot read private member from an object whose class did not declare it");
+          return kind === "m" ? f3 : kind === "a" ? f3.call(receiver) : f3 ? f3.value : state.get(receiver);
+        };
+        __classPrivateFieldSet2 = function(receiver, state, value, kind, f3) {
+          if (kind === "m")
+            throw new TypeError("Private method is not writable");
+          if (kind === "a" && !f3)
+            throw new TypeError("Private accessor was defined without a setter");
+          if (typeof state === "function" ? receiver !== state || !f3 : !state.has(receiver))
+            throw new TypeError("Cannot write private member to an object whose class did not declare it");
+          return kind === "a" ? f3.call(receiver, value) : f3 ? f3.value = value : state.set(receiver, value), value;
+        };
+        __classPrivateFieldIn2 = function(state, receiver) {
+          if (receiver === null || typeof receiver !== "object" && typeof receiver !== "function")
+            throw new TypeError("Cannot use 'in' operator on non-object");
+          return typeof state === "function" ? receiver === state : state.has(receiver);
+        };
+        exporter("__extends", __extends2);
+        exporter("__assign", __assign2);
+        exporter("__rest", __rest2);
+        exporter("__decorate", __decorate2);
+        exporter("__param", __param2);
+        exporter("__metadata", __metadata2);
+        exporter("__awaiter", __awaiter2);
+        exporter("__generator", __generator2);
+        exporter("__exportStar", __exportStar2);
+        exporter("__createBinding", __createBinding2);
+        exporter("__values", __values2);
+        exporter("__read", __read2);
+        exporter("__spread", __spread2);
+        exporter("__spreadArrays", __spreadArrays2);
+        exporter("__spreadArray", __spreadArray2);
+        exporter("__await", __await2);
+        exporter("__asyncGenerator", __asyncGenerator2);
+        exporter("__asyncDelegator", __asyncDelegator2);
+        exporter("__asyncValues", __asyncValues2);
+        exporter("__makeTemplateObject", __makeTemplateObject2);
+        exporter("__importStar", __importStar2);
+        exporter("__importDefault", __importDefault2);
+        exporter("__classPrivateFieldGet", __classPrivateFieldGet2);
+        exporter("__classPrivateFieldSet", __classPrivateFieldSet2);
+        exporter("__classPrivateFieldIn", __classPrivateFieldIn2);
+      });
     }
   });
 
@@ -1643,7 +2053,7 @@
             executeCallback(promise, callback);
             return promise;
           }
-          function clear2(callback) {
+          function clear(callback) {
             var self2 = this;
             var promise = new Promise$1(function(resolve, reject) {
               self2.ready().then(function() {
@@ -1897,7 +2307,7 @@
             getItem,
             setItem,
             removeItem,
-            clear: clear2,
+            clear,
             length,
             key,
             keys,
@@ -2888,446 +3298,6 @@
           var localforage_js = new LocalForage();
           module3.exports = localforage_js;
         }, { "3": 3 }] }, {}, [4])(4);
-      });
-    }
-  });
-
-  // ../../node_modules/tslib/tslib.js
-  var require_tslib = __commonJS({
-    "../../node_modules/tslib/tslib.js"(exports, module) {
-      var __extends2;
-      var __assign2;
-      var __rest2;
-      var __decorate2;
-      var __param2;
-      var __metadata2;
-      var __awaiter2;
-      var __generator2;
-      var __exportStar2;
-      var __values2;
-      var __read2;
-      var __spread2;
-      var __spreadArrays2;
-      var __spreadArray2;
-      var __await2;
-      var __asyncGenerator2;
-      var __asyncDelegator2;
-      var __asyncValues2;
-      var __makeTemplateObject2;
-      var __importStar2;
-      var __importDefault2;
-      var __classPrivateFieldGet2;
-      var __classPrivateFieldSet2;
-      var __classPrivateFieldIn2;
-      var __createBinding2;
-      (function(factory) {
-        var root = typeof global === "object" ? global : typeof self === "object" ? self : typeof this === "object" ? this : {};
-        if (typeof define === "function" && define.amd) {
-          define("tslib", ["exports"], function(exports2) {
-            factory(createExporter(root, createExporter(exports2)));
-          });
-        } else if (typeof module === "object" && typeof module.exports === "object") {
-          factory(createExporter(root, createExporter(module.exports)));
-        } else {
-          factory(createExporter(root));
-        }
-        function createExporter(exports2, previous) {
-          if (exports2 !== root) {
-            if (typeof Object.create === "function") {
-              Object.defineProperty(exports2, "__esModule", { value: true });
-            } else {
-              exports2.__esModule = true;
-            }
-          }
-          return function(id, v6) {
-            return exports2[id] = previous ? previous(id, v6) : v6;
-          };
-        }
-      })(function(exporter) {
-        var extendStatics = Object.setPrototypeOf || { __proto__: [] } instanceof Array && function(d3, b3) {
-          d3.__proto__ = b3;
-        } || function(d3, b3) {
-          for (var p2 in b3)
-            if (Object.prototype.hasOwnProperty.call(b3, p2))
-              d3[p2] = b3[p2];
-        };
-        __extends2 = function(d3, b3) {
-          if (typeof b3 !== "function" && b3 !== null)
-            throw new TypeError("Class extends value " + String(b3) + " is not a constructor or null");
-          extendStatics(d3, b3);
-          function __() {
-            this.constructor = d3;
-          }
-          d3.prototype = b3 === null ? Object.create(b3) : (__.prototype = b3.prototype, new __());
-        };
-        __assign2 = Object.assign || function(t3) {
-          for (var s2, i3 = 1, n3 = arguments.length; i3 < n3; i3++) {
-            s2 = arguments[i3];
-            for (var p2 in s2)
-              if (Object.prototype.hasOwnProperty.call(s2, p2))
-                t3[p2] = s2[p2];
-          }
-          return t3;
-        };
-        __rest2 = function(s2, e2) {
-          var t3 = {};
-          for (var p2 in s2)
-            if (Object.prototype.hasOwnProperty.call(s2, p2) && e2.indexOf(p2) < 0)
-              t3[p2] = s2[p2];
-          if (s2 != null && typeof Object.getOwnPropertySymbols === "function")
-            for (var i3 = 0, p2 = Object.getOwnPropertySymbols(s2); i3 < p2.length; i3++) {
-              if (e2.indexOf(p2[i3]) < 0 && Object.prototype.propertyIsEnumerable.call(s2, p2[i3]))
-                t3[p2[i3]] = s2[p2[i3]];
-            }
-          return t3;
-        };
-        __decorate2 = function(decorators, target, key, desc) {
-          var c2 = arguments.length, r3 = c2 < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d3;
-          if (typeof Reflect === "object" && typeof Reflect.decorate === "function")
-            r3 = Reflect.decorate(decorators, target, key, desc);
-          else
-            for (var i3 = decorators.length - 1; i3 >= 0; i3--)
-              if (d3 = decorators[i3])
-                r3 = (c2 < 3 ? d3(r3) : c2 > 3 ? d3(target, key, r3) : d3(target, key)) || r3;
-          return c2 > 3 && r3 && Object.defineProperty(target, key, r3), r3;
-        };
-        __param2 = function(paramIndex, decorator) {
-          return function(target, key) {
-            decorator(target, key, paramIndex);
-          };
-        };
-        __metadata2 = function(metadataKey, metadataValue) {
-          if (typeof Reflect === "object" && typeof Reflect.metadata === "function")
-            return Reflect.metadata(metadataKey, metadataValue);
-        };
-        __awaiter2 = function(thisArg, _arguments, P3, generator) {
-          function adopt(value) {
-            return value instanceof P3 ? value : new P3(function(resolve) {
-              resolve(value);
-            });
-          }
-          return new (P3 || (P3 = Promise))(function(resolve, reject) {
-            function fulfilled(value) {
-              try {
-                step(generator.next(value));
-              } catch (e2) {
-                reject(e2);
-              }
-            }
-            function rejected(value) {
-              try {
-                step(generator["throw"](value));
-              } catch (e2) {
-                reject(e2);
-              }
-            }
-            function step(result) {
-              result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected);
-            }
-            step((generator = generator.apply(thisArg, _arguments || [])).next());
-          });
-        };
-        __generator2 = function(thisArg, body) {
-          var _3 = { label: 0, sent: function() {
-            if (t3[0] & 1)
-              throw t3[1];
-            return t3[1];
-          }, trys: [], ops: [] }, f3, y3, t3, g3;
-          return g3 = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g3[Symbol.iterator] = function() {
-            return this;
-          }), g3;
-          function verb(n3) {
-            return function(v6) {
-              return step([n3, v6]);
-            };
-          }
-          function step(op) {
-            if (f3)
-              throw new TypeError("Generator is already executing.");
-            while (g3 && (g3 = 0, op[0] && (_3 = 0)), _3)
-              try {
-                if (f3 = 1, y3 && (t3 = op[0] & 2 ? y3["return"] : op[0] ? y3["throw"] || ((t3 = y3["return"]) && t3.call(y3), 0) : y3.next) && !(t3 = t3.call(y3, op[1])).done)
-                  return t3;
-                if (y3 = 0, t3)
-                  op = [op[0] & 2, t3.value];
-                switch (op[0]) {
-                  case 0:
-                  case 1:
-                    t3 = op;
-                    break;
-                  case 4:
-                    _3.label++;
-                    return { value: op[1], done: false };
-                  case 5:
-                    _3.label++;
-                    y3 = op[1];
-                    op = [0];
-                    continue;
-                  case 7:
-                    op = _3.ops.pop();
-                    _3.trys.pop();
-                    continue;
-                  default:
-                    if (!(t3 = _3.trys, t3 = t3.length > 0 && t3[t3.length - 1]) && (op[0] === 6 || op[0] === 2)) {
-                      _3 = 0;
-                      continue;
-                    }
-                    if (op[0] === 3 && (!t3 || op[1] > t3[0] && op[1] < t3[3])) {
-                      _3.label = op[1];
-                      break;
-                    }
-                    if (op[0] === 6 && _3.label < t3[1]) {
-                      _3.label = t3[1];
-                      t3 = op;
-                      break;
-                    }
-                    if (t3 && _3.label < t3[2]) {
-                      _3.label = t3[2];
-                      _3.ops.push(op);
-                      break;
-                    }
-                    if (t3[2])
-                      _3.ops.pop();
-                    _3.trys.pop();
-                    continue;
-                }
-                op = body.call(thisArg, _3);
-              } catch (e2) {
-                op = [6, e2];
-                y3 = 0;
-              } finally {
-                f3 = t3 = 0;
-              }
-            if (op[0] & 5)
-              throw op[1];
-            return { value: op[0] ? op[1] : void 0, done: true };
-          }
-        };
-        __exportStar2 = function(m3, o2) {
-          for (var p2 in m3)
-            if (p2 !== "default" && !Object.prototype.hasOwnProperty.call(o2, p2))
-              __createBinding2(o2, m3, p2);
-        };
-        __createBinding2 = Object.create ? function(o2, m3, k3, k22) {
-          if (k22 === void 0)
-            k22 = k3;
-          var desc = Object.getOwnPropertyDescriptor(m3, k3);
-          if (!desc || ("get" in desc ? !m3.__esModule : desc.writable || desc.configurable)) {
-            desc = { enumerable: true, get: function() {
-              return m3[k3];
-            } };
-          }
-          Object.defineProperty(o2, k22, desc);
-        } : function(o2, m3, k3, k22) {
-          if (k22 === void 0)
-            k22 = k3;
-          o2[k22] = m3[k3];
-        };
-        __values2 = function(o2) {
-          var s2 = typeof Symbol === "function" && Symbol.iterator, m3 = s2 && o2[s2], i3 = 0;
-          if (m3)
-            return m3.call(o2);
-          if (o2 && typeof o2.length === "number")
-            return {
-              next: function() {
-                if (o2 && i3 >= o2.length)
-                  o2 = void 0;
-                return { value: o2 && o2[i3++], done: !o2 };
-              }
-            };
-          throw new TypeError(s2 ? "Object is not iterable." : "Symbol.iterator is not defined.");
-        };
-        __read2 = function(o2, n3) {
-          var m3 = typeof Symbol === "function" && o2[Symbol.iterator];
-          if (!m3)
-            return o2;
-          var i3 = m3.call(o2), r3, ar2 = [], e2;
-          try {
-            while ((n3 === void 0 || n3-- > 0) && !(r3 = i3.next()).done)
-              ar2.push(r3.value);
-          } catch (error2) {
-            e2 = { error: error2 };
-          } finally {
-            try {
-              if (r3 && !r3.done && (m3 = i3["return"]))
-                m3.call(i3);
-            } finally {
-              if (e2)
-                throw e2.error;
-            }
-          }
-          return ar2;
-        };
-        __spread2 = function() {
-          for (var ar2 = [], i3 = 0; i3 < arguments.length; i3++)
-            ar2 = ar2.concat(__read2(arguments[i3]));
-          return ar2;
-        };
-        __spreadArrays2 = function() {
-          for (var s2 = 0, i3 = 0, il = arguments.length; i3 < il; i3++)
-            s2 += arguments[i3].length;
-          for (var r3 = Array(s2), k3 = 0, i3 = 0; i3 < il; i3++)
-            for (var a3 = arguments[i3], j2 = 0, jl = a3.length; j2 < jl; j2++, k3++)
-              r3[k3] = a3[j2];
-          return r3;
-        };
-        __spreadArray2 = function(to, from, pack) {
-          if (pack || arguments.length === 2)
-            for (var i3 = 0, l2 = from.length, ar2; i3 < l2; i3++) {
-              if (ar2 || !(i3 in from)) {
-                if (!ar2)
-                  ar2 = Array.prototype.slice.call(from, 0, i3);
-                ar2[i3] = from[i3];
-              }
-            }
-          return to.concat(ar2 || Array.prototype.slice.call(from));
-        };
-        __await2 = function(v6) {
-          return this instanceof __await2 ? (this.v = v6, this) : new __await2(v6);
-        };
-        __asyncGenerator2 = function(thisArg, _arguments, generator) {
-          if (!Symbol.asyncIterator)
-            throw new TypeError("Symbol.asyncIterator is not defined.");
-          var g3 = generator.apply(thisArg, _arguments || []), i3, q3 = [];
-          return i3 = {}, verb("next"), verb("throw"), verb("return"), i3[Symbol.asyncIterator] = function() {
-            return this;
-          }, i3;
-          function verb(n3) {
-            if (g3[n3])
-              i3[n3] = function(v6) {
-                return new Promise(function(a3, b3) {
-                  q3.push([n3, v6, a3, b3]) > 1 || resume(n3, v6);
-                });
-              };
-          }
-          function resume(n3, v6) {
-            try {
-              step(g3[n3](v6));
-            } catch (e2) {
-              settle(q3[0][3], e2);
-            }
-          }
-          function step(r3) {
-            r3.value instanceof __await2 ? Promise.resolve(r3.value.v).then(fulfill, reject) : settle(q3[0][2], r3);
-          }
-          function fulfill(value) {
-            resume("next", value);
-          }
-          function reject(value) {
-            resume("throw", value);
-          }
-          function settle(f3, v6) {
-            if (f3(v6), q3.shift(), q3.length)
-              resume(q3[0][0], q3[0][1]);
-          }
-        };
-        __asyncDelegator2 = function(o2) {
-          var i3, p2;
-          return i3 = {}, verb("next"), verb("throw", function(e2) {
-            throw e2;
-          }), verb("return"), i3[Symbol.iterator] = function() {
-            return this;
-          }, i3;
-          function verb(n3, f3) {
-            i3[n3] = o2[n3] ? function(v6) {
-              return (p2 = !p2) ? { value: __await2(o2[n3](v6)), done: n3 === "return" } : f3 ? f3(v6) : v6;
-            } : f3;
-          }
-        };
-        __asyncValues2 = function(o2) {
-          if (!Symbol.asyncIterator)
-            throw new TypeError("Symbol.asyncIterator is not defined.");
-          var m3 = o2[Symbol.asyncIterator], i3;
-          return m3 ? m3.call(o2) : (o2 = typeof __values2 === "function" ? __values2(o2) : o2[Symbol.iterator](), i3 = {}, verb("next"), verb("throw"), verb("return"), i3[Symbol.asyncIterator] = function() {
-            return this;
-          }, i3);
-          function verb(n3) {
-            i3[n3] = o2[n3] && function(v6) {
-              return new Promise(function(resolve, reject) {
-                v6 = o2[n3](v6), settle(resolve, reject, v6.done, v6.value);
-              });
-            };
-          }
-          function settle(resolve, reject, d3, v6) {
-            Promise.resolve(v6).then(function(v7) {
-              resolve({ value: v7, done: d3 });
-            }, reject);
-          }
-        };
-        __makeTemplateObject2 = function(cooked, raw) {
-          if (Object.defineProperty) {
-            Object.defineProperty(cooked, "raw", { value: raw });
-          } else {
-            cooked.raw = raw;
-          }
-          return cooked;
-        };
-        var __setModuleDefault = Object.create ? function(o2, v6) {
-          Object.defineProperty(o2, "default", { enumerable: true, value: v6 });
-        } : function(o2, v6) {
-          o2["default"] = v6;
-        };
-        __importStar2 = function(mod2) {
-          if (mod2 && mod2.__esModule)
-            return mod2;
-          var result = {};
-          if (mod2 != null) {
-            for (var k3 in mod2)
-              if (k3 !== "default" && Object.prototype.hasOwnProperty.call(mod2, k3))
-                __createBinding2(result, mod2, k3);
-          }
-          __setModuleDefault(result, mod2);
-          return result;
-        };
-        __importDefault2 = function(mod2) {
-          return mod2 && mod2.__esModule ? mod2 : { "default": mod2 };
-        };
-        __classPrivateFieldGet2 = function(receiver, state, kind, f3) {
-          if (kind === "a" && !f3)
-            throw new TypeError("Private accessor was defined without a getter");
-          if (typeof state === "function" ? receiver !== state || !f3 : !state.has(receiver))
-            throw new TypeError("Cannot read private member from an object whose class did not declare it");
-          return kind === "m" ? f3 : kind === "a" ? f3.call(receiver) : f3 ? f3.value : state.get(receiver);
-        };
-        __classPrivateFieldSet2 = function(receiver, state, value, kind, f3) {
-          if (kind === "m")
-            throw new TypeError("Private method is not writable");
-          if (kind === "a" && !f3)
-            throw new TypeError("Private accessor was defined without a setter");
-          if (typeof state === "function" ? receiver !== state || !f3 : !state.has(receiver))
-            throw new TypeError("Cannot write private member to an object whose class did not declare it");
-          return kind === "a" ? f3.call(receiver, value) : f3 ? f3.value = value : state.set(receiver, value), value;
-        };
-        __classPrivateFieldIn2 = function(state, receiver) {
-          if (receiver === null || typeof receiver !== "object" && typeof receiver !== "function")
-            throw new TypeError("Cannot use 'in' operator on non-object");
-          return typeof state === "function" ? receiver === state : state.has(receiver);
-        };
-        exporter("__extends", __extends2);
-        exporter("__assign", __assign2);
-        exporter("__rest", __rest2);
-        exporter("__decorate", __decorate2);
-        exporter("__param", __param2);
-        exporter("__metadata", __metadata2);
-        exporter("__awaiter", __awaiter2);
-        exporter("__generator", __generator2);
-        exporter("__exportStar", __exportStar2);
-        exporter("__createBinding", __createBinding2);
-        exporter("__values", __values2);
-        exporter("__read", __read2);
-        exporter("__spread", __spread2);
-        exporter("__spreadArrays", __spreadArrays2);
-        exporter("__spreadArray", __spreadArray2);
-        exporter("__await", __await2);
-        exporter("__asyncGenerator", __asyncGenerator2);
-        exporter("__asyncDelegator", __asyncDelegator2);
-        exporter("__asyncValues", __asyncValues2);
-        exporter("__makeTemplateObject", __makeTemplateObject2);
-        exporter("__importStar", __importStar2);
-        exporter("__importDefault", __importDefault2);
-        exporter("__classPrivateFieldGet", __classPrivateFieldGet2);
-        exporter("__classPrivateFieldSet", __classPrivateFieldSet2);
-        exporter("__classPrivateFieldIn", __classPrivateFieldIn2);
       });
     }
   });
@@ -6328,17 +6298,6 @@
   var libraryMessageSchema = mod.object({
     libraryId: mod.string()
   });
-  var syncStatusMessageSchema = mod.object({
-    taskId: mod.string(),
-    isActive: mod.boolean().optional()
-  });
-  var syncGetRefsMessageSchema = mod.object({
-    metadataRefPath: mod.string(),
-    tasksRefPath: mod.string()
-  });
-  var syncTaskMessageSchema = mod.object({
-    taskId: mod.string()
-  });
   var MessageAction = /* @__PURE__ */ ((MessageAction2) => {
     MessageAction2["ack"] = "ack";
     MessageAction2["libraryImportInit"] = "libraryImportInit";
@@ -6346,14 +6305,11 @@
     MessageAction2["libraryImportPause"] = "libraryImportPause";
     MessageAction2["libraryImportCancel"] = "libraryImportCancel";
     MessageAction2["libraryImportDestroy"] = "libraryImportDestroy";
-    MessageAction2["syncStatus"] = "syncStatus";
-    MessageAction2["syncStart"] = "syncStart";
-    MessageAction2["syncStop"] = "syncStop";
-    MessageAction2["syncEmpty"] = "syncEmpty";
-    MessageAction2["syncRequeue"] = "syncRequeue";
-    MessageAction2["syncGetRefs"] = "syncGetRefs";
-    MessageAction2["syncTaskStatus"] = "syncTaskStatus";
-    MessageAction2["syncQueueRefs"] = "syncQueueRefs";
+    MessageAction2["libraryDownloadInit"] = "libraryDownloadInit";
+    MessageAction2["libraryDownloadStart"] = "libraryDownloadStart";
+    MessageAction2["libraryDownloadPause"] = "libraryDownloadPause";
+    MessageAction2["libraryDownloadCancel"] = "libraryDownloadCancel";
+    MessageAction2["libraryDownloadDestroy"] = "libraryDownloadDestroy";
     return MessageAction2;
   })(MessageAction || {});
   function encodePostMessage({ action, data, error: error2, uuid }) {
@@ -6367,10 +6323,6 @@
   var messageActionSchema = mod.nativeEnum(MessageAction);
   var postMessageBaseSchema = mod.object({ error: mod.string().optional(), uuid: mod.string() });
   var messageSchemasByAction = {
-    ["syncStatus" /* syncStatus */]: postMessageBaseSchema.extend({
-      action: mod.literal("syncStatus" /* syncStatus */),
-      data: syncStatusMessageSchema
-    }),
     ["libraryImportInit" /* libraryImportInit */]: postMessageBaseSchema.extend({
       action: mod.literal("libraryImportInit" /* libraryImportInit */),
       data: libraryMessageSchema
@@ -6391,39 +6343,38 @@
       action: mod.literal("libraryImportDestroy" /* libraryImportDestroy */),
       data: libraryMessageSchema
     }),
-    ["syncGetRefs" /* syncGetRefs */]: postMessageBaseSchema.extend({
-      action: mod.literal("syncGetRefs" /* syncGetRefs */),
-      data: syncGetRefsMessageSchema
+    ["libraryDownloadInit" /* libraryDownloadInit */]: postMessageBaseSchema.extend({
+      action: mod.literal("libraryDownloadInit" /* libraryDownloadInit */),
+      data: libraryMessageSchema
     }),
-    ["syncStart" /* syncStart */]: postMessageBaseSchema.extend({
-      action: mod.literal("syncStart" /* syncStart */),
-      data: syncTaskMessageSchema
+    ["libraryDownloadStart" /* libraryDownloadStart */]: postMessageBaseSchema.extend({
+      action: mod.literal("libraryDownloadStart" /* libraryDownloadStart */),
+      data: libraryMessageSchema
     }),
-    ["syncStop" /* syncStop */]: postMessageBaseSchema.extend({
-      action: mod.literal("syncStop" /* syncStop */),
-      data: syncTaskMessageSchema
+    ["libraryDownloadPause" /* libraryDownloadPause */]: postMessageBaseSchema.extend({
+      action: mod.literal("libraryDownloadPause" /* libraryDownloadPause */),
+      data: libraryMessageSchema
     }),
-    ["syncEmpty" /* syncEmpty */]: postMessageBaseSchema.extend({
-      action: mod.literal("syncEmpty" /* syncEmpty */),
-      data: syncTaskMessageSchema
+    ["libraryDownloadCancel" /* libraryDownloadCancel */]: postMessageBaseSchema.extend({
+      action: mod.literal("libraryDownloadCancel" /* libraryDownloadCancel */),
+      data: libraryMessageSchema
     }),
-    ["syncRequeue" /* syncRequeue */]: postMessageBaseSchema.extend({
-      action: mod.literal("syncRequeue" /* syncRequeue */),
-      data: syncTaskMessageSchema
+    ["libraryDownloadDestroy" /* libraryDownloadDestroy */]: postMessageBaseSchema.extend({
+      action: mod.literal("libraryDownloadDestroy" /* libraryDownloadDestroy */),
+      data: libraryMessageSchema
     })
   };
   var discriminatedMessageSchema = mod.discriminatedUnion("action", [
-    messageSchemasByAction["syncStatus" /* syncStatus */],
     messageSchemasByAction["libraryImportInit" /* libraryImportInit */],
     messageSchemasByAction["libraryImportStart" /* libraryImportStart */],
     messageSchemasByAction["libraryImportPause" /* libraryImportPause */],
     messageSchemasByAction["libraryImportCancel" /* libraryImportCancel */],
     messageSchemasByAction["libraryImportDestroy" /* libraryImportDestroy */],
-    messageSchemasByAction["syncGetRefs" /* syncGetRefs */],
-    messageSchemasByAction["syncStart" /* syncStart */],
-    messageSchemasByAction["syncStop" /* syncStop */],
-    messageSchemasByAction["syncEmpty" /* syncEmpty */],
-    messageSchemasByAction["syncRequeue" /* syncRequeue */]
+    messageSchemasByAction["libraryDownloadInit" /* libraryDownloadInit */],
+    messageSchemasByAction["libraryDownloadStart" /* libraryDownloadStart */],
+    messageSchemasByAction["libraryDownloadPause" /* libraryDownloadPause */],
+    messageSchemasByAction["libraryDownloadCancel" /* libraryDownloadCancel */],
+    messageSchemasByAction["libraryDownloadDestroy" /* libraryDownloadDestroy */]
   ]);
   function decodePostMessage(message) {
     const { payload, uuid } = postMessageSchema.parse(message);
@@ -8320,9435 +8271,6 @@
   }
   registerCoreComponents("");
 
-  // ../../node_modules/@firebase/database/dist/index.esm2017.js
-  var name2 = "@firebase/database";
-  var version3 = "0.13.10";
-  var SDK_VERSION2 = "";
-  function setSDKVersion(version6) {
-    SDK_VERSION2 = version6;
-  }
-  var DOMStorageWrapper = class {
-    constructor(domStorage_) {
-      this.domStorage_ = domStorage_;
-      this.prefix_ = "firebase:";
-    }
-    set(key, value) {
-      if (value == null) {
-        this.domStorage_.removeItem(this.prefixedName_(key));
-      } else {
-        this.domStorage_.setItem(this.prefixedName_(key), stringify2(value));
-      }
-    }
-    get(key) {
-      const storedVal = this.domStorage_.getItem(this.prefixedName_(key));
-      if (storedVal == null) {
-        return null;
-      } else {
-        return jsonEval(storedVal);
-      }
-    }
-    remove(key) {
-      this.domStorage_.removeItem(this.prefixedName_(key));
-    }
-    prefixedName_(name5) {
-      return this.prefix_ + name5;
-    }
-    toString() {
-      return this.domStorage_.toString();
-    }
-  };
-  var MemoryStorage = class {
-    constructor() {
-      this.cache_ = {};
-      this.isInMemoryStorage = true;
-    }
-    set(key, value) {
-      if (value == null) {
-        delete this.cache_[key];
-      } else {
-        this.cache_[key] = value;
-      }
-    }
-    get(key) {
-      if (contains(this.cache_, key)) {
-        return this.cache_[key];
-      }
-      return null;
-    }
-    remove(key) {
-      delete this.cache_[key];
-    }
-  };
-  var createStoragefor = function(domStorageName) {
-    try {
-      if (typeof window !== "undefined" && typeof window[domStorageName] !== "undefined") {
-        const domStorage = window[domStorageName];
-        domStorage.setItem("firebase:sentinel", "cache");
-        domStorage.removeItem("firebase:sentinel");
-        return new DOMStorageWrapper(domStorage);
-      }
-    } catch (e2) {
-    }
-    return new MemoryStorage();
-  };
-  var PersistentStorage = createStoragefor("localStorage");
-  var SessionStorage = createStoragefor("sessionStorage");
-  var logClient = new Logger("@firebase/database");
-  var LUIDGenerator = function() {
-    let id = 1;
-    return function() {
-      return id++;
-    };
-  }();
-  var sha12 = function(str) {
-    const utf8Bytes = stringToByteArray(str);
-    const sha13 = new Sha1();
-    sha13.update(utf8Bytes);
-    const sha1Bytes = sha13.digest();
-    return base64.encodeByteArray(sha1Bytes);
-  };
-  var buildLogMessage_ = function(...varArgs) {
-    let message = "";
-    for (let i3 = 0; i3 < varArgs.length; i3++) {
-      const arg = varArgs[i3];
-      if (Array.isArray(arg) || arg && typeof arg === "object" && typeof arg.length === "number") {
-        message += buildLogMessage_.apply(null, arg);
-      } else if (typeof arg === "object") {
-        message += stringify2(arg);
-      } else {
-        message += arg;
-      }
-      message += " ";
-    }
-    return message;
-  };
-  var logger2 = null;
-  var firstLog_ = true;
-  var enableLogging$1 = function(logger_, persistent) {
-    assert(!persistent || logger_ === true || logger_ === false, "Can't turn on custom loggers persistently.");
-    if (logger_ === true) {
-      logClient.logLevel = LogLevel.VERBOSE;
-      logger2 = logClient.log.bind(logClient);
-      if (persistent) {
-        SessionStorage.set("logging_enabled", true);
-      }
-    } else if (typeof logger_ === "function") {
-      logger2 = logger_;
-    } else {
-      logger2 = null;
-      SessionStorage.remove("logging_enabled");
-    }
-  };
-  var log = function(...varArgs) {
-    if (firstLog_ === true) {
-      firstLog_ = false;
-      if (logger2 === null && SessionStorage.get("logging_enabled") === true) {
-        enableLogging$1(true);
-      }
-    }
-    if (logger2) {
-      const message = buildLogMessage_.apply(null, varArgs);
-      logger2(message);
-    }
-  };
-  var logWrapper = function(prefix) {
-    return function(...varArgs) {
-      log(prefix, ...varArgs);
-    };
-  };
-  var error = function(...varArgs) {
-    const message = "FIREBASE INTERNAL ERROR: " + buildLogMessage_(...varArgs);
-    logClient.error(message);
-  };
-  var fatal = function(...varArgs) {
-    const message = `FIREBASE FATAL ERROR: ${buildLogMessage_(...varArgs)}`;
-    logClient.error(message);
-    throw new Error(message);
-  };
-  var warn = function(...varArgs) {
-    const message = "FIREBASE WARNING: " + buildLogMessage_(...varArgs);
-    logClient.warn(message);
-  };
-  var warnIfPageIsSecure = function() {
-    if (typeof window !== "undefined" && window.location && window.location.protocol && window.location.protocol.indexOf("https:") !== -1) {
-      warn("Insecure Firebase access from a secure page. Please use https in calls to new Firebase().");
-    }
-  };
-  var isInvalidJSONNumber = function(data) {
-    return typeof data === "number" && (data !== data || data === Number.POSITIVE_INFINITY || data === Number.NEGATIVE_INFINITY);
-  };
-  var executeWhenDOMReady = function(fn3) {
-    if (isNodeSdk() || document.readyState === "complete") {
-      fn3();
-    } else {
-      let called = false;
-      const wrappedFn = function() {
-        if (!document.body) {
-          setTimeout(wrappedFn, Math.floor(10));
-          return;
-        }
-        if (!called) {
-          called = true;
-          fn3();
-        }
-      };
-      if (document.addEventListener) {
-        document.addEventListener("DOMContentLoaded", wrappedFn, false);
-        window.addEventListener("load", wrappedFn, false);
-      } else if (document.attachEvent) {
-        document.attachEvent("onreadystatechange", () => {
-          if (document.readyState === "complete") {
-            wrappedFn();
-          }
-        });
-        window.attachEvent("onload", wrappedFn);
-      }
-    }
-  };
-  var MIN_NAME = "[MIN_NAME]";
-  var MAX_NAME = "[MAX_NAME]";
-  var nameCompare = function(a3, b3) {
-    if (a3 === b3) {
-      return 0;
-    } else if (a3 === MIN_NAME || b3 === MAX_NAME) {
-      return -1;
-    } else if (b3 === MIN_NAME || a3 === MAX_NAME) {
-      return 1;
-    } else {
-      const aAsInt = tryParseInt(a3), bAsInt = tryParseInt(b3);
-      if (aAsInt !== null) {
-        if (bAsInt !== null) {
-          return aAsInt - bAsInt === 0 ? a3.length - b3.length : aAsInt - bAsInt;
-        } else {
-          return -1;
-        }
-      } else if (bAsInt !== null) {
-        return 1;
-      } else {
-        return a3 < b3 ? -1 : 1;
-      }
-    }
-  };
-  var stringCompare = function(a3, b3) {
-    if (a3 === b3) {
-      return 0;
-    } else if (a3 < b3) {
-      return -1;
-    } else {
-      return 1;
-    }
-  };
-  var requireKey = function(key, obj) {
-    if (obj && key in obj) {
-      return obj[key];
-    } else {
-      throw new Error("Missing required key (" + key + ") in object: " + stringify2(obj));
-    }
-  };
-  var ObjectToUniqueKey = function(obj) {
-    if (typeof obj !== "object" || obj === null) {
-      return stringify2(obj);
-    }
-    const keys = [];
-    for (const k3 in obj) {
-      keys.push(k3);
-    }
-    keys.sort();
-    let key = "{";
-    for (let i3 = 0; i3 < keys.length; i3++) {
-      if (i3 !== 0) {
-        key += ",";
-      }
-      key += stringify2(keys[i3]);
-      key += ":";
-      key += ObjectToUniqueKey(obj[keys[i3]]);
-    }
-    key += "}";
-    return key;
-  };
-  var splitStringBySize = function(str, segsize) {
-    const len = str.length;
-    if (len <= segsize) {
-      return [str];
-    }
-    const dataSegs = [];
-    for (let c2 = 0; c2 < len; c2 += segsize) {
-      if (c2 + segsize > len) {
-        dataSegs.push(str.substring(c2, len));
-      } else {
-        dataSegs.push(str.substring(c2, c2 + segsize));
-      }
-    }
-    return dataSegs;
-  };
-  function each(obj, fn3) {
-    for (const key in obj) {
-      if (obj.hasOwnProperty(key)) {
-        fn3(key, obj[key]);
-      }
-    }
-  }
-  var doubleToIEEE754String = function(v6) {
-    assert(!isInvalidJSONNumber(v6), "Invalid JSON number");
-    const ebits = 11, fbits = 52;
-    const bias = (1 << ebits - 1) - 1;
-    let s2, e2, f3, ln3, i3;
-    if (v6 === 0) {
-      e2 = 0;
-      f3 = 0;
-      s2 = 1 / v6 === -Infinity ? 1 : 0;
-    } else {
-      s2 = v6 < 0;
-      v6 = Math.abs(v6);
-      if (v6 >= Math.pow(2, 1 - bias)) {
-        ln3 = Math.min(Math.floor(Math.log(v6) / Math.LN2), bias);
-        e2 = ln3 + bias;
-        f3 = Math.round(v6 * Math.pow(2, fbits - ln3) - Math.pow(2, fbits));
-      } else {
-        e2 = 0;
-        f3 = Math.round(v6 / Math.pow(2, 1 - bias - fbits));
-      }
-    }
-    const bits = [];
-    for (i3 = fbits; i3; i3 -= 1) {
-      bits.push(f3 % 2 ? 1 : 0);
-      f3 = Math.floor(f3 / 2);
-    }
-    for (i3 = ebits; i3; i3 -= 1) {
-      bits.push(e2 % 2 ? 1 : 0);
-      e2 = Math.floor(e2 / 2);
-    }
-    bits.push(s2 ? 1 : 0);
-    bits.reverse();
-    const str = bits.join("");
-    let hexByteString = "";
-    for (i3 = 0; i3 < 64; i3 += 8) {
-      let hexByte = parseInt(str.substr(i3, 8), 2).toString(16);
-      if (hexByte.length === 1) {
-        hexByte = "0" + hexByte;
-      }
-      hexByteString = hexByteString + hexByte;
-    }
-    return hexByteString.toLowerCase();
-  };
-  var isChromeExtensionContentScript = function() {
-    return !!(typeof window === "object" && window["chrome"] && window["chrome"]["extension"] && !/^chrome/.test(window.location.href));
-  };
-  var isWindowsStoreApp = function() {
-    return typeof Windows === "object" && typeof Windows.UI === "object";
-  };
-  function errorForServerCode(code, query2) {
-    let reason = "Unknown Error";
-    if (code === "too_big") {
-      reason = "The data requested exceeds the maximum size that can be accessed with a single request.";
-    } else if (code === "permission_denied") {
-      reason = "Client doesn't have permission to access the desired data.";
-    } else if (code === "unavailable") {
-      reason = "The service is unavailable";
-    }
-    const error2 = new Error(code + " at " + query2._path.toString() + ": " + reason);
-    error2.code = code.toUpperCase();
-    return error2;
-  }
-  var INTEGER_REGEXP_ = new RegExp("^-?(0*)\\d{1,10}$");
-  var INTEGER_32_MIN = -2147483648;
-  var INTEGER_32_MAX = 2147483647;
-  var tryParseInt = function(str) {
-    if (INTEGER_REGEXP_.test(str)) {
-      const intVal = Number(str);
-      if (intVal >= INTEGER_32_MIN && intVal <= INTEGER_32_MAX) {
-        return intVal;
-      }
-    }
-    return null;
-  };
-  var exceptionGuard = function(fn3) {
-    try {
-      fn3();
-    } catch (e2) {
-      setTimeout(() => {
-        const stack = e2.stack || "";
-        warn("Exception was thrown by user callback.", stack);
-        throw e2;
-      }, Math.floor(0));
-    }
-  };
-  var beingCrawled = function() {
-    const userAgent = typeof window === "object" && window["navigator"] && window["navigator"]["userAgent"] || "";
-    return userAgent.search(/googlebot|google webmaster tools|bingbot|yahoo! slurp|baiduspider|yandexbot|duckduckbot/i) >= 0;
-  };
-  var setTimeoutNonBlocking = function(fn3, time) {
-    const timeout = setTimeout(fn3, time);
-    if (typeof timeout === "number" && typeof Deno !== "undefined" && Deno["unrefTimer"]) {
-      Deno.unrefTimer(timeout);
-    } else if (typeof timeout === "object" && timeout["unref"]) {
-      timeout["unref"]();
-    }
-    return timeout;
-  };
-  var AppCheckTokenProvider = class {
-    constructor(appName_, appCheckProvider) {
-      this.appName_ = appName_;
-      this.appCheckProvider = appCheckProvider;
-      this.appCheck = appCheckProvider === null || appCheckProvider === void 0 ? void 0 : appCheckProvider.getImmediate({ optional: true });
-      if (!this.appCheck) {
-        appCheckProvider === null || appCheckProvider === void 0 ? void 0 : appCheckProvider.get().then((appCheck) => this.appCheck = appCheck);
-      }
-    }
-    getToken(forceRefresh) {
-      if (!this.appCheck) {
-        return new Promise((resolve, reject) => {
-          setTimeout(() => {
-            if (this.appCheck) {
-              this.getToken(forceRefresh).then(resolve, reject);
-            } else {
-              resolve(null);
-            }
-          }, 0);
-        });
-      }
-      return this.appCheck.getToken(forceRefresh);
-    }
-    addTokenChangeListener(listener) {
-      var _a;
-      (_a = this.appCheckProvider) === null || _a === void 0 ? void 0 : _a.get().then((appCheck) => appCheck.addTokenListener(listener));
-    }
-    notifyForInvalidToken() {
-      warn(`Provided AppCheck credentials for the app named "${this.appName_}" are invalid. This usually indicates your app was not initialized correctly.`);
-    }
-  };
-  var FirebaseAuthTokenProvider = class {
-    constructor(appName_, firebaseOptions_, authProvider_) {
-      this.appName_ = appName_;
-      this.firebaseOptions_ = firebaseOptions_;
-      this.authProvider_ = authProvider_;
-      this.auth_ = null;
-      this.auth_ = authProvider_.getImmediate({ optional: true });
-      if (!this.auth_) {
-        authProvider_.onInit((auth) => this.auth_ = auth);
-      }
-    }
-    getToken(forceRefresh) {
-      if (!this.auth_) {
-        return new Promise((resolve, reject) => {
-          setTimeout(() => {
-            if (this.auth_) {
-              this.getToken(forceRefresh).then(resolve, reject);
-            } else {
-              resolve(null);
-            }
-          }, 0);
-        });
-      }
-      return this.auth_.getToken(forceRefresh).catch((error2) => {
-        if (error2 && error2.code === "auth/token-not-initialized") {
-          log("Got auth/token-not-initialized error.  Treating as null token.");
-          return null;
-        } else {
-          return Promise.reject(error2);
-        }
-      });
-    }
-    addTokenChangeListener(listener) {
-      if (this.auth_) {
-        this.auth_.addAuthTokenListener(listener);
-      } else {
-        this.authProvider_.get().then((auth) => auth.addAuthTokenListener(listener));
-      }
-    }
-    removeTokenChangeListener(listener) {
-      this.authProvider_.get().then((auth) => auth.removeAuthTokenListener(listener));
-    }
-    notifyForInvalidToken() {
-      let errorMessage = 'Provided authentication credentials for the app named "' + this.appName_ + '" are invalid. This usually indicates your app was not initialized correctly. ';
-      if ("credential" in this.firebaseOptions_) {
-        errorMessage += 'Make sure the "credential" property provided to initializeApp() is authorized to access the specified "databaseURL" and is from the correct project.';
-      } else if ("serviceAccount" in this.firebaseOptions_) {
-        errorMessage += 'Make sure the "serviceAccount" property provided to initializeApp() is authorized to access the specified "databaseURL" and is from the correct project.';
-      } else {
-        errorMessage += 'Make sure the "apiKey" and "databaseURL" properties provided to initializeApp() match the values provided for your app at https://console.firebase.google.com/.';
-      }
-      warn(errorMessage);
-    }
-  };
-  var EmulatorTokenProvider = class {
-    constructor(accessToken) {
-      this.accessToken = accessToken;
-    }
-    getToken(forceRefresh) {
-      return Promise.resolve({
-        accessToken: this.accessToken
-      });
-    }
-    addTokenChangeListener(listener) {
-      listener(this.accessToken);
-    }
-    removeTokenChangeListener(listener) {
-    }
-    notifyForInvalidToken() {
-    }
-  };
-  EmulatorTokenProvider.OWNER = "owner";
-  var PROTOCOL_VERSION = "5";
-  var VERSION_PARAM = "v";
-  var TRANSPORT_SESSION_PARAM = "s";
-  var REFERER_PARAM = "r";
-  var FORGE_REF = "f";
-  var FORGE_DOMAIN_RE = /(console\.firebase|firebase-console-\w+\.corp|firebase\.corp)\.google\.com/;
-  var LAST_SESSION_PARAM = "ls";
-  var APPLICATION_ID_PARAM = "p";
-  var APP_CHECK_TOKEN_PARAM = "ac";
-  var WEBSOCKET = "websocket";
-  var LONG_POLLING = "long_polling";
-  var RepoInfo = class {
-    constructor(host, secure, namespace, webSocketOnly, nodeAdmin = false, persistenceKey = "", includeNamespaceInQueryParams = false) {
-      this.secure = secure;
-      this.namespace = namespace;
-      this.webSocketOnly = webSocketOnly;
-      this.nodeAdmin = nodeAdmin;
-      this.persistenceKey = persistenceKey;
-      this.includeNamespaceInQueryParams = includeNamespaceInQueryParams;
-      this._host = host.toLowerCase();
-      this._domain = this._host.substr(this._host.indexOf(".") + 1);
-      this.internalHost = PersistentStorage.get("host:" + host) || this._host;
-    }
-    isCacheableHost() {
-      return this.internalHost.substr(0, 2) === "s-";
-    }
-    isCustomHost() {
-      return this._domain !== "firebaseio.com" && this._domain !== "firebaseio-demo.com";
-    }
-    get host() {
-      return this._host;
-    }
-    set host(newHost) {
-      if (newHost !== this.internalHost) {
-        this.internalHost = newHost;
-        if (this.isCacheableHost()) {
-          PersistentStorage.set("host:" + this._host, this.internalHost);
-        }
-      }
-    }
-    toString() {
-      let str = this.toURLString();
-      if (this.persistenceKey) {
-        str += "<" + this.persistenceKey + ">";
-      }
-      return str;
-    }
-    toURLString() {
-      const protocol = this.secure ? "https://" : "http://";
-      const query2 = this.includeNamespaceInQueryParams ? `?ns=${this.namespace}` : "";
-      return `${protocol}${this.host}/${query2}`;
-    }
-  };
-  function repoInfoNeedsQueryParam(repoInfo) {
-    return repoInfo.host !== repoInfo.internalHost || repoInfo.isCustomHost() || repoInfo.includeNamespaceInQueryParams;
-  }
-  function repoInfoConnectionURL(repoInfo, type, params) {
-    assert(typeof type === "string", "typeof type must == string");
-    assert(typeof params === "object", "typeof params must == object");
-    let connURL;
-    if (type === WEBSOCKET) {
-      connURL = (repoInfo.secure ? "wss://" : "ws://") + repoInfo.internalHost + "/.ws?";
-    } else if (type === LONG_POLLING) {
-      connURL = (repoInfo.secure ? "https://" : "http://") + repoInfo.internalHost + "/.lp?";
-    } else {
-      throw new Error("Unknown connection type: " + type);
-    }
-    if (repoInfoNeedsQueryParam(repoInfo)) {
-      params["ns"] = repoInfo.namespace;
-    }
-    const pairs = [];
-    each(params, (key, value) => {
-      pairs.push(key + "=" + value);
-    });
-    return connURL + pairs.join("&");
-  }
-  var StatsCollection = class {
-    constructor() {
-      this.counters_ = {};
-    }
-    incrementCounter(name5, amount = 1) {
-      if (!contains(this.counters_, name5)) {
-        this.counters_[name5] = 0;
-      }
-      this.counters_[name5] += amount;
-    }
-    get() {
-      return deepCopy(this.counters_);
-    }
-  };
-  var collections = {};
-  var reporters = {};
-  function statsManagerGetCollection(repoInfo) {
-    const hashString = repoInfo.toString();
-    if (!collections[hashString]) {
-      collections[hashString] = new StatsCollection();
-    }
-    return collections[hashString];
-  }
-  function statsManagerGetOrCreateReporter(repoInfo, creatorFunction) {
-    const hashString = repoInfo.toString();
-    if (!reporters[hashString]) {
-      reporters[hashString] = creatorFunction();
-    }
-    return reporters[hashString];
-  }
-  var PacketReceiver = class {
-    constructor(onMessage_) {
-      this.onMessage_ = onMessage_;
-      this.pendingResponses = [];
-      this.currentResponseNum = 0;
-      this.closeAfterResponse = -1;
-      this.onClose = null;
-    }
-    closeAfter(responseNum, callback) {
-      this.closeAfterResponse = responseNum;
-      this.onClose = callback;
-      if (this.closeAfterResponse < this.currentResponseNum) {
-        this.onClose();
-        this.onClose = null;
-      }
-    }
-    handleResponse(requestNum, data) {
-      this.pendingResponses[requestNum] = data;
-      while (this.pendingResponses[this.currentResponseNum]) {
-        const toProcess = this.pendingResponses[this.currentResponseNum];
-        delete this.pendingResponses[this.currentResponseNum];
-        for (let i3 = 0; i3 < toProcess.length; ++i3) {
-          if (toProcess[i3]) {
-            exceptionGuard(() => {
-              this.onMessage_(toProcess[i3]);
-            });
-          }
-        }
-        if (this.currentResponseNum === this.closeAfterResponse) {
-          if (this.onClose) {
-            this.onClose();
-            this.onClose = null;
-          }
-          break;
-        }
-        this.currentResponseNum++;
-      }
-    }
-  };
-  var FIREBASE_LONGPOLL_START_PARAM = "start";
-  var FIREBASE_LONGPOLL_CLOSE_COMMAND = "close";
-  var FIREBASE_LONGPOLL_COMMAND_CB_NAME = "pLPCommand";
-  var FIREBASE_LONGPOLL_DATA_CB_NAME = "pRTLPCB";
-  var FIREBASE_LONGPOLL_ID_PARAM = "id";
-  var FIREBASE_LONGPOLL_PW_PARAM = "pw";
-  var FIREBASE_LONGPOLL_SERIAL_PARAM = "ser";
-  var FIREBASE_LONGPOLL_CALLBACK_ID_PARAM = "cb";
-  var FIREBASE_LONGPOLL_SEGMENT_NUM_PARAM = "seg";
-  var FIREBASE_LONGPOLL_SEGMENTS_IN_PACKET = "ts";
-  var FIREBASE_LONGPOLL_DATA_PARAM = "d";
-  var FIREBASE_LONGPOLL_DISCONN_FRAME_REQUEST_PARAM = "dframe";
-  var MAX_URL_DATA_SIZE = 1870;
-  var SEG_HEADER_SIZE = 30;
-  var MAX_PAYLOAD_SIZE = MAX_URL_DATA_SIZE - SEG_HEADER_SIZE;
-  var KEEPALIVE_REQUEST_INTERVAL = 25e3;
-  var LP_CONNECT_TIMEOUT = 3e4;
-  var BrowserPollConnection = class {
-    constructor(connId, repoInfo, applicationId, appCheckToken, authToken, transportSessionId, lastSessionId) {
-      this.connId = connId;
-      this.repoInfo = repoInfo;
-      this.applicationId = applicationId;
-      this.appCheckToken = appCheckToken;
-      this.authToken = authToken;
-      this.transportSessionId = transportSessionId;
-      this.lastSessionId = lastSessionId;
-      this.bytesSent = 0;
-      this.bytesReceived = 0;
-      this.everConnected_ = false;
-      this.log_ = logWrapper(connId);
-      this.stats_ = statsManagerGetCollection(repoInfo);
-      this.urlFn = (params) => {
-        if (this.appCheckToken) {
-          params[APP_CHECK_TOKEN_PARAM] = this.appCheckToken;
-        }
-        return repoInfoConnectionURL(repoInfo, LONG_POLLING, params);
-      };
-    }
-    open(onMessage, onDisconnect) {
-      this.curSegmentNum = 0;
-      this.onDisconnect_ = onDisconnect;
-      this.myPacketOrderer = new PacketReceiver(onMessage);
-      this.isClosed_ = false;
-      this.connectTimeoutTimer_ = setTimeout(() => {
-        this.log_("Timed out trying to connect.");
-        this.onClosed_();
-        this.connectTimeoutTimer_ = null;
-      }, Math.floor(LP_CONNECT_TIMEOUT));
-      executeWhenDOMReady(() => {
-        if (this.isClosed_) {
-          return;
-        }
-        this.scriptTagHolder = new FirebaseIFrameScriptHolder((...args) => {
-          const [command, arg1, arg2, arg3, arg4] = args;
-          this.incrementIncomingBytes_(args);
-          if (!this.scriptTagHolder) {
-            return;
-          }
-          if (this.connectTimeoutTimer_) {
-            clearTimeout(this.connectTimeoutTimer_);
-            this.connectTimeoutTimer_ = null;
-          }
-          this.everConnected_ = true;
-          if (command === FIREBASE_LONGPOLL_START_PARAM) {
-            this.id = arg1;
-            this.password = arg2;
-          } else if (command === FIREBASE_LONGPOLL_CLOSE_COMMAND) {
-            if (arg1) {
-              this.scriptTagHolder.sendNewPolls = false;
-              this.myPacketOrderer.closeAfter(arg1, () => {
-                this.onClosed_();
-              });
-            } else {
-              this.onClosed_();
-            }
-          } else {
-            throw new Error("Unrecognized command received: " + command);
-          }
-        }, (...args) => {
-          const [pN, data] = args;
-          this.incrementIncomingBytes_(args);
-          this.myPacketOrderer.handleResponse(pN, data);
-        }, () => {
-          this.onClosed_();
-        }, this.urlFn);
-        const urlParams = {};
-        urlParams[FIREBASE_LONGPOLL_START_PARAM] = "t";
-        urlParams[FIREBASE_LONGPOLL_SERIAL_PARAM] = Math.floor(Math.random() * 1e8);
-        if (this.scriptTagHolder.uniqueCallbackIdentifier) {
-          urlParams[FIREBASE_LONGPOLL_CALLBACK_ID_PARAM] = this.scriptTagHolder.uniqueCallbackIdentifier;
-        }
-        urlParams[VERSION_PARAM] = PROTOCOL_VERSION;
-        if (this.transportSessionId) {
-          urlParams[TRANSPORT_SESSION_PARAM] = this.transportSessionId;
-        }
-        if (this.lastSessionId) {
-          urlParams[LAST_SESSION_PARAM] = this.lastSessionId;
-        }
-        if (this.applicationId) {
-          urlParams[APPLICATION_ID_PARAM] = this.applicationId;
-        }
-        if (this.appCheckToken) {
-          urlParams[APP_CHECK_TOKEN_PARAM] = this.appCheckToken;
-        }
-        if (typeof location !== "undefined" && location.hostname && FORGE_DOMAIN_RE.test(location.hostname)) {
-          urlParams[REFERER_PARAM] = FORGE_REF;
-        }
-        const connectURL = this.urlFn(urlParams);
-        this.log_("Connecting via long-poll to " + connectURL);
-        this.scriptTagHolder.addTag(connectURL, () => {
-        });
-      });
-    }
-    start() {
-      this.scriptTagHolder.startLongPoll(this.id, this.password);
-      this.addDisconnectPingFrame(this.id, this.password);
-    }
-    static forceAllow() {
-      BrowserPollConnection.forceAllow_ = true;
-    }
-    static forceDisallow() {
-      BrowserPollConnection.forceDisallow_ = true;
-    }
-    static isAvailable() {
-      if (isNodeSdk()) {
-        return false;
-      } else if (BrowserPollConnection.forceAllow_) {
-        return true;
-      } else {
-        return !BrowserPollConnection.forceDisallow_ && typeof document !== "undefined" && document.createElement != null && !isChromeExtensionContentScript() && !isWindowsStoreApp();
-      }
-    }
-    markConnectionHealthy() {
-    }
-    shutdown_() {
-      this.isClosed_ = true;
-      if (this.scriptTagHolder) {
-        this.scriptTagHolder.close();
-        this.scriptTagHolder = null;
-      }
-      if (this.myDisconnFrame) {
-        document.body.removeChild(this.myDisconnFrame);
-        this.myDisconnFrame = null;
-      }
-      if (this.connectTimeoutTimer_) {
-        clearTimeout(this.connectTimeoutTimer_);
-        this.connectTimeoutTimer_ = null;
-      }
-    }
-    onClosed_() {
-      if (!this.isClosed_) {
-        this.log_("Longpoll is closing itself");
-        this.shutdown_();
-        if (this.onDisconnect_) {
-          this.onDisconnect_(this.everConnected_);
-          this.onDisconnect_ = null;
-        }
-      }
-    }
-    close() {
-      if (!this.isClosed_) {
-        this.log_("Longpoll is being closed.");
-        this.shutdown_();
-      }
-    }
-    send(data) {
-      const dataStr = stringify2(data);
-      this.bytesSent += dataStr.length;
-      this.stats_.incrementCounter("bytes_sent", dataStr.length);
-      const base64data = base64Encode(dataStr);
-      const dataSegs = splitStringBySize(base64data, MAX_PAYLOAD_SIZE);
-      for (let i3 = 0; i3 < dataSegs.length; i3++) {
-        this.scriptTagHolder.enqueueSegment(this.curSegmentNum, dataSegs.length, dataSegs[i3]);
-        this.curSegmentNum++;
-      }
-    }
-    addDisconnectPingFrame(id, pw) {
-      if (isNodeSdk()) {
-        return;
-      }
-      this.myDisconnFrame = document.createElement("iframe");
-      const urlParams = {};
-      urlParams[FIREBASE_LONGPOLL_DISCONN_FRAME_REQUEST_PARAM] = "t";
-      urlParams[FIREBASE_LONGPOLL_ID_PARAM] = id;
-      urlParams[FIREBASE_LONGPOLL_PW_PARAM] = pw;
-      this.myDisconnFrame.src = this.urlFn(urlParams);
-      this.myDisconnFrame.style.display = "none";
-      document.body.appendChild(this.myDisconnFrame);
-    }
-    incrementIncomingBytes_(args) {
-      const bytesReceived = stringify2(args).length;
-      this.bytesReceived += bytesReceived;
-      this.stats_.incrementCounter("bytes_received", bytesReceived);
-    }
-  };
-  var FirebaseIFrameScriptHolder = class {
-    constructor(commandCB, onMessageCB, onDisconnect, urlFn) {
-      this.onDisconnect = onDisconnect;
-      this.urlFn = urlFn;
-      this.outstandingRequests = /* @__PURE__ */ new Set();
-      this.pendingSegs = [];
-      this.currentSerial = Math.floor(Math.random() * 1e8);
-      this.sendNewPolls = true;
-      if (!isNodeSdk()) {
-        this.uniqueCallbackIdentifier = LUIDGenerator();
-        window[FIREBASE_LONGPOLL_COMMAND_CB_NAME + this.uniqueCallbackIdentifier] = commandCB;
-        window[FIREBASE_LONGPOLL_DATA_CB_NAME + this.uniqueCallbackIdentifier] = onMessageCB;
-        this.myIFrame = FirebaseIFrameScriptHolder.createIFrame_();
-        let script = "";
-        if (this.myIFrame.src && this.myIFrame.src.substr(0, "javascript:".length) === "javascript:") {
-          const currentDomain = document.domain;
-          script = '<script>document.domain="' + currentDomain + '";<\/script>';
-        }
-        const iframeContents = "<html><body>" + script + "</body></html>";
-        try {
-          this.myIFrame.doc.open();
-          this.myIFrame.doc.write(iframeContents);
-          this.myIFrame.doc.close();
-        } catch (e2) {
-          log("frame writing exception");
-          if (e2.stack) {
-            log(e2.stack);
-          }
-          log(e2);
-        }
-      } else {
-        this.commandCB = commandCB;
-        this.onMessageCB = onMessageCB;
-      }
-    }
-    static createIFrame_() {
-      const iframe = document.createElement("iframe");
-      iframe.style.display = "none";
-      if (document.body) {
-        document.body.appendChild(iframe);
-        try {
-          const a3 = iframe.contentWindow.document;
-          if (!a3) {
-            log("No IE domain setting required");
-          }
-        } catch (e2) {
-          const domain = document.domain;
-          iframe.src = "javascript:void((function(){document.open();document.domain='" + domain + "';document.close();})())";
-        }
-      } else {
-        throw "Document body has not initialized. Wait to initialize Firebase until after the document is ready.";
-      }
-      if (iframe.contentDocument) {
-        iframe.doc = iframe.contentDocument;
-      } else if (iframe.contentWindow) {
-        iframe.doc = iframe.contentWindow.document;
-      } else if (iframe.document) {
-        iframe.doc = iframe.document;
-      }
-      return iframe;
-    }
-    close() {
-      this.alive = false;
-      if (this.myIFrame) {
-        this.myIFrame.doc.body.innerHTML = "";
-        setTimeout(() => {
-          if (this.myIFrame !== null) {
-            document.body.removeChild(this.myIFrame);
-            this.myIFrame = null;
-          }
-        }, Math.floor(0));
-      }
-      const onDisconnect = this.onDisconnect;
-      if (onDisconnect) {
-        this.onDisconnect = null;
-        onDisconnect();
-      }
-    }
-    startLongPoll(id, pw) {
-      this.myID = id;
-      this.myPW = pw;
-      this.alive = true;
-      while (this.newRequest_()) {
-      }
-    }
-    newRequest_() {
-      if (this.alive && this.sendNewPolls && this.outstandingRequests.size < (this.pendingSegs.length > 0 ? 2 : 1)) {
-        this.currentSerial++;
-        const urlParams = {};
-        urlParams[FIREBASE_LONGPOLL_ID_PARAM] = this.myID;
-        urlParams[FIREBASE_LONGPOLL_PW_PARAM] = this.myPW;
-        urlParams[FIREBASE_LONGPOLL_SERIAL_PARAM] = this.currentSerial;
-        let theURL = this.urlFn(urlParams);
-        let curDataString = "";
-        let i3 = 0;
-        while (this.pendingSegs.length > 0) {
-          const nextSeg = this.pendingSegs[0];
-          if (nextSeg.d.length + SEG_HEADER_SIZE + curDataString.length <= MAX_URL_DATA_SIZE) {
-            const theSeg = this.pendingSegs.shift();
-            curDataString = curDataString + "&" + FIREBASE_LONGPOLL_SEGMENT_NUM_PARAM + i3 + "=" + theSeg.seg + "&" + FIREBASE_LONGPOLL_SEGMENTS_IN_PACKET + i3 + "=" + theSeg.ts + "&" + FIREBASE_LONGPOLL_DATA_PARAM + i3 + "=" + theSeg.d;
-            i3++;
-          } else {
-            break;
-          }
-        }
-        theURL = theURL + curDataString;
-        this.addLongPollTag_(theURL, this.currentSerial);
-        return true;
-      } else {
-        return false;
-      }
-    }
-    enqueueSegment(segnum, totalsegs, data) {
-      this.pendingSegs.push({ seg: segnum, ts: totalsegs, d: data });
-      if (this.alive) {
-        this.newRequest_();
-      }
-    }
-    addLongPollTag_(url, serial) {
-      this.outstandingRequests.add(serial);
-      const doNewRequest = () => {
-        this.outstandingRequests.delete(serial);
-        this.newRequest_();
-      };
-      const keepaliveTimeout = setTimeout(doNewRequest, Math.floor(KEEPALIVE_REQUEST_INTERVAL));
-      const readyStateCB = () => {
-        clearTimeout(keepaliveTimeout);
-        doNewRequest();
-      };
-      this.addTag(url, readyStateCB);
-    }
-    addTag(url, loadCB) {
-      if (isNodeSdk()) {
-        this.doNodeLongPoll(url, loadCB);
-      } else {
-        setTimeout(() => {
-          try {
-            if (!this.sendNewPolls) {
-              return;
-            }
-            const newScript = this.myIFrame.doc.createElement("script");
-            newScript.type = "text/javascript";
-            newScript.async = true;
-            newScript.src = url;
-            newScript.onload = newScript.onreadystatechange = function() {
-              const rstate = newScript.readyState;
-              if (!rstate || rstate === "loaded" || rstate === "complete") {
-                newScript.onload = newScript.onreadystatechange = null;
-                if (newScript.parentNode) {
-                  newScript.parentNode.removeChild(newScript);
-                }
-                loadCB();
-              }
-            };
-            newScript.onerror = () => {
-              log("Long-poll script failed to load: " + url);
-              this.sendNewPolls = false;
-              this.close();
-            };
-            this.myIFrame.doc.body.appendChild(newScript);
-          } catch (e2) {
-          }
-        }, Math.floor(1));
-      }
-    }
-  };
-  var WEBSOCKET_MAX_FRAME_SIZE = 16384;
-  var WEBSOCKET_KEEPALIVE_INTERVAL = 45e3;
-  var WebSocketImpl = null;
-  if (typeof MozWebSocket !== "undefined") {
-    WebSocketImpl = MozWebSocket;
-  } else if (typeof WebSocket !== "undefined") {
-    WebSocketImpl = WebSocket;
-  }
-  var WebSocketConnection = class {
-    constructor(connId, repoInfo, applicationId, appCheckToken, authToken, transportSessionId, lastSessionId) {
-      this.connId = connId;
-      this.applicationId = applicationId;
-      this.appCheckToken = appCheckToken;
-      this.authToken = authToken;
-      this.keepaliveTimer = null;
-      this.frames = null;
-      this.totalFrames = 0;
-      this.bytesSent = 0;
-      this.bytesReceived = 0;
-      this.log_ = logWrapper(this.connId);
-      this.stats_ = statsManagerGetCollection(repoInfo);
-      this.connURL = WebSocketConnection.connectionURL_(repoInfo, transportSessionId, lastSessionId, appCheckToken, applicationId);
-      this.nodeAdmin = repoInfo.nodeAdmin;
-    }
-    static connectionURL_(repoInfo, transportSessionId, lastSessionId, appCheckToken, applicationId) {
-      const urlParams = {};
-      urlParams[VERSION_PARAM] = PROTOCOL_VERSION;
-      if (!isNodeSdk() && typeof location !== "undefined" && location.hostname && FORGE_DOMAIN_RE.test(location.hostname)) {
-        urlParams[REFERER_PARAM] = FORGE_REF;
-      }
-      if (transportSessionId) {
-        urlParams[TRANSPORT_SESSION_PARAM] = transportSessionId;
-      }
-      if (lastSessionId) {
-        urlParams[LAST_SESSION_PARAM] = lastSessionId;
-      }
-      if (appCheckToken) {
-        urlParams[APP_CHECK_TOKEN_PARAM] = appCheckToken;
-      }
-      if (applicationId) {
-        urlParams[APPLICATION_ID_PARAM] = applicationId;
-      }
-      return repoInfoConnectionURL(repoInfo, WEBSOCKET, urlParams);
-    }
-    open(onMessage, onDisconnect) {
-      this.onDisconnect = onDisconnect;
-      this.onMessage = onMessage;
-      this.log_("Websocket connecting to " + this.connURL);
-      this.everConnected_ = false;
-      PersistentStorage.set("previous_websocket_failure", true);
-      try {
-        let options;
-        if (isNodeSdk()) {
-          const device = this.nodeAdmin ? "AdminNode" : "Node";
-          options = {
-            headers: {
-              "User-Agent": `Firebase/${PROTOCOL_VERSION}/${SDK_VERSION2}/${process.platform}/${device}`,
-              "X-Firebase-GMPID": this.applicationId || ""
-            }
-          };
-          if (this.authToken) {
-            options.headers["Authorization"] = `Bearer ${this.authToken}`;
-          }
-          if (this.appCheckToken) {
-            options.headers["X-Firebase-AppCheck"] = this.appCheckToken;
-          }
-          const env = process["env"];
-          const proxy = this.connURL.indexOf("wss://") === 0 ? env["HTTPS_PROXY"] || env["https_proxy"] : env["HTTP_PROXY"] || env["http_proxy"];
-          if (proxy) {
-            options["proxy"] = { origin: proxy };
-          }
-        }
-        this.mySock = new WebSocketImpl(this.connURL, [], options);
-      } catch (e2) {
-        this.log_("Error instantiating WebSocket.");
-        const error2 = e2.message || e2.data;
-        if (error2) {
-          this.log_(error2);
-        }
-        this.onClosed_();
-        return;
-      }
-      this.mySock.onopen = () => {
-        this.log_("Websocket connected.");
-        this.everConnected_ = true;
-      };
-      this.mySock.onclose = () => {
-        this.log_("Websocket connection was disconnected.");
-        this.mySock = null;
-        this.onClosed_();
-      };
-      this.mySock.onmessage = (m3) => {
-        this.handleIncomingFrame(m3);
-      };
-      this.mySock.onerror = (e2) => {
-        this.log_("WebSocket error.  Closing connection.");
-        const error2 = e2.message || e2.data;
-        if (error2) {
-          this.log_(error2);
-        }
-        this.onClosed_();
-      };
-    }
-    start() {
-    }
-    static forceDisallow() {
-      WebSocketConnection.forceDisallow_ = true;
-    }
-    static isAvailable() {
-      let isOldAndroid = false;
-      if (typeof navigator !== "undefined" && navigator.userAgent) {
-        const oldAndroidRegex = /Android ([0-9]{0,}\.[0-9]{0,})/;
-        const oldAndroidMatch = navigator.userAgent.match(oldAndroidRegex);
-        if (oldAndroidMatch && oldAndroidMatch.length > 1) {
-          if (parseFloat(oldAndroidMatch[1]) < 4.4) {
-            isOldAndroid = true;
-          }
-        }
-      }
-      return !isOldAndroid && WebSocketImpl !== null && !WebSocketConnection.forceDisallow_;
-    }
-    static previouslyFailed() {
-      return PersistentStorage.isInMemoryStorage || PersistentStorage.get("previous_websocket_failure") === true;
-    }
-    markConnectionHealthy() {
-      PersistentStorage.remove("previous_websocket_failure");
-    }
-    appendFrame_(data) {
-      this.frames.push(data);
-      if (this.frames.length === this.totalFrames) {
-        const fullMess = this.frames.join("");
-        this.frames = null;
-        const jsonMess = jsonEval(fullMess);
-        this.onMessage(jsonMess);
-      }
-    }
-    handleNewFrameCount_(frameCount) {
-      this.totalFrames = frameCount;
-      this.frames = [];
-    }
-    extractFrameCount_(data) {
-      assert(this.frames === null, "We already have a frame buffer");
-      if (data.length <= 6) {
-        const frameCount = Number(data);
-        if (!isNaN(frameCount)) {
-          this.handleNewFrameCount_(frameCount);
-          return null;
-        }
-      }
-      this.handleNewFrameCount_(1);
-      return data;
-    }
-    handleIncomingFrame(mess) {
-      if (this.mySock === null) {
-        return;
-      }
-      const data = mess["data"];
-      this.bytesReceived += data.length;
-      this.stats_.incrementCounter("bytes_received", data.length);
-      this.resetKeepAlive();
-      if (this.frames !== null) {
-        this.appendFrame_(data);
-      } else {
-        const remainingData = this.extractFrameCount_(data);
-        if (remainingData !== null) {
-          this.appendFrame_(remainingData);
-        }
-      }
-    }
-    send(data) {
-      this.resetKeepAlive();
-      const dataStr = stringify2(data);
-      this.bytesSent += dataStr.length;
-      this.stats_.incrementCounter("bytes_sent", dataStr.length);
-      const dataSegs = splitStringBySize(dataStr, WEBSOCKET_MAX_FRAME_SIZE);
-      if (dataSegs.length > 1) {
-        this.sendString_(String(dataSegs.length));
-      }
-      for (let i3 = 0; i3 < dataSegs.length; i3++) {
-        this.sendString_(dataSegs[i3]);
-      }
-    }
-    shutdown_() {
-      this.isClosed_ = true;
-      if (this.keepaliveTimer) {
-        clearInterval(this.keepaliveTimer);
-        this.keepaliveTimer = null;
-      }
-      if (this.mySock) {
-        this.mySock.close();
-        this.mySock = null;
-      }
-    }
-    onClosed_() {
-      if (!this.isClosed_) {
-        this.log_("WebSocket is closing itself");
-        this.shutdown_();
-        if (this.onDisconnect) {
-          this.onDisconnect(this.everConnected_);
-          this.onDisconnect = null;
-        }
-      }
-    }
-    close() {
-      if (!this.isClosed_) {
-        this.log_("WebSocket is being closed");
-        this.shutdown_();
-      }
-    }
-    resetKeepAlive() {
-      clearInterval(this.keepaliveTimer);
-      this.keepaliveTimer = setInterval(() => {
-        if (this.mySock) {
-          this.sendString_("0");
-        }
-        this.resetKeepAlive();
-      }, Math.floor(WEBSOCKET_KEEPALIVE_INTERVAL));
-    }
-    sendString_(str) {
-      try {
-        this.mySock.send(str);
-      } catch (e2) {
-        this.log_("Exception thrown from WebSocket.send():", e2.message || e2.data, "Closing connection.");
-        setTimeout(this.onClosed_.bind(this), 0);
-      }
-    }
-  };
-  WebSocketConnection.responsesRequiredToBeHealthy = 2;
-  WebSocketConnection.healthyTimeout = 3e4;
-  var TransportManager = class {
-    constructor(repoInfo) {
-      this.initTransports_(repoInfo);
-    }
-    static get ALL_TRANSPORTS() {
-      return [BrowserPollConnection, WebSocketConnection];
-    }
-    static get IS_TRANSPORT_INITIALIZED() {
-      return this.globalTransportInitialized_;
-    }
-    initTransports_(repoInfo) {
-      const isWebSocketsAvailable = WebSocketConnection && WebSocketConnection["isAvailable"]();
-      let isSkipPollConnection = isWebSocketsAvailable && !WebSocketConnection.previouslyFailed();
-      if (repoInfo.webSocketOnly) {
-        if (!isWebSocketsAvailable) {
-          warn("wss:// URL used, but browser isn't known to support websockets.  Trying anyway.");
-        }
-        isSkipPollConnection = true;
-      }
-      if (isSkipPollConnection) {
-        this.transports_ = [WebSocketConnection];
-      } else {
-        const transports = this.transports_ = [];
-        for (const transport of TransportManager.ALL_TRANSPORTS) {
-          if (transport && transport["isAvailable"]()) {
-            transports.push(transport);
-          }
-        }
-        TransportManager.globalTransportInitialized_ = true;
-      }
-    }
-    initialTransport() {
-      if (this.transports_.length > 0) {
-        return this.transports_[0];
-      } else {
-        throw new Error("No transports available");
-      }
-    }
-    upgradeTransport() {
-      if (this.transports_.length > 1) {
-        return this.transports_[1];
-      } else {
-        return null;
-      }
-    }
-  };
-  TransportManager.globalTransportInitialized_ = false;
-  var UPGRADE_TIMEOUT = 6e4;
-  var DELAY_BEFORE_SENDING_EXTRA_REQUESTS = 5e3;
-  var BYTES_SENT_HEALTHY_OVERRIDE = 10 * 1024;
-  var BYTES_RECEIVED_HEALTHY_OVERRIDE = 100 * 1024;
-  var MESSAGE_TYPE = "t";
-  var MESSAGE_DATA = "d";
-  var CONTROL_SHUTDOWN = "s";
-  var CONTROL_RESET = "r";
-  var CONTROL_ERROR = "e";
-  var CONTROL_PONG = "o";
-  var SWITCH_ACK = "a";
-  var END_TRANSMISSION = "n";
-  var PING = "p";
-  var SERVER_HELLO = "h";
-  var Connection = class {
-    constructor(id, repoInfo_, applicationId_, appCheckToken_, authToken_, onMessage_, onReady_, onDisconnect_, onKill_, lastSessionId) {
-      this.id = id;
-      this.repoInfo_ = repoInfo_;
-      this.applicationId_ = applicationId_;
-      this.appCheckToken_ = appCheckToken_;
-      this.authToken_ = authToken_;
-      this.onMessage_ = onMessage_;
-      this.onReady_ = onReady_;
-      this.onDisconnect_ = onDisconnect_;
-      this.onKill_ = onKill_;
-      this.lastSessionId = lastSessionId;
-      this.connectionCount = 0;
-      this.pendingDataMessages = [];
-      this.state_ = 0;
-      this.log_ = logWrapper("c:" + this.id + ":");
-      this.transportManager_ = new TransportManager(repoInfo_);
-      this.log_("Connection created");
-      this.start_();
-    }
-    start_() {
-      const conn = this.transportManager_.initialTransport();
-      this.conn_ = new conn(this.nextTransportId_(), this.repoInfo_, this.applicationId_, this.appCheckToken_, this.authToken_, null, this.lastSessionId);
-      this.primaryResponsesRequired_ = conn["responsesRequiredToBeHealthy"] || 0;
-      const onMessageReceived = this.connReceiver_(this.conn_);
-      const onConnectionLost = this.disconnReceiver_(this.conn_);
-      this.tx_ = this.conn_;
-      this.rx_ = this.conn_;
-      this.secondaryConn_ = null;
-      this.isHealthy_ = false;
-      setTimeout(() => {
-        this.conn_ && this.conn_.open(onMessageReceived, onConnectionLost);
-      }, Math.floor(0));
-      const healthyTimeoutMS = conn["healthyTimeout"] || 0;
-      if (healthyTimeoutMS > 0) {
-        this.healthyTimeout_ = setTimeoutNonBlocking(() => {
-          this.healthyTimeout_ = null;
-          if (!this.isHealthy_) {
-            if (this.conn_ && this.conn_.bytesReceived > BYTES_RECEIVED_HEALTHY_OVERRIDE) {
-              this.log_("Connection exceeded healthy timeout but has received " + this.conn_.bytesReceived + " bytes.  Marking connection healthy.");
-              this.isHealthy_ = true;
-              this.conn_.markConnectionHealthy();
-            } else if (this.conn_ && this.conn_.bytesSent > BYTES_SENT_HEALTHY_OVERRIDE) {
-              this.log_("Connection exceeded healthy timeout but has sent " + this.conn_.bytesSent + " bytes.  Leaving connection alive.");
-            } else {
-              this.log_("Closing unhealthy connection after timeout.");
-              this.close();
-            }
-          }
-        }, Math.floor(healthyTimeoutMS));
-      }
-    }
-    nextTransportId_() {
-      return "c:" + this.id + ":" + this.connectionCount++;
-    }
-    disconnReceiver_(conn) {
-      return (everConnected) => {
-        if (conn === this.conn_) {
-          this.onConnectionLost_(everConnected);
-        } else if (conn === this.secondaryConn_) {
-          this.log_("Secondary connection lost.");
-          this.onSecondaryConnectionLost_();
-        } else {
-          this.log_("closing an old connection");
-        }
-      };
-    }
-    connReceiver_(conn) {
-      return (message) => {
-        if (this.state_ !== 2) {
-          if (conn === this.rx_) {
-            this.onPrimaryMessageReceived_(message);
-          } else if (conn === this.secondaryConn_) {
-            this.onSecondaryMessageReceived_(message);
-          } else {
-            this.log_("message on old connection");
-          }
-        }
-      };
-    }
-    sendRequest(dataMsg) {
-      const msg = { t: "d", d: dataMsg };
-      this.sendData_(msg);
-    }
-    tryCleanupConnection() {
-      if (this.tx_ === this.secondaryConn_ && this.rx_ === this.secondaryConn_) {
-        this.log_("cleaning up and promoting a connection: " + this.secondaryConn_.connId);
-        this.conn_ = this.secondaryConn_;
-        this.secondaryConn_ = null;
-      }
-    }
-    onSecondaryControl_(controlData) {
-      if (MESSAGE_TYPE in controlData) {
-        const cmd = controlData[MESSAGE_TYPE];
-        if (cmd === SWITCH_ACK) {
-          this.upgradeIfSecondaryHealthy_();
-        } else if (cmd === CONTROL_RESET) {
-          this.log_("Got a reset on secondary, closing it");
-          this.secondaryConn_.close();
-          if (this.tx_ === this.secondaryConn_ || this.rx_ === this.secondaryConn_) {
-            this.close();
-          }
-        } else if (cmd === CONTROL_PONG) {
-          this.log_("got pong on secondary.");
-          this.secondaryResponsesRequired_--;
-          this.upgradeIfSecondaryHealthy_();
-        }
-      }
-    }
-    onSecondaryMessageReceived_(parsedData) {
-      const layer = requireKey("t", parsedData);
-      const data = requireKey("d", parsedData);
-      if (layer === "c") {
-        this.onSecondaryControl_(data);
-      } else if (layer === "d") {
-        this.pendingDataMessages.push(data);
-      } else {
-        throw new Error("Unknown protocol layer: " + layer);
-      }
-    }
-    upgradeIfSecondaryHealthy_() {
-      if (this.secondaryResponsesRequired_ <= 0) {
-        this.log_("Secondary connection is healthy.");
-        this.isHealthy_ = true;
-        this.secondaryConn_.markConnectionHealthy();
-        this.proceedWithUpgrade_();
-      } else {
-        this.log_("sending ping on secondary.");
-        this.secondaryConn_.send({ t: "c", d: { t: PING, d: {} } });
-      }
-    }
-    proceedWithUpgrade_() {
-      this.secondaryConn_.start();
-      this.log_("sending client ack on secondary");
-      this.secondaryConn_.send({ t: "c", d: { t: SWITCH_ACK, d: {} } });
-      this.log_("Ending transmission on primary");
-      this.conn_.send({ t: "c", d: { t: END_TRANSMISSION, d: {} } });
-      this.tx_ = this.secondaryConn_;
-      this.tryCleanupConnection();
-    }
-    onPrimaryMessageReceived_(parsedData) {
-      const layer = requireKey("t", parsedData);
-      const data = requireKey("d", parsedData);
-      if (layer === "c") {
-        this.onControl_(data);
-      } else if (layer === "d") {
-        this.onDataMessage_(data);
-      }
-    }
-    onDataMessage_(message) {
-      this.onPrimaryResponse_();
-      this.onMessage_(message);
-    }
-    onPrimaryResponse_() {
-      if (!this.isHealthy_) {
-        this.primaryResponsesRequired_--;
-        if (this.primaryResponsesRequired_ <= 0) {
-          this.log_("Primary connection is healthy.");
-          this.isHealthy_ = true;
-          this.conn_.markConnectionHealthy();
-        }
-      }
-    }
-    onControl_(controlData) {
-      const cmd = requireKey(MESSAGE_TYPE, controlData);
-      if (MESSAGE_DATA in controlData) {
-        const payload = controlData[MESSAGE_DATA];
-        if (cmd === SERVER_HELLO) {
-          this.onHandshake_(payload);
-        } else if (cmd === END_TRANSMISSION) {
-          this.log_("recvd end transmission on primary");
-          this.rx_ = this.secondaryConn_;
-          for (let i3 = 0; i3 < this.pendingDataMessages.length; ++i3) {
-            this.onDataMessage_(this.pendingDataMessages[i3]);
-          }
-          this.pendingDataMessages = [];
-          this.tryCleanupConnection();
-        } else if (cmd === CONTROL_SHUTDOWN) {
-          this.onConnectionShutdown_(payload);
-        } else if (cmd === CONTROL_RESET) {
-          this.onReset_(payload);
-        } else if (cmd === CONTROL_ERROR) {
-          error("Server Error: " + payload);
-        } else if (cmd === CONTROL_PONG) {
-          this.log_("got pong on primary.");
-          this.onPrimaryResponse_();
-          this.sendPingOnPrimaryIfNecessary_();
-        } else {
-          error("Unknown control packet command: " + cmd);
-        }
-      }
-    }
-    onHandshake_(handshake) {
-      const timestamp = handshake.ts;
-      const version6 = handshake.v;
-      const host = handshake.h;
-      this.sessionId = handshake.s;
-      this.repoInfo_.host = host;
-      if (this.state_ === 0) {
-        this.conn_.start();
-        this.onConnectionEstablished_(this.conn_, timestamp);
-        if (PROTOCOL_VERSION !== version6) {
-          warn("Protocol version mismatch detected");
-        }
-        this.tryStartUpgrade_();
-      }
-    }
-    tryStartUpgrade_() {
-      const conn = this.transportManager_.upgradeTransport();
-      if (conn) {
-        this.startUpgrade_(conn);
-      }
-    }
-    startUpgrade_(conn) {
-      this.secondaryConn_ = new conn(this.nextTransportId_(), this.repoInfo_, this.applicationId_, this.appCheckToken_, this.authToken_, this.sessionId);
-      this.secondaryResponsesRequired_ = conn["responsesRequiredToBeHealthy"] || 0;
-      const onMessage = this.connReceiver_(this.secondaryConn_);
-      const onDisconnect = this.disconnReceiver_(this.secondaryConn_);
-      this.secondaryConn_.open(onMessage, onDisconnect);
-      setTimeoutNonBlocking(() => {
-        if (this.secondaryConn_) {
-          this.log_("Timed out trying to upgrade.");
-          this.secondaryConn_.close();
-        }
-      }, Math.floor(UPGRADE_TIMEOUT));
-    }
-    onReset_(host) {
-      this.log_("Reset packet received.  New host: " + host);
-      this.repoInfo_.host = host;
-      if (this.state_ === 1) {
-        this.close();
-      } else {
-        this.closeConnections_();
-        this.start_();
-      }
-    }
-    onConnectionEstablished_(conn, timestamp) {
-      this.log_("Realtime connection established.");
-      this.conn_ = conn;
-      this.state_ = 1;
-      if (this.onReady_) {
-        this.onReady_(timestamp, this.sessionId);
-        this.onReady_ = null;
-      }
-      if (this.primaryResponsesRequired_ === 0) {
-        this.log_("Primary connection is healthy.");
-        this.isHealthy_ = true;
-      } else {
-        setTimeoutNonBlocking(() => {
-          this.sendPingOnPrimaryIfNecessary_();
-        }, Math.floor(DELAY_BEFORE_SENDING_EXTRA_REQUESTS));
-      }
-    }
-    sendPingOnPrimaryIfNecessary_() {
-      if (!this.isHealthy_ && this.state_ === 1) {
-        this.log_("sending ping on primary.");
-        this.sendData_({ t: "c", d: { t: PING, d: {} } });
-      }
-    }
-    onSecondaryConnectionLost_() {
-      const conn = this.secondaryConn_;
-      this.secondaryConn_ = null;
-      if (this.tx_ === conn || this.rx_ === conn) {
-        this.close();
-      }
-    }
-    onConnectionLost_(everConnected) {
-      this.conn_ = null;
-      if (!everConnected && this.state_ === 0) {
-        this.log_("Realtime connection failed.");
-        if (this.repoInfo_.isCacheableHost()) {
-          PersistentStorage.remove("host:" + this.repoInfo_.host);
-          this.repoInfo_.internalHost = this.repoInfo_.host;
-        }
-      } else if (this.state_ === 1) {
-        this.log_("Realtime connection lost.");
-      }
-      this.close();
-    }
-    onConnectionShutdown_(reason) {
-      this.log_("Connection shutdown command received. Shutting down...");
-      if (this.onKill_) {
-        this.onKill_(reason);
-        this.onKill_ = null;
-      }
-      this.onDisconnect_ = null;
-      this.close();
-    }
-    sendData_(data) {
-      if (this.state_ !== 1) {
-        throw "Connection is not connected";
-      } else {
-        this.tx_.send(data);
-      }
-    }
-    close() {
-      if (this.state_ !== 2) {
-        this.log_("Closing realtime connection.");
-        this.state_ = 2;
-        this.closeConnections_();
-        if (this.onDisconnect_) {
-          this.onDisconnect_();
-          this.onDisconnect_ = null;
-        }
-      }
-    }
-    closeConnections_() {
-      this.log_("Shutting down all connections");
-      if (this.conn_) {
-        this.conn_.close();
-        this.conn_ = null;
-      }
-      if (this.secondaryConn_) {
-        this.secondaryConn_.close();
-        this.secondaryConn_ = null;
-      }
-      if (this.healthyTimeout_) {
-        clearTimeout(this.healthyTimeout_);
-        this.healthyTimeout_ = null;
-      }
-    }
-  };
-  var ServerActions = class {
-    put(pathString, data, onComplete, hash) {
-    }
-    merge(pathString, data, onComplete, hash) {
-    }
-    refreshAuthToken(token) {
-    }
-    refreshAppCheckToken(token) {
-    }
-    onDisconnectPut(pathString, data, onComplete) {
-    }
-    onDisconnectMerge(pathString, data, onComplete) {
-    }
-    onDisconnectCancel(pathString, onComplete) {
-    }
-    reportStats(stats) {
-    }
-  };
-  var EventEmitter = class {
-    constructor(allowedEvents_) {
-      this.allowedEvents_ = allowedEvents_;
-      this.listeners_ = {};
-      assert(Array.isArray(allowedEvents_) && allowedEvents_.length > 0, "Requires a non-empty array");
-    }
-    trigger(eventType, ...varArgs) {
-      if (Array.isArray(this.listeners_[eventType])) {
-        const listeners = [...this.listeners_[eventType]];
-        for (let i3 = 0; i3 < listeners.length; i3++) {
-          listeners[i3].callback.apply(listeners[i3].context, varArgs);
-        }
-      }
-    }
-    on(eventType, callback, context) {
-      this.validateEventType_(eventType);
-      this.listeners_[eventType] = this.listeners_[eventType] || [];
-      this.listeners_[eventType].push({ callback, context });
-      const eventData = this.getInitialEvent(eventType);
-      if (eventData) {
-        callback.apply(context, eventData);
-      }
-    }
-    off(eventType, callback, context) {
-      this.validateEventType_(eventType);
-      const listeners = this.listeners_[eventType] || [];
-      for (let i3 = 0; i3 < listeners.length; i3++) {
-        if (listeners[i3].callback === callback && (!context || context === listeners[i3].context)) {
-          listeners.splice(i3, 1);
-          return;
-        }
-      }
-    }
-    validateEventType_(eventType) {
-      assert(this.allowedEvents_.find((et2) => {
-        return et2 === eventType;
-      }), "Unknown event: " + eventType);
-    }
-  };
-  var OnlineMonitor = class extends EventEmitter {
-    constructor() {
-      super(["online"]);
-      this.online_ = true;
-      if (typeof window !== "undefined" && typeof window.addEventListener !== "undefined" && !isMobileCordova()) {
-        window.addEventListener("online", () => {
-          if (!this.online_) {
-            this.online_ = true;
-            this.trigger("online", true);
-          }
-        }, false);
-        window.addEventListener("offline", () => {
-          if (this.online_) {
-            this.online_ = false;
-            this.trigger("online", false);
-          }
-        }, false);
-      }
-    }
-    static getInstance() {
-      return new OnlineMonitor();
-    }
-    getInitialEvent(eventType) {
-      assert(eventType === "online", "Unknown event type: " + eventType);
-      return [this.online_];
-    }
-    currentlyOnline() {
-      return this.online_;
-    }
-  };
-  var MAX_PATH_DEPTH = 32;
-  var MAX_PATH_LENGTH_BYTES = 768;
-  var Path = class {
-    constructor(pathOrString, pieceNum) {
-      if (pieceNum === void 0) {
-        this.pieces_ = pathOrString.split("/");
-        let copyTo = 0;
-        for (let i3 = 0; i3 < this.pieces_.length; i3++) {
-          if (this.pieces_[i3].length > 0) {
-            this.pieces_[copyTo] = this.pieces_[i3];
-            copyTo++;
-          }
-        }
-        this.pieces_.length = copyTo;
-        this.pieceNum_ = 0;
-      } else {
-        this.pieces_ = pathOrString;
-        this.pieceNum_ = pieceNum;
-      }
-    }
-    toString() {
-      let pathString = "";
-      for (let i3 = this.pieceNum_; i3 < this.pieces_.length; i3++) {
-        if (this.pieces_[i3] !== "") {
-          pathString += "/" + this.pieces_[i3];
-        }
-      }
-      return pathString || "/";
-    }
-  };
-  function newEmptyPath() {
-    return new Path("");
-  }
-  function pathGetFront(path) {
-    if (path.pieceNum_ >= path.pieces_.length) {
-      return null;
-    }
-    return path.pieces_[path.pieceNum_];
-  }
-  function pathGetLength(path) {
-    return path.pieces_.length - path.pieceNum_;
-  }
-  function pathPopFront(path) {
-    let pieceNum = path.pieceNum_;
-    if (pieceNum < path.pieces_.length) {
-      pieceNum++;
-    }
-    return new Path(path.pieces_, pieceNum);
-  }
-  function pathGetBack(path) {
-    if (path.pieceNum_ < path.pieces_.length) {
-      return path.pieces_[path.pieces_.length - 1];
-    }
-    return null;
-  }
-  function pathToUrlEncodedString(path) {
-    let pathString = "";
-    for (let i3 = path.pieceNum_; i3 < path.pieces_.length; i3++) {
-      if (path.pieces_[i3] !== "") {
-        pathString += "/" + encodeURIComponent(String(path.pieces_[i3]));
-      }
-    }
-    return pathString || "/";
-  }
-  function pathSlice(path, begin = 0) {
-    return path.pieces_.slice(path.pieceNum_ + begin);
-  }
-  function pathParent(path) {
-    if (path.pieceNum_ >= path.pieces_.length) {
-      return null;
-    }
-    const pieces = [];
-    for (let i3 = path.pieceNum_; i3 < path.pieces_.length - 1; i3++) {
-      pieces.push(path.pieces_[i3]);
-    }
-    return new Path(pieces, 0);
-  }
-  function pathChild(path, childPathObj) {
-    const pieces = [];
-    for (let i3 = path.pieceNum_; i3 < path.pieces_.length; i3++) {
-      pieces.push(path.pieces_[i3]);
-    }
-    if (childPathObj instanceof Path) {
-      for (let i3 = childPathObj.pieceNum_; i3 < childPathObj.pieces_.length; i3++) {
-        pieces.push(childPathObj.pieces_[i3]);
-      }
-    } else {
-      const childPieces = childPathObj.split("/");
-      for (let i3 = 0; i3 < childPieces.length; i3++) {
-        if (childPieces[i3].length > 0) {
-          pieces.push(childPieces[i3]);
-        }
-      }
-    }
-    return new Path(pieces, 0);
-  }
-  function pathIsEmpty(path) {
-    return path.pieceNum_ >= path.pieces_.length;
-  }
-  function newRelativePath(outerPath, innerPath) {
-    const outer = pathGetFront(outerPath), inner = pathGetFront(innerPath);
-    if (outer === null) {
-      return innerPath;
-    } else if (outer === inner) {
-      return newRelativePath(pathPopFront(outerPath), pathPopFront(innerPath));
-    } else {
-      throw new Error("INTERNAL ERROR: innerPath (" + innerPath + ") is not within outerPath (" + outerPath + ")");
-    }
-  }
-  function pathCompare(left, right) {
-    const leftKeys = pathSlice(left, 0);
-    const rightKeys = pathSlice(right, 0);
-    for (let i3 = 0; i3 < leftKeys.length && i3 < rightKeys.length; i3++) {
-      const cmp = nameCompare(leftKeys[i3], rightKeys[i3]);
-      if (cmp !== 0) {
-        return cmp;
-      }
-    }
-    if (leftKeys.length === rightKeys.length) {
-      return 0;
-    }
-    return leftKeys.length < rightKeys.length ? -1 : 1;
-  }
-  function pathEquals(path, other) {
-    if (pathGetLength(path) !== pathGetLength(other)) {
-      return false;
-    }
-    for (let i3 = path.pieceNum_, j2 = other.pieceNum_; i3 <= path.pieces_.length; i3++, j2++) {
-      if (path.pieces_[i3] !== other.pieces_[j2]) {
-        return false;
-      }
-    }
-    return true;
-  }
-  function pathContains(path, other) {
-    let i3 = path.pieceNum_;
-    let j2 = other.pieceNum_;
-    if (pathGetLength(path) > pathGetLength(other)) {
-      return false;
-    }
-    while (i3 < path.pieces_.length) {
-      if (path.pieces_[i3] !== other.pieces_[j2]) {
-        return false;
-      }
-      ++i3;
-      ++j2;
-    }
-    return true;
-  }
-  var ValidationPath = class {
-    constructor(path, errorPrefix_) {
-      this.errorPrefix_ = errorPrefix_;
-      this.parts_ = pathSlice(path, 0);
-      this.byteLength_ = Math.max(1, this.parts_.length);
-      for (let i3 = 0; i3 < this.parts_.length; i3++) {
-        this.byteLength_ += stringLength(this.parts_[i3]);
-      }
-      validationPathCheckValid(this);
-    }
-  };
-  function validationPathPush(validationPath, child2) {
-    if (validationPath.parts_.length > 0) {
-      validationPath.byteLength_ += 1;
-    }
-    validationPath.parts_.push(child2);
-    validationPath.byteLength_ += stringLength(child2);
-    validationPathCheckValid(validationPath);
-  }
-  function validationPathPop(validationPath) {
-    const last = validationPath.parts_.pop();
-    validationPath.byteLength_ -= stringLength(last);
-    if (validationPath.parts_.length > 0) {
-      validationPath.byteLength_ -= 1;
-    }
-  }
-  function validationPathCheckValid(validationPath) {
-    if (validationPath.byteLength_ > MAX_PATH_LENGTH_BYTES) {
-      throw new Error(validationPath.errorPrefix_ + "has a key path longer than " + MAX_PATH_LENGTH_BYTES + " bytes (" + validationPath.byteLength_ + ").");
-    }
-    if (validationPath.parts_.length > MAX_PATH_DEPTH) {
-      throw new Error(validationPath.errorPrefix_ + "path specified exceeds the maximum depth that can be written (" + MAX_PATH_DEPTH + ") or object contains a cycle " + validationPathToErrorString(validationPath));
-    }
-  }
-  function validationPathToErrorString(validationPath) {
-    if (validationPath.parts_.length === 0) {
-      return "";
-    }
-    return "in property '" + validationPath.parts_.join(".") + "'";
-  }
-  var VisibilityMonitor = class extends EventEmitter {
-    constructor() {
-      super(["visible"]);
-      let hidden;
-      let visibilityChange;
-      if (typeof document !== "undefined" && typeof document.addEventListener !== "undefined") {
-        if (typeof document["hidden"] !== "undefined") {
-          visibilityChange = "visibilitychange";
-          hidden = "hidden";
-        } else if (typeof document["mozHidden"] !== "undefined") {
-          visibilityChange = "mozvisibilitychange";
-          hidden = "mozHidden";
-        } else if (typeof document["msHidden"] !== "undefined") {
-          visibilityChange = "msvisibilitychange";
-          hidden = "msHidden";
-        } else if (typeof document["webkitHidden"] !== "undefined") {
-          visibilityChange = "webkitvisibilitychange";
-          hidden = "webkitHidden";
-        }
-      }
-      this.visible_ = true;
-      if (visibilityChange) {
-        document.addEventListener(visibilityChange, () => {
-          const visible = !document[hidden];
-          if (visible !== this.visible_) {
-            this.visible_ = visible;
-            this.trigger("visible", visible);
-          }
-        }, false);
-      }
-    }
-    static getInstance() {
-      return new VisibilityMonitor();
-    }
-    getInitialEvent(eventType) {
-      assert(eventType === "visible", "Unknown event type: " + eventType);
-      return [this.visible_];
-    }
-  };
-  var RECONNECT_MIN_DELAY = 1e3;
-  var RECONNECT_MAX_DELAY_DEFAULT = 60 * 5 * 1e3;
-  var RECONNECT_MAX_DELAY_FOR_ADMINS = 30 * 1e3;
-  var RECONNECT_DELAY_MULTIPLIER = 1.3;
-  var RECONNECT_DELAY_RESET_TIMEOUT = 3e4;
-  var SERVER_KILL_INTERRUPT_REASON = "server_kill";
-  var INVALID_TOKEN_THRESHOLD = 3;
-  var PersistentConnection = class extends ServerActions {
-    constructor(repoInfo_, applicationId_, onDataUpdate_, onConnectStatus_, onServerInfoUpdate_, authTokenProvider_, appCheckTokenProvider_, authOverride_) {
-      super();
-      this.repoInfo_ = repoInfo_;
-      this.applicationId_ = applicationId_;
-      this.onDataUpdate_ = onDataUpdate_;
-      this.onConnectStatus_ = onConnectStatus_;
-      this.onServerInfoUpdate_ = onServerInfoUpdate_;
-      this.authTokenProvider_ = authTokenProvider_;
-      this.appCheckTokenProvider_ = appCheckTokenProvider_;
-      this.authOverride_ = authOverride_;
-      this.id = PersistentConnection.nextPersistentConnectionId_++;
-      this.log_ = logWrapper("p:" + this.id + ":");
-      this.interruptReasons_ = {};
-      this.listens = /* @__PURE__ */ new Map();
-      this.outstandingPuts_ = [];
-      this.outstandingGets_ = [];
-      this.outstandingPutCount_ = 0;
-      this.outstandingGetCount_ = 0;
-      this.onDisconnectRequestQueue_ = [];
-      this.connected_ = false;
-      this.reconnectDelay_ = RECONNECT_MIN_DELAY;
-      this.maxReconnectDelay_ = RECONNECT_MAX_DELAY_DEFAULT;
-      this.securityDebugCallback_ = null;
-      this.lastSessionId = null;
-      this.establishConnectionTimer_ = null;
-      this.visible_ = false;
-      this.requestCBHash_ = {};
-      this.requestNumber_ = 0;
-      this.realtime_ = null;
-      this.authToken_ = null;
-      this.appCheckToken_ = null;
-      this.forceTokenRefresh_ = false;
-      this.invalidAuthTokenCount_ = 0;
-      this.invalidAppCheckTokenCount_ = 0;
-      this.firstConnection_ = true;
-      this.lastConnectionAttemptTime_ = null;
-      this.lastConnectionEstablishedTime_ = null;
-      if (authOverride_ && !isNodeSdk()) {
-        throw new Error("Auth override specified in options, but not supported on non Node.js platforms");
-      }
-      VisibilityMonitor.getInstance().on("visible", this.onVisible_, this);
-      if (repoInfo_.host.indexOf("fblocal") === -1) {
-        OnlineMonitor.getInstance().on("online", this.onOnline_, this);
-      }
-    }
-    sendRequest(action, body, onResponse) {
-      const curReqNum = ++this.requestNumber_;
-      const msg = { r: curReqNum, a: action, b: body };
-      this.log_(stringify2(msg));
-      assert(this.connected_, "sendRequest call when we're not connected not allowed.");
-      this.realtime_.sendRequest(msg);
-      if (onResponse) {
-        this.requestCBHash_[curReqNum] = onResponse;
-      }
-    }
-    get(query2) {
-      this.initConnection_();
-      const deferred = new Deferred();
-      const request = {
-        p: query2._path.toString(),
-        q: query2._queryObject
-      };
-      const outstandingGet = {
-        action: "g",
-        request,
-        onComplete: (message) => {
-          const payload = message["d"];
-          if (message["s"] === "ok") {
-            deferred.resolve(payload);
-          } else {
-            deferred.reject(payload);
-          }
-        }
-      };
-      this.outstandingGets_.push(outstandingGet);
-      this.outstandingGetCount_++;
-      const index = this.outstandingGets_.length - 1;
-      if (this.connected_) {
-        this.sendGet_(index);
-      }
-      return deferred.promise;
-    }
-    listen(query2, currentHashFn, tag, onComplete) {
-      this.initConnection_();
-      const queryId = query2._queryIdentifier;
-      const pathString = query2._path.toString();
-      this.log_("Listen called for " + pathString + " " + queryId);
-      if (!this.listens.has(pathString)) {
-        this.listens.set(pathString, /* @__PURE__ */ new Map());
-      }
-      assert(query2._queryParams.isDefault() || !query2._queryParams.loadsAllData(), "listen() called for non-default but complete query");
-      assert(!this.listens.get(pathString).has(queryId), `listen() called twice for same path/queryId.`);
-      const listenSpec = {
-        onComplete,
-        hashFn: currentHashFn,
-        query: query2,
-        tag
-      };
-      this.listens.get(pathString).set(queryId, listenSpec);
-      if (this.connected_) {
-        this.sendListen_(listenSpec);
-      }
-    }
-    sendGet_(index) {
-      const get2 = this.outstandingGets_[index];
-      this.sendRequest("g", get2.request, (message) => {
-        delete this.outstandingGets_[index];
-        this.outstandingGetCount_--;
-        if (this.outstandingGetCount_ === 0) {
-          this.outstandingGets_ = [];
-        }
-        if (get2.onComplete) {
-          get2.onComplete(message);
-        }
-      });
-    }
-    sendListen_(listenSpec) {
-      const query2 = listenSpec.query;
-      const pathString = query2._path.toString();
-      const queryId = query2._queryIdentifier;
-      this.log_("Listen on " + pathString + " for " + queryId);
-      const req = { p: pathString };
-      const action = "q";
-      if (listenSpec.tag) {
-        req["q"] = query2._queryObject;
-        req["t"] = listenSpec.tag;
-      }
-      req["h"] = listenSpec.hashFn();
-      this.sendRequest(action, req, (message) => {
-        const payload = message["d"];
-        const status = message["s"];
-        PersistentConnection.warnOnListenWarnings_(payload, query2);
-        const currentListenSpec = this.listens.get(pathString) && this.listens.get(pathString).get(queryId);
-        if (currentListenSpec === listenSpec) {
-          this.log_("listen response", message);
-          if (status !== "ok") {
-            this.removeListen_(pathString, queryId);
-          }
-          if (listenSpec.onComplete) {
-            listenSpec.onComplete(status, payload);
-          }
-        }
-      });
-    }
-    static warnOnListenWarnings_(payload, query2) {
-      if (payload && typeof payload === "object" && contains(payload, "w")) {
-        const warnings = safeGet(payload, "w");
-        if (Array.isArray(warnings) && ~warnings.indexOf("no_index")) {
-          const indexSpec = '".indexOn": "' + query2._queryParams.getIndex().toString() + '"';
-          const indexPath = query2._path.toString();
-          warn(`Using an unspecified index. Your data will be downloaded and filtered on the client. Consider adding ${indexSpec} at ${indexPath} to your security rules for better performance.`);
-        }
-      }
-    }
-    refreshAuthToken(token) {
-      this.authToken_ = token;
-      this.log_("Auth token refreshed");
-      if (this.authToken_) {
-        this.tryAuth();
-      } else {
-        if (this.connected_) {
-          this.sendRequest("unauth", {}, () => {
-          });
-        }
-      }
-      this.reduceReconnectDelayIfAdminCredential_(token);
-    }
-    reduceReconnectDelayIfAdminCredential_(credential) {
-      const isFirebaseSecret = credential && credential.length === 40;
-      if (isFirebaseSecret || isAdmin(credential)) {
-        this.log_("Admin auth credential detected.  Reducing max reconnect time.");
-        this.maxReconnectDelay_ = RECONNECT_MAX_DELAY_FOR_ADMINS;
-      }
-    }
-    refreshAppCheckToken(token) {
-      this.appCheckToken_ = token;
-      this.log_("App check token refreshed");
-      if (this.appCheckToken_) {
-        this.tryAppCheck();
-      } else {
-        if (this.connected_) {
-          this.sendRequest("unappeck", {}, () => {
-          });
-        }
-      }
-    }
-    tryAuth() {
-      if (this.connected_ && this.authToken_) {
-        const token = this.authToken_;
-        const authMethod = isValidFormat(token) ? "auth" : "gauth";
-        const requestData = { cred: token };
-        if (this.authOverride_ === null) {
-          requestData["noauth"] = true;
-        } else if (typeof this.authOverride_ === "object") {
-          requestData["authvar"] = this.authOverride_;
-        }
-        this.sendRequest(authMethod, requestData, (res) => {
-          const status = res["s"];
-          const data = res["d"] || "error";
-          if (this.authToken_ === token) {
-            if (status === "ok") {
-              this.invalidAuthTokenCount_ = 0;
-            } else {
-              this.onAuthRevoked_(status, data);
-            }
-          }
-        });
-      }
-    }
-    tryAppCheck() {
-      if (this.connected_ && this.appCheckToken_) {
-        this.sendRequest("appcheck", { "token": this.appCheckToken_ }, (res) => {
-          const status = res["s"];
-          const data = res["d"] || "error";
-          if (status === "ok") {
-            this.invalidAppCheckTokenCount_ = 0;
-          } else {
-            this.onAppCheckRevoked_(status, data);
-          }
-        });
-      }
-    }
-    unlisten(query2, tag) {
-      const pathString = query2._path.toString();
-      const queryId = query2._queryIdentifier;
-      this.log_("Unlisten called for " + pathString + " " + queryId);
-      assert(query2._queryParams.isDefault() || !query2._queryParams.loadsAllData(), "unlisten() called for non-default but complete query");
-      const listen = this.removeListen_(pathString, queryId);
-      if (listen && this.connected_) {
-        this.sendUnlisten_(pathString, queryId, query2._queryObject, tag);
-      }
-    }
-    sendUnlisten_(pathString, queryId, queryObj, tag) {
-      this.log_("Unlisten on " + pathString + " for " + queryId);
-      const req = { p: pathString };
-      const action = "n";
-      if (tag) {
-        req["q"] = queryObj;
-        req["t"] = tag;
-      }
-      this.sendRequest(action, req);
-    }
-    onDisconnectPut(pathString, data, onComplete) {
-      this.initConnection_();
-      if (this.connected_) {
-        this.sendOnDisconnect_("o", pathString, data, onComplete);
-      } else {
-        this.onDisconnectRequestQueue_.push({
-          pathString,
-          action: "o",
-          data,
-          onComplete
-        });
-      }
-    }
-    onDisconnectMerge(pathString, data, onComplete) {
-      this.initConnection_();
-      if (this.connected_) {
-        this.sendOnDisconnect_("om", pathString, data, onComplete);
-      } else {
-        this.onDisconnectRequestQueue_.push({
-          pathString,
-          action: "om",
-          data,
-          onComplete
-        });
-      }
-    }
-    onDisconnectCancel(pathString, onComplete) {
-      this.initConnection_();
-      if (this.connected_) {
-        this.sendOnDisconnect_("oc", pathString, null, onComplete);
-      } else {
-        this.onDisconnectRequestQueue_.push({
-          pathString,
-          action: "oc",
-          data: null,
-          onComplete
-        });
-      }
-    }
-    sendOnDisconnect_(action, pathString, data, onComplete) {
-      const request = { p: pathString, d: data };
-      this.log_("onDisconnect " + action, request);
-      this.sendRequest(action, request, (response) => {
-        if (onComplete) {
-          setTimeout(() => {
-            onComplete(response["s"], response["d"]);
-          }, Math.floor(0));
-        }
-      });
-    }
-    put(pathString, data, onComplete, hash) {
-      this.putInternal("p", pathString, data, onComplete, hash);
-    }
-    merge(pathString, data, onComplete, hash) {
-      this.putInternal("m", pathString, data, onComplete, hash);
-    }
-    putInternal(action, pathString, data, onComplete, hash) {
-      this.initConnection_();
-      const request = {
-        p: pathString,
-        d: data
-      };
-      if (hash !== void 0) {
-        request["h"] = hash;
-      }
-      this.outstandingPuts_.push({
-        action,
-        request,
-        onComplete
-      });
-      this.outstandingPutCount_++;
-      const index = this.outstandingPuts_.length - 1;
-      if (this.connected_) {
-        this.sendPut_(index);
-      } else {
-        this.log_("Buffering put: " + pathString);
-      }
-    }
-    sendPut_(index) {
-      const action = this.outstandingPuts_[index].action;
-      const request = this.outstandingPuts_[index].request;
-      const onComplete = this.outstandingPuts_[index].onComplete;
-      this.outstandingPuts_[index].queued = this.connected_;
-      this.sendRequest(action, request, (message) => {
-        this.log_(action + " response", message);
-        delete this.outstandingPuts_[index];
-        this.outstandingPutCount_--;
-        if (this.outstandingPutCount_ === 0) {
-          this.outstandingPuts_ = [];
-        }
-        if (onComplete) {
-          onComplete(message["s"], message["d"]);
-        }
-      });
-    }
-    reportStats(stats) {
-      if (this.connected_) {
-        const request = { c: stats };
-        this.log_("reportStats", request);
-        this.sendRequest("s", request, (result) => {
-          const status = result["s"];
-          if (status !== "ok") {
-            const errorReason = result["d"];
-            this.log_("reportStats", "Error sending stats: " + errorReason);
-          }
-        });
-      }
-    }
-    onDataMessage_(message) {
-      if ("r" in message) {
-        this.log_("from server: " + stringify2(message));
-        const reqNum = message["r"];
-        const onResponse = this.requestCBHash_[reqNum];
-        if (onResponse) {
-          delete this.requestCBHash_[reqNum];
-          onResponse(message["b"]);
-        }
-      } else if ("error" in message) {
-        throw "A server-side error has occurred: " + message["error"];
-      } else if ("a" in message) {
-        this.onDataPush_(message["a"], message["b"]);
-      }
-    }
-    onDataPush_(action, body) {
-      this.log_("handleServerMessage", action, body);
-      if (action === "d") {
-        this.onDataUpdate_(
-          body["p"],
-          body["d"],
-          false,
-          body["t"]
-        );
-      } else if (action === "m") {
-        this.onDataUpdate_(
-          body["p"],
-          body["d"],
-          true,
-          body["t"]
-        );
-      } else if (action === "c") {
-        this.onListenRevoked_(body["p"], body["q"]);
-      } else if (action === "ac") {
-        this.onAuthRevoked_(body["s"], body["d"]);
-      } else if (action === "apc") {
-        this.onAppCheckRevoked_(body["s"], body["d"]);
-      } else if (action === "sd") {
-        this.onSecurityDebugPacket_(body);
-      } else {
-        error("Unrecognized action received from server: " + stringify2(action) + "\nAre you using the latest client?");
-      }
-    }
-    onReady_(timestamp, sessionId) {
-      this.log_("connection ready");
-      this.connected_ = true;
-      this.lastConnectionEstablishedTime_ = new Date().getTime();
-      this.handleTimestamp_(timestamp);
-      this.lastSessionId = sessionId;
-      if (this.firstConnection_) {
-        this.sendConnectStats_();
-      }
-      this.restoreState_();
-      this.firstConnection_ = false;
-      this.onConnectStatus_(true);
-    }
-    scheduleConnect_(timeout) {
-      assert(!this.realtime_, "Scheduling a connect when we're already connected/ing?");
-      if (this.establishConnectionTimer_) {
-        clearTimeout(this.establishConnectionTimer_);
-      }
-      this.establishConnectionTimer_ = setTimeout(() => {
-        this.establishConnectionTimer_ = null;
-        this.establishConnection_();
-      }, Math.floor(timeout));
-    }
-    initConnection_() {
-      if (!this.realtime_ && this.firstConnection_) {
-        this.scheduleConnect_(0);
-      }
-    }
-    onVisible_(visible) {
-      if (visible && !this.visible_ && this.reconnectDelay_ === this.maxReconnectDelay_) {
-        this.log_("Window became visible.  Reducing delay.");
-        this.reconnectDelay_ = RECONNECT_MIN_DELAY;
-        if (!this.realtime_) {
-          this.scheduleConnect_(0);
-        }
-      }
-      this.visible_ = visible;
-    }
-    onOnline_(online) {
-      if (online) {
-        this.log_("Browser went online.");
-        this.reconnectDelay_ = RECONNECT_MIN_DELAY;
-        if (!this.realtime_) {
-          this.scheduleConnect_(0);
-        }
-      } else {
-        this.log_("Browser went offline.  Killing connection.");
-        if (this.realtime_) {
-          this.realtime_.close();
-        }
-      }
-    }
-    onRealtimeDisconnect_() {
-      this.log_("data client disconnected");
-      this.connected_ = false;
-      this.realtime_ = null;
-      this.cancelSentTransactions_();
-      this.requestCBHash_ = {};
-      if (this.shouldReconnect_()) {
-        if (!this.visible_) {
-          this.log_("Window isn't visible.  Delaying reconnect.");
-          this.reconnectDelay_ = this.maxReconnectDelay_;
-          this.lastConnectionAttemptTime_ = new Date().getTime();
-        } else if (this.lastConnectionEstablishedTime_) {
-          const timeSinceLastConnectSucceeded = new Date().getTime() - this.lastConnectionEstablishedTime_;
-          if (timeSinceLastConnectSucceeded > RECONNECT_DELAY_RESET_TIMEOUT) {
-            this.reconnectDelay_ = RECONNECT_MIN_DELAY;
-          }
-          this.lastConnectionEstablishedTime_ = null;
-        }
-        const timeSinceLastConnectAttempt = new Date().getTime() - this.lastConnectionAttemptTime_;
-        let reconnectDelay = Math.max(0, this.reconnectDelay_ - timeSinceLastConnectAttempt);
-        reconnectDelay = Math.random() * reconnectDelay;
-        this.log_("Trying to reconnect in " + reconnectDelay + "ms");
-        this.scheduleConnect_(reconnectDelay);
-        this.reconnectDelay_ = Math.min(this.maxReconnectDelay_, this.reconnectDelay_ * RECONNECT_DELAY_MULTIPLIER);
-      }
-      this.onConnectStatus_(false);
-    }
-    async establishConnection_() {
-      if (this.shouldReconnect_()) {
-        this.log_("Making a connection attempt");
-        this.lastConnectionAttemptTime_ = new Date().getTime();
-        this.lastConnectionEstablishedTime_ = null;
-        const onDataMessage = this.onDataMessage_.bind(this);
-        const onReady = this.onReady_.bind(this);
-        const onDisconnect = this.onRealtimeDisconnect_.bind(this);
-        const connId = this.id + ":" + PersistentConnection.nextConnectionId_++;
-        const lastSessionId = this.lastSessionId;
-        let canceled = false;
-        let connection = null;
-        const closeFn = function() {
-          if (connection) {
-            connection.close();
-          } else {
-            canceled = true;
-            onDisconnect();
-          }
-        };
-        const sendRequestFn = function(msg) {
-          assert(connection, "sendRequest call when we're not connected not allowed.");
-          connection.sendRequest(msg);
-        };
-        this.realtime_ = {
-          close: closeFn,
-          sendRequest: sendRequestFn
-        };
-        const forceRefresh = this.forceTokenRefresh_;
-        this.forceTokenRefresh_ = false;
-        try {
-          const [authToken, appCheckToken] = await Promise.all([
-            this.authTokenProvider_.getToken(forceRefresh),
-            this.appCheckTokenProvider_.getToken(forceRefresh)
-          ]);
-          if (!canceled) {
-            log("getToken() completed. Creating connection.");
-            this.authToken_ = authToken && authToken.accessToken;
-            this.appCheckToken_ = appCheckToken && appCheckToken.token;
-            connection = new Connection(
-              connId,
-              this.repoInfo_,
-              this.applicationId_,
-              this.appCheckToken_,
-              this.authToken_,
-              onDataMessage,
-              onReady,
-              onDisconnect,
-              (reason) => {
-                warn(reason + " (" + this.repoInfo_.toString() + ")");
-                this.interrupt(SERVER_KILL_INTERRUPT_REASON);
-              },
-              lastSessionId
-            );
-          } else {
-            log("getToken() completed but was canceled");
-          }
-        } catch (error2) {
-          this.log_("Failed to get token: " + error2);
-          if (!canceled) {
-            if (this.repoInfo_.nodeAdmin) {
-              warn(error2);
-            }
-            closeFn();
-          }
-        }
-      }
-    }
-    interrupt(reason) {
-      log("Interrupting connection for reason: " + reason);
-      this.interruptReasons_[reason] = true;
-      if (this.realtime_) {
-        this.realtime_.close();
-      } else {
-        if (this.establishConnectionTimer_) {
-          clearTimeout(this.establishConnectionTimer_);
-          this.establishConnectionTimer_ = null;
-        }
-        if (this.connected_) {
-          this.onRealtimeDisconnect_();
-        }
-      }
-    }
-    resume(reason) {
-      log("Resuming connection for reason: " + reason);
-      delete this.interruptReasons_[reason];
-      if (isEmpty(this.interruptReasons_)) {
-        this.reconnectDelay_ = RECONNECT_MIN_DELAY;
-        if (!this.realtime_) {
-          this.scheduleConnect_(0);
-        }
-      }
-    }
-    handleTimestamp_(timestamp) {
-      const delta = timestamp - new Date().getTime();
-      this.onServerInfoUpdate_({ serverTimeOffset: delta });
-    }
-    cancelSentTransactions_() {
-      for (let i3 = 0; i3 < this.outstandingPuts_.length; i3++) {
-        const put = this.outstandingPuts_[i3];
-        if (put && "h" in put.request && put.queued) {
-          if (put.onComplete) {
-            put.onComplete("disconnect");
-          }
-          delete this.outstandingPuts_[i3];
-          this.outstandingPutCount_--;
-        }
-      }
-      if (this.outstandingPutCount_ === 0) {
-        this.outstandingPuts_ = [];
-      }
-    }
-    onListenRevoked_(pathString, query2) {
-      let queryId;
-      if (!query2) {
-        queryId = "default";
-      } else {
-        queryId = query2.map((q3) => ObjectToUniqueKey(q3)).join("$");
-      }
-      const listen = this.removeListen_(pathString, queryId);
-      if (listen && listen.onComplete) {
-        listen.onComplete("permission_denied");
-      }
-    }
-    removeListen_(pathString, queryId) {
-      const normalizedPathString = new Path(pathString).toString();
-      let listen;
-      if (this.listens.has(normalizedPathString)) {
-        const map2 = this.listens.get(normalizedPathString);
-        listen = map2.get(queryId);
-        map2.delete(queryId);
-        if (map2.size === 0) {
-          this.listens.delete(normalizedPathString);
-        }
-      } else {
-        listen = void 0;
-      }
-      return listen;
-    }
-    onAuthRevoked_(statusCode, explanation) {
-      log("Auth token revoked: " + statusCode + "/" + explanation);
-      this.authToken_ = null;
-      this.forceTokenRefresh_ = true;
-      this.realtime_.close();
-      if (statusCode === "invalid_token" || statusCode === "permission_denied") {
-        this.invalidAuthTokenCount_++;
-        if (this.invalidAuthTokenCount_ >= INVALID_TOKEN_THRESHOLD) {
-          this.reconnectDelay_ = RECONNECT_MAX_DELAY_FOR_ADMINS;
-          this.authTokenProvider_.notifyForInvalidToken();
-        }
-      }
-    }
-    onAppCheckRevoked_(statusCode, explanation) {
-      log("App check token revoked: " + statusCode + "/" + explanation);
-      this.appCheckToken_ = null;
-      this.forceTokenRefresh_ = true;
-      if (statusCode === "invalid_token" || statusCode === "permission_denied") {
-        this.invalidAppCheckTokenCount_++;
-        if (this.invalidAppCheckTokenCount_ >= INVALID_TOKEN_THRESHOLD) {
-          this.appCheckTokenProvider_.notifyForInvalidToken();
-        }
-      }
-    }
-    onSecurityDebugPacket_(body) {
-      if (this.securityDebugCallback_) {
-        this.securityDebugCallback_(body);
-      } else {
-        if ("msg" in body) {
-          console.log("FIREBASE: " + body["msg"].replace("\n", "\nFIREBASE: "));
-        }
-      }
-    }
-    restoreState_() {
-      this.tryAuth();
-      this.tryAppCheck();
-      for (const queries of this.listens.values()) {
-        for (const listenSpec of queries.values()) {
-          this.sendListen_(listenSpec);
-        }
-      }
-      for (let i3 = 0; i3 < this.outstandingPuts_.length; i3++) {
-        if (this.outstandingPuts_[i3]) {
-          this.sendPut_(i3);
-        }
-      }
-      while (this.onDisconnectRequestQueue_.length) {
-        const request = this.onDisconnectRequestQueue_.shift();
-        this.sendOnDisconnect_(request.action, request.pathString, request.data, request.onComplete);
-      }
-      for (let i3 = 0; i3 < this.outstandingGets_.length; i3++) {
-        if (this.outstandingGets_[i3]) {
-          this.sendGet_(i3);
-        }
-      }
-    }
-    sendConnectStats_() {
-      const stats = {};
-      let clientName = "js";
-      if (isNodeSdk()) {
-        if (this.repoInfo_.nodeAdmin) {
-          clientName = "admin_node";
-        } else {
-          clientName = "node";
-        }
-      }
-      stats["sdk." + clientName + "." + SDK_VERSION2.replace(/\./g, "-")] = 1;
-      if (isMobileCordova()) {
-        stats["framework.cordova"] = 1;
-      } else if (isReactNative()) {
-        stats["framework.reactnative"] = 1;
-      }
-      this.reportStats(stats);
-    }
-    shouldReconnect_() {
-      const online = OnlineMonitor.getInstance().currentlyOnline();
-      return isEmpty(this.interruptReasons_) && online;
-    }
-  };
-  PersistentConnection.nextPersistentConnectionId_ = 0;
-  PersistentConnection.nextConnectionId_ = 0;
-  var NamedNode = class {
-    constructor(name5, node) {
-      this.name = name5;
-      this.node = node;
-    }
-    static Wrap(name5, node) {
-      return new NamedNode(name5, node);
-    }
-  };
-  var Index = class {
-    getCompare() {
-      return this.compare.bind(this);
-    }
-    indexedValueChanged(oldNode, newNode) {
-      const oldWrapped = new NamedNode(MIN_NAME, oldNode);
-      const newWrapped = new NamedNode(MIN_NAME, newNode);
-      return this.compare(oldWrapped, newWrapped) !== 0;
-    }
-    minPost() {
-      return NamedNode.MIN;
-    }
-  };
-  var __EMPTY_NODE;
-  var KeyIndex = class extends Index {
-    static get __EMPTY_NODE() {
-      return __EMPTY_NODE;
-    }
-    static set __EMPTY_NODE(val) {
-      __EMPTY_NODE = val;
-    }
-    compare(a3, b3) {
-      return nameCompare(a3.name, b3.name);
-    }
-    isDefinedOn(node) {
-      throw assertionError("KeyIndex.isDefinedOn not expected to be called.");
-    }
-    indexedValueChanged(oldNode, newNode) {
-      return false;
-    }
-    minPost() {
-      return NamedNode.MIN;
-    }
-    maxPost() {
-      return new NamedNode(MAX_NAME, __EMPTY_NODE);
-    }
-    makePost(indexValue, name5) {
-      assert(typeof indexValue === "string", "KeyIndex indexValue must always be a string.");
-      return new NamedNode(indexValue, __EMPTY_NODE);
-    }
-    toString() {
-      return ".key";
-    }
-  };
-  var KEY_INDEX = new KeyIndex();
-  var SortedMapIterator = class {
-    constructor(node, startKey, comparator, isReverse_, resultGenerator_ = null) {
-      this.isReverse_ = isReverse_;
-      this.resultGenerator_ = resultGenerator_;
-      this.nodeStack_ = [];
-      let cmp = 1;
-      while (!node.isEmpty()) {
-        node = node;
-        cmp = startKey ? comparator(node.key, startKey) : 1;
-        if (isReverse_) {
-          cmp *= -1;
-        }
-        if (cmp < 0) {
-          if (this.isReverse_) {
-            node = node.left;
-          } else {
-            node = node.right;
-          }
-        } else if (cmp === 0) {
-          this.nodeStack_.push(node);
-          break;
-        } else {
-          this.nodeStack_.push(node);
-          if (this.isReverse_) {
-            node = node.right;
-          } else {
-            node = node.left;
-          }
-        }
-      }
-    }
-    getNext() {
-      if (this.nodeStack_.length === 0) {
-        return null;
-      }
-      let node = this.nodeStack_.pop();
-      let result;
-      if (this.resultGenerator_) {
-        result = this.resultGenerator_(node.key, node.value);
-      } else {
-        result = { key: node.key, value: node.value };
-      }
-      if (this.isReverse_) {
-        node = node.left;
-        while (!node.isEmpty()) {
-          this.nodeStack_.push(node);
-          node = node.right;
-        }
-      } else {
-        node = node.right;
-        while (!node.isEmpty()) {
-          this.nodeStack_.push(node);
-          node = node.left;
-        }
-      }
-      return result;
-    }
-    hasNext() {
-      return this.nodeStack_.length > 0;
-    }
-    peek() {
-      if (this.nodeStack_.length === 0) {
-        return null;
-      }
-      const node = this.nodeStack_[this.nodeStack_.length - 1];
-      if (this.resultGenerator_) {
-        return this.resultGenerator_(node.key, node.value);
-      } else {
-        return { key: node.key, value: node.value };
-      }
-    }
-  };
-  var LLRBNode = class {
-    constructor(key, value, color, left, right) {
-      this.key = key;
-      this.value = value;
-      this.color = color != null ? color : LLRBNode.RED;
-      this.left = left != null ? left : SortedMap.EMPTY_NODE;
-      this.right = right != null ? right : SortedMap.EMPTY_NODE;
-    }
-    copy(key, value, color, left, right) {
-      return new LLRBNode(key != null ? key : this.key, value != null ? value : this.value, color != null ? color : this.color, left != null ? left : this.left, right != null ? right : this.right);
-    }
-    count() {
-      return this.left.count() + 1 + this.right.count();
-    }
-    isEmpty() {
-      return false;
-    }
-    inorderTraversal(action) {
-      return this.left.inorderTraversal(action) || !!action(this.key, this.value) || this.right.inorderTraversal(action);
-    }
-    reverseTraversal(action) {
-      return this.right.reverseTraversal(action) || action(this.key, this.value) || this.left.reverseTraversal(action);
-    }
-    min_() {
-      if (this.left.isEmpty()) {
-        return this;
-      } else {
-        return this.left.min_();
-      }
-    }
-    minKey() {
-      return this.min_().key;
-    }
-    maxKey() {
-      if (this.right.isEmpty()) {
-        return this.key;
-      } else {
-        return this.right.maxKey();
-      }
-    }
-    insert(key, value, comparator) {
-      let n3 = this;
-      const cmp = comparator(key, n3.key);
-      if (cmp < 0) {
-        n3 = n3.copy(null, null, null, n3.left.insert(key, value, comparator), null);
-      } else if (cmp === 0) {
-        n3 = n3.copy(null, value, null, null, null);
-      } else {
-        n3 = n3.copy(null, null, null, null, n3.right.insert(key, value, comparator));
-      }
-      return n3.fixUp_();
-    }
-    removeMin_() {
-      if (this.left.isEmpty()) {
-        return SortedMap.EMPTY_NODE;
-      }
-      let n3 = this;
-      if (!n3.left.isRed_() && !n3.left.left.isRed_()) {
-        n3 = n3.moveRedLeft_();
-      }
-      n3 = n3.copy(null, null, null, n3.left.removeMin_(), null);
-      return n3.fixUp_();
-    }
-    remove(key, comparator) {
-      let n3, smallest;
-      n3 = this;
-      if (comparator(key, n3.key) < 0) {
-        if (!n3.left.isEmpty() && !n3.left.isRed_() && !n3.left.left.isRed_()) {
-          n3 = n3.moveRedLeft_();
-        }
-        n3 = n3.copy(null, null, null, n3.left.remove(key, comparator), null);
-      } else {
-        if (n3.left.isRed_()) {
-          n3 = n3.rotateRight_();
-        }
-        if (!n3.right.isEmpty() && !n3.right.isRed_() && !n3.right.left.isRed_()) {
-          n3 = n3.moveRedRight_();
-        }
-        if (comparator(key, n3.key) === 0) {
-          if (n3.right.isEmpty()) {
-            return SortedMap.EMPTY_NODE;
-          } else {
-            smallest = n3.right.min_();
-            n3 = n3.copy(smallest.key, smallest.value, null, null, n3.right.removeMin_());
-          }
-        }
-        n3 = n3.copy(null, null, null, null, n3.right.remove(key, comparator));
-      }
-      return n3.fixUp_();
-    }
-    isRed_() {
-      return this.color;
-    }
-    fixUp_() {
-      let n3 = this;
-      if (n3.right.isRed_() && !n3.left.isRed_()) {
-        n3 = n3.rotateLeft_();
-      }
-      if (n3.left.isRed_() && n3.left.left.isRed_()) {
-        n3 = n3.rotateRight_();
-      }
-      if (n3.left.isRed_() && n3.right.isRed_()) {
-        n3 = n3.colorFlip_();
-      }
-      return n3;
-    }
-    moveRedLeft_() {
-      let n3 = this.colorFlip_();
-      if (n3.right.left.isRed_()) {
-        n3 = n3.copy(null, null, null, null, n3.right.rotateRight_());
-        n3 = n3.rotateLeft_();
-        n3 = n3.colorFlip_();
-      }
-      return n3;
-    }
-    moveRedRight_() {
-      let n3 = this.colorFlip_();
-      if (n3.left.left.isRed_()) {
-        n3 = n3.rotateRight_();
-        n3 = n3.colorFlip_();
-      }
-      return n3;
-    }
-    rotateLeft_() {
-      const nl = this.copy(null, null, LLRBNode.RED, null, this.right.left);
-      return this.right.copy(null, null, this.color, nl, null);
-    }
-    rotateRight_() {
-      const nr2 = this.copy(null, null, LLRBNode.RED, this.left.right, null);
-      return this.left.copy(null, null, this.color, null, nr2);
-    }
-    colorFlip_() {
-      const left = this.left.copy(null, null, !this.left.color, null, null);
-      const right = this.right.copy(null, null, !this.right.color, null, null);
-      return this.copy(null, null, !this.color, left, right);
-    }
-    checkMaxDepth_() {
-      const blackDepth = this.check_();
-      return Math.pow(2, blackDepth) <= this.count() + 1;
-    }
-    check_() {
-      if (this.isRed_() && this.left.isRed_()) {
-        throw new Error("Red node has red child(" + this.key + "," + this.value + ")");
-      }
-      if (this.right.isRed_()) {
-        throw new Error("Right child of (" + this.key + "," + this.value + ") is red");
-      }
-      const blackDepth = this.left.check_();
-      if (blackDepth !== this.right.check_()) {
-        throw new Error("Black depths differ");
-      } else {
-        return blackDepth + (this.isRed_() ? 0 : 1);
-      }
-    }
-  };
-  LLRBNode.RED = true;
-  LLRBNode.BLACK = false;
-  var LLRBEmptyNode = class {
-    copy(key, value, color, left, right) {
-      return this;
-    }
-    insert(key, value, comparator) {
-      return new LLRBNode(key, value, null);
-    }
-    remove(key, comparator) {
-      return this;
-    }
-    count() {
-      return 0;
-    }
-    isEmpty() {
-      return true;
-    }
-    inorderTraversal(action) {
-      return false;
-    }
-    reverseTraversal(action) {
-      return false;
-    }
-    minKey() {
-      return null;
-    }
-    maxKey() {
-      return null;
-    }
-    check_() {
-      return 0;
-    }
-    isRed_() {
-      return false;
-    }
-  };
-  var SortedMap = class {
-    constructor(comparator_, root_ = SortedMap.EMPTY_NODE) {
-      this.comparator_ = comparator_;
-      this.root_ = root_;
-    }
-    insert(key, value) {
-      return new SortedMap(this.comparator_, this.root_.insert(key, value, this.comparator_).copy(null, null, LLRBNode.BLACK, null, null));
-    }
-    remove(key) {
-      return new SortedMap(this.comparator_, this.root_.remove(key, this.comparator_).copy(null, null, LLRBNode.BLACK, null, null));
-    }
-    get(key) {
-      let cmp;
-      let node = this.root_;
-      while (!node.isEmpty()) {
-        cmp = this.comparator_(key, node.key);
-        if (cmp === 0) {
-          return node.value;
-        } else if (cmp < 0) {
-          node = node.left;
-        } else if (cmp > 0) {
-          node = node.right;
-        }
-      }
-      return null;
-    }
-    getPredecessorKey(key) {
-      let cmp, node = this.root_, rightParent = null;
-      while (!node.isEmpty()) {
-        cmp = this.comparator_(key, node.key);
-        if (cmp === 0) {
-          if (!node.left.isEmpty()) {
-            node = node.left;
-            while (!node.right.isEmpty()) {
-              node = node.right;
-            }
-            return node.key;
-          } else if (rightParent) {
-            return rightParent.key;
-          } else {
-            return null;
-          }
-        } else if (cmp < 0) {
-          node = node.left;
-        } else if (cmp > 0) {
-          rightParent = node;
-          node = node.right;
-        }
-      }
-      throw new Error("Attempted to find predecessor key for a nonexistent key.  What gives?");
-    }
-    isEmpty() {
-      return this.root_.isEmpty();
-    }
-    count() {
-      return this.root_.count();
-    }
-    minKey() {
-      return this.root_.minKey();
-    }
-    maxKey() {
-      return this.root_.maxKey();
-    }
-    inorderTraversal(action) {
-      return this.root_.inorderTraversal(action);
-    }
-    reverseTraversal(action) {
-      return this.root_.reverseTraversal(action);
-    }
-    getIterator(resultGenerator) {
-      return new SortedMapIterator(this.root_, null, this.comparator_, false, resultGenerator);
-    }
-    getIteratorFrom(key, resultGenerator) {
-      return new SortedMapIterator(this.root_, key, this.comparator_, false, resultGenerator);
-    }
-    getReverseIteratorFrom(key, resultGenerator) {
-      return new SortedMapIterator(this.root_, key, this.comparator_, true, resultGenerator);
-    }
-    getReverseIterator(resultGenerator) {
-      return new SortedMapIterator(this.root_, null, this.comparator_, true, resultGenerator);
-    }
-  };
-  SortedMap.EMPTY_NODE = new LLRBEmptyNode();
-  function NAME_ONLY_COMPARATOR(left, right) {
-    return nameCompare(left.name, right.name);
-  }
-  function NAME_COMPARATOR(left, right) {
-    return nameCompare(left, right);
-  }
-  var MAX_NODE$2;
-  function setMaxNode$1(val) {
-    MAX_NODE$2 = val;
-  }
-  var priorityHashText = function(priority) {
-    if (typeof priority === "number") {
-      return "number:" + doubleToIEEE754String(priority);
-    } else {
-      return "string:" + priority;
-    }
-  };
-  var validatePriorityNode = function(priorityNode) {
-    if (priorityNode.isLeafNode()) {
-      const val = priorityNode.val();
-      assert(typeof val === "string" || typeof val === "number" || typeof val === "object" && contains(val, ".sv"), "Priority must be a string or number.");
-    } else {
-      assert(priorityNode === MAX_NODE$2 || priorityNode.isEmpty(), "priority of unexpected type.");
-    }
-    assert(priorityNode === MAX_NODE$2 || priorityNode.getPriority().isEmpty(), "Priority nodes can't have a priority of their own.");
-  };
-  var __childrenNodeConstructor;
-  var LeafNode = class {
-    constructor(value_, priorityNode_ = LeafNode.__childrenNodeConstructor.EMPTY_NODE) {
-      this.value_ = value_;
-      this.priorityNode_ = priorityNode_;
-      this.lazyHash_ = null;
-      assert(this.value_ !== void 0 && this.value_ !== null, "LeafNode shouldn't be created with null/undefined value.");
-      validatePriorityNode(this.priorityNode_);
-    }
-    static set __childrenNodeConstructor(val) {
-      __childrenNodeConstructor = val;
-    }
-    static get __childrenNodeConstructor() {
-      return __childrenNodeConstructor;
-    }
-    isLeafNode() {
-      return true;
-    }
-    getPriority() {
-      return this.priorityNode_;
-    }
-    updatePriority(newPriorityNode) {
-      return new LeafNode(this.value_, newPriorityNode);
-    }
-    getImmediateChild(childName) {
-      if (childName === ".priority") {
-        return this.priorityNode_;
-      } else {
-        return LeafNode.__childrenNodeConstructor.EMPTY_NODE;
-      }
-    }
-    getChild(path) {
-      if (pathIsEmpty(path)) {
-        return this;
-      } else if (pathGetFront(path) === ".priority") {
-        return this.priorityNode_;
-      } else {
-        return LeafNode.__childrenNodeConstructor.EMPTY_NODE;
-      }
-    }
-    hasChild() {
-      return false;
-    }
-    getPredecessorChildName(childName, childNode) {
-      return null;
-    }
-    updateImmediateChild(childName, newChildNode) {
-      if (childName === ".priority") {
-        return this.updatePriority(newChildNode);
-      } else if (newChildNode.isEmpty() && childName !== ".priority") {
-        return this;
-      } else {
-        return LeafNode.__childrenNodeConstructor.EMPTY_NODE.updateImmediateChild(childName, newChildNode).updatePriority(this.priorityNode_);
-      }
-    }
-    updateChild(path, newChildNode) {
-      const front = pathGetFront(path);
-      if (front === null) {
-        return newChildNode;
-      } else if (newChildNode.isEmpty() && front !== ".priority") {
-        return this;
-      } else {
-        assert(front !== ".priority" || pathGetLength(path) === 1, ".priority must be the last token in a path");
-        return this.updateImmediateChild(front, LeafNode.__childrenNodeConstructor.EMPTY_NODE.updateChild(pathPopFront(path), newChildNode));
-      }
-    }
-    isEmpty() {
-      return false;
-    }
-    numChildren() {
-      return 0;
-    }
-    forEachChild(index, action) {
-      return false;
-    }
-    val(exportFormat) {
-      if (exportFormat && !this.getPriority().isEmpty()) {
-        return {
-          ".value": this.getValue(),
-          ".priority": this.getPriority().val()
-        };
-      } else {
-        return this.getValue();
-      }
-    }
-    hash() {
-      if (this.lazyHash_ === null) {
-        let toHash = "";
-        if (!this.priorityNode_.isEmpty()) {
-          toHash += "priority:" + priorityHashText(this.priorityNode_.val()) + ":";
-        }
-        const type = typeof this.value_;
-        toHash += type + ":";
-        if (type === "number") {
-          toHash += doubleToIEEE754String(this.value_);
-        } else {
-          toHash += this.value_;
-        }
-        this.lazyHash_ = sha12(toHash);
-      }
-      return this.lazyHash_;
-    }
-    getValue() {
-      return this.value_;
-    }
-    compareTo(other) {
-      if (other === LeafNode.__childrenNodeConstructor.EMPTY_NODE) {
-        return 1;
-      } else if (other instanceof LeafNode.__childrenNodeConstructor) {
-        return -1;
-      } else {
-        assert(other.isLeafNode(), "Unknown node type");
-        return this.compareToLeafNode_(other);
-      }
-    }
-    compareToLeafNode_(otherLeaf) {
-      const otherLeafType = typeof otherLeaf.value_;
-      const thisLeafType = typeof this.value_;
-      const otherIndex = LeafNode.VALUE_TYPE_ORDER.indexOf(otherLeafType);
-      const thisIndex = LeafNode.VALUE_TYPE_ORDER.indexOf(thisLeafType);
-      assert(otherIndex >= 0, "Unknown leaf type: " + otherLeafType);
-      assert(thisIndex >= 0, "Unknown leaf type: " + thisLeafType);
-      if (otherIndex === thisIndex) {
-        if (thisLeafType === "object") {
-          return 0;
-        } else {
-          if (this.value_ < otherLeaf.value_) {
-            return -1;
-          } else if (this.value_ === otherLeaf.value_) {
-            return 0;
-          } else {
-            return 1;
-          }
-        }
-      } else {
-        return thisIndex - otherIndex;
-      }
-    }
-    withIndex() {
-      return this;
-    }
-    isIndexed() {
-      return true;
-    }
-    equals(other) {
-      if (other === this) {
-        return true;
-      } else if (other.isLeafNode()) {
-        const otherLeaf = other;
-        return this.value_ === otherLeaf.value_ && this.priorityNode_.equals(otherLeaf.priorityNode_);
-      } else {
-        return false;
-      }
-    }
-  };
-  LeafNode.VALUE_TYPE_ORDER = ["object", "boolean", "number", "string"];
-  var nodeFromJSON$1;
-  var MAX_NODE$1;
-  function setNodeFromJSON(val) {
-    nodeFromJSON$1 = val;
-  }
-  function setMaxNode(val) {
-    MAX_NODE$1 = val;
-  }
-  var PriorityIndex = class extends Index {
-    compare(a3, b3) {
-      const aPriority = a3.node.getPriority();
-      const bPriority = b3.node.getPriority();
-      const indexCmp = aPriority.compareTo(bPriority);
-      if (indexCmp === 0) {
-        return nameCompare(a3.name, b3.name);
-      } else {
-        return indexCmp;
-      }
-    }
-    isDefinedOn(node) {
-      return !node.getPriority().isEmpty();
-    }
-    indexedValueChanged(oldNode, newNode) {
-      return !oldNode.getPriority().equals(newNode.getPriority());
-    }
-    minPost() {
-      return NamedNode.MIN;
-    }
-    maxPost() {
-      return new NamedNode(MAX_NAME, new LeafNode("[PRIORITY-POST]", MAX_NODE$1));
-    }
-    makePost(indexValue, name5) {
-      const priorityNode = nodeFromJSON$1(indexValue);
-      return new NamedNode(name5, new LeafNode("[PRIORITY-POST]", priorityNode));
-    }
-    toString() {
-      return ".priority";
-    }
-  };
-  var PRIORITY_INDEX = new PriorityIndex();
-  var LOG_2 = Math.log(2);
-  var Base12Num = class {
-    constructor(length) {
-      const logBase2 = (num) => parseInt(Math.log(num) / LOG_2, 10);
-      const bitMask = (bits) => parseInt(Array(bits + 1).join("1"), 2);
-      this.count = logBase2(length + 1);
-      this.current_ = this.count - 1;
-      const mask = bitMask(this.count);
-      this.bits_ = length + 1 & mask;
-    }
-    nextBitIsOne() {
-      const result = !(this.bits_ & 1 << this.current_);
-      this.current_--;
-      return result;
-    }
-  };
-  var buildChildSet = function(childList, cmp, keyFn, mapSortFn) {
-    childList.sort(cmp);
-    const buildBalancedTree = function(low, high) {
-      const length = high - low;
-      let namedNode;
-      let key;
-      if (length === 0) {
-        return null;
-      } else if (length === 1) {
-        namedNode = childList[low];
-        key = keyFn ? keyFn(namedNode) : namedNode;
-        return new LLRBNode(key, namedNode.node, LLRBNode.BLACK, null, null);
-      } else {
-        const middle = parseInt(length / 2, 10) + low;
-        const left = buildBalancedTree(low, middle);
-        const right = buildBalancedTree(middle + 1, high);
-        namedNode = childList[middle];
-        key = keyFn ? keyFn(namedNode) : namedNode;
-        return new LLRBNode(key, namedNode.node, LLRBNode.BLACK, left, right);
-      }
-    };
-    const buildFrom12Array = function(base122) {
-      let node = null;
-      let root2 = null;
-      let index = childList.length;
-      const buildPennant = function(chunkSize, color) {
-        const low = index - chunkSize;
-        const high = index;
-        index -= chunkSize;
-        const childTree = buildBalancedTree(low + 1, high);
-        const namedNode = childList[low];
-        const key = keyFn ? keyFn(namedNode) : namedNode;
-        attachPennant(new LLRBNode(key, namedNode.node, color, null, childTree));
-      };
-      const attachPennant = function(pennant) {
-        if (node) {
-          node.left = pennant;
-          node = pennant;
-        } else {
-          root2 = pennant;
-          node = pennant;
-        }
-      };
-      for (let i3 = 0; i3 < base122.count; ++i3) {
-        const isOne = base122.nextBitIsOne();
-        const chunkSize = Math.pow(2, base122.count - (i3 + 1));
-        if (isOne) {
-          buildPennant(chunkSize, LLRBNode.BLACK);
-        } else {
-          buildPennant(chunkSize, LLRBNode.BLACK);
-          buildPennant(chunkSize, LLRBNode.RED);
-        }
-      }
-      return root2;
-    };
-    const base12 = new Base12Num(childList.length);
-    const root = buildFrom12Array(base12);
-    return new SortedMap(mapSortFn || cmp, root);
-  };
-  var _defaultIndexMap;
-  var fallbackObject = {};
-  var IndexMap = class {
-    constructor(indexes_, indexSet_) {
-      this.indexes_ = indexes_;
-      this.indexSet_ = indexSet_;
-    }
-    static get Default() {
-      assert(fallbackObject && PRIORITY_INDEX, "ChildrenNode.ts has not been loaded");
-      _defaultIndexMap = _defaultIndexMap || new IndexMap({ ".priority": fallbackObject }, { ".priority": PRIORITY_INDEX });
-      return _defaultIndexMap;
-    }
-    get(indexKey) {
-      const sortedMap = safeGet(this.indexes_, indexKey);
-      if (!sortedMap) {
-        throw new Error("No index defined for " + indexKey);
-      }
-      if (sortedMap instanceof SortedMap) {
-        return sortedMap;
-      } else {
-        return null;
-      }
-    }
-    hasIndex(indexDefinition) {
-      return contains(this.indexSet_, indexDefinition.toString());
-    }
-    addIndex(indexDefinition, existingChildren) {
-      assert(indexDefinition !== KEY_INDEX, "KeyIndex always exists and isn't meant to be added to the IndexMap.");
-      const childList = [];
-      let sawIndexedValue = false;
-      const iter = existingChildren.getIterator(NamedNode.Wrap);
-      let next = iter.getNext();
-      while (next) {
-        sawIndexedValue = sawIndexedValue || indexDefinition.isDefinedOn(next.node);
-        childList.push(next);
-        next = iter.getNext();
-      }
-      let newIndex;
-      if (sawIndexedValue) {
-        newIndex = buildChildSet(childList, indexDefinition.getCompare());
-      } else {
-        newIndex = fallbackObject;
-      }
-      const indexName = indexDefinition.toString();
-      const newIndexSet = Object.assign({}, this.indexSet_);
-      newIndexSet[indexName] = indexDefinition;
-      const newIndexes = Object.assign({}, this.indexes_);
-      newIndexes[indexName] = newIndex;
-      return new IndexMap(newIndexes, newIndexSet);
-    }
-    addToIndexes(namedNode, existingChildren) {
-      const newIndexes = map(this.indexes_, (indexedChildren, indexName) => {
-        const index = safeGet(this.indexSet_, indexName);
-        assert(index, "Missing index implementation for " + indexName);
-        if (indexedChildren === fallbackObject) {
-          if (index.isDefinedOn(namedNode.node)) {
-            const childList = [];
-            const iter = existingChildren.getIterator(NamedNode.Wrap);
-            let next = iter.getNext();
-            while (next) {
-              if (next.name !== namedNode.name) {
-                childList.push(next);
-              }
-              next = iter.getNext();
-            }
-            childList.push(namedNode);
-            return buildChildSet(childList, index.getCompare());
-          } else {
-            return fallbackObject;
-          }
-        } else {
-          const existingSnap = existingChildren.get(namedNode.name);
-          let newChildren = indexedChildren;
-          if (existingSnap) {
-            newChildren = newChildren.remove(new NamedNode(namedNode.name, existingSnap));
-          }
-          return newChildren.insert(namedNode, namedNode.node);
-        }
-      });
-      return new IndexMap(newIndexes, this.indexSet_);
-    }
-    removeFromIndexes(namedNode, existingChildren) {
-      const newIndexes = map(this.indexes_, (indexedChildren) => {
-        if (indexedChildren === fallbackObject) {
-          return indexedChildren;
-        } else {
-          const existingSnap = existingChildren.get(namedNode.name);
-          if (existingSnap) {
-            return indexedChildren.remove(new NamedNode(namedNode.name, existingSnap));
-          } else {
-            return indexedChildren;
-          }
-        }
-      });
-      return new IndexMap(newIndexes, this.indexSet_);
-    }
-  };
-  var EMPTY_NODE;
-  var ChildrenNode = class {
-    constructor(children_, priorityNode_, indexMap_) {
-      this.children_ = children_;
-      this.priorityNode_ = priorityNode_;
-      this.indexMap_ = indexMap_;
-      this.lazyHash_ = null;
-      if (this.priorityNode_) {
-        validatePriorityNode(this.priorityNode_);
-      }
-      if (this.children_.isEmpty()) {
-        assert(!this.priorityNode_ || this.priorityNode_.isEmpty(), "An empty node cannot have a priority");
-      }
-    }
-    static get EMPTY_NODE() {
-      return EMPTY_NODE || (EMPTY_NODE = new ChildrenNode(new SortedMap(NAME_COMPARATOR), null, IndexMap.Default));
-    }
-    isLeafNode() {
-      return false;
-    }
-    getPriority() {
-      return this.priorityNode_ || EMPTY_NODE;
-    }
-    updatePriority(newPriorityNode) {
-      if (this.children_.isEmpty()) {
-        return this;
-      } else {
-        return new ChildrenNode(this.children_, newPriorityNode, this.indexMap_);
-      }
-    }
-    getImmediateChild(childName) {
-      if (childName === ".priority") {
-        return this.getPriority();
-      } else {
-        const child2 = this.children_.get(childName);
-        return child2 === null ? EMPTY_NODE : child2;
-      }
-    }
-    getChild(path) {
-      const front = pathGetFront(path);
-      if (front === null) {
-        return this;
-      }
-      return this.getImmediateChild(front).getChild(pathPopFront(path));
-    }
-    hasChild(childName) {
-      return this.children_.get(childName) !== null;
-    }
-    updateImmediateChild(childName, newChildNode) {
-      assert(newChildNode, "We should always be passing snapshot nodes");
-      if (childName === ".priority") {
-        return this.updatePriority(newChildNode);
-      } else {
-        const namedNode = new NamedNode(childName, newChildNode);
-        let newChildren, newIndexMap;
-        if (newChildNode.isEmpty()) {
-          newChildren = this.children_.remove(childName);
-          newIndexMap = this.indexMap_.removeFromIndexes(namedNode, this.children_);
-        } else {
-          newChildren = this.children_.insert(childName, newChildNode);
-          newIndexMap = this.indexMap_.addToIndexes(namedNode, this.children_);
-        }
-        const newPriority = newChildren.isEmpty() ? EMPTY_NODE : this.priorityNode_;
-        return new ChildrenNode(newChildren, newPriority, newIndexMap);
-      }
-    }
-    updateChild(path, newChildNode) {
-      const front = pathGetFront(path);
-      if (front === null) {
-        return newChildNode;
-      } else {
-        assert(pathGetFront(path) !== ".priority" || pathGetLength(path) === 1, ".priority must be the last token in a path");
-        const newImmediateChild = this.getImmediateChild(front).updateChild(pathPopFront(path), newChildNode);
-        return this.updateImmediateChild(front, newImmediateChild);
-      }
-    }
-    isEmpty() {
-      return this.children_.isEmpty();
-    }
-    numChildren() {
-      return this.children_.count();
-    }
-    val(exportFormat) {
-      if (this.isEmpty()) {
-        return null;
-      }
-      const obj = {};
-      let numKeys = 0, maxKey = 0, allIntegerKeys = true;
-      this.forEachChild(PRIORITY_INDEX, (key, childNode) => {
-        obj[key] = childNode.val(exportFormat);
-        numKeys++;
-        if (allIntegerKeys && ChildrenNode.INTEGER_REGEXP_.test(key)) {
-          maxKey = Math.max(maxKey, Number(key));
-        } else {
-          allIntegerKeys = false;
-        }
-      });
-      if (!exportFormat && allIntegerKeys && maxKey < 2 * numKeys) {
-        const array = [];
-        for (const key in obj) {
-          array[key] = obj[key];
-        }
-        return array;
-      } else {
-        if (exportFormat && !this.getPriority().isEmpty()) {
-          obj[".priority"] = this.getPriority().val();
-        }
-        return obj;
-      }
-    }
-    hash() {
-      if (this.lazyHash_ === null) {
-        let toHash = "";
-        if (!this.getPriority().isEmpty()) {
-          toHash += "priority:" + priorityHashText(this.getPriority().val()) + ":";
-        }
-        this.forEachChild(PRIORITY_INDEX, (key, childNode) => {
-          const childHash = childNode.hash();
-          if (childHash !== "") {
-            toHash += ":" + key + ":" + childHash;
-          }
-        });
-        this.lazyHash_ = toHash === "" ? "" : sha12(toHash);
-      }
-      return this.lazyHash_;
-    }
-    getPredecessorChildName(childName, childNode, index) {
-      const idx = this.resolveIndex_(index);
-      if (idx) {
-        const predecessor = idx.getPredecessorKey(new NamedNode(childName, childNode));
-        return predecessor ? predecessor.name : null;
-      } else {
-        return this.children_.getPredecessorKey(childName);
-      }
-    }
-    getFirstChildName(indexDefinition) {
-      const idx = this.resolveIndex_(indexDefinition);
-      if (idx) {
-        const minKey = idx.minKey();
-        return minKey && minKey.name;
-      } else {
-        return this.children_.minKey();
-      }
-    }
-    getFirstChild(indexDefinition) {
-      const minKey = this.getFirstChildName(indexDefinition);
-      if (minKey) {
-        return new NamedNode(minKey, this.children_.get(minKey));
-      } else {
-        return null;
-      }
-    }
-    getLastChildName(indexDefinition) {
-      const idx = this.resolveIndex_(indexDefinition);
-      if (idx) {
-        const maxKey = idx.maxKey();
-        return maxKey && maxKey.name;
-      } else {
-        return this.children_.maxKey();
-      }
-    }
-    getLastChild(indexDefinition) {
-      const maxKey = this.getLastChildName(indexDefinition);
-      if (maxKey) {
-        return new NamedNode(maxKey, this.children_.get(maxKey));
-      } else {
-        return null;
-      }
-    }
-    forEachChild(index, action) {
-      const idx = this.resolveIndex_(index);
-      if (idx) {
-        return idx.inorderTraversal((wrappedNode) => {
-          return action(wrappedNode.name, wrappedNode.node);
-        });
-      } else {
-        return this.children_.inorderTraversal(action);
-      }
-    }
-    getIterator(indexDefinition) {
-      return this.getIteratorFrom(indexDefinition.minPost(), indexDefinition);
-    }
-    getIteratorFrom(startPost, indexDefinition) {
-      const idx = this.resolveIndex_(indexDefinition);
-      if (idx) {
-        return idx.getIteratorFrom(startPost, (key) => key);
-      } else {
-        const iterator = this.children_.getIteratorFrom(startPost.name, NamedNode.Wrap);
-        let next = iterator.peek();
-        while (next != null && indexDefinition.compare(next, startPost) < 0) {
-          iterator.getNext();
-          next = iterator.peek();
-        }
-        return iterator;
-      }
-    }
-    getReverseIterator(indexDefinition) {
-      return this.getReverseIteratorFrom(indexDefinition.maxPost(), indexDefinition);
-    }
-    getReverseIteratorFrom(endPost, indexDefinition) {
-      const idx = this.resolveIndex_(indexDefinition);
-      if (idx) {
-        return idx.getReverseIteratorFrom(endPost, (key) => {
-          return key;
-        });
-      } else {
-        const iterator = this.children_.getReverseIteratorFrom(endPost.name, NamedNode.Wrap);
-        let next = iterator.peek();
-        while (next != null && indexDefinition.compare(next, endPost) > 0) {
-          iterator.getNext();
-          next = iterator.peek();
-        }
-        return iterator;
-      }
-    }
-    compareTo(other) {
-      if (this.isEmpty()) {
-        if (other.isEmpty()) {
-          return 0;
-        } else {
-          return -1;
-        }
-      } else if (other.isLeafNode() || other.isEmpty()) {
-        return 1;
-      } else if (other === MAX_NODE) {
-        return -1;
-      } else {
-        return 0;
-      }
-    }
-    withIndex(indexDefinition) {
-      if (indexDefinition === KEY_INDEX || this.indexMap_.hasIndex(indexDefinition)) {
-        return this;
-      } else {
-        const newIndexMap = this.indexMap_.addIndex(indexDefinition, this.children_);
-        return new ChildrenNode(this.children_, this.priorityNode_, newIndexMap);
-      }
-    }
-    isIndexed(index) {
-      return index === KEY_INDEX || this.indexMap_.hasIndex(index);
-    }
-    equals(other) {
-      if (other === this) {
-        return true;
-      } else if (other.isLeafNode()) {
-        return false;
-      } else {
-        const otherChildrenNode = other;
-        if (!this.getPriority().equals(otherChildrenNode.getPriority())) {
-          return false;
-        } else if (this.children_.count() === otherChildrenNode.children_.count()) {
-          const thisIter = this.getIterator(PRIORITY_INDEX);
-          const otherIter = otherChildrenNode.getIterator(PRIORITY_INDEX);
-          let thisCurrent = thisIter.getNext();
-          let otherCurrent = otherIter.getNext();
-          while (thisCurrent && otherCurrent) {
-            if (thisCurrent.name !== otherCurrent.name || !thisCurrent.node.equals(otherCurrent.node)) {
-              return false;
-            }
-            thisCurrent = thisIter.getNext();
-            otherCurrent = otherIter.getNext();
-          }
-          return thisCurrent === null && otherCurrent === null;
-        } else {
-          return false;
-        }
-      }
-    }
-    resolveIndex_(indexDefinition) {
-      if (indexDefinition === KEY_INDEX) {
-        return null;
-      } else {
-        return this.indexMap_.get(indexDefinition.toString());
-      }
-    }
-  };
-  ChildrenNode.INTEGER_REGEXP_ = /^(0|[1-9]\d*)$/;
-  var MaxNode = class extends ChildrenNode {
-    constructor() {
-      super(new SortedMap(NAME_COMPARATOR), ChildrenNode.EMPTY_NODE, IndexMap.Default);
-    }
-    compareTo(other) {
-      if (other === this) {
-        return 0;
-      } else {
-        return 1;
-      }
-    }
-    equals(other) {
-      return other === this;
-    }
-    getPriority() {
-      return this;
-    }
-    getImmediateChild(childName) {
-      return ChildrenNode.EMPTY_NODE;
-    }
-    isEmpty() {
-      return false;
-    }
-  };
-  var MAX_NODE = new MaxNode();
-  Object.defineProperties(NamedNode, {
-    MIN: {
-      value: new NamedNode(MIN_NAME, ChildrenNode.EMPTY_NODE)
-    },
-    MAX: {
-      value: new NamedNode(MAX_NAME, MAX_NODE)
-    }
-  });
-  KeyIndex.__EMPTY_NODE = ChildrenNode.EMPTY_NODE;
-  LeafNode.__childrenNodeConstructor = ChildrenNode;
-  setMaxNode$1(MAX_NODE);
-  setMaxNode(MAX_NODE);
-  var USE_HINZE = true;
-  function nodeFromJSON(json, priority = null) {
-    if (json === null) {
-      return ChildrenNode.EMPTY_NODE;
-    }
-    if (typeof json === "object" && ".priority" in json) {
-      priority = json[".priority"];
-    }
-    assert(priority === null || typeof priority === "string" || typeof priority === "number" || typeof priority === "object" && ".sv" in priority, "Invalid priority type found: " + typeof priority);
-    if (typeof json === "object" && ".value" in json && json[".value"] !== null) {
-      json = json[".value"];
-    }
-    if (typeof json !== "object" || ".sv" in json) {
-      const jsonLeaf = json;
-      return new LeafNode(jsonLeaf, nodeFromJSON(priority));
-    }
-    if (!(json instanceof Array) && USE_HINZE) {
-      const children = [];
-      let childrenHavePriority = false;
-      const hinzeJsonObj = json;
-      each(hinzeJsonObj, (key, child2) => {
-        if (key.substring(0, 1) !== ".") {
-          const childNode = nodeFromJSON(child2);
-          if (!childNode.isEmpty()) {
-            childrenHavePriority = childrenHavePriority || !childNode.getPriority().isEmpty();
-            children.push(new NamedNode(key, childNode));
-          }
-        }
-      });
-      if (children.length === 0) {
-        return ChildrenNode.EMPTY_NODE;
-      }
-      const childSet = buildChildSet(children, NAME_ONLY_COMPARATOR, (namedNode) => namedNode.name, NAME_COMPARATOR);
-      if (childrenHavePriority) {
-        const sortedChildSet = buildChildSet(children, PRIORITY_INDEX.getCompare());
-        return new ChildrenNode(childSet, nodeFromJSON(priority), new IndexMap({ ".priority": sortedChildSet }, { ".priority": PRIORITY_INDEX }));
-      } else {
-        return new ChildrenNode(childSet, nodeFromJSON(priority), IndexMap.Default);
-      }
-    } else {
-      let node = ChildrenNode.EMPTY_NODE;
-      each(json, (key, childData) => {
-        if (contains(json, key)) {
-          if (key.substring(0, 1) !== ".") {
-            const childNode = nodeFromJSON(childData);
-            if (childNode.isLeafNode() || !childNode.isEmpty()) {
-              node = node.updateImmediateChild(key, childNode);
-            }
-          }
-        }
-      });
-      return node.updatePriority(nodeFromJSON(priority));
-    }
-  }
-  setNodeFromJSON(nodeFromJSON);
-  var PathIndex = class extends Index {
-    constructor(indexPath_) {
-      super();
-      this.indexPath_ = indexPath_;
-      assert(!pathIsEmpty(indexPath_) && pathGetFront(indexPath_) !== ".priority", "Can't create PathIndex with empty path or .priority key");
-    }
-    extractChild(snap) {
-      return snap.getChild(this.indexPath_);
-    }
-    isDefinedOn(node) {
-      return !node.getChild(this.indexPath_).isEmpty();
-    }
-    compare(a3, b3) {
-      const aChild = this.extractChild(a3.node);
-      const bChild = this.extractChild(b3.node);
-      const indexCmp = aChild.compareTo(bChild);
-      if (indexCmp === 0) {
-        return nameCompare(a3.name, b3.name);
-      } else {
-        return indexCmp;
-      }
-    }
-    makePost(indexValue, name5) {
-      const valueNode = nodeFromJSON(indexValue);
-      const node = ChildrenNode.EMPTY_NODE.updateChild(this.indexPath_, valueNode);
-      return new NamedNode(name5, node);
-    }
-    maxPost() {
-      const node = ChildrenNode.EMPTY_NODE.updateChild(this.indexPath_, MAX_NODE);
-      return new NamedNode(MAX_NAME, node);
-    }
-    toString() {
-      return pathSlice(this.indexPath_, 0).join("/");
-    }
-  };
-  var ValueIndex = class extends Index {
-    compare(a3, b3) {
-      const indexCmp = a3.node.compareTo(b3.node);
-      if (indexCmp === 0) {
-        return nameCompare(a3.name, b3.name);
-      } else {
-        return indexCmp;
-      }
-    }
-    isDefinedOn(node) {
-      return true;
-    }
-    indexedValueChanged(oldNode, newNode) {
-      return !oldNode.equals(newNode);
-    }
-    minPost() {
-      return NamedNode.MIN;
-    }
-    maxPost() {
-      return NamedNode.MAX;
-    }
-    makePost(indexValue, name5) {
-      const valueNode = nodeFromJSON(indexValue);
-      return new NamedNode(name5, valueNode);
-    }
-    toString() {
-      return ".value";
-    }
-  };
-  var VALUE_INDEX = new ValueIndex();
-  var PUSH_CHARS = "-0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz";
-  var MIN_PUSH_CHAR = "-";
-  var MAX_PUSH_CHAR = "z";
-  var MAX_KEY_LEN = 786;
-  var nextPushId = function() {
-    let lastPushTime = 0;
-    const lastRandChars = [];
-    return function(now) {
-      const duplicateTime = now === lastPushTime;
-      lastPushTime = now;
-      let i3;
-      const timeStampChars = new Array(8);
-      for (i3 = 7; i3 >= 0; i3--) {
-        timeStampChars[i3] = PUSH_CHARS.charAt(now % 64);
-        now = Math.floor(now / 64);
-      }
-      assert(now === 0, "Cannot push at time == 0");
-      let id = timeStampChars.join("");
-      if (!duplicateTime) {
-        for (i3 = 0; i3 < 12; i3++) {
-          lastRandChars[i3] = Math.floor(Math.random() * 64);
-        }
-      } else {
-        for (i3 = 11; i3 >= 0 && lastRandChars[i3] === 63; i3--) {
-          lastRandChars[i3] = 0;
-        }
-        lastRandChars[i3]++;
-      }
-      for (i3 = 0; i3 < 12; i3++) {
-        id += PUSH_CHARS.charAt(lastRandChars[i3]);
-      }
-      assert(id.length === 20, "nextPushId: Length should be 20.");
-      return id;
-    };
-  }();
-  var successor = function(key) {
-    if (key === "" + INTEGER_32_MAX) {
-      return MIN_PUSH_CHAR;
-    }
-    const keyAsInt = tryParseInt(key);
-    if (keyAsInt != null) {
-      return "" + (keyAsInt + 1);
-    }
-    const next = new Array(key.length);
-    for (let i4 = 0; i4 < next.length; i4++) {
-      next[i4] = key.charAt(i4);
-    }
-    if (next.length < MAX_KEY_LEN) {
-      next.push(MIN_PUSH_CHAR);
-      return next.join("");
-    }
-    let i3 = next.length - 1;
-    while (i3 >= 0 && next[i3] === MAX_PUSH_CHAR) {
-      i3--;
-    }
-    if (i3 === -1) {
-      return MAX_NAME;
-    }
-    const source = next[i3];
-    const sourcePlusOne = PUSH_CHARS.charAt(PUSH_CHARS.indexOf(source) + 1);
-    next[i3] = sourcePlusOne;
-    return next.slice(0, i3 + 1).join("");
-  };
-  function changeValue(snapshotNode) {
-    return { type: "value", snapshotNode };
-  }
-  function changeChildAdded(childName, snapshotNode) {
-    return { type: "child_added", snapshotNode, childName };
-  }
-  function changeChildRemoved(childName, snapshotNode) {
-    return { type: "child_removed", snapshotNode, childName };
-  }
-  function changeChildChanged(childName, snapshotNode, oldSnap) {
-    return {
-      type: "child_changed",
-      snapshotNode,
-      childName,
-      oldSnap
-    };
-  }
-  function changeChildMoved(childName, snapshotNode) {
-    return { type: "child_moved", snapshotNode, childName };
-  }
-  var IndexedFilter = class {
-    constructor(index_) {
-      this.index_ = index_;
-    }
-    updateChild(snap, key, newChild, affectedPath, source, optChangeAccumulator) {
-      assert(snap.isIndexed(this.index_), "A node must be indexed if only a child is updated");
-      const oldChild = snap.getImmediateChild(key);
-      if (oldChild.getChild(affectedPath).equals(newChild.getChild(affectedPath))) {
-        if (oldChild.isEmpty() === newChild.isEmpty()) {
-          return snap;
-        }
-      }
-      if (optChangeAccumulator != null) {
-        if (newChild.isEmpty()) {
-          if (snap.hasChild(key)) {
-            optChangeAccumulator.trackChildChange(changeChildRemoved(key, oldChild));
-          } else {
-            assert(snap.isLeafNode(), "A child remove without an old child only makes sense on a leaf node");
-          }
-        } else if (oldChild.isEmpty()) {
-          optChangeAccumulator.trackChildChange(changeChildAdded(key, newChild));
-        } else {
-          optChangeAccumulator.trackChildChange(changeChildChanged(key, newChild, oldChild));
-        }
-      }
-      if (snap.isLeafNode() && newChild.isEmpty()) {
-        return snap;
-      } else {
-        return snap.updateImmediateChild(key, newChild).withIndex(this.index_);
-      }
-    }
-    updateFullNode(oldSnap, newSnap, optChangeAccumulator) {
-      if (optChangeAccumulator != null) {
-        if (!oldSnap.isLeafNode()) {
-          oldSnap.forEachChild(PRIORITY_INDEX, (key, childNode) => {
-            if (!newSnap.hasChild(key)) {
-              optChangeAccumulator.trackChildChange(changeChildRemoved(key, childNode));
-            }
-          });
-        }
-        if (!newSnap.isLeafNode()) {
-          newSnap.forEachChild(PRIORITY_INDEX, (key, childNode) => {
-            if (oldSnap.hasChild(key)) {
-              const oldChild = oldSnap.getImmediateChild(key);
-              if (!oldChild.equals(childNode)) {
-                optChangeAccumulator.trackChildChange(changeChildChanged(key, childNode, oldChild));
-              }
-            } else {
-              optChangeAccumulator.trackChildChange(changeChildAdded(key, childNode));
-            }
-          });
-        }
-      }
-      return newSnap.withIndex(this.index_);
-    }
-    updatePriority(oldSnap, newPriority) {
-      if (oldSnap.isEmpty()) {
-        return ChildrenNode.EMPTY_NODE;
-      } else {
-        return oldSnap.updatePriority(newPriority);
-      }
-    }
-    filtersNodes() {
-      return false;
-    }
-    getIndexedFilter() {
-      return this;
-    }
-    getIndex() {
-      return this.index_;
-    }
-  };
-  var RangedFilter = class {
-    constructor(params) {
-      this.indexedFilter_ = new IndexedFilter(params.getIndex());
-      this.index_ = params.getIndex();
-      this.startPost_ = RangedFilter.getStartPost_(params);
-      this.endPost_ = RangedFilter.getEndPost_(params);
-    }
-    getStartPost() {
-      return this.startPost_;
-    }
-    getEndPost() {
-      return this.endPost_;
-    }
-    matches(node) {
-      return this.index_.compare(this.getStartPost(), node) <= 0 && this.index_.compare(node, this.getEndPost()) <= 0;
-    }
-    updateChild(snap, key, newChild, affectedPath, source, optChangeAccumulator) {
-      if (!this.matches(new NamedNode(key, newChild))) {
-        newChild = ChildrenNode.EMPTY_NODE;
-      }
-      return this.indexedFilter_.updateChild(snap, key, newChild, affectedPath, source, optChangeAccumulator);
-    }
-    updateFullNode(oldSnap, newSnap, optChangeAccumulator) {
-      if (newSnap.isLeafNode()) {
-        newSnap = ChildrenNode.EMPTY_NODE;
-      }
-      let filtered = newSnap.withIndex(this.index_);
-      filtered = filtered.updatePriority(ChildrenNode.EMPTY_NODE);
-      const self2 = this;
-      newSnap.forEachChild(PRIORITY_INDEX, (key, childNode) => {
-        if (!self2.matches(new NamedNode(key, childNode))) {
-          filtered = filtered.updateImmediateChild(key, ChildrenNode.EMPTY_NODE);
-        }
-      });
-      return this.indexedFilter_.updateFullNode(oldSnap, filtered, optChangeAccumulator);
-    }
-    updatePriority(oldSnap, newPriority) {
-      return oldSnap;
-    }
-    filtersNodes() {
-      return true;
-    }
-    getIndexedFilter() {
-      return this.indexedFilter_;
-    }
-    getIndex() {
-      return this.index_;
-    }
-    static getStartPost_(params) {
-      if (params.hasStart()) {
-        const startName = params.getIndexStartName();
-        return params.getIndex().makePost(params.getIndexStartValue(), startName);
-      } else {
-        return params.getIndex().minPost();
-      }
-    }
-    static getEndPost_(params) {
-      if (params.hasEnd()) {
-        const endName = params.getIndexEndName();
-        return params.getIndex().makePost(params.getIndexEndValue(), endName);
-      } else {
-        return params.getIndex().maxPost();
-      }
-    }
-  };
-  var LimitedFilter = class {
-    constructor(params) {
-      this.rangedFilter_ = new RangedFilter(params);
-      this.index_ = params.getIndex();
-      this.limit_ = params.getLimit();
-      this.reverse_ = !params.isViewFromLeft();
-    }
-    updateChild(snap, key, newChild, affectedPath, source, optChangeAccumulator) {
-      if (!this.rangedFilter_.matches(new NamedNode(key, newChild))) {
-        newChild = ChildrenNode.EMPTY_NODE;
-      }
-      if (snap.getImmediateChild(key).equals(newChild)) {
-        return snap;
-      } else if (snap.numChildren() < this.limit_) {
-        return this.rangedFilter_.getIndexedFilter().updateChild(snap, key, newChild, affectedPath, source, optChangeAccumulator);
-      } else {
-        return this.fullLimitUpdateChild_(snap, key, newChild, source, optChangeAccumulator);
-      }
-    }
-    updateFullNode(oldSnap, newSnap, optChangeAccumulator) {
-      let filtered;
-      if (newSnap.isLeafNode() || newSnap.isEmpty()) {
-        filtered = ChildrenNode.EMPTY_NODE.withIndex(this.index_);
-      } else {
-        if (this.limit_ * 2 < newSnap.numChildren() && newSnap.isIndexed(this.index_)) {
-          filtered = ChildrenNode.EMPTY_NODE.withIndex(this.index_);
-          let iterator;
-          if (this.reverse_) {
-            iterator = newSnap.getReverseIteratorFrom(this.rangedFilter_.getEndPost(), this.index_);
-          } else {
-            iterator = newSnap.getIteratorFrom(this.rangedFilter_.getStartPost(), this.index_);
-          }
-          let count = 0;
-          while (iterator.hasNext() && count < this.limit_) {
-            const next = iterator.getNext();
-            let inRange;
-            if (this.reverse_) {
-              inRange = this.index_.compare(this.rangedFilter_.getStartPost(), next) <= 0;
-            } else {
-              inRange = this.index_.compare(next, this.rangedFilter_.getEndPost()) <= 0;
-            }
-            if (inRange) {
-              filtered = filtered.updateImmediateChild(next.name, next.node);
-              count++;
-            } else {
-              break;
-            }
-          }
-        } else {
-          filtered = newSnap.withIndex(this.index_);
-          filtered = filtered.updatePriority(ChildrenNode.EMPTY_NODE);
-          let startPost;
-          let endPost;
-          let cmp;
-          let iterator;
-          if (this.reverse_) {
-            iterator = filtered.getReverseIterator(this.index_);
-            startPost = this.rangedFilter_.getEndPost();
-            endPost = this.rangedFilter_.getStartPost();
-            const indexCompare = this.index_.getCompare();
-            cmp = (a3, b3) => indexCompare(b3, a3);
-          } else {
-            iterator = filtered.getIterator(this.index_);
-            startPost = this.rangedFilter_.getStartPost();
-            endPost = this.rangedFilter_.getEndPost();
-            cmp = this.index_.getCompare();
-          }
-          let count = 0;
-          let foundStartPost = false;
-          while (iterator.hasNext()) {
-            const next = iterator.getNext();
-            if (!foundStartPost && cmp(startPost, next) <= 0) {
-              foundStartPost = true;
-            }
-            const inRange = foundStartPost && count < this.limit_ && cmp(next, endPost) <= 0;
-            if (inRange) {
-              count++;
-            } else {
-              filtered = filtered.updateImmediateChild(next.name, ChildrenNode.EMPTY_NODE);
-            }
-          }
-        }
-      }
-      return this.rangedFilter_.getIndexedFilter().updateFullNode(oldSnap, filtered, optChangeAccumulator);
-    }
-    updatePriority(oldSnap, newPriority) {
-      return oldSnap;
-    }
-    filtersNodes() {
-      return true;
-    }
-    getIndexedFilter() {
-      return this.rangedFilter_.getIndexedFilter();
-    }
-    getIndex() {
-      return this.index_;
-    }
-    fullLimitUpdateChild_(snap, childKey, childSnap, source, changeAccumulator) {
-      let cmp;
-      if (this.reverse_) {
-        const indexCmp = this.index_.getCompare();
-        cmp = (a3, b3) => indexCmp(b3, a3);
-      } else {
-        cmp = this.index_.getCompare();
-      }
-      const oldEventCache = snap;
-      assert(oldEventCache.numChildren() === this.limit_, "");
-      const newChildNamedNode = new NamedNode(childKey, childSnap);
-      const windowBoundary = this.reverse_ ? oldEventCache.getFirstChild(this.index_) : oldEventCache.getLastChild(this.index_);
-      const inRange = this.rangedFilter_.matches(newChildNamedNode);
-      if (oldEventCache.hasChild(childKey)) {
-        const oldChildSnap = oldEventCache.getImmediateChild(childKey);
-        let nextChild = source.getChildAfterChild(this.index_, windowBoundary, this.reverse_);
-        while (nextChild != null && (nextChild.name === childKey || oldEventCache.hasChild(nextChild.name))) {
-          nextChild = source.getChildAfterChild(this.index_, nextChild, this.reverse_);
-        }
-        const compareNext = nextChild == null ? 1 : cmp(nextChild, newChildNamedNode);
-        const remainsInWindow = inRange && !childSnap.isEmpty() && compareNext >= 0;
-        if (remainsInWindow) {
-          if (changeAccumulator != null) {
-            changeAccumulator.trackChildChange(changeChildChanged(childKey, childSnap, oldChildSnap));
-          }
-          return oldEventCache.updateImmediateChild(childKey, childSnap);
-        } else {
-          if (changeAccumulator != null) {
-            changeAccumulator.trackChildChange(changeChildRemoved(childKey, oldChildSnap));
-          }
-          const newEventCache = oldEventCache.updateImmediateChild(childKey, ChildrenNode.EMPTY_NODE);
-          const nextChildInRange = nextChild != null && this.rangedFilter_.matches(nextChild);
-          if (nextChildInRange) {
-            if (changeAccumulator != null) {
-              changeAccumulator.trackChildChange(changeChildAdded(nextChild.name, nextChild.node));
-            }
-            return newEventCache.updateImmediateChild(nextChild.name, nextChild.node);
-          } else {
-            return newEventCache;
-          }
-        }
-      } else if (childSnap.isEmpty()) {
-        return snap;
-      } else if (inRange) {
-        if (cmp(windowBoundary, newChildNamedNode) >= 0) {
-          if (changeAccumulator != null) {
-            changeAccumulator.trackChildChange(changeChildRemoved(windowBoundary.name, windowBoundary.node));
-            changeAccumulator.trackChildChange(changeChildAdded(childKey, childSnap));
-          }
-          return oldEventCache.updateImmediateChild(childKey, childSnap).updateImmediateChild(windowBoundary.name, ChildrenNode.EMPTY_NODE);
-        } else {
-          return snap;
-        }
-      } else {
-        return snap;
-      }
-    }
-  };
-  var QueryParams = class {
-    constructor() {
-      this.limitSet_ = false;
-      this.startSet_ = false;
-      this.startNameSet_ = false;
-      this.startAfterSet_ = false;
-      this.endSet_ = false;
-      this.endNameSet_ = false;
-      this.endBeforeSet_ = false;
-      this.limit_ = 0;
-      this.viewFrom_ = "";
-      this.indexStartValue_ = null;
-      this.indexStartName_ = "";
-      this.indexEndValue_ = null;
-      this.indexEndName_ = "";
-      this.index_ = PRIORITY_INDEX;
-    }
-    hasStart() {
-      return this.startSet_;
-    }
-    hasStartAfter() {
-      return this.startAfterSet_;
-    }
-    hasEndBefore() {
-      return this.endBeforeSet_;
-    }
-    isViewFromLeft() {
-      if (this.viewFrom_ === "") {
-        return this.startSet_;
-      } else {
-        return this.viewFrom_ === "l";
-      }
-    }
-    getIndexStartValue() {
-      assert(this.startSet_, "Only valid if start has been set");
-      return this.indexStartValue_;
-    }
-    getIndexStartName() {
-      assert(this.startSet_, "Only valid if start has been set");
-      if (this.startNameSet_) {
-        return this.indexStartName_;
-      } else {
-        return MIN_NAME;
-      }
-    }
-    hasEnd() {
-      return this.endSet_;
-    }
-    getIndexEndValue() {
-      assert(this.endSet_, "Only valid if end has been set");
-      return this.indexEndValue_;
-    }
-    getIndexEndName() {
-      assert(this.endSet_, "Only valid if end has been set");
-      if (this.endNameSet_) {
-        return this.indexEndName_;
-      } else {
-        return MAX_NAME;
-      }
-    }
-    hasLimit() {
-      return this.limitSet_;
-    }
-    hasAnchoredLimit() {
-      return this.limitSet_ && this.viewFrom_ !== "";
-    }
-    getLimit() {
-      assert(this.limitSet_, "Only valid if limit has been set");
-      return this.limit_;
-    }
-    getIndex() {
-      return this.index_;
-    }
-    loadsAllData() {
-      return !(this.startSet_ || this.endSet_ || this.limitSet_);
-    }
-    isDefault() {
-      return this.loadsAllData() && this.index_ === PRIORITY_INDEX;
-    }
-    copy() {
-      const copy = new QueryParams();
-      copy.limitSet_ = this.limitSet_;
-      copy.limit_ = this.limit_;
-      copy.startSet_ = this.startSet_;
-      copy.indexStartValue_ = this.indexStartValue_;
-      copy.startNameSet_ = this.startNameSet_;
-      copy.indexStartName_ = this.indexStartName_;
-      copy.endSet_ = this.endSet_;
-      copy.indexEndValue_ = this.indexEndValue_;
-      copy.endNameSet_ = this.endNameSet_;
-      copy.indexEndName_ = this.indexEndName_;
-      copy.index_ = this.index_;
-      copy.viewFrom_ = this.viewFrom_;
-      return copy;
-    }
-  };
-  function queryParamsGetNodeFilter(queryParams) {
-    if (queryParams.loadsAllData()) {
-      return new IndexedFilter(queryParams.getIndex());
-    } else if (queryParams.hasLimit()) {
-      return new LimitedFilter(queryParams);
-    } else {
-      return new RangedFilter(queryParams);
-    }
-  }
-  function queryParamsLimitToFirst(queryParams, newLimit) {
-    const newParams = queryParams.copy();
-    newParams.limitSet_ = true;
-    newParams.limit_ = newLimit;
-    newParams.viewFrom_ = "l";
-    return newParams;
-  }
-  function queryParamsStartAt(queryParams, indexValue, key) {
-    const newParams = queryParams.copy();
-    newParams.startSet_ = true;
-    if (indexValue === void 0) {
-      indexValue = null;
-    }
-    newParams.indexStartValue_ = indexValue;
-    if (key != null) {
-      newParams.startNameSet_ = true;
-      newParams.indexStartName_ = key;
-    } else {
-      newParams.startNameSet_ = false;
-      newParams.indexStartName_ = "";
-    }
-    return newParams;
-  }
-  function queryParamsStartAfter(queryParams, indexValue, key) {
-    let params;
-    if (queryParams.index_ === KEY_INDEX) {
-      if (typeof indexValue === "string") {
-        indexValue = successor(indexValue);
-      }
-      params = queryParamsStartAt(queryParams, indexValue, key);
-    } else {
-      let childKey;
-      if (key == null) {
-        childKey = MAX_NAME;
-      } else {
-        childKey = successor(key);
-      }
-      params = queryParamsStartAt(queryParams, indexValue, childKey);
-    }
-    params.startAfterSet_ = true;
-    return params;
-  }
-  function queryParamsEndAt(queryParams, indexValue, key) {
-    const newParams = queryParams.copy();
-    newParams.endSet_ = true;
-    if (indexValue === void 0) {
-      indexValue = null;
-    }
-    newParams.indexEndValue_ = indexValue;
-    if (key !== void 0) {
-      newParams.endNameSet_ = true;
-      newParams.indexEndName_ = key;
-    } else {
-      newParams.endNameSet_ = false;
-      newParams.indexEndName_ = "";
-    }
-    return newParams;
-  }
-  function queryParamsOrderBy(queryParams, index) {
-    const newParams = queryParams.copy();
-    newParams.index_ = index;
-    return newParams;
-  }
-  function queryParamsToRestQueryStringParameters(queryParams) {
-    const qs = {};
-    if (queryParams.isDefault()) {
-      return qs;
-    }
-    let orderBy;
-    if (queryParams.index_ === PRIORITY_INDEX) {
-      orderBy = "$priority";
-    } else if (queryParams.index_ === VALUE_INDEX) {
-      orderBy = "$value";
-    } else if (queryParams.index_ === KEY_INDEX) {
-      orderBy = "$key";
-    } else {
-      assert(queryParams.index_ instanceof PathIndex, "Unrecognized index type!");
-      orderBy = queryParams.index_.toString();
-    }
-    qs["orderBy"] = stringify2(orderBy);
-    if (queryParams.startSet_) {
-      qs["startAt"] = stringify2(queryParams.indexStartValue_);
-      if (queryParams.startNameSet_) {
-        qs["startAt"] += "," + stringify2(queryParams.indexStartName_);
-      }
-    }
-    if (queryParams.endSet_) {
-      qs["endAt"] = stringify2(queryParams.indexEndValue_);
-      if (queryParams.endNameSet_) {
-        qs["endAt"] += "," + stringify2(queryParams.indexEndName_);
-      }
-    }
-    if (queryParams.limitSet_) {
-      if (queryParams.isViewFromLeft()) {
-        qs["limitToFirst"] = queryParams.limit_;
-      } else {
-        qs["limitToLast"] = queryParams.limit_;
-      }
-    }
-    return qs;
-  }
-  function queryParamsGetQueryObject(queryParams) {
-    const obj = {};
-    if (queryParams.startSet_) {
-      obj["sp"] = queryParams.indexStartValue_;
-      if (queryParams.startNameSet_) {
-        obj["sn"] = queryParams.indexStartName_;
-      }
-    }
-    if (queryParams.endSet_) {
-      obj["ep"] = queryParams.indexEndValue_;
-      if (queryParams.endNameSet_) {
-        obj["en"] = queryParams.indexEndName_;
-      }
-    }
-    if (queryParams.limitSet_) {
-      obj["l"] = queryParams.limit_;
-      let viewFrom = queryParams.viewFrom_;
-      if (viewFrom === "") {
-        if (queryParams.isViewFromLeft()) {
-          viewFrom = "l";
-        } else {
-          viewFrom = "r";
-        }
-      }
-      obj["vf"] = viewFrom;
-    }
-    if (queryParams.index_ !== PRIORITY_INDEX) {
-      obj["i"] = queryParams.index_.toString();
-    }
-    return obj;
-  }
-  var ReadonlyRestClient = class extends ServerActions {
-    constructor(repoInfo_, onDataUpdate_, authTokenProvider_, appCheckTokenProvider_) {
-      super();
-      this.repoInfo_ = repoInfo_;
-      this.onDataUpdate_ = onDataUpdate_;
-      this.authTokenProvider_ = authTokenProvider_;
-      this.appCheckTokenProvider_ = appCheckTokenProvider_;
-      this.log_ = logWrapper("p:rest:");
-      this.listens_ = {};
-    }
-    reportStats(stats) {
-      throw new Error("Method not implemented.");
-    }
-    static getListenId_(query2, tag) {
-      if (tag !== void 0) {
-        return "tag$" + tag;
-      } else {
-        assert(query2._queryParams.isDefault(), "should have a tag if it's not a default query.");
-        return query2._path.toString();
-      }
-    }
-    listen(query2, currentHashFn, tag, onComplete) {
-      const pathString = query2._path.toString();
-      this.log_("Listen called for " + pathString + " " + query2._queryIdentifier);
-      const listenId = ReadonlyRestClient.getListenId_(query2, tag);
-      const thisListen = {};
-      this.listens_[listenId] = thisListen;
-      const queryStringParameters = queryParamsToRestQueryStringParameters(query2._queryParams);
-      this.restRequest_(pathString + ".json", queryStringParameters, (error2, result) => {
-        let data = result;
-        if (error2 === 404) {
-          data = null;
-          error2 = null;
-        }
-        if (error2 === null) {
-          this.onDataUpdate_(pathString, data, false, tag);
-        }
-        if (safeGet(this.listens_, listenId) === thisListen) {
-          let status;
-          if (!error2) {
-            status = "ok";
-          } else if (error2 === 401) {
-            status = "permission_denied";
-          } else {
-            status = "rest_error:" + error2;
-          }
-          onComplete(status, null);
-        }
-      });
-    }
-    unlisten(query2, tag) {
-      const listenId = ReadonlyRestClient.getListenId_(query2, tag);
-      delete this.listens_[listenId];
-    }
-    get(query2) {
-      const queryStringParameters = queryParamsToRestQueryStringParameters(query2._queryParams);
-      const pathString = query2._path.toString();
-      const deferred = new Deferred();
-      this.restRequest_(pathString + ".json", queryStringParameters, (error2, result) => {
-        let data = result;
-        if (error2 === 404) {
-          data = null;
-          error2 = null;
-        }
-        if (error2 === null) {
-          this.onDataUpdate_(
-            pathString,
-            data,
-            false,
-            null
-          );
-          deferred.resolve(data);
-        } else {
-          deferred.reject(new Error(data));
-        }
-      });
-      return deferred.promise;
-    }
-    refreshAuthToken(token) {
-    }
-    restRequest_(pathString, queryStringParameters = {}, callback) {
-      queryStringParameters["format"] = "export";
-      return Promise.all([
-        this.authTokenProvider_.getToken(false),
-        this.appCheckTokenProvider_.getToken(false)
-      ]).then(([authToken, appCheckToken]) => {
-        if (authToken && authToken.accessToken) {
-          queryStringParameters["auth"] = authToken.accessToken;
-        }
-        if (appCheckToken && appCheckToken.token) {
-          queryStringParameters["ac"] = appCheckToken.token;
-        }
-        const url = (this.repoInfo_.secure ? "https://" : "http://") + this.repoInfo_.host + pathString + "?ns=" + this.repoInfo_.namespace + querystring(queryStringParameters);
-        this.log_("Sending REST request for " + url);
-        const xhr = new XMLHttpRequest();
-        xhr.onreadystatechange = () => {
-          if (callback && xhr.readyState === 4) {
-            this.log_("REST Response for " + url + " received. status:", xhr.status, "response:", xhr.responseText);
-            let res = null;
-            if (xhr.status >= 200 && xhr.status < 300) {
-              try {
-                res = jsonEval(xhr.responseText);
-              } catch (e2) {
-                warn("Failed to parse JSON response for " + url + ": " + xhr.responseText);
-              }
-              callback(null, res);
-            } else {
-              if (xhr.status !== 401 && xhr.status !== 404) {
-                warn("Got unsuccessful REST response for " + url + " Status: " + xhr.status);
-              }
-              callback(xhr.status);
-            }
-            callback = null;
-          }
-        };
-        xhr.open("GET", url, true);
-        xhr.send();
-      });
-    }
-  };
-  var SnapshotHolder = class {
-    constructor() {
-      this.rootNode_ = ChildrenNode.EMPTY_NODE;
-    }
-    getNode(path) {
-      return this.rootNode_.getChild(path);
-    }
-    updateSnapshot(path, newSnapshotNode) {
-      this.rootNode_ = this.rootNode_.updateChild(path, newSnapshotNode);
-    }
-  };
-  function newSparseSnapshotTree() {
-    return {
-      value: null,
-      children: /* @__PURE__ */ new Map()
-    };
-  }
-  function sparseSnapshotTreeRemember(sparseSnapshotTree, path, data) {
-    if (pathIsEmpty(path)) {
-      sparseSnapshotTree.value = data;
-      sparseSnapshotTree.children.clear();
-    } else if (sparseSnapshotTree.value !== null) {
-      sparseSnapshotTree.value = sparseSnapshotTree.value.updateChild(path, data);
-    } else {
-      const childKey = pathGetFront(path);
-      if (!sparseSnapshotTree.children.has(childKey)) {
-        sparseSnapshotTree.children.set(childKey, newSparseSnapshotTree());
-      }
-      const child2 = sparseSnapshotTree.children.get(childKey);
-      path = pathPopFront(path);
-      sparseSnapshotTreeRemember(child2, path, data);
-    }
-  }
-  function sparseSnapshotTreeForEachTree(sparseSnapshotTree, prefixPath, func) {
-    if (sparseSnapshotTree.value !== null) {
-      func(prefixPath, sparseSnapshotTree.value);
-    } else {
-      sparseSnapshotTreeForEachChild(sparseSnapshotTree, (key, tree) => {
-        const path = new Path(prefixPath.toString() + "/" + key);
-        sparseSnapshotTreeForEachTree(tree, path, func);
-      });
-    }
-  }
-  function sparseSnapshotTreeForEachChild(sparseSnapshotTree, func) {
-    sparseSnapshotTree.children.forEach((tree, key) => {
-      func(key, tree);
-    });
-  }
-  var StatsListener = class {
-    constructor(collection_) {
-      this.collection_ = collection_;
-      this.last_ = null;
-    }
-    get() {
-      const newStats = this.collection_.get();
-      const delta = Object.assign({}, newStats);
-      if (this.last_) {
-        each(this.last_, (stat, value) => {
-          delta[stat] = delta[stat] - value;
-        });
-      }
-      this.last_ = newStats;
-      return delta;
-    }
-  };
-  var FIRST_STATS_MIN_TIME = 10 * 1e3;
-  var FIRST_STATS_MAX_TIME = 30 * 1e3;
-  var REPORT_STATS_INTERVAL = 5 * 60 * 1e3;
-  var StatsReporter = class {
-    constructor(collection, server_) {
-      this.server_ = server_;
-      this.statsToReport_ = {};
-      this.statsListener_ = new StatsListener(collection);
-      const timeout = FIRST_STATS_MIN_TIME + (FIRST_STATS_MAX_TIME - FIRST_STATS_MIN_TIME) * Math.random();
-      setTimeoutNonBlocking(this.reportStats_.bind(this), Math.floor(timeout));
-    }
-    reportStats_() {
-      const stats = this.statsListener_.get();
-      const reportedStats = {};
-      let haveStatsToReport = false;
-      each(stats, (stat, value) => {
-        if (value > 0 && contains(this.statsToReport_, stat)) {
-          reportedStats[stat] = value;
-          haveStatsToReport = true;
-        }
-      });
-      if (haveStatsToReport) {
-        this.server_.reportStats(reportedStats);
-      }
-      setTimeoutNonBlocking(this.reportStats_.bind(this), Math.floor(Math.random() * 2 * REPORT_STATS_INTERVAL));
-    }
-  };
-  var OperationType;
-  (function(OperationType3) {
-    OperationType3[OperationType3["OVERWRITE"] = 0] = "OVERWRITE";
-    OperationType3[OperationType3["MERGE"] = 1] = "MERGE";
-    OperationType3[OperationType3["ACK_USER_WRITE"] = 2] = "ACK_USER_WRITE";
-    OperationType3[OperationType3["LISTEN_COMPLETE"] = 3] = "LISTEN_COMPLETE";
-  })(OperationType || (OperationType = {}));
-  function newOperationSourceUser() {
-    return {
-      fromUser: true,
-      fromServer: false,
-      queryId: null,
-      tagged: false
-    };
-  }
-  function newOperationSourceServer() {
-    return {
-      fromUser: false,
-      fromServer: true,
-      queryId: null,
-      tagged: false
-    };
-  }
-  function newOperationSourceServerTaggedQuery(queryId) {
-    return {
-      fromUser: false,
-      fromServer: true,
-      queryId,
-      tagged: true
-    };
-  }
-  var AckUserWrite = class {
-    constructor(path, affectedTree, revert) {
-      this.path = path;
-      this.affectedTree = affectedTree;
-      this.revert = revert;
-      this.type = OperationType.ACK_USER_WRITE;
-      this.source = newOperationSourceUser();
-    }
-    operationForChild(childName) {
-      if (!pathIsEmpty(this.path)) {
-        assert(pathGetFront(this.path) === childName, "operationForChild called for unrelated child.");
-        return new AckUserWrite(pathPopFront(this.path), this.affectedTree, this.revert);
-      } else if (this.affectedTree.value != null) {
-        assert(this.affectedTree.children.isEmpty(), "affectedTree should not have overlapping affected paths.");
-        return this;
-      } else {
-        const childTree = this.affectedTree.subtree(new Path(childName));
-        return new AckUserWrite(newEmptyPath(), childTree, this.revert);
-      }
-    }
-  };
-  var ListenComplete = class {
-    constructor(source, path) {
-      this.source = source;
-      this.path = path;
-      this.type = OperationType.LISTEN_COMPLETE;
-    }
-    operationForChild(childName) {
-      if (pathIsEmpty(this.path)) {
-        return new ListenComplete(this.source, newEmptyPath());
-      } else {
-        return new ListenComplete(this.source, pathPopFront(this.path));
-      }
-    }
-  };
-  var Overwrite = class {
-    constructor(source, path, snap) {
-      this.source = source;
-      this.path = path;
-      this.snap = snap;
-      this.type = OperationType.OVERWRITE;
-    }
-    operationForChild(childName) {
-      if (pathIsEmpty(this.path)) {
-        return new Overwrite(this.source, newEmptyPath(), this.snap.getImmediateChild(childName));
-      } else {
-        return new Overwrite(this.source, pathPopFront(this.path), this.snap);
-      }
-    }
-  };
-  var Merge = class {
-    constructor(source, path, children) {
-      this.source = source;
-      this.path = path;
-      this.children = children;
-      this.type = OperationType.MERGE;
-    }
-    operationForChild(childName) {
-      if (pathIsEmpty(this.path)) {
-        const childTree = this.children.subtree(new Path(childName));
-        if (childTree.isEmpty()) {
-          return null;
-        } else if (childTree.value) {
-          return new Overwrite(this.source, newEmptyPath(), childTree.value);
-        } else {
-          return new Merge(this.source, newEmptyPath(), childTree);
-        }
-      } else {
-        assert(pathGetFront(this.path) === childName, "Can't get a merge for a child not on the path of the operation");
-        return new Merge(this.source, pathPopFront(this.path), this.children);
-      }
-    }
-    toString() {
-      return "Operation(" + this.path + ": " + this.source.toString() + " merge: " + this.children.toString() + ")";
-    }
-  };
-  var CacheNode = class {
-    constructor(node_, fullyInitialized_, filtered_) {
-      this.node_ = node_;
-      this.fullyInitialized_ = fullyInitialized_;
-      this.filtered_ = filtered_;
-    }
-    isFullyInitialized() {
-      return this.fullyInitialized_;
-    }
-    isFiltered() {
-      return this.filtered_;
-    }
-    isCompleteForPath(path) {
-      if (pathIsEmpty(path)) {
-        return this.isFullyInitialized() && !this.filtered_;
-      }
-      const childKey = pathGetFront(path);
-      return this.isCompleteForChild(childKey);
-    }
-    isCompleteForChild(key) {
-      return this.isFullyInitialized() && !this.filtered_ || this.node_.hasChild(key);
-    }
-    getNode() {
-      return this.node_;
-    }
-  };
-  var EventGenerator = class {
-    constructor(query_) {
-      this.query_ = query_;
-      this.index_ = this.query_._queryParams.getIndex();
-    }
-  };
-  function eventGeneratorGenerateEventsForChanges(eventGenerator, changes, eventCache, eventRegistrations) {
-    const events = [];
-    const moves = [];
-    changes.forEach((change) => {
-      if (change.type === "child_changed" && eventGenerator.index_.indexedValueChanged(change.oldSnap, change.snapshotNode)) {
-        moves.push(changeChildMoved(change.childName, change.snapshotNode));
-      }
-    });
-    eventGeneratorGenerateEventsForType(eventGenerator, events, "child_removed", changes, eventRegistrations, eventCache);
-    eventGeneratorGenerateEventsForType(eventGenerator, events, "child_added", changes, eventRegistrations, eventCache);
-    eventGeneratorGenerateEventsForType(eventGenerator, events, "child_moved", moves, eventRegistrations, eventCache);
-    eventGeneratorGenerateEventsForType(eventGenerator, events, "child_changed", changes, eventRegistrations, eventCache);
-    eventGeneratorGenerateEventsForType(eventGenerator, events, "value", changes, eventRegistrations, eventCache);
-    return events;
-  }
-  function eventGeneratorGenerateEventsForType(eventGenerator, events, eventType, changes, registrations, eventCache) {
-    const filteredChanges = changes.filter((change) => change.type === eventType);
-    filteredChanges.sort((a3, b3) => eventGeneratorCompareChanges(eventGenerator, a3, b3));
-    filteredChanges.forEach((change) => {
-      const materializedChange = eventGeneratorMaterializeSingleChange(eventGenerator, change, eventCache);
-      registrations.forEach((registration) => {
-        if (registration.respondsTo(change.type)) {
-          events.push(registration.createEvent(materializedChange, eventGenerator.query_));
-        }
-      });
-    });
-  }
-  function eventGeneratorMaterializeSingleChange(eventGenerator, change, eventCache) {
-    if (change.type === "value" || change.type === "child_removed") {
-      return change;
-    } else {
-      change.prevName = eventCache.getPredecessorChildName(change.childName, change.snapshotNode, eventGenerator.index_);
-      return change;
-    }
-  }
-  function eventGeneratorCompareChanges(eventGenerator, a3, b3) {
-    if (a3.childName == null || b3.childName == null) {
-      throw assertionError("Should only compare child_ events.");
-    }
-    const aWrapped = new NamedNode(a3.childName, a3.snapshotNode);
-    const bWrapped = new NamedNode(b3.childName, b3.snapshotNode);
-    return eventGenerator.index_.compare(aWrapped, bWrapped);
-  }
-  function newViewCache(eventCache, serverCache) {
-    return { eventCache, serverCache };
-  }
-  function viewCacheUpdateEventSnap(viewCache, eventSnap, complete, filtered) {
-    return newViewCache(new CacheNode(eventSnap, complete, filtered), viewCache.serverCache);
-  }
-  function viewCacheUpdateServerSnap(viewCache, serverSnap, complete, filtered) {
-    return newViewCache(viewCache.eventCache, new CacheNode(serverSnap, complete, filtered));
-  }
-  function viewCacheGetCompleteEventSnap(viewCache) {
-    return viewCache.eventCache.isFullyInitialized() ? viewCache.eventCache.getNode() : null;
-  }
-  function viewCacheGetCompleteServerSnap(viewCache) {
-    return viewCache.serverCache.isFullyInitialized() ? viewCache.serverCache.getNode() : null;
-  }
-  var emptyChildrenSingleton;
-  var EmptyChildren = () => {
-    if (!emptyChildrenSingleton) {
-      emptyChildrenSingleton = new SortedMap(stringCompare);
-    }
-    return emptyChildrenSingleton;
-  };
-  var ImmutableTree = class {
-    constructor(value, children = EmptyChildren()) {
-      this.value = value;
-      this.children = children;
-    }
-    static fromObject(obj) {
-      let tree = new ImmutableTree(null);
-      each(obj, (childPath, childSnap) => {
-        tree = tree.set(new Path(childPath), childSnap);
-      });
-      return tree;
-    }
-    isEmpty() {
-      return this.value === null && this.children.isEmpty();
-    }
-    findRootMostMatchingPathAndValue(relativePath, predicate) {
-      if (this.value != null && predicate(this.value)) {
-        return { path: newEmptyPath(), value: this.value };
-      } else {
-        if (pathIsEmpty(relativePath)) {
-          return null;
-        } else {
-          const front = pathGetFront(relativePath);
-          const child2 = this.children.get(front);
-          if (child2 !== null) {
-            const childExistingPathAndValue = child2.findRootMostMatchingPathAndValue(pathPopFront(relativePath), predicate);
-            if (childExistingPathAndValue != null) {
-              const fullPath = pathChild(new Path(front), childExistingPathAndValue.path);
-              return { path: fullPath, value: childExistingPathAndValue.value };
-            } else {
-              return null;
-            }
-          } else {
-            return null;
-          }
-        }
-      }
-    }
-    findRootMostValueAndPath(relativePath) {
-      return this.findRootMostMatchingPathAndValue(relativePath, () => true);
-    }
-    subtree(relativePath) {
-      if (pathIsEmpty(relativePath)) {
-        return this;
-      } else {
-        const front = pathGetFront(relativePath);
-        const childTree = this.children.get(front);
-        if (childTree !== null) {
-          return childTree.subtree(pathPopFront(relativePath));
-        } else {
-          return new ImmutableTree(null);
-        }
-      }
-    }
-    set(relativePath, toSet) {
-      if (pathIsEmpty(relativePath)) {
-        return new ImmutableTree(toSet, this.children);
-      } else {
-        const front = pathGetFront(relativePath);
-        const child2 = this.children.get(front) || new ImmutableTree(null);
-        const newChild = child2.set(pathPopFront(relativePath), toSet);
-        const newChildren = this.children.insert(front, newChild);
-        return new ImmutableTree(this.value, newChildren);
-      }
-    }
-    remove(relativePath) {
-      if (pathIsEmpty(relativePath)) {
-        if (this.children.isEmpty()) {
-          return new ImmutableTree(null);
-        } else {
-          return new ImmutableTree(null, this.children);
-        }
-      } else {
-        const front = pathGetFront(relativePath);
-        const child2 = this.children.get(front);
-        if (child2) {
-          const newChild = child2.remove(pathPopFront(relativePath));
-          let newChildren;
-          if (newChild.isEmpty()) {
-            newChildren = this.children.remove(front);
-          } else {
-            newChildren = this.children.insert(front, newChild);
-          }
-          if (this.value === null && newChildren.isEmpty()) {
-            return new ImmutableTree(null);
-          } else {
-            return new ImmutableTree(this.value, newChildren);
-          }
-        } else {
-          return this;
-        }
-      }
-    }
-    get(relativePath) {
-      if (pathIsEmpty(relativePath)) {
-        return this.value;
-      } else {
-        const front = pathGetFront(relativePath);
-        const child2 = this.children.get(front);
-        if (child2) {
-          return child2.get(pathPopFront(relativePath));
-        } else {
-          return null;
-        }
-      }
-    }
-    setTree(relativePath, newTree) {
-      if (pathIsEmpty(relativePath)) {
-        return newTree;
-      } else {
-        const front = pathGetFront(relativePath);
-        const child2 = this.children.get(front) || new ImmutableTree(null);
-        const newChild = child2.setTree(pathPopFront(relativePath), newTree);
-        let newChildren;
-        if (newChild.isEmpty()) {
-          newChildren = this.children.remove(front);
-        } else {
-          newChildren = this.children.insert(front, newChild);
-        }
-        return new ImmutableTree(this.value, newChildren);
-      }
-    }
-    fold(fn3) {
-      return this.fold_(newEmptyPath(), fn3);
-    }
-    fold_(pathSoFar, fn3) {
-      const accum = {};
-      this.children.inorderTraversal((childKey, childTree) => {
-        accum[childKey] = childTree.fold_(pathChild(pathSoFar, childKey), fn3);
-      });
-      return fn3(pathSoFar, this.value, accum);
-    }
-    findOnPath(path, f3) {
-      return this.findOnPath_(path, newEmptyPath(), f3);
-    }
-    findOnPath_(pathToFollow, pathSoFar, f3) {
-      const result = this.value ? f3(pathSoFar, this.value) : false;
-      if (result) {
-        return result;
-      } else {
-        if (pathIsEmpty(pathToFollow)) {
-          return null;
-        } else {
-          const front = pathGetFront(pathToFollow);
-          const nextChild = this.children.get(front);
-          if (nextChild) {
-            return nextChild.findOnPath_(pathPopFront(pathToFollow), pathChild(pathSoFar, front), f3);
-          } else {
-            return null;
-          }
-        }
-      }
-    }
-    foreachOnPath(path, f3) {
-      return this.foreachOnPath_(path, newEmptyPath(), f3);
-    }
-    foreachOnPath_(pathToFollow, currentRelativePath, f3) {
-      if (pathIsEmpty(pathToFollow)) {
-        return this;
-      } else {
-        if (this.value) {
-          f3(currentRelativePath, this.value);
-        }
-        const front = pathGetFront(pathToFollow);
-        const nextChild = this.children.get(front);
-        if (nextChild) {
-          return nextChild.foreachOnPath_(pathPopFront(pathToFollow), pathChild(currentRelativePath, front), f3);
-        } else {
-          return new ImmutableTree(null);
-        }
-      }
-    }
-    foreach(f3) {
-      this.foreach_(newEmptyPath(), f3);
-    }
-    foreach_(currentRelativePath, f3) {
-      this.children.inorderTraversal((childName, childTree) => {
-        childTree.foreach_(pathChild(currentRelativePath, childName), f3);
-      });
-      if (this.value) {
-        f3(currentRelativePath, this.value);
-      }
-    }
-    foreachChild(f3) {
-      this.children.inorderTraversal((childName, childTree) => {
-        if (childTree.value) {
-          f3(childName, childTree.value);
-        }
-      });
-    }
-  };
-  var CompoundWrite = class {
-    constructor(writeTree_) {
-      this.writeTree_ = writeTree_;
-    }
-    static empty() {
-      return new CompoundWrite(new ImmutableTree(null));
-    }
-  };
-  function compoundWriteAddWrite(compoundWrite, path, node) {
-    if (pathIsEmpty(path)) {
-      return new CompoundWrite(new ImmutableTree(node));
-    } else {
-      const rootmost = compoundWrite.writeTree_.findRootMostValueAndPath(path);
-      if (rootmost != null) {
-        const rootMostPath = rootmost.path;
-        let value = rootmost.value;
-        const relativePath = newRelativePath(rootMostPath, path);
-        value = value.updateChild(relativePath, node);
-        return new CompoundWrite(compoundWrite.writeTree_.set(rootMostPath, value));
-      } else {
-        const subtree = new ImmutableTree(node);
-        const newWriteTree2 = compoundWrite.writeTree_.setTree(path, subtree);
-        return new CompoundWrite(newWriteTree2);
-      }
-    }
-  }
-  function compoundWriteAddWrites(compoundWrite, path, updates) {
-    let newWrite = compoundWrite;
-    each(updates, (childKey, node) => {
-      newWrite = compoundWriteAddWrite(newWrite, pathChild(path, childKey), node);
-    });
-    return newWrite;
-  }
-  function compoundWriteRemoveWrite(compoundWrite, path) {
-    if (pathIsEmpty(path)) {
-      return CompoundWrite.empty();
-    } else {
-      const newWriteTree2 = compoundWrite.writeTree_.setTree(path, new ImmutableTree(null));
-      return new CompoundWrite(newWriteTree2);
-    }
-  }
-  function compoundWriteHasCompleteWrite(compoundWrite, path) {
-    return compoundWriteGetCompleteNode(compoundWrite, path) != null;
-  }
-  function compoundWriteGetCompleteNode(compoundWrite, path) {
-    const rootmost = compoundWrite.writeTree_.findRootMostValueAndPath(path);
-    if (rootmost != null) {
-      return compoundWrite.writeTree_.get(rootmost.path).getChild(newRelativePath(rootmost.path, path));
-    } else {
-      return null;
-    }
-  }
-  function compoundWriteGetCompleteChildren(compoundWrite) {
-    const children = [];
-    const node = compoundWrite.writeTree_.value;
-    if (node != null) {
-      if (!node.isLeafNode()) {
-        node.forEachChild(PRIORITY_INDEX, (childName, childNode) => {
-          children.push(new NamedNode(childName, childNode));
-        });
-      }
-    } else {
-      compoundWrite.writeTree_.children.inorderTraversal((childName, childTree) => {
-        if (childTree.value != null) {
-          children.push(new NamedNode(childName, childTree.value));
-        }
-      });
-    }
-    return children;
-  }
-  function compoundWriteChildCompoundWrite(compoundWrite, path) {
-    if (pathIsEmpty(path)) {
-      return compoundWrite;
-    } else {
-      const shadowingNode = compoundWriteGetCompleteNode(compoundWrite, path);
-      if (shadowingNode != null) {
-        return new CompoundWrite(new ImmutableTree(shadowingNode));
-      } else {
-        return new CompoundWrite(compoundWrite.writeTree_.subtree(path));
-      }
-    }
-  }
-  function compoundWriteIsEmpty(compoundWrite) {
-    return compoundWrite.writeTree_.isEmpty();
-  }
-  function compoundWriteApply(compoundWrite, node) {
-    return applySubtreeWrite(newEmptyPath(), compoundWrite.writeTree_, node);
-  }
-  function applySubtreeWrite(relativePath, writeTree, node) {
-    if (writeTree.value != null) {
-      return node.updateChild(relativePath, writeTree.value);
-    } else {
-      let priorityWrite = null;
-      writeTree.children.inorderTraversal((childKey, childTree) => {
-        if (childKey === ".priority") {
-          assert(childTree.value !== null, "Priority writes must always be leaf nodes");
-          priorityWrite = childTree.value;
-        } else {
-          node = applySubtreeWrite(pathChild(relativePath, childKey), childTree, node);
-        }
-      });
-      if (!node.getChild(relativePath).isEmpty() && priorityWrite !== null) {
-        node = node.updateChild(pathChild(relativePath, ".priority"), priorityWrite);
-      }
-      return node;
-    }
-  }
-  function writeTreeChildWrites(writeTree, path) {
-    return newWriteTreeRef(path, writeTree);
-  }
-  function writeTreeAddOverwrite(writeTree, path, snap, writeId, visible) {
-    assert(writeId > writeTree.lastWriteId, "Stacking an older write on top of newer ones");
-    if (visible === void 0) {
-      visible = true;
-    }
-    writeTree.allWrites.push({
-      path,
-      snap,
-      writeId,
-      visible
-    });
-    if (visible) {
-      writeTree.visibleWrites = compoundWriteAddWrite(writeTree.visibleWrites, path, snap);
-    }
-    writeTree.lastWriteId = writeId;
-  }
-  function writeTreeAddMerge(writeTree, path, changedChildren, writeId) {
-    assert(writeId > writeTree.lastWriteId, "Stacking an older merge on top of newer ones");
-    writeTree.allWrites.push({
-      path,
-      children: changedChildren,
-      writeId,
-      visible: true
-    });
-    writeTree.visibleWrites = compoundWriteAddWrites(writeTree.visibleWrites, path, changedChildren);
-    writeTree.lastWriteId = writeId;
-  }
-  function writeTreeGetWrite(writeTree, writeId) {
-    for (let i3 = 0; i3 < writeTree.allWrites.length; i3++) {
-      const record = writeTree.allWrites[i3];
-      if (record.writeId === writeId) {
-        return record;
-      }
-    }
-    return null;
-  }
-  function writeTreeRemoveWrite(writeTree, writeId) {
-    const idx = writeTree.allWrites.findIndex((s2) => {
-      return s2.writeId === writeId;
-    });
-    assert(idx >= 0, "removeWrite called with nonexistent writeId.");
-    const writeToRemove = writeTree.allWrites[idx];
-    writeTree.allWrites.splice(idx, 1);
-    let removedWriteWasVisible = writeToRemove.visible;
-    let removedWriteOverlapsWithOtherWrites = false;
-    let i3 = writeTree.allWrites.length - 1;
-    while (removedWriteWasVisible && i3 >= 0) {
-      const currentWrite = writeTree.allWrites[i3];
-      if (currentWrite.visible) {
-        if (i3 >= idx && writeTreeRecordContainsPath_(currentWrite, writeToRemove.path)) {
-          removedWriteWasVisible = false;
-        } else if (pathContains(writeToRemove.path, currentWrite.path)) {
-          removedWriteOverlapsWithOtherWrites = true;
-        }
-      }
-      i3--;
-    }
-    if (!removedWriteWasVisible) {
-      return false;
-    } else if (removedWriteOverlapsWithOtherWrites) {
-      writeTreeResetTree_(writeTree);
-      return true;
-    } else {
-      if (writeToRemove.snap) {
-        writeTree.visibleWrites = compoundWriteRemoveWrite(writeTree.visibleWrites, writeToRemove.path);
-      } else {
-        const children = writeToRemove.children;
-        each(children, (childName) => {
-          writeTree.visibleWrites = compoundWriteRemoveWrite(writeTree.visibleWrites, pathChild(writeToRemove.path, childName));
-        });
-      }
-      return true;
-    }
-  }
-  function writeTreeRecordContainsPath_(writeRecord, path) {
-    if (writeRecord.snap) {
-      return pathContains(writeRecord.path, path);
-    } else {
-      for (const childName in writeRecord.children) {
-        if (writeRecord.children.hasOwnProperty(childName) && pathContains(pathChild(writeRecord.path, childName), path)) {
-          return true;
-        }
-      }
-      return false;
-    }
-  }
-  function writeTreeResetTree_(writeTree) {
-    writeTree.visibleWrites = writeTreeLayerTree_(writeTree.allWrites, writeTreeDefaultFilter_, newEmptyPath());
-    if (writeTree.allWrites.length > 0) {
-      writeTree.lastWriteId = writeTree.allWrites[writeTree.allWrites.length - 1].writeId;
-    } else {
-      writeTree.lastWriteId = -1;
-    }
-  }
-  function writeTreeDefaultFilter_(write) {
-    return write.visible;
-  }
-  function writeTreeLayerTree_(writes, filter, treeRoot) {
-    let compoundWrite = CompoundWrite.empty();
-    for (let i3 = 0; i3 < writes.length; ++i3) {
-      const write = writes[i3];
-      if (filter(write)) {
-        const writePath = write.path;
-        let relativePath;
-        if (write.snap) {
-          if (pathContains(treeRoot, writePath)) {
-            relativePath = newRelativePath(treeRoot, writePath);
-            compoundWrite = compoundWriteAddWrite(compoundWrite, relativePath, write.snap);
-          } else if (pathContains(writePath, treeRoot)) {
-            relativePath = newRelativePath(writePath, treeRoot);
-            compoundWrite = compoundWriteAddWrite(compoundWrite, newEmptyPath(), write.snap.getChild(relativePath));
-          } else
-            ;
-        } else if (write.children) {
-          if (pathContains(treeRoot, writePath)) {
-            relativePath = newRelativePath(treeRoot, writePath);
-            compoundWrite = compoundWriteAddWrites(compoundWrite, relativePath, write.children);
-          } else if (pathContains(writePath, treeRoot)) {
-            relativePath = newRelativePath(writePath, treeRoot);
-            if (pathIsEmpty(relativePath)) {
-              compoundWrite = compoundWriteAddWrites(compoundWrite, newEmptyPath(), write.children);
-            } else {
-              const child2 = safeGet(write.children, pathGetFront(relativePath));
-              if (child2) {
-                const deepNode = child2.getChild(pathPopFront(relativePath));
-                compoundWrite = compoundWriteAddWrite(compoundWrite, newEmptyPath(), deepNode);
-              }
-            }
-          } else
-            ;
-        } else {
-          throw assertionError("WriteRecord should have .snap or .children");
-        }
-      }
-    }
-    return compoundWrite;
-  }
-  function writeTreeCalcCompleteEventCache(writeTree, treePath, completeServerCache, writeIdsToExclude, includeHiddenWrites) {
-    if (!writeIdsToExclude && !includeHiddenWrites) {
-      const shadowingNode = compoundWriteGetCompleteNode(writeTree.visibleWrites, treePath);
-      if (shadowingNode != null) {
-        return shadowingNode;
-      } else {
-        const subMerge = compoundWriteChildCompoundWrite(writeTree.visibleWrites, treePath);
-        if (compoundWriteIsEmpty(subMerge)) {
-          return completeServerCache;
-        } else if (completeServerCache == null && !compoundWriteHasCompleteWrite(subMerge, newEmptyPath())) {
-          return null;
-        } else {
-          const layeredCache = completeServerCache || ChildrenNode.EMPTY_NODE;
-          return compoundWriteApply(subMerge, layeredCache);
-        }
-      }
-    } else {
-      const merge = compoundWriteChildCompoundWrite(writeTree.visibleWrites, treePath);
-      if (!includeHiddenWrites && compoundWriteIsEmpty(merge)) {
-        return completeServerCache;
-      } else {
-        if (!includeHiddenWrites && completeServerCache == null && !compoundWriteHasCompleteWrite(merge, newEmptyPath())) {
-          return null;
-        } else {
-          const filter = function(write) {
-            return (write.visible || includeHiddenWrites) && (!writeIdsToExclude || !~writeIdsToExclude.indexOf(write.writeId)) && (pathContains(write.path, treePath) || pathContains(treePath, write.path));
-          };
-          const mergeAtPath = writeTreeLayerTree_(writeTree.allWrites, filter, treePath);
-          const layeredCache = completeServerCache || ChildrenNode.EMPTY_NODE;
-          return compoundWriteApply(mergeAtPath, layeredCache);
-        }
-      }
-    }
-  }
-  function writeTreeCalcCompleteEventChildren(writeTree, treePath, completeServerChildren) {
-    let completeChildren = ChildrenNode.EMPTY_NODE;
-    const topLevelSet = compoundWriteGetCompleteNode(writeTree.visibleWrites, treePath);
-    if (topLevelSet) {
-      if (!topLevelSet.isLeafNode()) {
-        topLevelSet.forEachChild(PRIORITY_INDEX, (childName, childSnap) => {
-          completeChildren = completeChildren.updateImmediateChild(childName, childSnap);
-        });
-      }
-      return completeChildren;
-    } else if (completeServerChildren) {
-      const merge = compoundWriteChildCompoundWrite(writeTree.visibleWrites, treePath);
-      completeServerChildren.forEachChild(PRIORITY_INDEX, (childName, childNode) => {
-        const node = compoundWriteApply(compoundWriteChildCompoundWrite(merge, new Path(childName)), childNode);
-        completeChildren = completeChildren.updateImmediateChild(childName, node);
-      });
-      compoundWriteGetCompleteChildren(merge).forEach((namedNode) => {
-        completeChildren = completeChildren.updateImmediateChild(namedNode.name, namedNode.node);
-      });
-      return completeChildren;
-    } else {
-      const merge = compoundWriteChildCompoundWrite(writeTree.visibleWrites, treePath);
-      compoundWriteGetCompleteChildren(merge).forEach((namedNode) => {
-        completeChildren = completeChildren.updateImmediateChild(namedNode.name, namedNode.node);
-      });
-      return completeChildren;
-    }
-  }
-  function writeTreeCalcEventCacheAfterServerOverwrite(writeTree, treePath, childPath, existingEventSnap, existingServerSnap) {
-    assert(existingEventSnap || existingServerSnap, "Either existingEventSnap or existingServerSnap must exist");
-    const path = pathChild(treePath, childPath);
-    if (compoundWriteHasCompleteWrite(writeTree.visibleWrites, path)) {
-      return null;
-    } else {
-      const childMerge = compoundWriteChildCompoundWrite(writeTree.visibleWrites, path);
-      if (compoundWriteIsEmpty(childMerge)) {
-        return existingServerSnap.getChild(childPath);
-      } else {
-        return compoundWriteApply(childMerge, existingServerSnap.getChild(childPath));
-      }
-    }
-  }
-  function writeTreeCalcCompleteChild(writeTree, treePath, childKey, existingServerSnap) {
-    const path = pathChild(treePath, childKey);
-    const shadowingNode = compoundWriteGetCompleteNode(writeTree.visibleWrites, path);
-    if (shadowingNode != null) {
-      return shadowingNode;
-    } else {
-      if (existingServerSnap.isCompleteForChild(childKey)) {
-        const childMerge = compoundWriteChildCompoundWrite(writeTree.visibleWrites, path);
-        return compoundWriteApply(childMerge, existingServerSnap.getNode().getImmediateChild(childKey));
-      } else {
-        return null;
-      }
-    }
-  }
-  function writeTreeShadowingWrite(writeTree, path) {
-    return compoundWriteGetCompleteNode(writeTree.visibleWrites, path);
-  }
-  function writeTreeCalcIndexedSlice(writeTree, treePath, completeServerData, startPost, count, reverse, index) {
-    let toIterate;
-    const merge = compoundWriteChildCompoundWrite(writeTree.visibleWrites, treePath);
-    const shadowingNode = compoundWriteGetCompleteNode(merge, newEmptyPath());
-    if (shadowingNode != null) {
-      toIterate = shadowingNode;
-    } else if (completeServerData != null) {
-      toIterate = compoundWriteApply(merge, completeServerData);
-    } else {
-      return [];
-    }
-    toIterate = toIterate.withIndex(index);
-    if (!toIterate.isEmpty() && !toIterate.isLeafNode()) {
-      const nodes = [];
-      const cmp = index.getCompare();
-      const iter = reverse ? toIterate.getReverseIteratorFrom(startPost, index) : toIterate.getIteratorFrom(startPost, index);
-      let next = iter.getNext();
-      while (next && nodes.length < count) {
-        if (cmp(next, startPost) !== 0) {
-          nodes.push(next);
-        }
-        next = iter.getNext();
-      }
-      return nodes;
-    } else {
-      return [];
-    }
-  }
-  function newWriteTree() {
-    return {
-      visibleWrites: CompoundWrite.empty(),
-      allWrites: [],
-      lastWriteId: -1
-    };
-  }
-  function writeTreeRefCalcCompleteEventCache(writeTreeRef, completeServerCache, writeIdsToExclude, includeHiddenWrites) {
-    return writeTreeCalcCompleteEventCache(writeTreeRef.writeTree, writeTreeRef.treePath, completeServerCache, writeIdsToExclude, includeHiddenWrites);
-  }
-  function writeTreeRefCalcCompleteEventChildren(writeTreeRef, completeServerChildren) {
-    return writeTreeCalcCompleteEventChildren(writeTreeRef.writeTree, writeTreeRef.treePath, completeServerChildren);
-  }
-  function writeTreeRefCalcEventCacheAfterServerOverwrite(writeTreeRef, path, existingEventSnap, existingServerSnap) {
-    return writeTreeCalcEventCacheAfterServerOverwrite(writeTreeRef.writeTree, writeTreeRef.treePath, path, existingEventSnap, existingServerSnap);
-  }
-  function writeTreeRefShadowingWrite(writeTreeRef, path) {
-    return writeTreeShadowingWrite(writeTreeRef.writeTree, pathChild(writeTreeRef.treePath, path));
-  }
-  function writeTreeRefCalcIndexedSlice(writeTreeRef, completeServerData, startPost, count, reverse, index) {
-    return writeTreeCalcIndexedSlice(writeTreeRef.writeTree, writeTreeRef.treePath, completeServerData, startPost, count, reverse, index);
-  }
-  function writeTreeRefCalcCompleteChild(writeTreeRef, childKey, existingServerCache) {
-    return writeTreeCalcCompleteChild(writeTreeRef.writeTree, writeTreeRef.treePath, childKey, existingServerCache);
-  }
-  function writeTreeRefChild(writeTreeRef, childName) {
-    return newWriteTreeRef(pathChild(writeTreeRef.treePath, childName), writeTreeRef.writeTree);
-  }
-  function newWriteTreeRef(path, writeTree) {
-    return {
-      treePath: path,
-      writeTree
-    };
-  }
-  var ChildChangeAccumulator = class {
-    constructor() {
-      this.changeMap = /* @__PURE__ */ new Map();
-    }
-    trackChildChange(change) {
-      const type = change.type;
-      const childKey = change.childName;
-      assert(type === "child_added" || type === "child_changed" || type === "child_removed", "Only child changes supported for tracking");
-      assert(childKey !== ".priority", "Only non-priority child changes can be tracked.");
-      const oldChange = this.changeMap.get(childKey);
-      if (oldChange) {
-        const oldType = oldChange.type;
-        if (type === "child_added" && oldType === "child_removed") {
-          this.changeMap.set(childKey, changeChildChanged(childKey, change.snapshotNode, oldChange.snapshotNode));
-        } else if (type === "child_removed" && oldType === "child_added") {
-          this.changeMap.delete(childKey);
-        } else if (type === "child_removed" && oldType === "child_changed") {
-          this.changeMap.set(childKey, changeChildRemoved(childKey, oldChange.oldSnap));
-        } else if (type === "child_changed" && oldType === "child_added") {
-          this.changeMap.set(childKey, changeChildAdded(childKey, change.snapshotNode));
-        } else if (type === "child_changed" && oldType === "child_changed") {
-          this.changeMap.set(childKey, changeChildChanged(childKey, change.snapshotNode, oldChange.oldSnap));
-        } else {
-          throw assertionError("Illegal combination of changes: " + change + " occurred after " + oldChange);
-        }
-      } else {
-        this.changeMap.set(childKey, change);
-      }
-    }
-    getChanges() {
-      return Array.from(this.changeMap.values());
-    }
-  };
-  var NoCompleteChildSource_ = class {
-    getCompleteChild(childKey) {
-      return null;
-    }
-    getChildAfterChild(index, child2, reverse) {
-      return null;
-    }
-  };
-  var NO_COMPLETE_CHILD_SOURCE = new NoCompleteChildSource_();
-  var WriteTreeCompleteChildSource = class {
-    constructor(writes_, viewCache_, optCompleteServerCache_ = null) {
-      this.writes_ = writes_;
-      this.viewCache_ = viewCache_;
-      this.optCompleteServerCache_ = optCompleteServerCache_;
-    }
-    getCompleteChild(childKey) {
-      const node = this.viewCache_.eventCache;
-      if (node.isCompleteForChild(childKey)) {
-        return node.getNode().getImmediateChild(childKey);
-      } else {
-        const serverNode = this.optCompleteServerCache_ != null ? new CacheNode(this.optCompleteServerCache_, true, false) : this.viewCache_.serverCache;
-        return writeTreeRefCalcCompleteChild(this.writes_, childKey, serverNode);
-      }
-    }
-    getChildAfterChild(index, child2, reverse) {
-      const completeServerData = this.optCompleteServerCache_ != null ? this.optCompleteServerCache_ : viewCacheGetCompleteServerSnap(this.viewCache_);
-      const nodes = writeTreeRefCalcIndexedSlice(this.writes_, completeServerData, child2, 1, reverse, index);
-      if (nodes.length === 0) {
-        return null;
-      } else {
-        return nodes[0];
-      }
-    }
-  };
-  function newViewProcessor(filter) {
-    return { filter };
-  }
-  function viewProcessorAssertIndexed(viewProcessor, viewCache) {
-    assert(viewCache.eventCache.getNode().isIndexed(viewProcessor.filter.getIndex()), "Event snap not indexed");
-    assert(viewCache.serverCache.getNode().isIndexed(viewProcessor.filter.getIndex()), "Server snap not indexed");
-  }
-  function viewProcessorApplyOperation(viewProcessor, oldViewCache, operation, writesCache, completeCache) {
-    const accumulator = new ChildChangeAccumulator();
-    let newViewCache2, filterServerNode;
-    if (operation.type === OperationType.OVERWRITE) {
-      const overwrite = operation;
-      if (overwrite.source.fromUser) {
-        newViewCache2 = viewProcessorApplyUserOverwrite(viewProcessor, oldViewCache, overwrite.path, overwrite.snap, writesCache, completeCache, accumulator);
-      } else {
-        assert(overwrite.source.fromServer, "Unknown source.");
-        filterServerNode = overwrite.source.tagged || oldViewCache.serverCache.isFiltered() && !pathIsEmpty(overwrite.path);
-        newViewCache2 = viewProcessorApplyServerOverwrite(viewProcessor, oldViewCache, overwrite.path, overwrite.snap, writesCache, completeCache, filterServerNode, accumulator);
-      }
-    } else if (operation.type === OperationType.MERGE) {
-      const merge = operation;
-      if (merge.source.fromUser) {
-        newViewCache2 = viewProcessorApplyUserMerge(viewProcessor, oldViewCache, merge.path, merge.children, writesCache, completeCache, accumulator);
-      } else {
-        assert(merge.source.fromServer, "Unknown source.");
-        filterServerNode = merge.source.tagged || oldViewCache.serverCache.isFiltered();
-        newViewCache2 = viewProcessorApplyServerMerge(viewProcessor, oldViewCache, merge.path, merge.children, writesCache, completeCache, filterServerNode, accumulator);
-      }
-    } else if (operation.type === OperationType.ACK_USER_WRITE) {
-      const ackUserWrite = operation;
-      if (!ackUserWrite.revert) {
-        newViewCache2 = viewProcessorAckUserWrite(viewProcessor, oldViewCache, ackUserWrite.path, ackUserWrite.affectedTree, writesCache, completeCache, accumulator);
-      } else {
-        newViewCache2 = viewProcessorRevertUserWrite(viewProcessor, oldViewCache, ackUserWrite.path, writesCache, completeCache, accumulator);
-      }
-    } else if (operation.type === OperationType.LISTEN_COMPLETE) {
-      newViewCache2 = viewProcessorListenComplete(viewProcessor, oldViewCache, operation.path, writesCache, accumulator);
-    } else {
-      throw assertionError("Unknown operation type: " + operation.type);
-    }
-    const changes = accumulator.getChanges();
-    viewProcessorMaybeAddValueEvent(oldViewCache, newViewCache2, changes);
-    return { viewCache: newViewCache2, changes };
-  }
-  function viewProcessorMaybeAddValueEvent(oldViewCache, newViewCache2, accumulator) {
-    const eventSnap = newViewCache2.eventCache;
-    if (eventSnap.isFullyInitialized()) {
-      const isLeafOrEmpty = eventSnap.getNode().isLeafNode() || eventSnap.getNode().isEmpty();
-      const oldCompleteSnap = viewCacheGetCompleteEventSnap(oldViewCache);
-      if (accumulator.length > 0 || !oldViewCache.eventCache.isFullyInitialized() || isLeafOrEmpty && !eventSnap.getNode().equals(oldCompleteSnap) || !eventSnap.getNode().getPriority().equals(oldCompleteSnap.getPriority())) {
-        accumulator.push(changeValue(viewCacheGetCompleteEventSnap(newViewCache2)));
-      }
-    }
-  }
-  function viewProcessorGenerateEventCacheAfterServerEvent(viewProcessor, viewCache, changePath, writesCache, source, accumulator) {
-    const oldEventSnap = viewCache.eventCache;
-    if (writeTreeRefShadowingWrite(writesCache, changePath) != null) {
-      return viewCache;
-    } else {
-      let newEventCache, serverNode;
-      if (pathIsEmpty(changePath)) {
-        assert(viewCache.serverCache.isFullyInitialized(), "If change path is empty, we must have complete server data");
-        if (viewCache.serverCache.isFiltered()) {
-          const serverCache = viewCacheGetCompleteServerSnap(viewCache);
-          const completeChildren = serverCache instanceof ChildrenNode ? serverCache : ChildrenNode.EMPTY_NODE;
-          const completeEventChildren = writeTreeRefCalcCompleteEventChildren(writesCache, completeChildren);
-          newEventCache = viewProcessor.filter.updateFullNode(viewCache.eventCache.getNode(), completeEventChildren, accumulator);
-        } else {
-          const completeNode = writeTreeRefCalcCompleteEventCache(writesCache, viewCacheGetCompleteServerSnap(viewCache));
-          newEventCache = viewProcessor.filter.updateFullNode(viewCache.eventCache.getNode(), completeNode, accumulator);
-        }
-      } else {
-        const childKey = pathGetFront(changePath);
-        if (childKey === ".priority") {
-          assert(pathGetLength(changePath) === 1, "Can't have a priority with additional path components");
-          const oldEventNode = oldEventSnap.getNode();
-          serverNode = viewCache.serverCache.getNode();
-          const updatedPriority = writeTreeRefCalcEventCacheAfterServerOverwrite(writesCache, changePath, oldEventNode, serverNode);
-          if (updatedPriority != null) {
-            newEventCache = viewProcessor.filter.updatePriority(oldEventNode, updatedPriority);
-          } else {
-            newEventCache = oldEventSnap.getNode();
-          }
-        } else {
-          const childChangePath = pathPopFront(changePath);
-          let newEventChild;
-          if (oldEventSnap.isCompleteForChild(childKey)) {
-            serverNode = viewCache.serverCache.getNode();
-            const eventChildUpdate = writeTreeRefCalcEventCacheAfterServerOverwrite(writesCache, changePath, oldEventSnap.getNode(), serverNode);
-            if (eventChildUpdate != null) {
-              newEventChild = oldEventSnap.getNode().getImmediateChild(childKey).updateChild(childChangePath, eventChildUpdate);
-            } else {
-              newEventChild = oldEventSnap.getNode().getImmediateChild(childKey);
-            }
-          } else {
-            newEventChild = writeTreeRefCalcCompleteChild(writesCache, childKey, viewCache.serverCache);
-          }
-          if (newEventChild != null) {
-            newEventCache = viewProcessor.filter.updateChild(oldEventSnap.getNode(), childKey, newEventChild, childChangePath, source, accumulator);
-          } else {
-            newEventCache = oldEventSnap.getNode();
-          }
-        }
-      }
-      return viewCacheUpdateEventSnap(viewCache, newEventCache, oldEventSnap.isFullyInitialized() || pathIsEmpty(changePath), viewProcessor.filter.filtersNodes());
-    }
-  }
-  function viewProcessorApplyServerOverwrite(viewProcessor, oldViewCache, changePath, changedSnap, writesCache, completeCache, filterServerNode, accumulator) {
-    const oldServerSnap = oldViewCache.serverCache;
-    let newServerCache;
-    const serverFilter = filterServerNode ? viewProcessor.filter : viewProcessor.filter.getIndexedFilter();
-    if (pathIsEmpty(changePath)) {
-      newServerCache = serverFilter.updateFullNode(oldServerSnap.getNode(), changedSnap, null);
-    } else if (serverFilter.filtersNodes() && !oldServerSnap.isFiltered()) {
-      const newServerNode = oldServerSnap.getNode().updateChild(changePath, changedSnap);
-      newServerCache = serverFilter.updateFullNode(oldServerSnap.getNode(), newServerNode, null);
-    } else {
-      const childKey = pathGetFront(changePath);
-      if (!oldServerSnap.isCompleteForPath(changePath) && pathGetLength(changePath) > 1) {
-        return oldViewCache;
-      }
-      const childChangePath = pathPopFront(changePath);
-      const childNode = oldServerSnap.getNode().getImmediateChild(childKey);
-      const newChildNode = childNode.updateChild(childChangePath, changedSnap);
-      if (childKey === ".priority") {
-        newServerCache = serverFilter.updatePriority(oldServerSnap.getNode(), newChildNode);
-      } else {
-        newServerCache = serverFilter.updateChild(oldServerSnap.getNode(), childKey, newChildNode, childChangePath, NO_COMPLETE_CHILD_SOURCE, null);
-      }
-    }
-    const newViewCache2 = viewCacheUpdateServerSnap(oldViewCache, newServerCache, oldServerSnap.isFullyInitialized() || pathIsEmpty(changePath), serverFilter.filtersNodes());
-    const source = new WriteTreeCompleteChildSource(writesCache, newViewCache2, completeCache);
-    return viewProcessorGenerateEventCacheAfterServerEvent(viewProcessor, newViewCache2, changePath, writesCache, source, accumulator);
-  }
-  function viewProcessorApplyUserOverwrite(viewProcessor, oldViewCache, changePath, changedSnap, writesCache, completeCache, accumulator) {
-    const oldEventSnap = oldViewCache.eventCache;
-    let newViewCache2, newEventCache;
-    const source = new WriteTreeCompleteChildSource(writesCache, oldViewCache, completeCache);
-    if (pathIsEmpty(changePath)) {
-      newEventCache = viewProcessor.filter.updateFullNode(oldViewCache.eventCache.getNode(), changedSnap, accumulator);
-      newViewCache2 = viewCacheUpdateEventSnap(oldViewCache, newEventCache, true, viewProcessor.filter.filtersNodes());
-    } else {
-      const childKey = pathGetFront(changePath);
-      if (childKey === ".priority") {
-        newEventCache = viewProcessor.filter.updatePriority(oldViewCache.eventCache.getNode(), changedSnap);
-        newViewCache2 = viewCacheUpdateEventSnap(oldViewCache, newEventCache, oldEventSnap.isFullyInitialized(), oldEventSnap.isFiltered());
-      } else {
-        const childChangePath = pathPopFront(changePath);
-        const oldChild = oldEventSnap.getNode().getImmediateChild(childKey);
-        let newChild;
-        if (pathIsEmpty(childChangePath)) {
-          newChild = changedSnap;
-        } else {
-          const childNode = source.getCompleteChild(childKey);
-          if (childNode != null) {
-            if (pathGetBack(childChangePath) === ".priority" && childNode.getChild(pathParent(childChangePath)).isEmpty()) {
-              newChild = childNode;
-            } else {
-              newChild = childNode.updateChild(childChangePath, changedSnap);
-            }
-          } else {
-            newChild = ChildrenNode.EMPTY_NODE;
-          }
-        }
-        if (!oldChild.equals(newChild)) {
-          const newEventSnap = viewProcessor.filter.updateChild(oldEventSnap.getNode(), childKey, newChild, childChangePath, source, accumulator);
-          newViewCache2 = viewCacheUpdateEventSnap(oldViewCache, newEventSnap, oldEventSnap.isFullyInitialized(), viewProcessor.filter.filtersNodes());
-        } else {
-          newViewCache2 = oldViewCache;
-        }
-      }
-    }
-    return newViewCache2;
-  }
-  function viewProcessorCacheHasChild(viewCache, childKey) {
-    return viewCache.eventCache.isCompleteForChild(childKey);
-  }
-  function viewProcessorApplyUserMerge(viewProcessor, viewCache, path, changedChildren, writesCache, serverCache, accumulator) {
-    let curViewCache = viewCache;
-    changedChildren.foreach((relativePath, childNode) => {
-      const writePath = pathChild(path, relativePath);
-      if (viewProcessorCacheHasChild(viewCache, pathGetFront(writePath))) {
-        curViewCache = viewProcessorApplyUserOverwrite(viewProcessor, curViewCache, writePath, childNode, writesCache, serverCache, accumulator);
-      }
-    });
-    changedChildren.foreach((relativePath, childNode) => {
-      const writePath = pathChild(path, relativePath);
-      if (!viewProcessorCacheHasChild(viewCache, pathGetFront(writePath))) {
-        curViewCache = viewProcessorApplyUserOverwrite(viewProcessor, curViewCache, writePath, childNode, writesCache, serverCache, accumulator);
-      }
-    });
-    return curViewCache;
-  }
-  function viewProcessorApplyMerge(viewProcessor, node, merge) {
-    merge.foreach((relativePath, childNode) => {
-      node = node.updateChild(relativePath, childNode);
-    });
-    return node;
-  }
-  function viewProcessorApplyServerMerge(viewProcessor, viewCache, path, changedChildren, writesCache, serverCache, filterServerNode, accumulator) {
-    if (viewCache.serverCache.getNode().isEmpty() && !viewCache.serverCache.isFullyInitialized()) {
-      return viewCache;
-    }
-    let curViewCache = viewCache;
-    let viewMergeTree;
-    if (pathIsEmpty(path)) {
-      viewMergeTree = changedChildren;
-    } else {
-      viewMergeTree = new ImmutableTree(null).setTree(path, changedChildren);
-    }
-    const serverNode = viewCache.serverCache.getNode();
-    viewMergeTree.children.inorderTraversal((childKey, childTree) => {
-      if (serverNode.hasChild(childKey)) {
-        const serverChild = viewCache.serverCache.getNode().getImmediateChild(childKey);
-        const newChild = viewProcessorApplyMerge(viewProcessor, serverChild, childTree);
-        curViewCache = viewProcessorApplyServerOverwrite(viewProcessor, curViewCache, new Path(childKey), newChild, writesCache, serverCache, filterServerNode, accumulator);
-      }
-    });
-    viewMergeTree.children.inorderTraversal((childKey, childMergeTree) => {
-      const isUnknownDeepMerge = !viewCache.serverCache.isCompleteForChild(childKey) && childMergeTree.value === null;
-      if (!serverNode.hasChild(childKey) && !isUnknownDeepMerge) {
-        const serverChild = viewCache.serverCache.getNode().getImmediateChild(childKey);
-        const newChild = viewProcessorApplyMerge(viewProcessor, serverChild, childMergeTree);
-        curViewCache = viewProcessorApplyServerOverwrite(viewProcessor, curViewCache, new Path(childKey), newChild, writesCache, serverCache, filterServerNode, accumulator);
-      }
-    });
-    return curViewCache;
-  }
-  function viewProcessorAckUserWrite(viewProcessor, viewCache, ackPath, affectedTree, writesCache, completeCache, accumulator) {
-    if (writeTreeRefShadowingWrite(writesCache, ackPath) != null) {
-      return viewCache;
-    }
-    const filterServerNode = viewCache.serverCache.isFiltered();
-    const serverCache = viewCache.serverCache;
-    if (affectedTree.value != null) {
-      if (pathIsEmpty(ackPath) && serverCache.isFullyInitialized() || serverCache.isCompleteForPath(ackPath)) {
-        return viewProcessorApplyServerOverwrite(viewProcessor, viewCache, ackPath, serverCache.getNode().getChild(ackPath), writesCache, completeCache, filterServerNode, accumulator);
-      } else if (pathIsEmpty(ackPath)) {
-        let changedChildren = new ImmutableTree(null);
-        serverCache.getNode().forEachChild(KEY_INDEX, (name5, node) => {
-          changedChildren = changedChildren.set(new Path(name5), node);
-        });
-        return viewProcessorApplyServerMerge(viewProcessor, viewCache, ackPath, changedChildren, writesCache, completeCache, filterServerNode, accumulator);
-      } else {
-        return viewCache;
-      }
-    } else {
-      let changedChildren = new ImmutableTree(null);
-      affectedTree.foreach((mergePath, value) => {
-        const serverCachePath = pathChild(ackPath, mergePath);
-        if (serverCache.isCompleteForPath(serverCachePath)) {
-          changedChildren = changedChildren.set(mergePath, serverCache.getNode().getChild(serverCachePath));
-        }
-      });
-      return viewProcessorApplyServerMerge(viewProcessor, viewCache, ackPath, changedChildren, writesCache, completeCache, filterServerNode, accumulator);
-    }
-  }
-  function viewProcessorListenComplete(viewProcessor, viewCache, path, writesCache, accumulator) {
-    const oldServerNode = viewCache.serverCache;
-    const newViewCache2 = viewCacheUpdateServerSnap(viewCache, oldServerNode.getNode(), oldServerNode.isFullyInitialized() || pathIsEmpty(path), oldServerNode.isFiltered());
-    return viewProcessorGenerateEventCacheAfterServerEvent(viewProcessor, newViewCache2, path, writesCache, NO_COMPLETE_CHILD_SOURCE, accumulator);
-  }
-  function viewProcessorRevertUserWrite(viewProcessor, viewCache, path, writesCache, completeServerCache, accumulator) {
-    let complete;
-    if (writeTreeRefShadowingWrite(writesCache, path) != null) {
-      return viewCache;
-    } else {
-      const source = new WriteTreeCompleteChildSource(writesCache, viewCache, completeServerCache);
-      const oldEventCache = viewCache.eventCache.getNode();
-      let newEventCache;
-      if (pathIsEmpty(path) || pathGetFront(path) === ".priority") {
-        let newNode;
-        if (viewCache.serverCache.isFullyInitialized()) {
-          newNode = writeTreeRefCalcCompleteEventCache(writesCache, viewCacheGetCompleteServerSnap(viewCache));
-        } else {
-          const serverChildren = viewCache.serverCache.getNode();
-          assert(serverChildren instanceof ChildrenNode, "serverChildren would be complete if leaf node");
-          newNode = writeTreeRefCalcCompleteEventChildren(writesCache, serverChildren);
-        }
-        newNode = newNode;
-        newEventCache = viewProcessor.filter.updateFullNode(oldEventCache, newNode, accumulator);
-      } else {
-        const childKey = pathGetFront(path);
-        let newChild = writeTreeRefCalcCompleteChild(writesCache, childKey, viewCache.serverCache);
-        if (newChild == null && viewCache.serverCache.isCompleteForChild(childKey)) {
-          newChild = oldEventCache.getImmediateChild(childKey);
-        }
-        if (newChild != null) {
-          newEventCache = viewProcessor.filter.updateChild(oldEventCache, childKey, newChild, pathPopFront(path), source, accumulator);
-        } else if (viewCache.eventCache.getNode().hasChild(childKey)) {
-          newEventCache = viewProcessor.filter.updateChild(oldEventCache, childKey, ChildrenNode.EMPTY_NODE, pathPopFront(path), source, accumulator);
-        } else {
-          newEventCache = oldEventCache;
-        }
-        if (newEventCache.isEmpty() && viewCache.serverCache.isFullyInitialized()) {
-          complete = writeTreeRefCalcCompleteEventCache(writesCache, viewCacheGetCompleteServerSnap(viewCache));
-          if (complete.isLeafNode()) {
-            newEventCache = viewProcessor.filter.updateFullNode(newEventCache, complete, accumulator);
-          }
-        }
-      }
-      complete = viewCache.serverCache.isFullyInitialized() || writeTreeRefShadowingWrite(writesCache, newEmptyPath()) != null;
-      return viewCacheUpdateEventSnap(viewCache, newEventCache, complete, viewProcessor.filter.filtersNodes());
-    }
-  }
-  var View = class {
-    constructor(query_, initialViewCache) {
-      this.query_ = query_;
-      this.eventRegistrations_ = [];
-      const params = this.query_._queryParams;
-      const indexFilter = new IndexedFilter(params.getIndex());
-      const filter = queryParamsGetNodeFilter(params);
-      this.processor_ = newViewProcessor(filter);
-      const initialServerCache = initialViewCache.serverCache;
-      const initialEventCache = initialViewCache.eventCache;
-      const serverSnap = indexFilter.updateFullNode(ChildrenNode.EMPTY_NODE, initialServerCache.getNode(), null);
-      const eventSnap = filter.updateFullNode(ChildrenNode.EMPTY_NODE, initialEventCache.getNode(), null);
-      const newServerCache = new CacheNode(serverSnap, initialServerCache.isFullyInitialized(), indexFilter.filtersNodes());
-      const newEventCache = new CacheNode(eventSnap, initialEventCache.isFullyInitialized(), filter.filtersNodes());
-      this.viewCache_ = newViewCache(newEventCache, newServerCache);
-      this.eventGenerator_ = new EventGenerator(this.query_);
-    }
-    get query() {
-      return this.query_;
-    }
-  };
-  function viewGetServerCache(view) {
-    return view.viewCache_.serverCache.getNode();
-  }
-  function viewGetCompleteNode(view) {
-    return viewCacheGetCompleteEventSnap(view.viewCache_);
-  }
-  function viewGetCompleteServerCache(view, path) {
-    const cache = viewCacheGetCompleteServerSnap(view.viewCache_);
-    if (cache) {
-      if (view.query._queryParams.loadsAllData() || !pathIsEmpty(path) && !cache.getImmediateChild(pathGetFront(path)).isEmpty()) {
-        return cache.getChild(path);
-      }
-    }
-    return null;
-  }
-  function viewIsEmpty(view) {
-    return view.eventRegistrations_.length === 0;
-  }
-  function viewAddEventRegistration(view, eventRegistration) {
-    view.eventRegistrations_.push(eventRegistration);
-  }
-  function viewRemoveEventRegistration(view, eventRegistration, cancelError) {
-    const cancelEvents = [];
-    if (cancelError) {
-      assert(eventRegistration == null, "A cancel should cancel all event registrations.");
-      const path = view.query._path;
-      view.eventRegistrations_.forEach((registration) => {
-        const maybeEvent = registration.createCancelEvent(cancelError, path);
-        if (maybeEvent) {
-          cancelEvents.push(maybeEvent);
-        }
-      });
-    }
-    if (eventRegistration) {
-      let remaining = [];
-      for (let i3 = 0; i3 < view.eventRegistrations_.length; ++i3) {
-        const existing = view.eventRegistrations_[i3];
-        if (!existing.matches(eventRegistration)) {
-          remaining.push(existing);
-        } else if (eventRegistration.hasAnyCallback()) {
-          remaining = remaining.concat(view.eventRegistrations_.slice(i3 + 1));
-          break;
-        }
-      }
-      view.eventRegistrations_ = remaining;
-    } else {
-      view.eventRegistrations_ = [];
-    }
-    return cancelEvents;
-  }
-  function viewApplyOperation(view, operation, writesCache, completeServerCache) {
-    if (operation.type === OperationType.MERGE && operation.source.queryId !== null) {
-      assert(viewCacheGetCompleteServerSnap(view.viewCache_), "We should always have a full cache before handling merges");
-      assert(viewCacheGetCompleteEventSnap(view.viewCache_), "Missing event cache, even though we have a server cache");
-    }
-    const oldViewCache = view.viewCache_;
-    const result = viewProcessorApplyOperation(view.processor_, oldViewCache, operation, writesCache, completeServerCache);
-    viewProcessorAssertIndexed(view.processor_, result.viewCache);
-    assert(result.viewCache.serverCache.isFullyInitialized() || !oldViewCache.serverCache.isFullyInitialized(), "Once a server snap is complete, it should never go back");
-    view.viewCache_ = result.viewCache;
-    return viewGenerateEventsForChanges_(view, result.changes, result.viewCache.eventCache.getNode(), null);
-  }
-  function viewGetInitialEvents(view, registration) {
-    const eventSnap = view.viewCache_.eventCache;
-    const initialChanges = [];
-    if (!eventSnap.getNode().isLeafNode()) {
-      const eventNode = eventSnap.getNode();
-      eventNode.forEachChild(PRIORITY_INDEX, (key, childNode) => {
-        initialChanges.push(changeChildAdded(key, childNode));
-      });
-    }
-    if (eventSnap.isFullyInitialized()) {
-      initialChanges.push(changeValue(eventSnap.getNode()));
-    }
-    return viewGenerateEventsForChanges_(view, initialChanges, eventSnap.getNode(), registration);
-  }
-  function viewGenerateEventsForChanges_(view, changes, eventCache, eventRegistration) {
-    const registrations = eventRegistration ? [eventRegistration] : view.eventRegistrations_;
-    return eventGeneratorGenerateEventsForChanges(view.eventGenerator_, changes, eventCache, registrations);
-  }
-  var referenceConstructor$1;
-  var SyncPoint = class {
-    constructor() {
-      this.views = /* @__PURE__ */ new Map();
-    }
-  };
-  function syncPointSetReferenceConstructor(val) {
-    assert(!referenceConstructor$1, "__referenceConstructor has already been defined");
-    referenceConstructor$1 = val;
-  }
-  function syncPointGetReferenceConstructor() {
-    assert(referenceConstructor$1, "Reference.ts has not been loaded");
-    return referenceConstructor$1;
-  }
-  function syncPointIsEmpty(syncPoint) {
-    return syncPoint.views.size === 0;
-  }
-  function syncPointApplyOperation(syncPoint, operation, writesCache, optCompleteServerCache) {
-    const queryId = operation.source.queryId;
-    if (queryId !== null) {
-      const view = syncPoint.views.get(queryId);
-      assert(view != null, "SyncTree gave us an op for an invalid query.");
-      return viewApplyOperation(view, operation, writesCache, optCompleteServerCache);
-    } else {
-      let events = [];
-      for (const view of syncPoint.views.values()) {
-        events = events.concat(viewApplyOperation(view, operation, writesCache, optCompleteServerCache));
-      }
-      return events;
-    }
-  }
-  function syncPointGetView(syncPoint, query2, writesCache, serverCache, serverCacheComplete) {
-    const queryId = query2._queryIdentifier;
-    const view = syncPoint.views.get(queryId);
-    if (!view) {
-      let eventCache = writeTreeRefCalcCompleteEventCache(writesCache, serverCacheComplete ? serverCache : null);
-      let eventCacheComplete = false;
-      if (eventCache) {
-        eventCacheComplete = true;
-      } else if (serverCache instanceof ChildrenNode) {
-        eventCache = writeTreeRefCalcCompleteEventChildren(writesCache, serverCache);
-        eventCacheComplete = false;
-      } else {
-        eventCache = ChildrenNode.EMPTY_NODE;
-        eventCacheComplete = false;
-      }
-      const viewCache = newViewCache(new CacheNode(eventCache, eventCacheComplete, false), new CacheNode(serverCache, serverCacheComplete, false));
-      return new View(query2, viewCache);
-    }
-    return view;
-  }
-  function syncPointAddEventRegistration(syncPoint, query2, eventRegistration, writesCache, serverCache, serverCacheComplete) {
-    const view = syncPointGetView(syncPoint, query2, writesCache, serverCache, serverCacheComplete);
-    if (!syncPoint.views.has(query2._queryIdentifier)) {
-      syncPoint.views.set(query2._queryIdentifier, view);
-    }
-    viewAddEventRegistration(view, eventRegistration);
-    return viewGetInitialEvents(view, eventRegistration);
-  }
-  function syncPointRemoveEventRegistration(syncPoint, query2, eventRegistration, cancelError) {
-    const queryId = query2._queryIdentifier;
-    const removed = [];
-    let cancelEvents = [];
-    const hadCompleteView = syncPointHasCompleteView(syncPoint);
-    if (queryId === "default") {
-      for (const [viewQueryId, view] of syncPoint.views.entries()) {
-        cancelEvents = cancelEvents.concat(viewRemoveEventRegistration(view, eventRegistration, cancelError));
-        if (viewIsEmpty(view)) {
-          syncPoint.views.delete(viewQueryId);
-          if (!view.query._queryParams.loadsAllData()) {
-            removed.push(view.query);
-          }
-        }
-      }
-    } else {
-      const view = syncPoint.views.get(queryId);
-      if (view) {
-        cancelEvents = cancelEvents.concat(viewRemoveEventRegistration(view, eventRegistration, cancelError));
-        if (viewIsEmpty(view)) {
-          syncPoint.views.delete(queryId);
-          if (!view.query._queryParams.loadsAllData()) {
-            removed.push(view.query);
-          }
-        }
-      }
-    }
-    if (hadCompleteView && !syncPointHasCompleteView(syncPoint)) {
-      removed.push(new (syncPointGetReferenceConstructor())(query2._repo, query2._path));
-    }
-    return { removed, events: cancelEvents };
-  }
-  function syncPointGetQueryViews(syncPoint) {
-    const result = [];
-    for (const view of syncPoint.views.values()) {
-      if (!view.query._queryParams.loadsAllData()) {
-        result.push(view);
-      }
-    }
-    return result;
-  }
-  function syncPointGetCompleteServerCache(syncPoint, path) {
-    let serverCache = null;
-    for (const view of syncPoint.views.values()) {
-      serverCache = serverCache || viewGetCompleteServerCache(view, path);
-    }
-    return serverCache;
-  }
-  function syncPointViewForQuery(syncPoint, query2) {
-    const params = query2._queryParams;
-    if (params.loadsAllData()) {
-      return syncPointGetCompleteView(syncPoint);
-    } else {
-      const queryId = query2._queryIdentifier;
-      return syncPoint.views.get(queryId);
-    }
-  }
-  function syncPointViewExistsForQuery(syncPoint, query2) {
-    return syncPointViewForQuery(syncPoint, query2) != null;
-  }
-  function syncPointHasCompleteView(syncPoint) {
-    return syncPointGetCompleteView(syncPoint) != null;
-  }
-  function syncPointGetCompleteView(syncPoint) {
-    for (const view of syncPoint.views.values()) {
-      if (view.query._queryParams.loadsAllData()) {
-        return view;
-      }
-    }
-    return null;
-  }
-  var referenceConstructor;
-  function syncTreeSetReferenceConstructor(val) {
-    assert(!referenceConstructor, "__referenceConstructor has already been defined");
-    referenceConstructor = val;
-  }
-  function syncTreeGetReferenceConstructor() {
-    assert(referenceConstructor, "Reference.ts has not been loaded");
-    return referenceConstructor;
-  }
-  var syncTreeNextQueryTag_ = 1;
-  var SyncTree = class {
-    constructor(listenProvider_) {
-      this.listenProvider_ = listenProvider_;
-      this.syncPointTree_ = new ImmutableTree(null);
-      this.pendingWriteTree_ = newWriteTree();
-      this.tagToQueryMap = /* @__PURE__ */ new Map();
-      this.queryToTagMap = /* @__PURE__ */ new Map();
-    }
-  };
-  function syncTreeApplyUserOverwrite(syncTree, path, newData, writeId, visible) {
-    writeTreeAddOverwrite(syncTree.pendingWriteTree_, path, newData, writeId, visible);
-    if (!visible) {
-      return [];
-    } else {
-      return syncTreeApplyOperationToSyncPoints_(syncTree, new Overwrite(newOperationSourceUser(), path, newData));
-    }
-  }
-  function syncTreeApplyUserMerge(syncTree, path, changedChildren, writeId) {
-    writeTreeAddMerge(syncTree.pendingWriteTree_, path, changedChildren, writeId);
-    const changeTree = ImmutableTree.fromObject(changedChildren);
-    return syncTreeApplyOperationToSyncPoints_(syncTree, new Merge(newOperationSourceUser(), path, changeTree));
-  }
-  function syncTreeAckUserWrite(syncTree, writeId, revert = false) {
-    const write = writeTreeGetWrite(syncTree.pendingWriteTree_, writeId);
-    const needToReevaluate = writeTreeRemoveWrite(syncTree.pendingWriteTree_, writeId);
-    if (!needToReevaluate) {
-      return [];
-    } else {
-      let affectedTree = new ImmutableTree(null);
-      if (write.snap != null) {
-        affectedTree = affectedTree.set(newEmptyPath(), true);
-      } else {
-        each(write.children, (pathString) => {
-          affectedTree = affectedTree.set(new Path(pathString), true);
-        });
-      }
-      return syncTreeApplyOperationToSyncPoints_(syncTree, new AckUserWrite(write.path, affectedTree, revert));
-    }
-  }
-  function syncTreeApplyServerOverwrite(syncTree, path, newData) {
-    return syncTreeApplyOperationToSyncPoints_(syncTree, new Overwrite(newOperationSourceServer(), path, newData));
-  }
-  function syncTreeApplyServerMerge(syncTree, path, changedChildren) {
-    const changeTree = ImmutableTree.fromObject(changedChildren);
-    return syncTreeApplyOperationToSyncPoints_(syncTree, new Merge(newOperationSourceServer(), path, changeTree));
-  }
-  function syncTreeApplyListenComplete(syncTree, path) {
-    return syncTreeApplyOperationToSyncPoints_(syncTree, new ListenComplete(newOperationSourceServer(), path));
-  }
-  function syncTreeApplyTaggedListenComplete(syncTree, path, tag) {
-    const queryKey = syncTreeQueryKeyForTag_(syncTree, tag);
-    if (queryKey) {
-      const r3 = syncTreeParseQueryKey_(queryKey);
-      const queryPath = r3.path, queryId = r3.queryId;
-      const relativePath = newRelativePath(queryPath, path);
-      const op = new ListenComplete(newOperationSourceServerTaggedQuery(queryId), relativePath);
-      return syncTreeApplyTaggedOperation_(syncTree, queryPath, op);
-    } else {
-      return [];
-    }
-  }
-  function syncTreeRemoveEventRegistration(syncTree, query2, eventRegistration, cancelError, skipListenerDedup = false) {
-    const path = query2._path;
-    const maybeSyncPoint = syncTree.syncPointTree_.get(path);
-    let cancelEvents = [];
-    if (maybeSyncPoint && (query2._queryIdentifier === "default" || syncPointViewExistsForQuery(maybeSyncPoint, query2))) {
-      const removedAndEvents = syncPointRemoveEventRegistration(maybeSyncPoint, query2, eventRegistration, cancelError);
-      if (syncPointIsEmpty(maybeSyncPoint)) {
-        syncTree.syncPointTree_ = syncTree.syncPointTree_.remove(path);
-      }
-      const removed = removedAndEvents.removed;
-      cancelEvents = removedAndEvents.events;
-      if (!skipListenerDedup) {
-        const removingDefault = -1 !== removed.findIndex((query3) => {
-          return query3._queryParams.loadsAllData();
-        });
-        const covered = syncTree.syncPointTree_.findOnPath(path, (relativePath, parentSyncPoint) => syncPointHasCompleteView(parentSyncPoint));
-        if (removingDefault && !covered) {
-          const subtree = syncTree.syncPointTree_.subtree(path);
-          if (!subtree.isEmpty()) {
-            const newViews = syncTreeCollectDistinctViewsForSubTree_(subtree);
-            for (let i3 = 0; i3 < newViews.length; ++i3) {
-              const view = newViews[i3], newQuery = view.query;
-              const listener = syncTreeCreateListenerForView_(syncTree, view);
-              syncTree.listenProvider_.startListening(syncTreeQueryForListening_(newQuery), syncTreeTagForQuery(syncTree, newQuery), listener.hashFn, listener.onComplete);
-            }
-          }
-        }
-        if (!covered && removed.length > 0 && !cancelError) {
-          if (removingDefault) {
-            const defaultTag = null;
-            syncTree.listenProvider_.stopListening(syncTreeQueryForListening_(query2), defaultTag);
-          } else {
-            removed.forEach((queryToRemove) => {
-              const tagToRemove = syncTree.queryToTagMap.get(syncTreeMakeQueryKey_(queryToRemove));
-              syncTree.listenProvider_.stopListening(syncTreeQueryForListening_(queryToRemove), tagToRemove);
-            });
-          }
-        }
-      }
-      syncTreeRemoveTags_(syncTree, removed);
-    }
-    return cancelEvents;
-  }
-  function syncTreeApplyTaggedQueryOverwrite(syncTree, path, snap, tag) {
-    const queryKey = syncTreeQueryKeyForTag_(syncTree, tag);
-    if (queryKey != null) {
-      const r3 = syncTreeParseQueryKey_(queryKey);
-      const queryPath = r3.path, queryId = r3.queryId;
-      const relativePath = newRelativePath(queryPath, path);
-      const op = new Overwrite(newOperationSourceServerTaggedQuery(queryId), relativePath, snap);
-      return syncTreeApplyTaggedOperation_(syncTree, queryPath, op);
-    } else {
-      return [];
-    }
-  }
-  function syncTreeApplyTaggedQueryMerge(syncTree, path, changedChildren, tag) {
-    const queryKey = syncTreeQueryKeyForTag_(syncTree, tag);
-    if (queryKey) {
-      const r3 = syncTreeParseQueryKey_(queryKey);
-      const queryPath = r3.path, queryId = r3.queryId;
-      const relativePath = newRelativePath(queryPath, path);
-      const changeTree = ImmutableTree.fromObject(changedChildren);
-      const op = new Merge(newOperationSourceServerTaggedQuery(queryId), relativePath, changeTree);
-      return syncTreeApplyTaggedOperation_(syncTree, queryPath, op);
-    } else {
-      return [];
-    }
-  }
-  function syncTreeAddEventRegistration(syncTree, query2, eventRegistration, skipSetupListener = false) {
-    const path = query2._path;
-    let serverCache = null;
-    let foundAncestorDefaultView = false;
-    syncTree.syncPointTree_.foreachOnPath(path, (pathToSyncPoint, sp) => {
-      const relativePath = newRelativePath(pathToSyncPoint, path);
-      serverCache = serverCache || syncPointGetCompleteServerCache(sp, relativePath);
-      foundAncestorDefaultView = foundAncestorDefaultView || syncPointHasCompleteView(sp);
-    });
-    let syncPoint = syncTree.syncPointTree_.get(path);
-    if (!syncPoint) {
-      syncPoint = new SyncPoint();
-      syncTree.syncPointTree_ = syncTree.syncPointTree_.set(path, syncPoint);
-    } else {
-      foundAncestorDefaultView = foundAncestorDefaultView || syncPointHasCompleteView(syncPoint);
-      serverCache = serverCache || syncPointGetCompleteServerCache(syncPoint, newEmptyPath());
-    }
-    let serverCacheComplete;
-    if (serverCache != null) {
-      serverCacheComplete = true;
-    } else {
-      serverCacheComplete = false;
-      serverCache = ChildrenNode.EMPTY_NODE;
-      const subtree = syncTree.syncPointTree_.subtree(path);
-      subtree.foreachChild((childName, childSyncPoint) => {
-        const completeCache = syncPointGetCompleteServerCache(childSyncPoint, newEmptyPath());
-        if (completeCache) {
-          serverCache = serverCache.updateImmediateChild(childName, completeCache);
-        }
-      });
-    }
-    const viewAlreadyExists = syncPointViewExistsForQuery(syncPoint, query2);
-    if (!viewAlreadyExists && !query2._queryParams.loadsAllData()) {
-      const queryKey = syncTreeMakeQueryKey_(query2);
-      assert(!syncTree.queryToTagMap.has(queryKey), "View does not exist, but we have a tag");
-      const tag = syncTreeGetNextQueryTag_();
-      syncTree.queryToTagMap.set(queryKey, tag);
-      syncTree.tagToQueryMap.set(tag, queryKey);
-    }
-    const writesCache = writeTreeChildWrites(syncTree.pendingWriteTree_, path);
-    let events = syncPointAddEventRegistration(syncPoint, query2, eventRegistration, writesCache, serverCache, serverCacheComplete);
-    if (!viewAlreadyExists && !foundAncestorDefaultView && !skipSetupListener) {
-      const view = syncPointViewForQuery(syncPoint, query2);
-      events = events.concat(syncTreeSetupListener_(syncTree, query2, view));
-    }
-    return events;
-  }
-  function syncTreeCalcCompleteEventCache(syncTree, path, writeIdsToExclude) {
-    const includeHiddenSets = true;
-    const writeTree = syncTree.pendingWriteTree_;
-    const serverCache = syncTree.syncPointTree_.findOnPath(path, (pathSoFar, syncPoint) => {
-      const relativePath = newRelativePath(pathSoFar, path);
-      const serverCache2 = syncPointGetCompleteServerCache(syncPoint, relativePath);
-      if (serverCache2) {
-        return serverCache2;
-      }
-    });
-    return writeTreeCalcCompleteEventCache(writeTree, path, serverCache, writeIdsToExclude, includeHiddenSets);
-  }
-  function syncTreeGetServerValue(syncTree, query2) {
-    const path = query2._path;
-    let serverCache = null;
-    syncTree.syncPointTree_.foreachOnPath(path, (pathToSyncPoint, sp) => {
-      const relativePath = newRelativePath(pathToSyncPoint, path);
-      serverCache = serverCache || syncPointGetCompleteServerCache(sp, relativePath);
-    });
-    let syncPoint = syncTree.syncPointTree_.get(path);
-    if (!syncPoint) {
-      syncPoint = new SyncPoint();
-      syncTree.syncPointTree_ = syncTree.syncPointTree_.set(path, syncPoint);
-    } else {
-      serverCache = serverCache || syncPointGetCompleteServerCache(syncPoint, newEmptyPath());
-    }
-    const serverCacheComplete = serverCache != null;
-    const serverCacheNode = serverCacheComplete ? new CacheNode(serverCache, true, false) : null;
-    const writesCache = writeTreeChildWrites(syncTree.pendingWriteTree_, query2._path);
-    const view = syncPointGetView(syncPoint, query2, writesCache, serverCacheComplete ? serverCacheNode.getNode() : ChildrenNode.EMPTY_NODE, serverCacheComplete);
-    return viewGetCompleteNode(view);
-  }
-  function syncTreeApplyOperationToSyncPoints_(syncTree, operation) {
-    return syncTreeApplyOperationHelper_(
-      operation,
-      syncTree.syncPointTree_,
-      null,
-      writeTreeChildWrites(syncTree.pendingWriteTree_, newEmptyPath())
-    );
-  }
-  function syncTreeApplyOperationHelper_(operation, syncPointTree, serverCache, writesCache) {
-    if (pathIsEmpty(operation.path)) {
-      return syncTreeApplyOperationDescendantsHelper_(operation, syncPointTree, serverCache, writesCache);
-    } else {
-      const syncPoint = syncPointTree.get(newEmptyPath());
-      if (serverCache == null && syncPoint != null) {
-        serverCache = syncPointGetCompleteServerCache(syncPoint, newEmptyPath());
-      }
-      let events = [];
-      const childName = pathGetFront(operation.path);
-      const childOperation = operation.operationForChild(childName);
-      const childTree = syncPointTree.children.get(childName);
-      if (childTree && childOperation) {
-        const childServerCache = serverCache ? serverCache.getImmediateChild(childName) : null;
-        const childWritesCache = writeTreeRefChild(writesCache, childName);
-        events = events.concat(syncTreeApplyOperationHelper_(childOperation, childTree, childServerCache, childWritesCache));
-      }
-      if (syncPoint) {
-        events = events.concat(syncPointApplyOperation(syncPoint, operation, writesCache, serverCache));
-      }
-      return events;
-    }
-  }
-  function syncTreeApplyOperationDescendantsHelper_(operation, syncPointTree, serverCache, writesCache) {
-    const syncPoint = syncPointTree.get(newEmptyPath());
-    if (serverCache == null && syncPoint != null) {
-      serverCache = syncPointGetCompleteServerCache(syncPoint, newEmptyPath());
-    }
-    let events = [];
-    syncPointTree.children.inorderTraversal((childName, childTree) => {
-      const childServerCache = serverCache ? serverCache.getImmediateChild(childName) : null;
-      const childWritesCache = writeTreeRefChild(writesCache, childName);
-      const childOperation = operation.operationForChild(childName);
-      if (childOperation) {
-        events = events.concat(syncTreeApplyOperationDescendantsHelper_(childOperation, childTree, childServerCache, childWritesCache));
-      }
-    });
-    if (syncPoint) {
-      events = events.concat(syncPointApplyOperation(syncPoint, operation, writesCache, serverCache));
-    }
-    return events;
-  }
-  function syncTreeCreateListenerForView_(syncTree, view) {
-    const query2 = view.query;
-    const tag = syncTreeTagForQuery(syncTree, query2);
-    return {
-      hashFn: () => {
-        const cache = viewGetServerCache(view) || ChildrenNode.EMPTY_NODE;
-        return cache.hash();
-      },
-      onComplete: (status) => {
-        if (status === "ok") {
-          if (tag) {
-            return syncTreeApplyTaggedListenComplete(syncTree, query2._path, tag);
-          } else {
-            return syncTreeApplyListenComplete(syncTree, query2._path);
-          }
-        } else {
-          const error2 = errorForServerCode(status, query2);
-          return syncTreeRemoveEventRegistration(
-            syncTree,
-            query2,
-            null,
-            error2
-          );
-        }
-      }
-    };
-  }
-  function syncTreeTagForQuery(syncTree, query2) {
-    const queryKey = syncTreeMakeQueryKey_(query2);
-    return syncTree.queryToTagMap.get(queryKey);
-  }
-  function syncTreeMakeQueryKey_(query2) {
-    return query2._path.toString() + "$" + query2._queryIdentifier;
-  }
-  function syncTreeQueryKeyForTag_(syncTree, tag) {
-    return syncTree.tagToQueryMap.get(tag);
-  }
-  function syncTreeParseQueryKey_(queryKey) {
-    const splitIndex = queryKey.indexOf("$");
-    assert(splitIndex !== -1 && splitIndex < queryKey.length - 1, "Bad queryKey.");
-    return {
-      queryId: queryKey.substr(splitIndex + 1),
-      path: new Path(queryKey.substr(0, splitIndex))
-    };
-  }
-  function syncTreeApplyTaggedOperation_(syncTree, queryPath, operation) {
-    const syncPoint = syncTree.syncPointTree_.get(queryPath);
-    assert(syncPoint, "Missing sync point for query tag that we're tracking");
-    const writesCache = writeTreeChildWrites(syncTree.pendingWriteTree_, queryPath);
-    return syncPointApplyOperation(syncPoint, operation, writesCache, null);
-  }
-  function syncTreeCollectDistinctViewsForSubTree_(subtree) {
-    return subtree.fold((relativePath, maybeChildSyncPoint, childMap) => {
-      if (maybeChildSyncPoint && syncPointHasCompleteView(maybeChildSyncPoint)) {
-        const completeView = syncPointGetCompleteView(maybeChildSyncPoint);
-        return [completeView];
-      } else {
-        let views = [];
-        if (maybeChildSyncPoint) {
-          views = syncPointGetQueryViews(maybeChildSyncPoint);
-        }
-        each(childMap, (_key, childViews) => {
-          views = views.concat(childViews);
-        });
-        return views;
-      }
-    });
-  }
-  function syncTreeQueryForListening_(query2) {
-    if (query2._queryParams.loadsAllData() && !query2._queryParams.isDefault()) {
-      return new (syncTreeGetReferenceConstructor())(query2._repo, query2._path);
-    } else {
-      return query2;
-    }
-  }
-  function syncTreeRemoveTags_(syncTree, queries) {
-    for (let j2 = 0; j2 < queries.length; ++j2) {
-      const removedQuery = queries[j2];
-      if (!removedQuery._queryParams.loadsAllData()) {
-        const removedQueryKey = syncTreeMakeQueryKey_(removedQuery);
-        const removedQueryTag = syncTree.queryToTagMap.get(removedQueryKey);
-        syncTree.queryToTagMap.delete(removedQueryKey);
-        syncTree.tagToQueryMap.delete(removedQueryTag);
-      }
-    }
-  }
-  function syncTreeGetNextQueryTag_() {
-    return syncTreeNextQueryTag_++;
-  }
-  function syncTreeSetupListener_(syncTree, query2, view) {
-    const path = query2._path;
-    const tag = syncTreeTagForQuery(syncTree, query2);
-    const listener = syncTreeCreateListenerForView_(syncTree, view);
-    const events = syncTree.listenProvider_.startListening(syncTreeQueryForListening_(query2), tag, listener.hashFn, listener.onComplete);
-    const subtree = syncTree.syncPointTree_.subtree(path);
-    if (tag) {
-      assert(!syncPointHasCompleteView(subtree.value), "If we're adding a query, it shouldn't be shadowed");
-    } else {
-      const queriesToStop = subtree.fold((relativePath, maybeChildSyncPoint, childMap) => {
-        if (!pathIsEmpty(relativePath) && maybeChildSyncPoint && syncPointHasCompleteView(maybeChildSyncPoint)) {
-          return [syncPointGetCompleteView(maybeChildSyncPoint).query];
-        } else {
-          let queries = [];
-          if (maybeChildSyncPoint) {
-            queries = queries.concat(syncPointGetQueryViews(maybeChildSyncPoint).map((view2) => view2.query));
-          }
-          each(childMap, (_key, childQueries) => {
-            queries = queries.concat(childQueries);
-          });
-          return queries;
-        }
-      });
-      for (let i3 = 0; i3 < queriesToStop.length; ++i3) {
-        const queryToStop = queriesToStop[i3];
-        syncTree.listenProvider_.stopListening(syncTreeQueryForListening_(queryToStop), syncTreeTagForQuery(syncTree, queryToStop));
-      }
-    }
-    return events;
-  }
-  var ExistingValueProvider = class {
-    constructor(node_) {
-      this.node_ = node_;
-    }
-    getImmediateChild(childName) {
-      const child2 = this.node_.getImmediateChild(childName);
-      return new ExistingValueProvider(child2);
-    }
-    node() {
-      return this.node_;
-    }
-  };
-  var DeferredValueProvider = class {
-    constructor(syncTree, path) {
-      this.syncTree_ = syncTree;
-      this.path_ = path;
-    }
-    getImmediateChild(childName) {
-      const childPath = pathChild(this.path_, childName);
-      return new DeferredValueProvider(this.syncTree_, childPath);
-    }
-    node() {
-      return syncTreeCalcCompleteEventCache(this.syncTree_, this.path_);
-    }
-  };
-  var generateWithValues = function(values) {
-    values = values || {};
-    values["timestamp"] = values["timestamp"] || new Date().getTime();
-    return values;
-  };
-  var resolveDeferredLeafValue = function(value, existingVal, serverValues) {
-    if (!value || typeof value !== "object") {
-      return value;
-    }
-    assert(".sv" in value, "Unexpected leaf node or priority contents");
-    if (typeof value[".sv"] === "string") {
-      return resolveScalarDeferredValue(value[".sv"], existingVal, serverValues);
-    } else if (typeof value[".sv"] === "object") {
-      return resolveComplexDeferredValue(value[".sv"], existingVal);
-    } else {
-      assert(false, "Unexpected server value: " + JSON.stringify(value, null, 2));
-    }
-  };
-  var resolveScalarDeferredValue = function(op, existing, serverValues) {
-    switch (op) {
-      case "timestamp":
-        return serverValues["timestamp"];
-      default:
-        assert(false, "Unexpected server value: " + op);
-    }
-  };
-  var resolveComplexDeferredValue = function(op, existing, unused) {
-    if (!op.hasOwnProperty("increment")) {
-      assert(false, "Unexpected server value: " + JSON.stringify(op, null, 2));
-    }
-    const delta = op["increment"];
-    if (typeof delta !== "number") {
-      assert(false, "Unexpected increment value: " + delta);
-    }
-    const existingNode = existing.node();
-    assert(existingNode !== null && typeof existingNode !== "undefined", "Expected ChildrenNode.EMPTY_NODE for nulls");
-    if (!existingNode.isLeafNode()) {
-      return delta;
-    }
-    const leaf = existingNode;
-    const existingVal = leaf.getValue();
-    if (typeof existingVal !== "number") {
-      return delta;
-    }
-    return existingVal + delta;
-  };
-  var resolveDeferredValueTree = function(path, node, syncTree, serverValues) {
-    return resolveDeferredValue(node, new DeferredValueProvider(syncTree, path), serverValues);
-  };
-  var resolveDeferredValueSnapshot = function(node, existing, serverValues) {
-    return resolveDeferredValue(node, new ExistingValueProvider(existing), serverValues);
-  };
-  function resolveDeferredValue(node, existingVal, serverValues) {
-    const rawPri = node.getPriority().val();
-    const priority = resolveDeferredLeafValue(rawPri, existingVal.getImmediateChild(".priority"), serverValues);
-    let newNode;
-    if (node.isLeafNode()) {
-      const leafNode = node;
-      const value = resolveDeferredLeafValue(leafNode.getValue(), existingVal, serverValues);
-      if (value !== leafNode.getValue() || priority !== leafNode.getPriority().val()) {
-        return new LeafNode(value, nodeFromJSON(priority));
-      } else {
-        return node;
-      }
-    } else {
-      const childrenNode = node;
-      newNode = childrenNode;
-      if (priority !== childrenNode.getPriority().val()) {
-        newNode = newNode.updatePriority(new LeafNode(priority));
-      }
-      childrenNode.forEachChild(PRIORITY_INDEX, (childName, childNode) => {
-        const newChildNode = resolveDeferredValue(childNode, existingVal.getImmediateChild(childName), serverValues);
-        if (newChildNode !== childNode) {
-          newNode = newNode.updateImmediateChild(childName, newChildNode);
-        }
-      });
-      return newNode;
-    }
-  }
-  var Tree = class {
-    constructor(name5 = "", parent = null, node = { children: {}, childCount: 0 }) {
-      this.name = name5;
-      this.parent = parent;
-      this.node = node;
-    }
-  };
-  function treeSubTree(tree, pathObj) {
-    let path = pathObj instanceof Path ? pathObj : new Path(pathObj);
-    let child2 = tree, next = pathGetFront(path);
-    while (next !== null) {
-      const childNode = safeGet(child2.node.children, next) || {
-        children: {},
-        childCount: 0
-      };
-      child2 = new Tree(next, child2, childNode);
-      path = pathPopFront(path);
-      next = pathGetFront(path);
-    }
-    return child2;
-  }
-  function treeGetValue(tree) {
-    return tree.node.value;
-  }
-  function treeSetValue(tree, value) {
-    tree.node.value = value;
-    treeUpdateParents(tree);
-  }
-  function treeHasChildren(tree) {
-    return tree.node.childCount > 0;
-  }
-  function treeIsEmpty(tree) {
-    return treeGetValue(tree) === void 0 && !treeHasChildren(tree);
-  }
-  function treeForEachChild(tree, action) {
-    each(tree.node.children, (child2, childTree) => {
-      action(new Tree(child2, tree, childTree));
-    });
-  }
-  function treeForEachDescendant(tree, action, includeSelf, childrenFirst) {
-    if (includeSelf && !childrenFirst) {
-      action(tree);
-    }
-    treeForEachChild(tree, (child2) => {
-      treeForEachDescendant(child2, action, true, childrenFirst);
-    });
-    if (includeSelf && childrenFirst) {
-      action(tree);
-    }
-  }
-  function treeForEachAncestor(tree, action, includeSelf) {
-    let node = includeSelf ? tree : tree.parent;
-    while (node !== null) {
-      if (action(node)) {
-        return true;
-      }
-      node = node.parent;
-    }
-    return false;
-  }
-  function treeGetPath(tree) {
-    return new Path(tree.parent === null ? tree.name : treeGetPath(tree.parent) + "/" + tree.name);
-  }
-  function treeUpdateParents(tree) {
-    if (tree.parent !== null) {
-      treeUpdateChild(tree.parent, tree.name, tree);
-    }
-  }
-  function treeUpdateChild(tree, childName, child2) {
-    const childEmpty = treeIsEmpty(child2);
-    const childExists = contains(tree.node.children, childName);
-    if (childEmpty && childExists) {
-      delete tree.node.children[childName];
-      tree.node.childCount--;
-      treeUpdateParents(tree);
-    } else if (!childEmpty && !childExists) {
-      tree.node.children[childName] = child2.node;
-      tree.node.childCount++;
-      treeUpdateParents(tree);
-    }
-  }
-  var INVALID_KEY_REGEX_ = /[\[\].#$\/\u0000-\u001F\u007F]/;
-  var INVALID_PATH_REGEX_ = /[\[\].#$\u0000-\u001F\u007F]/;
-  var MAX_LEAF_SIZE_ = 10 * 1024 * 1024;
-  var isValidKey2 = function(key) {
-    return typeof key === "string" && key.length !== 0 && !INVALID_KEY_REGEX_.test(key);
-  };
-  var isValidPathString = function(pathString) {
-    return typeof pathString === "string" && pathString.length !== 0 && !INVALID_PATH_REGEX_.test(pathString);
-  };
-  var isValidRootPathString = function(pathString) {
-    if (pathString) {
-      pathString = pathString.replace(/^\/*\.info(\/|$)/, "/");
-    }
-    return isValidPathString(pathString);
-  };
-  var isValidPriority = function(priority) {
-    return priority === null || typeof priority === "string" || typeof priority === "number" && !isInvalidJSONNumber(priority) || priority && typeof priority === "object" && contains(priority, ".sv");
-  };
-  var validateFirebaseDataArg = function(fnName, value, path, optional) {
-    if (optional && value === void 0) {
-      return;
-    }
-    validateFirebaseData(errorPrefix(fnName, "value"), value, path);
-  };
-  var validateFirebaseData = function(errorPrefix2, data, path_) {
-    const path = path_ instanceof Path ? new ValidationPath(path_, errorPrefix2) : path_;
-    if (data === void 0) {
-      throw new Error(errorPrefix2 + "contains undefined " + validationPathToErrorString(path));
-    }
-    if (typeof data === "function") {
-      throw new Error(errorPrefix2 + "contains a function " + validationPathToErrorString(path) + " with contents = " + data.toString());
-    }
-    if (isInvalidJSONNumber(data)) {
-      throw new Error(errorPrefix2 + "contains " + data.toString() + " " + validationPathToErrorString(path));
-    }
-    if (typeof data === "string" && data.length > MAX_LEAF_SIZE_ / 3 && stringLength(data) > MAX_LEAF_SIZE_) {
-      throw new Error(errorPrefix2 + "contains a string greater than " + MAX_LEAF_SIZE_ + " utf8 bytes " + validationPathToErrorString(path) + " ('" + data.substring(0, 50) + "...')");
-    }
-    if (data && typeof data === "object") {
-      let hasDotValue = false;
-      let hasActualChild = false;
-      each(data, (key, value) => {
-        if (key === ".value") {
-          hasDotValue = true;
-        } else if (key !== ".priority" && key !== ".sv") {
-          hasActualChild = true;
-          if (!isValidKey2(key)) {
-            throw new Error(errorPrefix2 + " contains an invalid key (" + key + ") " + validationPathToErrorString(path) + `.  Keys must be non-empty strings and can't contain ".", "#", "$", "/", "[", or "]"`);
-          }
-        }
-        validationPathPush(path, key);
-        validateFirebaseData(errorPrefix2, value, path);
-        validationPathPop(path);
-      });
-      if (hasDotValue && hasActualChild) {
-        throw new Error(errorPrefix2 + ' contains ".value" child ' + validationPathToErrorString(path) + " in addition to actual children.");
-      }
-    }
-  };
-  var validateFirebaseMergePaths = function(errorPrefix2, mergePaths) {
-    let i3, curPath;
-    for (i3 = 0; i3 < mergePaths.length; i3++) {
-      curPath = mergePaths[i3];
-      const keys = pathSlice(curPath);
-      for (let j2 = 0; j2 < keys.length; j2++) {
-        if (keys[j2] === ".priority" && j2 === keys.length - 1)
-          ;
-        else if (!isValidKey2(keys[j2])) {
-          throw new Error(errorPrefix2 + "contains an invalid key (" + keys[j2] + ") in path " + curPath.toString() + `. Keys must be non-empty strings and can't contain ".", "#", "$", "/", "[", or "]"`);
-        }
-      }
-    }
-    mergePaths.sort(pathCompare);
-    let prevPath = null;
-    for (i3 = 0; i3 < mergePaths.length; i3++) {
-      curPath = mergePaths[i3];
-      if (prevPath !== null && pathContains(prevPath, curPath)) {
-        throw new Error(errorPrefix2 + "contains a path " + prevPath.toString() + " that is ancestor of another path " + curPath.toString());
-      }
-      prevPath = curPath;
-    }
-  };
-  var validateFirebaseMergeDataArg = function(fnName, data, path, optional) {
-    if (optional && data === void 0) {
-      return;
-    }
-    const errorPrefix$1 = errorPrefix(fnName, "values");
-    if (!(data && typeof data === "object") || Array.isArray(data)) {
-      throw new Error(errorPrefix$1 + " must be an object containing the children to replace.");
-    }
-    const mergePaths = [];
-    each(data, (key, value) => {
-      const curPath = new Path(key);
-      validateFirebaseData(errorPrefix$1, value, pathChild(path, curPath));
-      if (pathGetBack(curPath) === ".priority") {
-        if (!isValidPriority(value)) {
-          throw new Error(errorPrefix$1 + "contains an invalid value for '" + curPath.toString() + "', which must be a valid Firebase priority (a string, finite number, server value, or null).");
-        }
-      }
-      mergePaths.push(curPath);
-    });
-    validateFirebaseMergePaths(errorPrefix$1, mergePaths);
-  };
-  var validateKey = function(fnName, argumentName, key, optional) {
-    if (optional && key === void 0) {
-      return;
-    }
-    if (!isValidKey2(key)) {
-      throw new Error(errorPrefix(fnName, argumentName) + 'was an invalid key = "' + key + `".  Firebase keys must be non-empty strings and can't contain ".", "#", "$", "/", "[", or "]").`);
-    }
-  };
-  var validatePathString = function(fnName, argumentName, pathString, optional) {
-    if (optional && pathString === void 0) {
-      return;
-    }
-    if (!isValidPathString(pathString)) {
-      throw new Error(errorPrefix(fnName, argumentName) + 'was an invalid path = "' + pathString + `". Paths must be non-empty strings and can't contain ".", "#", "$", "[", or "]"`);
-    }
-  };
-  var validateRootPathString = function(fnName, argumentName, pathString, optional) {
-    if (pathString) {
-      pathString = pathString.replace(/^\/*\.info(\/|$)/, "/");
-    }
-    validatePathString(fnName, argumentName, pathString, optional);
-  };
-  var validateWritablePath = function(fnName, path) {
-    if (pathGetFront(path) === ".info") {
-      throw new Error(fnName + " failed = Can't modify data under /.info/");
-    }
-  };
-  var validateUrl = function(fnName, parsedUrl) {
-    const pathString = parsedUrl.path.toString();
-    if (!(typeof parsedUrl.repoInfo.host === "string") || parsedUrl.repoInfo.host.length === 0 || !isValidKey2(parsedUrl.repoInfo.namespace) && parsedUrl.repoInfo.host.split(":")[0] !== "localhost" || pathString.length !== 0 && !isValidRootPathString(pathString)) {
-      throw new Error(errorPrefix(fnName, "url") + `must be a valid firebase URL and the path can't contain ".", "#", "$", "[", or "]".`);
-    }
-  };
-  var EventQueue = class {
-    constructor() {
-      this.eventLists_ = [];
-      this.recursionDepth_ = 0;
-    }
-  };
-  function eventQueueQueueEvents(eventQueue, eventDataList) {
-    let currList = null;
-    for (let i3 = 0; i3 < eventDataList.length; i3++) {
-      const data = eventDataList[i3];
-      const path = data.getPath();
-      if (currList !== null && !pathEquals(path, currList.path)) {
-        eventQueue.eventLists_.push(currList);
-        currList = null;
-      }
-      if (currList === null) {
-        currList = { events: [], path };
-      }
-      currList.events.push(data);
-    }
-    if (currList) {
-      eventQueue.eventLists_.push(currList);
-    }
-  }
-  function eventQueueRaiseEventsAtPath(eventQueue, path, eventDataList) {
-    eventQueueQueueEvents(eventQueue, eventDataList);
-    eventQueueRaiseQueuedEventsMatchingPredicate(eventQueue, (eventPath) => pathEquals(eventPath, path));
-  }
-  function eventQueueRaiseEventsForChangedPath(eventQueue, changedPath, eventDataList) {
-    eventQueueQueueEvents(eventQueue, eventDataList);
-    eventQueueRaiseQueuedEventsMatchingPredicate(eventQueue, (eventPath) => pathContains(eventPath, changedPath) || pathContains(changedPath, eventPath));
-  }
-  function eventQueueRaiseQueuedEventsMatchingPredicate(eventQueue, predicate) {
-    eventQueue.recursionDepth_++;
-    let sentAll = true;
-    for (let i3 = 0; i3 < eventQueue.eventLists_.length; i3++) {
-      const eventList = eventQueue.eventLists_[i3];
-      if (eventList) {
-        const eventPath = eventList.path;
-        if (predicate(eventPath)) {
-          eventListRaise(eventQueue.eventLists_[i3]);
-          eventQueue.eventLists_[i3] = null;
-        } else {
-          sentAll = false;
-        }
-      }
-    }
-    if (sentAll) {
-      eventQueue.eventLists_ = [];
-    }
-    eventQueue.recursionDepth_--;
-  }
-  function eventListRaise(eventList) {
-    for (let i3 = 0; i3 < eventList.events.length; i3++) {
-      const eventData = eventList.events[i3];
-      if (eventData !== null) {
-        eventList.events[i3] = null;
-        const eventFn = eventData.getEventRunner();
-        if (logger2) {
-          log("event: " + eventData.toString());
-        }
-        exceptionGuard(eventFn);
-      }
-    }
-  }
-  var INTERRUPT_REASON = "repo_interrupt";
-  var MAX_TRANSACTION_RETRIES = 25;
-  var Repo = class {
-    constructor(repoInfo_, forceRestClient_, authTokenProvider_, appCheckProvider_) {
-      this.repoInfo_ = repoInfo_;
-      this.forceRestClient_ = forceRestClient_;
-      this.authTokenProvider_ = authTokenProvider_;
-      this.appCheckProvider_ = appCheckProvider_;
-      this.dataUpdateCount = 0;
-      this.statsListener_ = null;
-      this.eventQueue_ = new EventQueue();
-      this.nextWriteId_ = 1;
-      this.interceptServerDataCallback_ = null;
-      this.onDisconnect_ = newSparseSnapshotTree();
-      this.transactionQueueTree_ = new Tree();
-      this.persistentConnection_ = null;
-      this.key = this.repoInfo_.toURLString();
-    }
-    toString() {
-      return (this.repoInfo_.secure ? "https://" : "http://") + this.repoInfo_.host;
-    }
-  };
-  function repoStart(repo, appId, authOverride) {
-    repo.stats_ = statsManagerGetCollection(repo.repoInfo_);
-    if (repo.forceRestClient_ || beingCrawled()) {
-      repo.server_ = new ReadonlyRestClient(repo.repoInfo_, (pathString, data, isMerge, tag) => {
-        repoOnDataUpdate(repo, pathString, data, isMerge, tag);
-      }, repo.authTokenProvider_, repo.appCheckProvider_);
-      setTimeout(() => repoOnConnectStatus(repo, true), 0);
-    } else {
-      if (typeof authOverride !== "undefined" && authOverride !== null) {
-        if (typeof authOverride !== "object") {
-          throw new Error("Only objects are supported for option databaseAuthVariableOverride");
-        }
-        try {
-          stringify2(authOverride);
-        } catch (e2) {
-          throw new Error("Invalid authOverride provided: " + e2);
-        }
-      }
-      repo.persistentConnection_ = new PersistentConnection(repo.repoInfo_, appId, (pathString, data, isMerge, tag) => {
-        repoOnDataUpdate(repo, pathString, data, isMerge, tag);
-      }, (connectStatus) => {
-        repoOnConnectStatus(repo, connectStatus);
-      }, (updates) => {
-        repoOnServerInfoUpdate(repo, updates);
-      }, repo.authTokenProvider_, repo.appCheckProvider_, authOverride);
-      repo.server_ = repo.persistentConnection_;
-    }
-    repo.authTokenProvider_.addTokenChangeListener((token) => {
-      repo.server_.refreshAuthToken(token);
-    });
-    repo.appCheckProvider_.addTokenChangeListener((result) => {
-      repo.server_.refreshAppCheckToken(result.token);
-    });
-    repo.statsReporter_ = statsManagerGetOrCreateReporter(repo.repoInfo_, () => new StatsReporter(repo.stats_, repo.server_));
-    repo.infoData_ = new SnapshotHolder();
-    repo.infoSyncTree_ = new SyncTree({
-      startListening: (query2, tag, currentHashFn, onComplete) => {
-        let infoEvents = [];
-        const node = repo.infoData_.getNode(query2._path);
-        if (!node.isEmpty()) {
-          infoEvents = syncTreeApplyServerOverwrite(repo.infoSyncTree_, query2._path, node);
-          setTimeout(() => {
-            onComplete("ok");
-          }, 0);
-        }
-        return infoEvents;
-      },
-      stopListening: () => {
-      }
-    });
-    repoUpdateInfo(repo, "connected", false);
-    repo.serverSyncTree_ = new SyncTree({
-      startListening: (query2, tag, currentHashFn, onComplete) => {
-        repo.server_.listen(query2, currentHashFn, tag, (status, data) => {
-          const events = onComplete(status, data);
-          eventQueueRaiseEventsForChangedPath(repo.eventQueue_, query2._path, events);
-        });
-        return [];
-      },
-      stopListening: (query2, tag) => {
-        repo.server_.unlisten(query2, tag);
-      }
-    });
-  }
-  function repoServerTime(repo) {
-    const offsetNode = repo.infoData_.getNode(new Path(".info/serverTimeOffset"));
-    const offset = offsetNode.val() || 0;
-    return new Date().getTime() + offset;
-  }
-  function repoGenerateServerValues(repo) {
-    return generateWithValues({
-      timestamp: repoServerTime(repo)
-    });
-  }
-  function repoOnDataUpdate(repo, pathString, data, isMerge, tag) {
-    repo.dataUpdateCount++;
-    const path = new Path(pathString);
-    data = repo.interceptServerDataCallback_ ? repo.interceptServerDataCallback_(pathString, data) : data;
-    let events = [];
-    if (tag) {
-      if (isMerge) {
-        const taggedChildren = map(data, (raw) => nodeFromJSON(raw));
-        events = syncTreeApplyTaggedQueryMerge(repo.serverSyncTree_, path, taggedChildren, tag);
-      } else {
-        const taggedSnap = nodeFromJSON(data);
-        events = syncTreeApplyTaggedQueryOverwrite(repo.serverSyncTree_, path, taggedSnap, tag);
-      }
-    } else if (isMerge) {
-      const changedChildren = map(data, (raw) => nodeFromJSON(raw));
-      events = syncTreeApplyServerMerge(repo.serverSyncTree_, path, changedChildren);
-    } else {
-      const snap = nodeFromJSON(data);
-      events = syncTreeApplyServerOverwrite(repo.serverSyncTree_, path, snap);
-    }
-    let affectedPath = path;
-    if (events.length > 0) {
-      affectedPath = repoRerunTransactions(repo, path);
-    }
-    eventQueueRaiseEventsForChangedPath(repo.eventQueue_, affectedPath, events);
-  }
-  function repoOnConnectStatus(repo, connectStatus) {
-    repoUpdateInfo(repo, "connected", connectStatus);
-    if (connectStatus === false) {
-      repoRunOnDisconnectEvents(repo);
-    }
-  }
-  function repoOnServerInfoUpdate(repo, updates) {
-    each(updates, (key, value) => {
-      repoUpdateInfo(repo, key, value);
-    });
-  }
-  function repoUpdateInfo(repo, pathString, value) {
-    const path = new Path("/.info/" + pathString);
-    const newNode = nodeFromJSON(value);
-    repo.infoData_.updateSnapshot(path, newNode);
-    const events = syncTreeApplyServerOverwrite(repo.infoSyncTree_, path, newNode);
-    eventQueueRaiseEventsForChangedPath(repo.eventQueue_, path, events);
-  }
-  function repoGetNextWriteId(repo) {
-    return repo.nextWriteId_++;
-  }
-  function repoGetValue(repo, query2, eventRegistration) {
-    const cached = syncTreeGetServerValue(repo.serverSyncTree_, query2);
-    if (cached != null) {
-      return Promise.resolve(cached);
-    }
-    return repo.server_.get(query2).then((payload) => {
-      const node = nodeFromJSON(payload).withIndex(query2._queryParams.getIndex());
-      syncTreeAddEventRegistration(repo.serverSyncTree_, query2, eventRegistration, true);
-      let events;
-      if (query2._queryParams.loadsAllData()) {
-        events = syncTreeApplyServerOverwrite(repo.serverSyncTree_, query2._path, node);
-      } else {
-        const tag = syncTreeTagForQuery(repo.serverSyncTree_, query2);
-        events = syncTreeApplyTaggedQueryOverwrite(repo.serverSyncTree_, query2._path, node, tag);
-      }
-      eventQueueRaiseEventsForChangedPath(repo.eventQueue_, query2._path, events);
-      syncTreeRemoveEventRegistration(repo.serverSyncTree_, query2, eventRegistration, null, true);
-      return node;
-    }, (err) => {
-      repoLog(repo, "get for query " + stringify2(query2) + " failed: " + err);
-      return Promise.reject(new Error(err));
-    });
-  }
-  function repoSetWithPriority(repo, path, newVal, newPriority, onComplete) {
-    repoLog(repo, "set", {
-      path: path.toString(),
-      value: newVal,
-      priority: newPriority
-    });
-    const serverValues = repoGenerateServerValues(repo);
-    const newNodeUnresolved = nodeFromJSON(newVal, newPriority);
-    const existing = syncTreeCalcCompleteEventCache(repo.serverSyncTree_, path);
-    const newNode = resolveDeferredValueSnapshot(newNodeUnresolved, existing, serverValues);
-    const writeId = repoGetNextWriteId(repo);
-    const events = syncTreeApplyUserOverwrite(repo.serverSyncTree_, path, newNode, writeId, true);
-    eventQueueQueueEvents(repo.eventQueue_, events);
-    repo.server_.put(path.toString(), newNodeUnresolved.val(true), (status, errorReason) => {
-      const success = status === "ok";
-      if (!success) {
-        warn("set at " + path + " failed: " + status);
-      }
-      const clearEvents = syncTreeAckUserWrite(repo.serverSyncTree_, writeId, !success);
-      eventQueueRaiseEventsForChangedPath(repo.eventQueue_, path, clearEvents);
-      repoCallOnCompleteCallback(repo, onComplete, status, errorReason);
-    });
-    const affectedPath = repoAbortTransactions(repo, path);
-    repoRerunTransactions(repo, affectedPath);
-    eventQueueRaiseEventsForChangedPath(repo.eventQueue_, affectedPath, []);
-  }
-  function repoUpdate(repo, path, childrenToMerge, onComplete) {
-    repoLog(repo, "update", { path: path.toString(), value: childrenToMerge });
-    let empty = true;
-    const serverValues = repoGenerateServerValues(repo);
-    const changedChildren = {};
-    each(childrenToMerge, (changedKey, changedValue) => {
-      empty = false;
-      changedChildren[changedKey] = resolveDeferredValueTree(pathChild(path, changedKey), nodeFromJSON(changedValue), repo.serverSyncTree_, serverValues);
-    });
-    if (!empty) {
-      const writeId = repoGetNextWriteId(repo);
-      const events = syncTreeApplyUserMerge(repo.serverSyncTree_, path, changedChildren, writeId);
-      eventQueueQueueEvents(repo.eventQueue_, events);
-      repo.server_.merge(path.toString(), childrenToMerge, (status, errorReason) => {
-        const success = status === "ok";
-        if (!success) {
-          warn("update at " + path + " failed: " + status);
-        }
-        const clearEvents = syncTreeAckUserWrite(repo.serverSyncTree_, writeId, !success);
-        const affectedPath = clearEvents.length > 0 ? repoRerunTransactions(repo, path) : path;
-        eventQueueRaiseEventsForChangedPath(repo.eventQueue_, affectedPath, clearEvents);
-        repoCallOnCompleteCallback(repo, onComplete, status, errorReason);
-      });
-      each(childrenToMerge, (changedPath) => {
-        const affectedPath = repoAbortTransactions(repo, pathChild(path, changedPath));
-        repoRerunTransactions(repo, affectedPath);
-      });
-      eventQueueRaiseEventsForChangedPath(repo.eventQueue_, path, []);
-    } else {
-      log("update() called with empty data.  Don't do anything.");
-      repoCallOnCompleteCallback(repo, onComplete, "ok", void 0);
-    }
-  }
-  function repoRunOnDisconnectEvents(repo) {
-    repoLog(repo, "onDisconnectEvents");
-    const serverValues = repoGenerateServerValues(repo);
-    const resolvedOnDisconnectTree = newSparseSnapshotTree();
-    sparseSnapshotTreeForEachTree(repo.onDisconnect_, newEmptyPath(), (path, node) => {
-      const resolved = resolveDeferredValueTree(path, node, repo.serverSyncTree_, serverValues);
-      sparseSnapshotTreeRemember(resolvedOnDisconnectTree, path, resolved);
-    });
-    let events = [];
-    sparseSnapshotTreeForEachTree(resolvedOnDisconnectTree, newEmptyPath(), (path, snap) => {
-      events = events.concat(syncTreeApplyServerOverwrite(repo.serverSyncTree_, path, snap));
-      const affectedPath = repoAbortTransactions(repo, path);
-      repoRerunTransactions(repo, affectedPath);
-    });
-    repo.onDisconnect_ = newSparseSnapshotTree();
-    eventQueueRaiseEventsForChangedPath(repo.eventQueue_, newEmptyPath(), events);
-  }
-  function repoAddEventCallbackForQuery(repo, query2, eventRegistration) {
-    let events;
-    if (pathGetFront(query2._path) === ".info") {
-      events = syncTreeAddEventRegistration(repo.infoSyncTree_, query2, eventRegistration);
-    } else {
-      events = syncTreeAddEventRegistration(repo.serverSyncTree_, query2, eventRegistration);
-    }
-    eventQueueRaiseEventsAtPath(repo.eventQueue_, query2._path, events);
-  }
-  function repoRemoveEventCallbackForQuery(repo, query2, eventRegistration) {
-    let events;
-    if (pathGetFront(query2._path) === ".info") {
-      events = syncTreeRemoveEventRegistration(repo.infoSyncTree_, query2, eventRegistration);
-    } else {
-      events = syncTreeRemoveEventRegistration(repo.serverSyncTree_, query2, eventRegistration);
-    }
-    eventQueueRaiseEventsAtPath(repo.eventQueue_, query2._path, events);
-  }
-  function repoInterrupt(repo) {
-    if (repo.persistentConnection_) {
-      repo.persistentConnection_.interrupt(INTERRUPT_REASON);
-    }
-  }
-  function repoLog(repo, ...varArgs) {
-    let prefix = "";
-    if (repo.persistentConnection_) {
-      prefix = repo.persistentConnection_.id + ":";
-    }
-    log(prefix, ...varArgs);
-  }
-  function repoCallOnCompleteCallback(repo, callback, status, errorReason) {
-    if (callback) {
-      exceptionGuard(() => {
-        if (status === "ok") {
-          callback(null);
-        } else {
-          const code = (status || "error").toUpperCase();
-          let message = code;
-          if (errorReason) {
-            message += ": " + errorReason;
-          }
-          const error2 = new Error(message);
-          error2.code = code;
-          callback(error2);
-        }
-      });
-    }
-  }
-  function repoGetLatestState(repo, path, excludeSets) {
-    return syncTreeCalcCompleteEventCache(repo.serverSyncTree_, path, excludeSets) || ChildrenNode.EMPTY_NODE;
-  }
-  function repoSendReadyTransactions(repo, node = repo.transactionQueueTree_) {
-    if (!node) {
-      repoPruneCompletedTransactionsBelowNode(repo, node);
-    }
-    if (treeGetValue(node)) {
-      const queue = repoBuildTransactionQueue(repo, node);
-      assert(queue.length > 0, "Sending zero length transaction queue");
-      const allRun = queue.every((transaction) => transaction.status === 0);
-      if (allRun) {
-        repoSendTransactionQueue(repo, treeGetPath(node), queue);
-      }
-    } else if (treeHasChildren(node)) {
-      treeForEachChild(node, (childNode) => {
-        repoSendReadyTransactions(repo, childNode);
-      });
-    }
-  }
-  function repoSendTransactionQueue(repo, path, queue) {
-    const setsToIgnore = queue.map((txn) => {
-      return txn.currentWriteId;
-    });
-    const latestState = repoGetLatestState(repo, path, setsToIgnore);
-    let snapToSend = latestState;
-    const latestHash = latestState.hash();
-    for (let i3 = 0; i3 < queue.length; i3++) {
-      const txn = queue[i3];
-      assert(txn.status === 0, "tryToSendTransactionQueue_: items in queue should all be run.");
-      txn.status = 1;
-      txn.retryCount++;
-      const relativePath = newRelativePath(path, txn.path);
-      snapToSend = snapToSend.updateChild(relativePath, txn.currentOutputSnapshotRaw);
-    }
-    const dataToSend = snapToSend.val(true);
-    const pathToSend = path;
-    repo.server_.put(pathToSend.toString(), dataToSend, (status) => {
-      repoLog(repo, "transaction put response", {
-        path: pathToSend.toString(),
-        status
-      });
-      let events = [];
-      if (status === "ok") {
-        const callbacks = [];
-        for (let i3 = 0; i3 < queue.length; i3++) {
-          queue[i3].status = 2;
-          events = events.concat(syncTreeAckUserWrite(repo.serverSyncTree_, queue[i3].currentWriteId));
-          if (queue[i3].onComplete) {
-            callbacks.push(() => queue[i3].onComplete(null, true, queue[i3].currentOutputSnapshotResolved));
-          }
-          queue[i3].unwatcher();
-        }
-        repoPruneCompletedTransactionsBelowNode(repo, treeSubTree(repo.transactionQueueTree_, path));
-        repoSendReadyTransactions(repo, repo.transactionQueueTree_);
-        eventQueueRaiseEventsForChangedPath(repo.eventQueue_, path, events);
-        for (let i3 = 0; i3 < callbacks.length; i3++) {
-          exceptionGuard(callbacks[i3]);
-        }
-      } else {
-        if (status === "datastale") {
-          for (let i3 = 0; i3 < queue.length; i3++) {
-            if (queue[i3].status === 3) {
-              queue[i3].status = 4;
-            } else {
-              queue[i3].status = 0;
-            }
-          }
-        } else {
-          warn("transaction at " + pathToSend.toString() + " failed: " + status);
-          for (let i3 = 0; i3 < queue.length; i3++) {
-            queue[i3].status = 4;
-            queue[i3].abortReason = status;
-          }
-        }
-        repoRerunTransactions(repo, path);
-      }
-    }, latestHash);
-  }
-  function repoRerunTransactions(repo, changedPath) {
-    const rootMostTransactionNode = repoGetAncestorTransactionNode(repo, changedPath);
-    const path = treeGetPath(rootMostTransactionNode);
-    const queue = repoBuildTransactionQueue(repo, rootMostTransactionNode);
-    repoRerunTransactionQueue(repo, queue, path);
-    return path;
-  }
-  function repoRerunTransactionQueue(repo, queue, path) {
-    if (queue.length === 0) {
-      return;
-    }
-    const callbacks = [];
-    let events = [];
-    const txnsToRerun = queue.filter((q3) => {
-      return q3.status === 0;
-    });
-    const setsToIgnore = txnsToRerun.map((q3) => {
-      return q3.currentWriteId;
-    });
-    for (let i3 = 0; i3 < queue.length; i3++) {
-      const transaction = queue[i3];
-      const relativePath = newRelativePath(path, transaction.path);
-      let abortTransaction = false, abortReason;
-      assert(relativePath !== null, "rerunTransactionsUnderNode_: relativePath should not be null.");
-      if (transaction.status === 4) {
-        abortTransaction = true;
-        abortReason = transaction.abortReason;
-        events = events.concat(syncTreeAckUserWrite(repo.serverSyncTree_, transaction.currentWriteId, true));
-      } else if (transaction.status === 0) {
-        if (transaction.retryCount >= MAX_TRANSACTION_RETRIES) {
-          abortTransaction = true;
-          abortReason = "maxretry";
-          events = events.concat(syncTreeAckUserWrite(repo.serverSyncTree_, transaction.currentWriteId, true));
-        } else {
-          const currentNode = repoGetLatestState(repo, transaction.path, setsToIgnore);
-          transaction.currentInputSnapshot = currentNode;
-          const newData = queue[i3].update(currentNode.val());
-          if (newData !== void 0) {
-            validateFirebaseData("transaction failed: Data returned ", newData, transaction.path);
-            let newDataNode = nodeFromJSON(newData);
-            const hasExplicitPriority = typeof newData === "object" && newData != null && contains(newData, ".priority");
-            if (!hasExplicitPriority) {
-              newDataNode = newDataNode.updatePriority(currentNode.getPriority());
-            }
-            const oldWriteId = transaction.currentWriteId;
-            const serverValues = repoGenerateServerValues(repo);
-            const newNodeResolved = resolveDeferredValueSnapshot(newDataNode, currentNode, serverValues);
-            transaction.currentOutputSnapshotRaw = newDataNode;
-            transaction.currentOutputSnapshotResolved = newNodeResolved;
-            transaction.currentWriteId = repoGetNextWriteId(repo);
-            setsToIgnore.splice(setsToIgnore.indexOf(oldWriteId), 1);
-            events = events.concat(syncTreeApplyUserOverwrite(repo.serverSyncTree_, transaction.path, newNodeResolved, transaction.currentWriteId, transaction.applyLocally));
-            events = events.concat(syncTreeAckUserWrite(repo.serverSyncTree_, oldWriteId, true));
-          } else {
-            abortTransaction = true;
-            abortReason = "nodata";
-            events = events.concat(syncTreeAckUserWrite(repo.serverSyncTree_, transaction.currentWriteId, true));
-          }
-        }
-      }
-      eventQueueRaiseEventsForChangedPath(repo.eventQueue_, path, events);
-      events = [];
-      if (abortTransaction) {
-        queue[i3].status = 2;
-        (function(unwatcher) {
-          setTimeout(unwatcher, Math.floor(0));
-        })(queue[i3].unwatcher);
-        if (queue[i3].onComplete) {
-          if (abortReason === "nodata") {
-            callbacks.push(() => queue[i3].onComplete(null, false, queue[i3].currentInputSnapshot));
-          } else {
-            callbacks.push(() => queue[i3].onComplete(new Error(abortReason), false, null));
-          }
-        }
-      }
-    }
-    repoPruneCompletedTransactionsBelowNode(repo, repo.transactionQueueTree_);
-    for (let i3 = 0; i3 < callbacks.length; i3++) {
-      exceptionGuard(callbacks[i3]);
-    }
-    repoSendReadyTransactions(repo, repo.transactionQueueTree_);
-  }
-  function repoGetAncestorTransactionNode(repo, path) {
-    let front;
-    let transactionNode = repo.transactionQueueTree_;
-    front = pathGetFront(path);
-    while (front !== null && treeGetValue(transactionNode) === void 0) {
-      transactionNode = treeSubTree(transactionNode, front);
-      path = pathPopFront(path);
-      front = pathGetFront(path);
-    }
-    return transactionNode;
-  }
-  function repoBuildTransactionQueue(repo, transactionNode) {
-    const transactionQueue = [];
-    repoAggregateTransactionQueuesForNode(repo, transactionNode, transactionQueue);
-    transactionQueue.sort((a3, b3) => a3.order - b3.order);
-    return transactionQueue;
-  }
-  function repoAggregateTransactionQueuesForNode(repo, node, queue) {
-    const nodeQueue = treeGetValue(node);
-    if (nodeQueue) {
-      for (let i3 = 0; i3 < nodeQueue.length; i3++) {
-        queue.push(nodeQueue[i3]);
-      }
-    }
-    treeForEachChild(node, (child2) => {
-      repoAggregateTransactionQueuesForNode(repo, child2, queue);
-    });
-  }
-  function repoPruneCompletedTransactionsBelowNode(repo, node) {
-    const queue = treeGetValue(node);
-    if (queue) {
-      let to = 0;
-      for (let from = 0; from < queue.length; from++) {
-        if (queue[from].status !== 2) {
-          queue[to] = queue[from];
-          to++;
-        }
-      }
-      queue.length = to;
-      treeSetValue(node, queue.length > 0 ? queue : void 0);
-    }
-    treeForEachChild(node, (childNode) => {
-      repoPruneCompletedTransactionsBelowNode(repo, childNode);
-    });
-  }
-  function repoAbortTransactions(repo, path) {
-    const affectedPath = treeGetPath(repoGetAncestorTransactionNode(repo, path));
-    const transactionNode = treeSubTree(repo.transactionQueueTree_, path);
-    treeForEachAncestor(transactionNode, (node) => {
-      repoAbortTransactionsOnNode(repo, node);
-    });
-    repoAbortTransactionsOnNode(repo, transactionNode);
-    treeForEachDescendant(transactionNode, (node) => {
-      repoAbortTransactionsOnNode(repo, node);
-    });
-    return affectedPath;
-  }
-  function repoAbortTransactionsOnNode(repo, node) {
-    const queue = treeGetValue(node);
-    if (queue) {
-      const callbacks = [];
-      let events = [];
-      let lastSent = -1;
-      for (let i3 = 0; i3 < queue.length; i3++) {
-        if (queue[i3].status === 3)
-          ;
-        else if (queue[i3].status === 1) {
-          assert(lastSent === i3 - 1, "All SENT items should be at beginning of queue.");
-          lastSent = i3;
-          queue[i3].status = 3;
-          queue[i3].abortReason = "set";
-        } else {
-          assert(queue[i3].status === 0, "Unexpected transaction status in abort");
-          queue[i3].unwatcher();
-          events = events.concat(syncTreeAckUserWrite(repo.serverSyncTree_, queue[i3].currentWriteId, true));
-          if (queue[i3].onComplete) {
-            callbacks.push(queue[i3].onComplete.bind(null, new Error("set"), false, null));
-          }
-        }
-      }
-      if (lastSent === -1) {
-        treeSetValue(node, void 0);
-      } else {
-        queue.length = lastSent + 1;
-      }
-      eventQueueRaiseEventsForChangedPath(repo.eventQueue_, treeGetPath(node), events);
-      for (let i3 = 0; i3 < callbacks.length; i3++) {
-        exceptionGuard(callbacks[i3]);
-      }
-    }
-  }
-  function decodePath(pathString) {
-    let pathStringDecoded = "";
-    const pieces = pathString.split("/");
-    for (let i3 = 0; i3 < pieces.length; i3++) {
-      if (pieces[i3].length > 0) {
-        let piece = pieces[i3];
-        try {
-          piece = decodeURIComponent(piece.replace(/\+/g, " "));
-        } catch (e2) {
-        }
-        pathStringDecoded += "/" + piece;
-      }
-    }
-    return pathStringDecoded;
-  }
-  function decodeQuery(queryString) {
-    const results = {};
-    if (queryString.charAt(0) === "?") {
-      queryString = queryString.substring(1);
-    }
-    for (const segment of queryString.split("&")) {
-      if (segment.length === 0) {
-        continue;
-      }
-      const kv = segment.split("=");
-      if (kv.length === 2) {
-        results[decodeURIComponent(kv[0])] = decodeURIComponent(kv[1]);
-      } else {
-        warn(`Invalid query segment '${segment}' in query '${queryString}'`);
-      }
-    }
-    return results;
-  }
-  var parseRepoInfo = function(dataURL, nodeAdmin) {
-    const parsedUrl = parseDatabaseURL(dataURL), namespace = parsedUrl.namespace;
-    if (parsedUrl.domain === "firebase.com") {
-      fatal(parsedUrl.host + " is no longer supported. Please use <YOUR FIREBASE>.firebaseio.com instead");
-    }
-    if ((!namespace || namespace === "undefined") && parsedUrl.domain !== "localhost") {
-      fatal("Cannot parse Firebase url. Please use https://<YOUR FIREBASE>.firebaseio.com");
-    }
-    if (!parsedUrl.secure) {
-      warnIfPageIsSecure();
-    }
-    const webSocketOnly = parsedUrl.scheme === "ws" || parsedUrl.scheme === "wss";
-    return {
-      repoInfo: new RepoInfo(
-        parsedUrl.host,
-        parsedUrl.secure,
-        namespace,
-        webSocketOnly,
-        nodeAdmin,
-        "",
-        namespace !== parsedUrl.subdomain
-      ),
-      path: new Path(parsedUrl.pathString)
-    };
-  };
-  var parseDatabaseURL = function(dataURL) {
-    let host = "", domain = "", subdomain = "", pathString = "", namespace = "";
-    let secure = true, scheme = "https", port = 443;
-    if (typeof dataURL === "string") {
-      let colonInd = dataURL.indexOf("//");
-      if (colonInd >= 0) {
-        scheme = dataURL.substring(0, colonInd - 1);
-        dataURL = dataURL.substring(colonInd + 2);
-      }
-      let slashInd = dataURL.indexOf("/");
-      if (slashInd === -1) {
-        slashInd = dataURL.length;
-      }
-      let questionMarkInd = dataURL.indexOf("?");
-      if (questionMarkInd === -1) {
-        questionMarkInd = dataURL.length;
-      }
-      host = dataURL.substring(0, Math.min(slashInd, questionMarkInd));
-      if (slashInd < questionMarkInd) {
-        pathString = decodePath(dataURL.substring(slashInd, questionMarkInd));
-      }
-      const queryParams = decodeQuery(dataURL.substring(Math.min(dataURL.length, questionMarkInd)));
-      colonInd = host.indexOf(":");
-      if (colonInd >= 0) {
-        secure = scheme === "https" || scheme === "wss";
-        port = parseInt(host.substring(colonInd + 1), 10);
-      } else {
-        colonInd = host.length;
-      }
-      const hostWithoutPort = host.slice(0, colonInd);
-      if (hostWithoutPort.toLowerCase() === "localhost") {
-        domain = "localhost";
-      } else if (hostWithoutPort.split(".").length <= 2) {
-        domain = hostWithoutPort;
-      } else {
-        const dotInd = host.indexOf(".");
-        subdomain = host.substring(0, dotInd).toLowerCase();
-        domain = host.substring(dotInd + 1);
-        namespace = subdomain;
-      }
-      if ("ns" in queryParams) {
-        namespace = queryParams["ns"];
-      }
-    }
-    return {
-      host,
-      port,
-      domain,
-      subdomain,
-      secure,
-      scheme,
-      pathString,
-      namespace
-    };
-  };
-  var DataEvent = class {
-    constructor(eventType, eventRegistration, snapshot, prevName) {
-      this.eventType = eventType;
-      this.eventRegistration = eventRegistration;
-      this.snapshot = snapshot;
-      this.prevName = prevName;
-    }
-    getPath() {
-      const ref2 = this.snapshot.ref;
-      if (this.eventType === "value") {
-        return ref2._path;
-      } else {
-        return ref2.parent._path;
-      }
-    }
-    getEventType() {
-      return this.eventType;
-    }
-    getEventRunner() {
-      return this.eventRegistration.getEventRunner(this);
-    }
-    toString() {
-      return this.getPath().toString() + ":" + this.eventType + ":" + stringify2(this.snapshot.exportVal());
-    }
-  };
-  var CancelEvent = class {
-    constructor(eventRegistration, error2, path) {
-      this.eventRegistration = eventRegistration;
-      this.error = error2;
-      this.path = path;
-    }
-    getPath() {
-      return this.path;
-    }
-    getEventType() {
-      return "cancel";
-    }
-    getEventRunner() {
-      return this.eventRegistration.getEventRunner(this);
-    }
-    toString() {
-      return this.path.toString() + ":cancel";
-    }
-  };
-  var CallbackContext = class {
-    constructor(snapshotCallback, cancelCallback) {
-      this.snapshotCallback = snapshotCallback;
-      this.cancelCallback = cancelCallback;
-    }
-    onValue(expDataSnapshot, previousChildName) {
-      this.snapshotCallback.call(null, expDataSnapshot, previousChildName);
-    }
-    onCancel(error2) {
-      assert(this.hasCancelCallback, "Raising a cancel event on a listener with no cancel callback");
-      return this.cancelCallback.call(null, error2);
-    }
-    get hasCancelCallback() {
-      return !!this.cancelCallback;
-    }
-    matches(other) {
-      return this.snapshotCallback === other.snapshotCallback || this.snapshotCallback.userCallback !== void 0 && this.snapshotCallback.userCallback === other.snapshotCallback.userCallback && this.snapshotCallback.context === other.snapshotCallback.context;
-    }
-  };
-  var QueryImpl = class {
-    constructor(_repo, _path, _queryParams, _orderByCalled) {
-      this._repo = _repo;
-      this._path = _path;
-      this._queryParams = _queryParams;
-      this._orderByCalled = _orderByCalled;
-    }
-    get key() {
-      if (pathIsEmpty(this._path)) {
-        return null;
-      } else {
-        return pathGetBack(this._path);
-      }
-    }
-    get ref() {
-      return new ReferenceImpl(this._repo, this._path);
-    }
-    get _queryIdentifier() {
-      const obj = queryParamsGetQueryObject(this._queryParams);
-      const id = ObjectToUniqueKey(obj);
-      return id === "{}" ? "default" : id;
-    }
-    get _queryObject() {
-      return queryParamsGetQueryObject(this._queryParams);
-    }
-    isEqual(other) {
-      other = getModularInstance(other);
-      if (!(other instanceof QueryImpl)) {
-        return false;
-      }
-      const sameRepo = this._repo === other._repo;
-      const samePath = pathEquals(this._path, other._path);
-      const sameQueryIdentifier = this._queryIdentifier === other._queryIdentifier;
-      return sameRepo && samePath && sameQueryIdentifier;
-    }
-    toJSON() {
-      return this.toString();
-    }
-    toString() {
-      return this._repo.toString() + pathToUrlEncodedString(this._path);
-    }
-  };
-  function validateNoPreviousOrderByCall(query2, fnName) {
-    if (query2._orderByCalled === true) {
-      throw new Error(fnName + ": You can't combine multiple orderBy calls.");
-    }
-  }
-  function validateQueryEndpoints(params) {
-    let startNode = null;
-    let endNode = null;
-    if (params.hasStart()) {
-      startNode = params.getIndexStartValue();
-    }
-    if (params.hasEnd()) {
-      endNode = params.getIndexEndValue();
-    }
-    if (params.getIndex() === KEY_INDEX) {
-      const tooManyArgsError = "Query: When ordering by key, you may only pass one argument to startAt(), endAt(), or equalTo().";
-      const wrongArgTypeError = "Query: When ordering by key, the argument passed to startAt(), startAfter(), endAt(), endBefore(), or equalTo() must be a string.";
-      if (params.hasStart()) {
-        const startName = params.getIndexStartName();
-        if (startName !== MIN_NAME) {
-          throw new Error(tooManyArgsError);
-        } else if (typeof startNode !== "string") {
-          throw new Error(wrongArgTypeError);
-        }
-      }
-      if (params.hasEnd()) {
-        const endName = params.getIndexEndName();
-        if (endName !== MAX_NAME) {
-          throw new Error(tooManyArgsError);
-        } else if (typeof endNode !== "string") {
-          throw new Error(wrongArgTypeError);
-        }
-      }
-    } else if (params.getIndex() === PRIORITY_INDEX) {
-      if (startNode != null && !isValidPriority(startNode) || endNode != null && !isValidPriority(endNode)) {
-        throw new Error("Query: When ordering by priority, the first argument passed to startAt(), startAfter() endAt(), endBefore(), or equalTo() must be a valid priority value (null, a number, or a string).");
-      }
-    } else {
-      assert(params.getIndex() instanceof PathIndex || params.getIndex() === VALUE_INDEX, "unknown index type.");
-      if (startNode != null && typeof startNode === "object" || endNode != null && typeof endNode === "object") {
-        throw new Error("Query: First argument passed to startAt(), startAfter(), endAt(), endBefore(), or equalTo() cannot be an object.");
-      }
-    }
-  }
-  function validateLimit(params) {
-    if (params.hasStart() && params.hasEnd() && params.hasLimit() && !params.hasAnchoredLimit()) {
-      throw new Error("Query: Can't combine startAt(), startAfter(), endAt(), endBefore(), and limit(). Use limitToFirst() or limitToLast() instead.");
-    }
-  }
-  var ReferenceImpl = class extends QueryImpl {
-    constructor(repo, path) {
-      super(repo, path, new QueryParams(), false);
-    }
-    get parent() {
-      const parentPath = pathParent(this._path);
-      return parentPath === null ? null : new ReferenceImpl(this._repo, parentPath);
-    }
-    get root() {
-      let ref2 = this;
-      while (ref2.parent !== null) {
-        ref2 = ref2.parent;
-      }
-      return ref2;
-    }
-  };
-  var DataSnapshot = class {
-    constructor(_node, ref2, _index) {
-      this._node = _node;
-      this.ref = ref2;
-      this._index = _index;
-    }
-    get priority() {
-      return this._node.getPriority().val();
-    }
-    get key() {
-      return this.ref.key;
-    }
-    get size() {
-      return this._node.numChildren();
-    }
-    child(path) {
-      const childPath = new Path(path);
-      const childRef = child(this.ref, path);
-      return new DataSnapshot(this._node.getChild(childPath), childRef, PRIORITY_INDEX);
-    }
-    exists() {
-      return !this._node.isEmpty();
-    }
-    exportVal() {
-      return this._node.val(true);
-    }
-    forEach(action) {
-      if (this._node.isLeafNode()) {
-        return false;
-      }
-      const childrenNode = this._node;
-      return !!childrenNode.forEachChild(this._index, (key, node) => {
-        return action(new DataSnapshot(node, child(this.ref, key), PRIORITY_INDEX));
-      });
-    }
-    hasChild(path) {
-      const childPath = new Path(path);
-      return !this._node.getChild(childPath).isEmpty();
-    }
-    hasChildren() {
-      if (this._node.isLeafNode()) {
-        return false;
-      } else {
-        return !this._node.isEmpty();
-      }
-    }
-    toJSON() {
-      return this.exportVal();
-    }
-    val() {
-      return this._node.val();
-    }
-  };
-  function ref(db2, path) {
-    db2 = getModularInstance(db2);
-    db2._checkNotDeleted("ref");
-    return path !== void 0 ? child(db2._root, path) : db2._root;
-  }
-  function child(parent, path) {
-    parent = getModularInstance(parent);
-    if (pathGetFront(parent._path) === null) {
-      validateRootPathString("child", "path", path, false);
-    } else {
-      validatePathString("child", "path", path, false);
-    }
-    return new ReferenceImpl(parent._repo, pathChild(parent._path, path));
-  }
-  function push(parent, value) {
-    parent = getModularInstance(parent);
-    validateWritablePath("push", parent._path);
-    validateFirebaseDataArg("push", value, parent._path, true);
-    const now = repoServerTime(parent._repo);
-    const name5 = nextPushId(now);
-    const thennablePushRef = child(parent, name5);
-    const pushRef = child(parent, name5);
-    let promise;
-    if (value != null) {
-      promise = set(pushRef, value).then(() => pushRef);
-    } else {
-      promise = Promise.resolve(pushRef);
-    }
-    thennablePushRef.then = promise.then.bind(promise);
-    thennablePushRef.catch = promise.then.bind(promise, void 0);
-    return thennablePushRef;
-  }
-  function remove(ref2) {
-    validateWritablePath("remove", ref2._path);
-    return set(ref2, null);
-  }
-  function set(ref2, value) {
-    ref2 = getModularInstance(ref2);
-    validateWritablePath("set", ref2._path);
-    validateFirebaseDataArg("set", value, ref2._path, false);
-    const deferred = new Deferred();
-    repoSetWithPriority(
-      ref2._repo,
-      ref2._path,
-      value,
-      null,
-      deferred.wrapCallback(() => {
-      })
-    );
-    return deferred.promise;
-  }
-  function update(ref2, values) {
-    validateFirebaseMergeDataArg("update", values, ref2._path, false);
-    const deferred = new Deferred();
-    repoUpdate(ref2._repo, ref2._path, values, deferred.wrapCallback(() => {
-    }));
-    return deferred.promise;
-  }
-  function get(query2) {
-    query2 = getModularInstance(query2);
-    const callbackContext = new CallbackContext(() => {
-    });
-    const container = new ValueEventRegistration(callbackContext);
-    return repoGetValue(query2._repo, query2, container).then((node) => {
-      return new DataSnapshot(node, new ReferenceImpl(query2._repo, query2._path), query2._queryParams.getIndex());
-    });
-  }
-  var ValueEventRegistration = class {
-    constructor(callbackContext) {
-      this.callbackContext = callbackContext;
-    }
-    respondsTo(eventType) {
-      return eventType === "value";
-    }
-    createEvent(change, query2) {
-      const index = query2._queryParams.getIndex();
-      return new DataEvent("value", this, new DataSnapshot(change.snapshotNode, new ReferenceImpl(query2._repo, query2._path), index));
-    }
-    getEventRunner(eventData) {
-      if (eventData.getEventType() === "cancel") {
-        return () => this.callbackContext.onCancel(eventData.error);
-      } else {
-        return () => this.callbackContext.onValue(eventData.snapshot, null);
-      }
-    }
-    createCancelEvent(error2, path) {
-      if (this.callbackContext.hasCancelCallback) {
-        return new CancelEvent(this, error2, path);
-      } else {
-        return null;
-      }
-    }
-    matches(other) {
-      if (!(other instanceof ValueEventRegistration)) {
-        return false;
-      } else if (!other.callbackContext || !this.callbackContext) {
-        return true;
-      } else {
-        return other.callbackContext.matches(this.callbackContext);
-      }
-    }
-    hasAnyCallback() {
-      return this.callbackContext !== null;
-    }
-  };
-  var ChildEventRegistration = class {
-    constructor(eventType, callbackContext) {
-      this.eventType = eventType;
-      this.callbackContext = callbackContext;
-    }
-    respondsTo(eventType) {
-      let eventToCheck = eventType === "children_added" ? "child_added" : eventType;
-      eventToCheck = eventToCheck === "children_removed" ? "child_removed" : eventToCheck;
-      return this.eventType === eventToCheck;
-    }
-    createCancelEvent(error2, path) {
-      if (this.callbackContext.hasCancelCallback) {
-        return new CancelEvent(this, error2, path);
-      } else {
-        return null;
-      }
-    }
-    createEvent(change, query2) {
-      assert(change.childName != null, "Child events should have a childName.");
-      const childRef = child(new ReferenceImpl(query2._repo, query2._path), change.childName);
-      const index = query2._queryParams.getIndex();
-      return new DataEvent(change.type, this, new DataSnapshot(change.snapshotNode, childRef, index), change.prevName);
-    }
-    getEventRunner(eventData) {
-      if (eventData.getEventType() === "cancel") {
-        return () => this.callbackContext.onCancel(eventData.error);
-      } else {
-        return () => this.callbackContext.onValue(eventData.snapshot, eventData.prevName);
-      }
-    }
-    matches(other) {
-      if (other instanceof ChildEventRegistration) {
-        return this.eventType === other.eventType && (!this.callbackContext || !other.callbackContext || this.callbackContext.matches(other.callbackContext));
-      }
-      return false;
-    }
-    hasAnyCallback() {
-      return !!this.callbackContext;
-    }
-  };
-  function addEventListener(query2, eventType, callback, cancelCallbackOrListenOptions, options) {
-    let cancelCallback;
-    if (typeof cancelCallbackOrListenOptions === "object") {
-      cancelCallback = void 0;
-      options = cancelCallbackOrListenOptions;
-    }
-    if (typeof cancelCallbackOrListenOptions === "function") {
-      cancelCallback = cancelCallbackOrListenOptions;
-    }
-    if (options && options.onlyOnce) {
-      const userCallback = callback;
-      const onceCallback = (dataSnapshot, previousChildName) => {
-        repoRemoveEventCallbackForQuery(query2._repo, query2, container);
-        userCallback(dataSnapshot, previousChildName);
-      };
-      onceCallback.userCallback = callback.userCallback;
-      onceCallback.context = callback.context;
-      callback = onceCallback;
-    }
-    const callbackContext = new CallbackContext(callback, cancelCallback || void 0);
-    const container = eventType === "value" ? new ValueEventRegistration(callbackContext) : new ChildEventRegistration(eventType, callbackContext);
-    repoAddEventCallbackForQuery(query2._repo, query2, container);
-    return () => repoRemoveEventCallbackForQuery(query2._repo, query2, container);
-  }
-  function onValue(query2, callback, cancelCallbackOrListenOptions, options) {
-    return addEventListener(query2, "value", callback, cancelCallbackOrListenOptions, options);
-  }
-  function onChildAdded(query2, callback, cancelCallbackOrListenOptions, options) {
-    return addEventListener(query2, "child_added", callback, cancelCallbackOrListenOptions, options);
-  }
-  var QueryConstraint = class {
-  };
-  var QueryEndAtConstraint = class extends QueryConstraint {
-    constructor(_value, _key) {
-      super();
-      this._value = _value;
-      this._key = _key;
-    }
-    _apply(query2) {
-      validateFirebaseDataArg("endAt", this._value, query2._path, true);
-      const newParams = queryParamsEndAt(query2._queryParams, this._value, this._key);
-      validateLimit(newParams);
-      validateQueryEndpoints(newParams);
-      if (query2._queryParams.hasEnd()) {
-        throw new Error("endAt: Starting point was already set (by another call to endAt, endBefore or equalTo).");
-      }
-      return new QueryImpl(query2._repo, query2._path, newParams, query2._orderByCalled);
-    }
-  };
-  var QueryStartAtConstraint = class extends QueryConstraint {
-    constructor(_value, _key) {
-      super();
-      this._value = _value;
-      this._key = _key;
-    }
-    _apply(query2) {
-      validateFirebaseDataArg("startAt", this._value, query2._path, true);
-      const newParams = queryParamsStartAt(query2._queryParams, this._value, this._key);
-      validateLimit(newParams);
-      validateQueryEndpoints(newParams);
-      if (query2._queryParams.hasStart()) {
-        throw new Error("startAt: Starting point was already set (by another call to startAt, startBefore or equalTo).");
-      }
-      return new QueryImpl(query2._repo, query2._path, newParams, query2._orderByCalled);
-    }
-  };
-  var QueryStartAfterConstraint = class extends QueryConstraint {
-    constructor(_value, _key) {
-      super();
-      this._value = _value;
-      this._key = _key;
-    }
-    _apply(query2) {
-      validateFirebaseDataArg("startAfter", this._value, query2._path, false);
-      const newParams = queryParamsStartAfter(query2._queryParams, this._value, this._key);
-      validateLimit(newParams);
-      validateQueryEndpoints(newParams);
-      if (query2._queryParams.hasStart()) {
-        throw new Error("startAfter: Starting point was already set (by another call to startAt, startAfter, or equalTo).");
-      }
-      return new QueryImpl(query2._repo, query2._path, newParams, query2._orderByCalled);
-    }
-  };
-  function startAfter(value, key) {
-    validateKey("startAfter", "key", key, true);
-    return new QueryStartAfterConstraint(value, key);
-  }
-  var QueryLimitToFirstConstraint = class extends QueryConstraint {
-    constructor(_limit) {
-      super();
-      this._limit = _limit;
-    }
-    _apply(query2) {
-      if (query2._queryParams.hasLimit()) {
-        throw new Error("limitToFirst: Limit was already set (by another call to limitToFirst or limitToLast).");
-      }
-      return new QueryImpl(query2._repo, query2._path, queryParamsLimitToFirst(query2._queryParams, this._limit), query2._orderByCalled);
-    }
-  };
-  function limitToFirst(limit) {
-    if (typeof limit !== "number" || Math.floor(limit) !== limit || limit <= 0) {
-      throw new Error("limitToFirst: First argument must be a positive integer.");
-    }
-    return new QueryLimitToFirstConstraint(limit);
-  }
-  var QueryOrderByChildConstraint = class extends QueryConstraint {
-    constructor(_path) {
-      super();
-      this._path = _path;
-    }
-    _apply(query2) {
-      validateNoPreviousOrderByCall(query2, "orderByChild");
-      const parsedPath = new Path(this._path);
-      if (pathIsEmpty(parsedPath)) {
-        throw new Error("orderByChild: cannot pass in empty path. Use orderByValue() instead.");
-      }
-      const index = new PathIndex(parsedPath);
-      const newParams = queryParamsOrderBy(query2._queryParams, index);
-      validateQueryEndpoints(newParams);
-      return new QueryImpl(
-        query2._repo,
-        query2._path,
-        newParams,
-        true
-      );
-    }
-  };
-  function orderByChild(path) {
-    if (path === "$key") {
-      throw new Error('orderByChild: "$key" is invalid.  Use orderByKey() instead.');
-    } else if (path === "$priority") {
-      throw new Error('orderByChild: "$priority" is invalid.  Use orderByPriority() instead.');
-    } else if (path === "$value") {
-      throw new Error('orderByChild: "$value" is invalid.  Use orderByValue() instead.');
-    }
-    validatePathString("orderByChild", "path", path, false);
-    return new QueryOrderByChildConstraint(path);
-  }
-  var QueryOrderByKeyConstraint = class extends QueryConstraint {
-    _apply(query2) {
-      validateNoPreviousOrderByCall(query2, "orderByKey");
-      const newParams = queryParamsOrderBy(query2._queryParams, KEY_INDEX);
-      validateQueryEndpoints(newParams);
-      return new QueryImpl(
-        query2._repo,
-        query2._path,
-        newParams,
-        true
-      );
-    }
-  };
-  function orderByKey() {
-    return new QueryOrderByKeyConstraint();
-  }
-  var QueryEqualToValueConstraint = class extends QueryConstraint {
-    constructor(_value, _key) {
-      super();
-      this._value = _value;
-      this._key = _key;
-    }
-    _apply(query2) {
-      validateFirebaseDataArg("equalTo", this._value, query2._path, false);
-      if (query2._queryParams.hasStart()) {
-        throw new Error("equalTo: Starting point was already set (by another call to startAt/startAfter or equalTo).");
-      }
-      if (query2._queryParams.hasEnd()) {
-        throw new Error("equalTo: Ending point was already set (by another call to endAt/endBefore or equalTo).");
-      }
-      return new QueryEndAtConstraint(this._value, this._key)._apply(new QueryStartAtConstraint(this._value, this._key)._apply(query2));
-    }
-  };
-  function equalTo(value, key) {
-    validateKey("equalTo", "key", key, true);
-    return new QueryEqualToValueConstraint(value, key);
-  }
-  function query(query2, ...queryConstraints) {
-    let queryImpl = getModularInstance(query2);
-    for (const constraint of queryConstraints) {
-      queryImpl = constraint._apply(queryImpl);
-    }
-    return queryImpl;
-  }
-  syncPointSetReferenceConstructor(ReferenceImpl);
-  syncTreeSetReferenceConstructor(ReferenceImpl);
-  var FIREBASE_DATABASE_EMULATOR_HOST_VAR = "FIREBASE_DATABASE_EMULATOR_HOST";
-  var repos = {};
-  var useRestClient = false;
-  function repoManagerApplyEmulatorSettings(repo, host, port, tokenProvider) {
-    repo.repoInfo_ = new RepoInfo(
-      `${host}:${port}`,
-      false,
-      repo.repoInfo_.namespace,
-      repo.repoInfo_.webSocketOnly,
-      repo.repoInfo_.nodeAdmin,
-      repo.repoInfo_.persistenceKey,
-      repo.repoInfo_.includeNamespaceInQueryParams
-    );
-    if (tokenProvider) {
-      repo.authTokenProvider_ = tokenProvider;
-    }
-  }
-  function repoManagerDatabaseFromApp(app2, authProvider, appCheckProvider, url, nodeAdmin) {
-    let dbUrl = url || app2.options.databaseURL;
-    if (dbUrl === void 0) {
-      if (!app2.options.projectId) {
-        fatal("Can't determine Firebase Database URL. Be sure to include  a Project ID when calling firebase.initializeApp().");
-      }
-      log("Using default host for project ", app2.options.projectId);
-      dbUrl = `${app2.options.projectId}-default-rtdb.firebaseio.com`;
-    }
-    let parsedUrl = parseRepoInfo(dbUrl, nodeAdmin);
-    let repoInfo = parsedUrl.repoInfo;
-    let isEmulator;
-    let dbEmulatorHost = void 0;
-    if (typeof process !== "undefined" && process.env) {
-      dbEmulatorHost = process.env[FIREBASE_DATABASE_EMULATOR_HOST_VAR];
-    }
-    if (dbEmulatorHost) {
-      isEmulator = true;
-      dbUrl = `http://${dbEmulatorHost}?ns=${repoInfo.namespace}`;
-      parsedUrl = parseRepoInfo(dbUrl, nodeAdmin);
-      repoInfo = parsedUrl.repoInfo;
-    } else {
-      isEmulator = !parsedUrl.repoInfo.secure;
-    }
-    const authTokenProvider = nodeAdmin && isEmulator ? new EmulatorTokenProvider(EmulatorTokenProvider.OWNER) : new FirebaseAuthTokenProvider(app2.name, app2.options, authProvider);
-    validateUrl("Invalid Firebase Database URL", parsedUrl);
-    if (!pathIsEmpty(parsedUrl.path)) {
-      fatal("Database URL must point to the root of a Firebase Database (not including a child path).");
-    }
-    const repo = repoManagerCreateRepo(repoInfo, app2, authTokenProvider, new AppCheckTokenProvider(app2.name, appCheckProvider));
-    return new Database(repo, app2);
-  }
-  function repoManagerDeleteRepo(repo, appName) {
-    const appRepos = repos[appName];
-    if (!appRepos || appRepos[repo.key] !== repo) {
-      fatal(`Database ${appName}(${repo.repoInfo_}) has already been deleted.`);
-    }
-    repoInterrupt(repo);
-    delete appRepos[repo.key];
-  }
-  function repoManagerCreateRepo(repoInfo, app2, authTokenProvider, appCheckProvider) {
-    let appRepos = repos[app2.name];
-    if (!appRepos) {
-      appRepos = {};
-      repos[app2.name] = appRepos;
-    }
-    let repo = appRepos[repoInfo.toURLString()];
-    if (repo) {
-      fatal("Database initialized multiple times. Please make sure the format of the database URL matches with each database() call.");
-    }
-    repo = new Repo(repoInfo, useRestClient, authTokenProvider, appCheckProvider);
-    appRepos[repoInfo.toURLString()] = repo;
-    return repo;
-  }
-  var Database = class {
-    constructor(_repoInternal, app2) {
-      this._repoInternal = _repoInternal;
-      this.app = app2;
-      this["type"] = "database";
-      this._instanceStarted = false;
-    }
-    get _repo() {
-      if (!this._instanceStarted) {
-        repoStart(this._repoInternal, this.app.options.appId, this.app.options["databaseAuthVariableOverride"]);
-        this._instanceStarted = true;
-      }
-      return this._repoInternal;
-    }
-    get _root() {
-      if (!this._rootInternal) {
-        this._rootInternal = new ReferenceImpl(this._repo, newEmptyPath());
-      }
-      return this._rootInternal;
-    }
-    _delete() {
-      if (this._rootInternal !== null) {
-        repoManagerDeleteRepo(this._repo, this.app.name);
-        this._repoInternal = null;
-        this._rootInternal = null;
-      }
-      return Promise.resolve();
-    }
-    _checkNotDeleted(apiName) {
-      if (this._rootInternal === null) {
-        fatal("Cannot call " + apiName + " on a deleted database.");
-      }
-    }
-  };
-  function getDatabase(app2 = getApp(), url) {
-    const db2 = _getProvider(app2, "database").getImmediate({
-      identifier: url
-    });
-    const emulator = getDefaultEmulatorHostnameAndPort("database");
-    if (emulator) {
-      connectDatabaseEmulator(db2, ...emulator);
-    }
-    return db2;
-  }
-  function connectDatabaseEmulator(db2, host, port, options = {}) {
-    db2 = getModularInstance(db2);
-    db2._checkNotDeleted("useEmulator");
-    if (db2._instanceStarted) {
-      fatal("Cannot call useEmulator() after instance has already been initialized.");
-    }
-    const repo = db2._repoInternal;
-    let tokenProvider = void 0;
-    if (repo.repoInfo_.nodeAdmin) {
-      if (options.mockUserToken) {
-        fatal('mockUserToken is not supported by the Admin SDK. For client access with mock users, please use the "firebase" package instead of "firebase-admin".');
-      }
-      tokenProvider = new EmulatorTokenProvider(EmulatorTokenProvider.OWNER);
-    } else if (options.mockUserToken) {
-      const token = typeof options.mockUserToken === "string" ? options.mockUserToken : createMockUserToken(options.mockUserToken, db2.app.options.projectId);
-      tokenProvider = new EmulatorTokenProvider(token);
-    }
-    repoManagerApplyEmulatorSettings(repo, host, port, tokenProvider);
-  }
-  function registerDatabase(variant) {
-    setSDKVersion(SDK_VERSION);
-    _registerComponent(new Component("database", (container, { instanceIdentifier: url }) => {
-      const app2 = container.getProvider("app").getImmediate();
-      const authProvider = container.getProvider("auth-internal");
-      const appCheckProvider = container.getProvider("app-check-internal");
-      return repoManagerDatabaseFromApp(app2, authProvider, appCheckProvider, url);
-    }, "PUBLIC").setMultipleInstances(true));
-    registerVersion(name2, version3, variant);
-    registerVersion(name2, version3, "esm2017");
-  }
-  function increment(delta) {
-    return {
-      ".sv": {
-        "increment": delta
-      }
-    };
-  }
-  PersistentConnection.prototype.simpleListen = function(pathString, onComplete) {
-    this.sendRequest("q", { p: pathString }, onComplete);
-  };
-  PersistentConnection.prototype.echo = function(data, onEcho) {
-    this.sendRequest("echo", { d: data }, onEcho);
-  };
-  registerDatabase();
-
-  // ../../packages/queue/src/schema.ts
-  var metadataSchema = mod.object({
-    ["isPaused" /* isPaused */]: mod.boolean().optional(),
-    ["count" /* count */]: mod.number().int().optional(),
-    ["errorCount" /* errorCount */]: mod.number().int().optional(),
-    ["waitingCount" /* waitingCount */]: mod.number().int().optional(),
-    ["activeCount" /* activeCount */]: mod.number().int().optional(),
-    ["completeCount" /* completeCount */]: mod.number().int().optional()
-  });
-  var TaskState = /* @__PURE__ */ ((TaskState3) => {
-    TaskState3["error"] = "error";
-    TaskState3["waiting"] = "waiting";
-    TaskState3["active"] = "active";
-    TaskState3["complete"] = "complete";
-    return TaskState3;
-  })(TaskState || {});
-  var taskSchema = mod.object({
-    ["state" /* state */]: mod.nativeEnum(TaskState),
-    ["message" /* message */]: mod.string().optional(),
-    ["data" /* data */]: mod.any(),
-    ["created" /* created */]: mod.number(),
-    ["started" /* started */]: mod.number().optional().nullable(),
-    ["errored" /* errored */]: mod.number().optional().nullable(),
-    ["completed" /* completed */]: mod.number().optional().nullable()
-  });
-  var errorSchema = mod.object({ created: mod.date(), message: mod.string() });
-  var logSchema = mod.object({ task: taskSchema, errors: mod.record(mod.string(), errorSchema) });
-
-  // ../../packages/queue/src/utils/debounce.ts
-  function debounce(func, { millis = 300, leading = false } = {}) {
-    return leading ? leadingDebounce(func, { millis }) : trailingDebounce(func, { millis });
-  }
-  function leadingDebounce(func, { millis }) {
-    let blocked = false;
-    return (...args) => {
-      if (!blocked) {
-        blocked = true;
-        func(...args);
-        setTimeout(() => {
-          blocked = false;
-        }, millis);
-      }
-    };
-  }
-  function trailingDebounce(func, { millis }) {
-    let timer;
-    return (...args) => {
-      timer && clearTimeout(timer);
-      timer = setTimeout(() => func(...args), millis);
-    };
-  }
-
-  // ../../packages/queue/src/utils/map-tasks.ts
-  function mapTasks(dataSnapshot) {
-    const data = dataSnapshot.val();
-    switch (true) {
-      case !data:
-        return {};
-      case !!data.state: {
-        const key = dataSnapshot.key || "";
-        const task = taskSchema.parse(data);
-        return { [key]: task };
-      }
-      default:
-        return Object.entries(dataSnapshot.val() || {}).reduce((acc, [key, value]) => {
-          const task = taskSchema.parse(value);
-          acc[key] = task;
-          return acc;
-        }, {});
-    }
-  }
-
-  // ../../packages/queue/src/utils/page-through-tasks.ts
-  async function pageThroughTasks({
-    batchSize,
-    callback,
-    startAfterKey,
-    taskState,
-    tasksRef
-  }) {
-    const tasksQuery = startAfterKey ? query(tasksRef, orderByKey(), limitToFirst(batchSize), startAfter(startAfterKey)) : query(tasksRef, orderByChild("state" /* state */), limitToFirst(batchSize), equalTo(taskState));
-    const snapshot = await get(tasksQuery);
-    const queueTasks = mapTasks(snapshot);
-    const matchingTasks = Object.entries(queueTasks).reduce((acc, [key, task]) => {
-      if (task.state === taskState) {
-        acc[key] = task;
-      }
-      return acc;
-    }, {});
-    const existMatchingTasks = Object.keys(matchingTasks).length > 0;
-    const lastKey = Object.keys(queueTasks).pop();
-    const isLastPage = !lastKey;
-    if (existMatchingTasks) {
-      await callback(matchingTasks);
-    }
-    if (!isLastPage && lastKey) {
-      await pageThroughTasks({ batchSize, callback, startAfterKey: lastKey, taskState, tasksRef });
-    }
-  }
-
-  // ../../packages/queue/src/queue/handle-active.ts
-  async function handleActive({
-    callback,
-    dataSnapshot,
-    queueRef
-  }) {
-    const started = Date.now();
-    const data = mapTasks(dataSnapshot);
-    const task = Object.values(data)[0] ?? null;
-    try {
-      const { success, message } = await callback(data);
-      if (!success) {
-        throw new Error(message);
-      } else {
-        await update(dataSnapshot.ref, {
-          ["message" /* message */]: message,
-          ["state" /* state */]: "complete" /* complete */,
-          ["started" /* started */]: started,
-          ["completed" /* completed */]: Date.now()
-        });
-        return { success, message };
-      }
-    } catch (error2) {
-      let message = "";
-      if (error2 instanceof Error) {
-        message = error2.message;
-      } else {
-        message = String(message);
-      }
-      update(dataSnapshot.ref, {
-        ["message" /* message */]: message,
-        ["state" /* state */]: "error" /* error */,
-        ["started" /* started */]: started,
-        ["errored" /* errored */]: Date.now()
-      });
-      await update(queueRef, {
-        [`${"logs" /* logs */}/${dataSnapshot.key}/${"task" /* task */}`]: task,
-        [`${"logs" /* logs */}/${dataSnapshot.key}/${"errors" /* errors */}/${push(queueRef).key}`]: errorSchema.parse({
-          created: new Date(),
-          message
-        })
-      });
-      return { success: false, message };
-    }
-  }
-
-  // ../../packages/queue/src/queue/handle-waiting.ts
-  var ONE_SECOND = 1e3;
-  function handleWaiting({
-    batchSize,
-    callback,
-    metadataRef,
-    queueRef,
-    tasksRef
-  }) {
-    const activeQuery = query(tasksRef, orderByChild("state" /* state */), limitToFirst(batchSize), equalTo("active" /* active */));
-    const unlistenMetadata = onValue(
-      metadataRef,
-      debounce(
-        async (metadataSnapshot) => {
-          const metadata = metadataSchema.parse(metadataSnapshot.val());
-          const { activeCount: activeCount2 = 0, waitingCount = 0 } = metadata;
-          const countToActivate = Math.min(Math.max(0, batchSize - Math.max(0, activeCount2)), waitingCount);
-          if (countToActivate > 0) {
-            const waitingDataSnapshot = await get(
-              query(tasksRef, orderByChild("state" /* state */), limitToFirst(countToActivate), equalTo("waiting" /* waiting */))
-            );
-            const newWaitingTasks = mapTasks(waitingDataSnapshot);
-            const newWaitingTaskCount = Object.keys(newWaitingTasks).length;
-            const updates = Object.entries(newWaitingTasks).reduce(
-              (acc, [key, task]) => {
-                acc[`${"task" /* task */}/${key}/${"state" /* state */}`] = "active" /* active */;
-                acc[`${"task" /* task */}/${key}/${"started" /* started */}`] = Date.now();
-                return acc;
-              },
-              {
-                [`${"metadata" /* metadata */}/${"activeCount" /* activeCount */}`]: increment(+newWaitingTaskCount),
-                [`${"metadata" /* metadata */}/${"waitingCount" /* waitingCount */}`]: increment(-newWaitingTaskCount)
-              }
-            );
-            await update(queueRef, updates);
-          }
-        },
-        { millis: ONE_SECOND }
-      )
-    );
-    let activeCount = 0;
-    let errorCount = 0;
-    let completeCount = 0;
-    const unlistenActiveAdded = onChildAdded(activeQuery, async (dataSnapshot) => {
-      const { success } = await handleActive({ callback, dataSnapshot, queueRef });
-      if (success) {
-        completeCount++;
-      } else {
-        errorCount++;
-      }
-      activeCount--;
-    });
-    const timer = setInterval(async () => {
-      const updates = {
-        ["activeCount" /* activeCount */]: increment(activeCount),
-        ["completeCount" /* completeCount */]: increment(completeCount),
-        ["errorCount" /* errorCount */]: increment(errorCount)
-      };
-      const i3 = activeCount;
-      activeCount = 0;
-      completeCount = 0;
-      errorCount = 0;
-      await update(metadataRef, updates);
-    }, ONE_SECOND);
-    return () => {
-      unlistenActiveAdded();
-      unlistenMetadata();
-      setTimeout(() => {
-        clearInterval(timer);
-      }, ONE_SECOND);
-    };
-  }
-
-  // ../../packages/queue/src/queue/queue.ts
-  function Queue({ batchSize = 1, callback, ref: queueRef }) {
-    const metadataRef = child(queueRef, "metadata" /* metadata */);
-    const tasksRef = child(queueRef, "task" /* task */);
-    let unlisten;
-    function mount() {
-      let unlistenWaiting = null;
-      let unlistenWaitingTimer;
-      const unlistenMetadata = onValue(metadataRef, (dataSnapshot) => {
-        const value = dataSnapshot.val();
-        const parsed = metadataSchema.safeParse(value);
-        if (parsed.success) {
-          const { isPaused, activeCount, waitingCount } = parsed.data;
-          if (!isPaused && !unlistenWaiting) {
-            unlistenWaiting = handleWaiting({ batchSize, callback, metadataRef, queueRef, tasksRef });
-          } else if (!activeCount && !waitingCount) {
-            clearTimeout(unlistenWaitingTimer);
-            unlistenWaitingTimer = setTimeout(() => {
-              unlistenWaiting?.();
-              unlistenWaiting = null;
-            }, 1e3 * 5);
-          }
-        }
-      });
-      return () => {
-        unlistenWaiting?.();
-        unlistenMetadata();
-      };
-    }
-    async function add(tasks) {
-      const newTasks = tasks.map(
-        (data) => taskSchema.parse({ ["created" /* created */]: Date.now(), ["state" /* state */]: "waiting" /* waiting */, ["data" /* data */]: data })
-      );
-      const updates = newTasks.reduce(
-        (acc, task) => {
-          const newRef = push(tasksRef);
-          acc[`${"task" /* task */}/${newRef.key}`] = task;
-          return acc;
-        },
-        {
-          [`${metadataRef.key}/${"activeCount" /* activeCount */}`]: increment(0),
-          [`${metadataRef.key}/${"errorCount" /* errorCount */}`]: increment(0),
-          [`${metadataRef.key}/${"waitingCount" /* waitingCount */}`]: increment(newTasks.length),
-          [`${metadataRef.key}/${"completeCount" /* completeCount */}`]: increment(0),
-          [`${metadataRef.key}/${"count" /* count */}`]: increment(newTasks.length)
-        }
-      );
-      await update(queueRef, updates);
-    }
-    async function empty() {
-      unmount();
-      await remove(queueRef);
-    }
-    async function stop() {
-      unmount();
-      await update(metadataRef, { isPaused: true });
-    }
-    async function start() {
-      await update(metadataRef, { isPaused: false });
-      unlisten = mount();
-    }
-    function unmount() {
-      unlisten?.();
-      unlisten = null;
-    }
-    async function requeueByKey(keys, metadataKey) {
-      const updates = getRequeueUpdates(keys, metadataKey);
-      await stop();
-      await update(queueRef, updates);
-      return { success: true, message: `${updates.length} errored tasks reqeueued` };
-    }
-    async function requeueByState(taskState) {
-      const metadataKey = taskState === "complete" /* complete */ ? "completeCount" /* completeCount */ : "errorCount" /* errorCount */;
-      await stop();
-      await pageThroughTasks({
-        batchSize: 3,
-        callback: async (queueTasks) => {
-          const keys = Object.keys(queueTasks);
-          const updates = getRequeueUpdates(keys, metadataKey);
-          await update(queueRef, updates);
-          return { success: true, message: `${updates.length} errored tasks reqeueued` };
-        },
-        taskState,
-        tasksRef
-      });
-    }
-    function getRequeueUpdates(keys, metadataKey) {
-      return keys.reduce(
-        (acc, key) => {
-          acc[`${"task" /* task */}/${key}/${"state" /* state */}`] = "waiting" /* waiting */;
-          acc[`${"task" /* task */}/${key}/${"started" /* started */}`] = null;
-          acc[`${"task" /* task */}/${key}/${"completed" /* completed */}`] = null;
-          return acc;
-        },
-        {
-          [`${"metadata" /* metadata */}/${metadataKey}`]: increment(-keys.length),
-          [`${"metadata" /* metadata */}/${"waitingCount" /* waitingCount */}`]: increment(keys.length)
-        }
-      );
-    }
-    return {
-      add,
-      empty,
-      stop,
-      start,
-      metadataRef,
-      tasksRef,
-      requeueByKey,
-      requeueByState
-    };
-  }
-
-  // ../../packages/ui/utils/app.ts
-  function isServer() {
-    return typeof window === "undefined" && !isServiceWorker();
-  }
-  function isClient(callback) {
-    const isClient2 = typeof window !== "undefined" || isServiceWorker();
-    return isClient2 && callback ? callback() : isClient2;
-  }
-  function isServiceWorker() {
-    return typeof self !== "undefined";
-  }
-
-  // ../../packages/ui/utils/auth.ts
-  var ONE_HOUR_MS = 60 * 60 * 1e3;
-
-  // ../../packages/ui/utils/firebase.ts
-  function getPath(ref2) {
-    return ref2.toString().replace(ref2.root.toString(), "");
-  }
-
-  // ../../packages/ui/utils/url.ts
-  function addParams(uri, params) {
-    const url = new URL(uri);
-    const keys = Object.keys(params);
-    keys.forEach((key) => {
-      const value = params[key];
-      const isDefined = typeof value !== "undefined";
-      isDefined && url.searchParams.append(key, String(value));
-    });
-    return url.toString();
-  }
-
-  // ../../packages/ui/utils/localforage.ts
-  var localforage_exports = {};
-  __export(localforage_exports, {
-    LocalforageDataType: () => LocalforageDataType,
-    addSyncTask: () => addSyncTask,
-    clear: () => clear,
-    clearSyncTasks: () => clearSyncTasks,
-    getSyncTask: () => getSyncTask,
-    removeSyncTask: () => removeSyncTask,
-    updateSyncTask: () => updateSyncTask
-  });
-
-  // ../../packages/data/sync.ts
-  var SyncStage = /* @__PURE__ */ ((SyncStage2) => {
-    SyncStage2["ready"] = "ready";
-    SyncStage2["downloading"] = "downloading";
-    return SyncStage2;
-  })(SyncStage || {});
-  var syncTaskSchema = mod.object({
-    ["accessToken" /* accessToken */]: mod.string(),
-    ["accessTokenCreated" /* accessTokenCreated */]: mod.number(),
-    ["refreshToken" /* refreshToken */]: mod.string(),
-    ["taskName" /* taskName */]: mod.string(),
-    ["directoryHandle" /* directoryHandle */]: mod.any().refine((obj) => obj instanceof FileSystemDirectoryHandle, { message: "Must be a FileSystemDirectoryHandle" }),
-    ["fileCount" /* fileCount */]: mod.number(),
-    ["importedCount" /* importedCount */]: mod.number(),
-    ["processedCount" /* processedCount */]: mod.number(),
-    ["exportedCount" /* exportedCount */]: mod.number(),
-    ["created" /* created */]: mod.date(),
-    ["stage" /* stage */]: mod.nativeEnum(SyncStage),
-    ["paused" /* paused */]: mod.boolean().optional().transform((val) => val ?? false),
-    ["previousPageToken" /* previousPageToken */]: mod.string().nullable().optional(),
-    ["nextPageToken" /* nextPageToken */]: mod.string().nullable().optional()
-  });
-  var syncTaskRecordSchema = mod.object({
-    ["accessToken" /* accessToken */]: mod.string(),
-    ["accessTokenCreated" /* accessTokenCreated */]: mod.number(),
-    ["refreshToken" /* refreshToken */]: mod.string(),
-    ["taskName" /* taskName */]: mod.string(),
-    ["fileCount" /* fileCount */]: mod.number(),
-    ["importedCount" /* importedCount */]: mod.number(),
-    ["processedCount" /* processedCount */]: mod.number(),
-    ["exportedCount" /* exportedCount */]: mod.number(),
-    ["directoryName" /* directoryName */]: mod.string(),
-    ["created" /* created */]: mod.string(),
-    ["stage" /* stage */]: mod.nativeEnum(SyncStage),
-    ["paused" /* paused */]: mod.boolean().optional().transform((val) => val ?? false),
-    ["previousPageToken" /* previousPageToken */]: mod.string().nullable().optional(),
-    ["nextPageToken" /* nextPageToken */]: mod.string().nullable().optional()
-  });
-  function getSyncTasksRefPath(userId) {
-    return `sync-tasks/${userId}`;
-  }
-  function getSyncTaskRefPath({ taskId, userId }) {
-    return `${getSyncTasksRefPath(userId)}/${taskId}`;
-  }
-
-  // ../../node_modules/immer/dist/immer.esm.mjs
-  function n(n3) {
-    for (var r3 = arguments.length, t3 = Array(r3 > 1 ? r3 - 1 : 0), e2 = 1; e2 < r3; e2++)
-      t3[e2 - 1] = arguments[e2];
-    if (true) {
-      var i3 = Y[n3], o2 = i3 ? "function" == typeof i3 ? i3.apply(null, t3) : i3 : "unknown error nr: " + n3;
-      throw Error("[Immer] " + o2);
-    }
-    throw Error("[Immer] minified error nr: " + n3 + (t3.length ? " " + t3.map(function(n4) {
-      return "'" + n4 + "'";
-    }).join(",") : "") + ". Find the full error at: https://bit.ly/3cXEKWf");
-  }
-  function r(n3) {
-    return !!n3 && !!n3[Q];
-  }
-  function t(n3) {
-    var r3;
-    return !!n3 && (function(n4) {
-      if (!n4 || "object" != typeof n4)
-        return false;
-      var r4 = Object.getPrototypeOf(n4);
-      if (null === r4)
-        return true;
-      var t3 = Object.hasOwnProperty.call(r4, "constructor") && r4.constructor;
-      return t3 === Object || "function" == typeof t3 && Function.toString.call(t3) === Z;
-    }(n3) || Array.isArray(n3) || !!n3[L] || !!(null === (r3 = n3.constructor) || void 0 === r3 ? void 0 : r3[L]) || s(n3) || v(n3));
-  }
-  function i(n3, r3, t3) {
-    void 0 === t3 && (t3 = false), 0 === o(n3) ? (t3 ? Object.keys : nn)(n3).forEach(function(e2) {
-      t3 && "symbol" == typeof e2 || r3(e2, n3[e2], n3);
-    }) : n3.forEach(function(t4, e2) {
-      return r3(e2, t4, n3);
-    });
-  }
-  function o(n3) {
-    var r3 = n3[Q];
-    return r3 ? r3.i > 3 ? r3.i - 4 : r3.i : Array.isArray(n3) ? 1 : s(n3) ? 2 : v(n3) ? 3 : 0;
-  }
-  function u(n3, r3) {
-    return 2 === o(n3) ? n3.has(r3) : Object.prototype.hasOwnProperty.call(n3, r3);
-  }
-  function a(n3, r3) {
-    return 2 === o(n3) ? n3.get(r3) : n3[r3];
-  }
-  function f2(n3, r3, t3) {
-    var e2 = o(n3);
-    2 === e2 ? n3.set(r3, t3) : 3 === e2 ? (n3.delete(r3), n3.add(t3)) : n3[r3] = t3;
-  }
-  function c(n3, r3) {
-    return n3 === r3 ? 0 !== n3 || 1 / n3 == 1 / r3 : n3 != n3 && r3 != r3;
-  }
-  function s(n3) {
-    return X && n3 instanceof Map;
-  }
-  function v(n3) {
-    return q && n3 instanceof Set;
-  }
-  function p(n3) {
-    return n3.o || n3.t;
-  }
-  function l(n3) {
-    if (Array.isArray(n3))
-      return Array.prototype.slice.call(n3);
-    var r3 = rn(n3);
-    delete r3[Q];
-    for (var t3 = nn(r3), e2 = 0; e2 < t3.length; e2++) {
-      var i3 = t3[e2], o2 = r3[i3];
-      false === o2.writable && (o2.writable = true, o2.configurable = true), (o2.get || o2.set) && (r3[i3] = { configurable: true, writable: true, enumerable: o2.enumerable, value: n3[i3] });
-    }
-    return Object.create(Object.getPrototypeOf(n3), r3);
-  }
-  function d(n3, e2) {
-    return void 0 === e2 && (e2 = false), y(n3) || r(n3) || !t(n3) ? n3 : (o(n3) > 1 && (n3.set = n3.add = n3.clear = n3.delete = h), Object.freeze(n3), e2 && i(n3, function(n4, r3) {
-      return d(r3, true);
-    }, true), n3);
-  }
-  function h() {
-    n(2);
-  }
-  function y(n3) {
-    return null == n3 || "object" != typeof n3 || Object.isFrozen(n3);
-  }
-  function b(r3) {
-    var t3 = tn[r3];
-    return t3 || n(18, r3), t3;
-  }
-  function m(n3, r3) {
-    tn[n3] || (tn[n3] = r3);
-  }
-  function _() {
-    return U || n(0), U;
-  }
-  function j(n3, r3) {
-    r3 && (b("Patches"), n3.u = [], n3.s = [], n3.v = r3);
-  }
-  function O(n3) {
-    g(n3), n3.p.forEach(S), n3.p = null;
-  }
-  function g(n3) {
-    n3 === U && (U = n3.l);
-  }
-  function w(n3) {
-    return U = { p: [], l: U, h: n3, m: true, _: 0 };
-  }
-  function S(n3) {
-    var r3 = n3[Q];
-    0 === r3.i || 1 === r3.i ? r3.j() : r3.O = true;
-  }
-  function P(r3, e2) {
-    e2._ = e2.p.length;
-    var i3 = e2.p[0], o2 = void 0 !== r3 && r3 !== i3;
-    return e2.h.g || b("ES5").S(e2, r3, o2), o2 ? (i3[Q].P && (O(e2), n(4)), t(r3) && (r3 = M(e2, r3), e2.l || x(e2, r3)), e2.u && b("Patches").M(i3[Q].t, r3, e2.u, e2.s)) : r3 = M(e2, i3, []), O(e2), e2.u && e2.v(e2.u, e2.s), r3 !== H ? r3 : void 0;
-  }
-  function M(n3, r3, t3) {
-    if (y(r3))
-      return r3;
-    var e2 = r3[Q];
-    if (!e2)
-      return i(r3, function(i3, o3) {
-        return A(n3, e2, r3, i3, o3, t3);
-      }, true), r3;
-    if (e2.A !== n3)
-      return r3;
-    if (!e2.P)
-      return x(n3, e2.t, true), e2.t;
-    if (!e2.I) {
-      e2.I = true, e2.A._--;
-      var o2 = 4 === e2.i || 5 === e2.i ? e2.o = l(e2.k) : e2.o;
-      i(3 === e2.i ? new Set(o2) : o2, function(r4, i3) {
-        return A(n3, e2, o2, r4, i3, t3);
-      }), x(n3, o2, false), t3 && n3.u && b("Patches").R(e2, t3, n3.u, n3.s);
-    }
-    return e2.o;
-  }
-  function A(e2, i3, o2, a3, c2, s2) {
-    if (c2 === o2 && n(5), r(c2)) {
-      var v6 = M(e2, c2, s2 && i3 && 3 !== i3.i && !u(i3.D, a3) ? s2.concat(a3) : void 0);
-      if (f2(o2, a3, v6), !r(v6))
-        return;
-      e2.m = false;
-    }
-    if (t(c2) && !y(c2)) {
-      if (!e2.h.F && e2._ < 1)
-        return;
-      M(e2, c2), i3 && i3.A.l || x(e2, c2);
-    }
-  }
-  function x(n3, r3, t3) {
-    void 0 === t3 && (t3 = false), n3.h.F && n3.m && d(r3, t3);
-  }
-  function z(n3, r3) {
-    var t3 = n3[Q];
-    return (t3 ? p(t3) : n3)[r3];
-  }
-  function I(n3, r3) {
-    if (r3 in n3)
-      for (var t3 = Object.getPrototypeOf(n3); t3; ) {
-        var e2 = Object.getOwnPropertyDescriptor(t3, r3);
-        if (e2)
-          return e2;
-        t3 = Object.getPrototypeOf(t3);
-      }
-  }
-  function k(n3) {
-    n3.P || (n3.P = true, n3.l && k(n3.l));
-  }
-  function E(n3) {
-    n3.o || (n3.o = l(n3.t));
-  }
-  function R(n3, r3, t3) {
-    var e2 = s(r3) ? b("MapSet").N(r3, t3) : v(r3) ? b("MapSet").T(r3, t3) : n3.g ? function(n4, r4) {
-      var t4 = Array.isArray(n4), e3 = { i: t4 ? 1 : 0, A: r4 ? r4.A : _(), P: false, I: false, D: {}, l: r4, t: n4, k: null, o: null, j: null, C: false }, i3 = e3, o2 = en;
-      t4 && (i3 = [e3], o2 = on);
-      var u2 = Proxy.revocable(i3, o2), a3 = u2.revoke, f3 = u2.proxy;
-      return e3.k = f3, e3.j = a3, f3;
-    }(r3, t3) : b("ES5").J(r3, t3);
-    return (t3 ? t3.A : _()).p.push(e2), e2;
-  }
-  function D(e2) {
-    return r(e2) || n(22, e2), function n3(r3) {
-      if (!t(r3))
-        return r3;
-      var e3, u2 = r3[Q], c2 = o(r3);
-      if (u2) {
-        if (!u2.P && (u2.i < 4 || !b("ES5").K(u2)))
-          return u2.t;
-        u2.I = true, e3 = F(r3, c2), u2.I = false;
-      } else
-        e3 = F(r3, c2);
-      return i(e3, function(r4, t3) {
-        u2 && a(u2.t, r4) === t3 || f2(e3, r4, n3(t3));
-      }), 3 === c2 ? new Set(e3) : e3;
-    }(e2);
-  }
-  function F(n3, r3) {
-    switch (r3) {
-      case 2:
-        return new Map(n3);
-      case 3:
-        return Array.from(n3);
-    }
-    return l(n3);
-  }
-  function C() {
-    function r3(n3, r4) {
-      function t3() {
-        this.constructor = n3;
-      }
-      a3(n3, r4), n3.prototype = (t3.prototype = r4.prototype, new t3());
-    }
-    function e2(n3) {
-      n3.o || (n3.D = /* @__PURE__ */ new Map(), n3.o = new Map(n3.t));
-    }
-    function o2(n3) {
-      n3.o || (n3.o = /* @__PURE__ */ new Set(), n3.t.forEach(function(r4) {
-        if (t(r4)) {
-          var e3 = R(n3.A.h, r4, n3);
-          n3.p.set(r4, e3), n3.o.add(e3);
-        } else
-          n3.o.add(r4);
-      }));
-    }
-    function u2(r4) {
-      r4.O && n(3, JSON.stringify(p(r4)));
-    }
-    var a3 = function(n3, r4) {
-      return (a3 = Object.setPrototypeOf || { __proto__: [] } instanceof Array && function(n4, r5) {
-        n4.__proto__ = r5;
-      } || function(n4, r5) {
-        for (var t3 in r5)
-          r5.hasOwnProperty(t3) && (n4[t3] = r5[t3]);
-      })(n3, r4);
-    }, f3 = function() {
-      function n3(n4, r4) {
-        return this[Q] = { i: 2, l: r4, A: r4 ? r4.A : _(), P: false, I: false, o: void 0, D: void 0, t: n4, k: this, C: false, O: false }, this;
-      }
-      r3(n3, Map);
-      var o3 = n3.prototype;
-      return Object.defineProperty(o3, "size", { get: function() {
-        return p(this[Q]).size;
-      } }), o3.has = function(n4) {
-        return p(this[Q]).has(n4);
-      }, o3.set = function(n4, r4) {
-        var t3 = this[Q];
-        return u2(t3), p(t3).has(n4) && p(t3).get(n4) === r4 || (e2(t3), k(t3), t3.D.set(n4, true), t3.o.set(n4, r4), t3.D.set(n4, true)), this;
-      }, o3.delete = function(n4) {
-        if (!this.has(n4))
-          return false;
-        var r4 = this[Q];
-        return u2(r4), e2(r4), k(r4), r4.t.has(n4) ? r4.D.set(n4, false) : r4.D.delete(n4), r4.o.delete(n4), true;
-      }, o3.clear = function() {
-        var n4 = this[Q];
-        u2(n4), p(n4).size && (e2(n4), k(n4), n4.D = /* @__PURE__ */ new Map(), i(n4.t, function(r4) {
-          n4.D.set(r4, false);
-        }), n4.o.clear());
-      }, o3.forEach = function(n4, r4) {
-        var t3 = this;
-        p(this[Q]).forEach(function(e3, i3) {
-          n4.call(r4, t3.get(i3), i3, t3);
-        });
-      }, o3.get = function(n4) {
-        var r4 = this[Q];
-        u2(r4);
-        var i3 = p(r4).get(n4);
-        if (r4.I || !t(i3))
-          return i3;
-        if (i3 !== r4.t.get(n4))
-          return i3;
-        var o4 = R(r4.A.h, i3, r4);
-        return e2(r4), r4.o.set(n4, o4), o4;
-      }, o3.keys = function() {
-        return p(this[Q]).keys();
-      }, o3.values = function() {
-        var n4, r4 = this, t3 = this.keys();
-        return (n4 = {})[V] = function() {
-          return r4.values();
-        }, n4.next = function() {
-          var n5 = t3.next();
-          return n5.done ? n5 : { done: false, value: r4.get(n5.value) };
-        }, n4;
-      }, o3.entries = function() {
-        var n4, r4 = this, t3 = this.keys();
-        return (n4 = {})[V] = function() {
-          return r4.entries();
-        }, n4.next = function() {
-          var n5 = t3.next();
-          if (n5.done)
-            return n5;
-          var e3 = r4.get(n5.value);
-          return { done: false, value: [n5.value, e3] };
-        }, n4;
-      }, o3[V] = function() {
-        return this.entries();
-      }, n3;
-    }(), c2 = function() {
-      function n3(n4, r4) {
-        return this[Q] = { i: 3, l: r4, A: r4 ? r4.A : _(), P: false, I: false, o: void 0, t: n4, k: this, p: /* @__PURE__ */ new Map(), O: false, C: false }, this;
-      }
-      r3(n3, Set);
-      var t3 = n3.prototype;
-      return Object.defineProperty(t3, "size", { get: function() {
-        return p(this[Q]).size;
-      } }), t3.has = function(n4) {
-        var r4 = this[Q];
-        return u2(r4), r4.o ? !!r4.o.has(n4) || !(!r4.p.has(n4) || !r4.o.has(r4.p.get(n4))) : r4.t.has(n4);
-      }, t3.add = function(n4) {
-        var r4 = this[Q];
-        return u2(r4), this.has(n4) || (o2(r4), k(r4), r4.o.add(n4)), this;
-      }, t3.delete = function(n4) {
-        if (!this.has(n4))
-          return false;
-        var r4 = this[Q];
-        return u2(r4), o2(r4), k(r4), r4.o.delete(n4) || !!r4.p.has(n4) && r4.o.delete(r4.p.get(n4));
-      }, t3.clear = function() {
-        var n4 = this[Q];
-        u2(n4), p(n4).size && (o2(n4), k(n4), n4.o.clear());
-      }, t3.values = function() {
-        var n4 = this[Q];
-        return u2(n4), o2(n4), n4.o.values();
-      }, t3.entries = function() {
-        var n4 = this[Q];
-        return u2(n4), o2(n4), n4.o.entries();
-      }, t3.keys = function() {
-        return this.values();
-      }, t3[V] = function() {
-        return this.values();
-      }, t3.forEach = function(n4, r4) {
-        for (var t4 = this.values(), e3 = t4.next(); !e3.done; )
-          n4.call(r4, e3.value, e3.value, this), e3 = t4.next();
-      }, n3;
-    }();
-    m("MapSet", { N: function(n3, r4) {
-      return new f3(n3, r4);
-    }, T: function(n3, r4) {
-      return new c2(n3, r4);
-    } });
-  }
-  var G;
-  var U;
-  var W = "undefined" != typeof Symbol && "symbol" == typeof Symbol("x");
-  var X = "undefined" != typeof Map;
-  var q = "undefined" != typeof Set;
-  var B = "undefined" != typeof Proxy && void 0 !== Proxy.revocable && "undefined" != typeof Reflect;
-  var H = W ? Symbol.for("immer-nothing") : ((G = {})["immer-nothing"] = true, G);
-  var L = W ? Symbol.for("immer-draftable") : "__$immer_draftable";
-  var Q = W ? Symbol.for("immer-state") : "__$immer_state";
-  var V = "undefined" != typeof Symbol && Symbol.iterator || "@@iterator";
-  var Y = { 0: "Illegal state", 1: "Immer drafts cannot have computed properties", 2: "This object has been frozen and should not be mutated", 3: function(n3) {
-    return "Cannot use a proxy that has been revoked. Did you pass an object from inside an immer function to an async process? " + n3;
-  }, 4: "An immer producer returned a new value *and* modified its draft. Either return a new value *or* modify the draft.", 5: "Immer forbids circular references", 6: "The first or second argument to `produce` must be a function", 7: "The third argument to `produce` must be a function or undefined", 8: "First argument to `createDraft` must be a plain object, an array, or an immerable object", 9: "First argument to `finishDraft` must be a draft returned by `createDraft`", 10: "The given draft is already finalized", 11: "Object.defineProperty() cannot be used on an Immer draft", 12: "Object.setPrototypeOf() cannot be used on an Immer draft", 13: "Immer only supports deleting array indices", 14: "Immer only supports setting array indices and the 'length' property", 15: function(n3) {
-    return "Cannot apply patch, path doesn't resolve: " + n3;
-  }, 16: 'Sets cannot have "replace" patches.', 17: function(n3) {
-    return "Unsupported patch operation: " + n3;
-  }, 18: function(n3) {
-    return "The plugin for '" + n3 + "' has not been loaded into Immer. To enable the plugin, import and call `enable" + n3 + "()` when initializing your application.";
-  }, 20: "Cannot use proxies if Proxy, Proxy.revocable or Reflect are not available", 21: function(n3) {
-    return "produce can only be called on things that are draftable: plain objects, arrays, Map, Set or classes that are marked with '[immerable]: true'. Got '" + n3 + "'";
-  }, 22: function(n3) {
-    return "'current' expects a draft, got: " + n3;
-  }, 23: function(n3) {
-    return "'original' expects a draft, got: " + n3;
-  }, 24: "Patching reserved attributes like __proto__, prototype and constructor is not allowed" };
-  var Z = "" + Object.prototype.constructor;
-  var nn = "undefined" != typeof Reflect && Reflect.ownKeys ? Reflect.ownKeys : void 0 !== Object.getOwnPropertySymbols ? function(n3) {
-    return Object.getOwnPropertyNames(n3).concat(Object.getOwnPropertySymbols(n3));
-  } : Object.getOwnPropertyNames;
-  var rn = Object.getOwnPropertyDescriptors || function(n3) {
-    var r3 = {};
-    return nn(n3).forEach(function(t3) {
-      r3[t3] = Object.getOwnPropertyDescriptor(n3, t3);
-    }), r3;
-  };
-  var tn = {};
-  var en = { get: function(n3, r3) {
-    if (r3 === Q)
-      return n3;
-    var e2 = p(n3);
-    if (!u(e2, r3))
-      return function(n4, r4, t3) {
-        var e3, i4 = I(r4, t3);
-        return i4 ? "value" in i4 ? i4.value : null === (e3 = i4.get) || void 0 === e3 ? void 0 : e3.call(n4.k) : void 0;
-      }(n3, e2, r3);
-    var i3 = e2[r3];
-    return n3.I || !t(i3) ? i3 : i3 === z(n3.t, r3) ? (E(n3), n3.o[r3] = R(n3.A.h, i3, n3)) : i3;
-  }, has: function(n3, r3) {
-    return r3 in p(n3);
-  }, ownKeys: function(n3) {
-    return Reflect.ownKeys(p(n3));
-  }, set: function(n3, r3, t3) {
-    var e2 = I(p(n3), r3);
-    if (null == e2 ? void 0 : e2.set)
-      return e2.set.call(n3.k, t3), true;
-    if (!n3.P) {
-      var i3 = z(p(n3), r3), o2 = null == i3 ? void 0 : i3[Q];
-      if (o2 && o2.t === t3)
-        return n3.o[r3] = t3, n3.D[r3] = false, true;
-      if (c(t3, i3) && (void 0 !== t3 || u(n3.t, r3)))
-        return true;
-      E(n3), k(n3);
-    }
-    return n3.o[r3] === t3 && "number" != typeof t3 && (void 0 !== t3 || r3 in n3.o) || (n3.o[r3] = t3, n3.D[r3] = true, true);
-  }, deleteProperty: function(n3, r3) {
-    return void 0 !== z(n3.t, r3) || r3 in n3.t ? (n3.D[r3] = false, E(n3), k(n3)) : delete n3.D[r3], n3.o && delete n3.o[r3], true;
-  }, getOwnPropertyDescriptor: function(n3, r3) {
-    var t3 = p(n3), e2 = Reflect.getOwnPropertyDescriptor(t3, r3);
-    return e2 ? { writable: true, configurable: 1 !== n3.i || "length" !== r3, enumerable: e2.enumerable, value: t3[r3] } : e2;
-  }, defineProperty: function() {
-    n(11);
-  }, getPrototypeOf: function(n3) {
-    return Object.getPrototypeOf(n3.t);
-  }, setPrototypeOf: function() {
-    n(12);
-  } };
-  var on = {};
-  i(en, function(n3, r3) {
-    on[n3] = function() {
-      return arguments[0] = arguments[0][0], r3.apply(this, arguments);
-    };
-  }), on.deleteProperty = function(r3, t3) {
-    return isNaN(parseInt(t3)) && n(13), on.set.call(this, r3, t3, void 0);
-  }, on.set = function(r3, t3, e2) {
-    return "length" !== t3 && isNaN(parseInt(t3)) && n(14), en.set.call(this, r3[0], t3, e2, r3[0]);
-  };
-  var un = function() {
-    function e2(r3) {
-      var e3 = this;
-      this.g = B, this.F = true, this.produce = function(r4, i4, o2) {
-        if ("function" == typeof r4 && "function" != typeof i4) {
-          var u2 = i4;
-          i4 = r4;
-          var a3 = e3;
-          return function(n3) {
-            var r5 = this;
-            void 0 === n3 && (n3 = u2);
-            for (var t3 = arguments.length, e4 = Array(t3 > 1 ? t3 - 1 : 0), o3 = 1; o3 < t3; o3++)
-              e4[o3 - 1] = arguments[o3];
-            return a3.produce(n3, function(n4) {
-              var t4;
-              return (t4 = i4).call.apply(t4, [r5, n4].concat(e4));
-            });
-          };
-        }
-        var f3;
-        if ("function" != typeof i4 && n(6), void 0 !== o2 && "function" != typeof o2 && n(7), t(r4)) {
-          var c2 = w(e3), s2 = R(e3, r4, void 0), v6 = true;
-          try {
-            f3 = i4(s2), v6 = false;
-          } finally {
-            v6 ? O(c2) : g(c2);
-          }
-          return "undefined" != typeof Promise && f3 instanceof Promise ? f3.then(function(n3) {
-            return j(c2, o2), P(n3, c2);
-          }, function(n3) {
-            throw O(c2), n3;
-          }) : (j(c2, o2), P(f3, c2));
-        }
-        if (!r4 || "object" != typeof r4) {
-          if (void 0 === (f3 = i4(r4)) && (f3 = r4), f3 === H && (f3 = void 0), e3.F && d(f3, true), o2) {
-            var p2 = [], l2 = [];
-            b("Patches").M(r4, f3, p2, l2), o2(p2, l2);
-          }
-          return f3;
-        }
-        n(21, r4);
-      }, this.produceWithPatches = function(n3, r4) {
-        if ("function" == typeof n3)
-          return function(r5) {
-            for (var t4 = arguments.length, i5 = Array(t4 > 1 ? t4 - 1 : 0), o3 = 1; o3 < t4; o3++)
-              i5[o3 - 1] = arguments[o3];
-            return e3.produceWithPatches(r5, function(r6) {
-              return n3.apply(void 0, [r6].concat(i5));
-            });
-          };
-        var t3, i4, o2 = e3.produce(n3, r4, function(n4, r5) {
-          t3 = n4, i4 = r5;
-        });
-        return "undefined" != typeof Promise && o2 instanceof Promise ? o2.then(function(n4) {
-          return [n4, t3, i4];
-        }) : [o2, t3, i4];
-      }, "boolean" == typeof (null == r3 ? void 0 : r3.useProxies) && this.setUseProxies(r3.useProxies), "boolean" == typeof (null == r3 ? void 0 : r3.autoFreeze) && this.setAutoFreeze(r3.autoFreeze);
-    }
-    var i3 = e2.prototype;
-    return i3.createDraft = function(e3) {
-      t(e3) || n(8), r(e3) && (e3 = D(e3));
-      var i4 = w(this), o2 = R(this, e3, void 0);
-      return o2[Q].C = true, g(i4), o2;
-    }, i3.finishDraft = function(r3, t3) {
-      var e3 = r3 && r3[Q];
-      e3 && e3.C || n(9), e3.I && n(10);
-      var i4 = e3.A;
-      return j(i4, t3), P(void 0, i4);
-    }, i3.setAutoFreeze = function(n3) {
-      this.F = n3;
-    }, i3.setUseProxies = function(r3) {
-      r3 && !B && n(20), this.g = r3;
-    }, i3.applyPatches = function(n3, t3) {
-      var e3;
-      for (e3 = t3.length - 1; e3 >= 0; e3--) {
-        var i4 = t3[e3];
-        if (0 === i4.path.length && "replace" === i4.op) {
-          n3 = i4.value;
-          break;
-        }
-      }
-      e3 > -1 && (t3 = t3.slice(e3 + 1));
-      var o2 = b("Patches").$;
-      return r(n3) ? o2(n3, t3) : this.produce(n3, function(n4) {
-        return o2(n4, t3);
-      });
-    }, e2;
-  }();
-  var an = new un();
-  var fn = an.produce;
-  var cn = an.produceWithPatches.bind(an);
-  var sn = an.setAutoFreeze.bind(an);
-  var vn = an.setUseProxies.bind(an);
-  var pn = an.applyPatches.bind(an);
-  var ln = an.createDraft.bind(an);
-  var dn = an.finishDraft.bind(an);
-
-  // ../../packages/ui/utils/localforage.ts
-  var import_localforage = __toESM(require_localforage());
-  C();
-  isClient && isClient(() => {
-    import_localforage.default.config({
-      driver: [import_localforage.default.INDEXEDDB, import_localforage.default.LOCALSTORAGE, import_localforage.default.WEBSQL],
-      name: "jupiter-storage"
-    });
-  });
-  var LocalforageDataType = /* @__PURE__ */ ((LocalforageDataType2) => {
-    LocalforageDataType2["SyncTasks"] = "sync-tasks";
-    return LocalforageDataType2;
-  })(LocalforageDataType || {});
-  function getSyncTask(id) {
-    return __async(this, null, function* () {
-      const syncTasks = yield getSyncTasks();
-      return syncTasks ? syncTasks[id] : null;
-    });
-  }
-  function addSyncTask(id, task) {
-    return __async(this, null, function* () {
-      const syncTasks = yield getSyncTasks();
-      return setSyncTasks(__spreadProps(__spreadValues({}, syncTasks), { [id]: task }));
-    });
-  }
-  function updateSyncTask(id, updates) {
-    return __async(this, null, function* () {
-      const syncTasks = yield getSyncTasks();
-      const syncTask = syncTasks ? syncTasks[id] : null;
-      const updatedSyncTask = syncTaskSchema.parse(__spreadValues(__spreadValues({}, syncTask), updates));
-      yield setSyncTasks(__spreadProps(__spreadValues({}, syncTasks), { [id]: updatedSyncTask }));
-      return updatedSyncTask;
-    });
-  }
-  function removeSyncTask(id) {
-    return __async(this, null, function* () {
-      const syncTasks = yield getSyncTasks();
-      if (syncTasks && syncTasks[id]) {
-        const _a = syncTasks, { [id]: _3 } = _a, newSyncTasks = __objRest(_a, [__restKey(id)]);
-        setSyncTasks(newSyncTasks);
-        return true;
-      } else {
-        console.warn(`Could not find sync task with id ${id}`);
-        return false;
-      }
-    });
-  }
-  function clearSyncTasks() {
-    return __async(this, null, function* () {
-      return import_localforage.default.removeItem("sync-tasks" /* SyncTasks */);
-    });
-  }
-  var getSyncTasks = createGetter("sync-tasks" /* SyncTasks */, null);
-  var setSyncTasks = createSetter("sync-tasks" /* SyncTasks */);
-  function createGetter(key, defaultValue) {
-    return isServer && isServer() ? () => __async(this, null, function* () {
-    }) : () => __async(this, null, function* () {
-      const value = yield import_localforage.default.getItem(key);
-      return value === null ? defaultValue : deserialize(value);
-    });
-  }
-  function createSetter(key) {
-    return isServer && isServer() ? () => __async(this, null, function* () {
-    }) : (value) => __async(this, null, function* () {
-      return import_localforage.default.setItem(key, serialize(value));
-    });
-  }
-  function serialize(object) {
-    const isImmerable = getIsImmerable(object);
-    const isArray = Array.isArray(object);
-    const cannotSerialize = object instanceof FileSystemDirectoryHandle || object instanceof FileSystemFileHandle || object instanceof Date;
-    if (cannotSerialize) {
-      return object;
-    } else if (!isImmerable && isArray) {
-      return object.map(serialize);
-    } else {
-      return fn(object, (draft) => {
-        for (const key in object) {
-          if (Object.prototype.hasOwnProperty.call(object, key)) {
-            const value = object[key];
-            if (value instanceof Set) {
-              const set2 = value;
-              draft[key] = { __isSet: true, value: [...set2] };
-            } else if (typeof value === "object") {
-              draft[key] = serialize(value);
-            } else if (typeof value === "function") {
-              delete draft[key];
-            }
-          }
-        }
-      });
-    }
-  }
-  function deserialize(object) {
-    const isImmerable = getIsImmerable(object);
-    return !isImmerable ? object : fn(
-      object,
-      (draft) => {
-        for (const key in object) {
-          if (Object.prototype.hasOwnProperty.call(object, key)) {
-            const value = object[key];
-            if (value == null ? void 0 : value.__isSet) {
-              draft[key] = new Set(value.value);
-            } else if (typeof value === "object") {
-              draft[key] = deserialize(value);
-            }
-          }
-        }
-      }
-    );
-  }
-  function getIsImmerable(object) {
-    const isPlainObject = !!object && Object.getPrototypeOf(object) === Object.prototype;
-    const isMap = object instanceof Map;
-    const isSet = object instanceof Set;
-    const isImmerable = !!object && object[L] === true;
-    return isPlainObject || isMap || isSet || isImmerable;
-  }
-  var clear = () => import_localforage.default.clear();
-
-  // ../../packages/data/media-items.ts
-  var mediaItemSchema = mod.object({
-    id: mod.string(),
-    description: mod.string().optional(),
-    productUrl: mod.string(),
-    baseUrl: mod.string(),
-    mimeType: mod.string(),
-    filename: mod.string(),
-    mediaMetadata: mod.object({
-      creationTime: mod.string(),
-      width: mod.string(),
-      height: mod.string(),
-      video: mod.object({
-        cameraMake: mod.string().optional(),
-        cameraModel: mod.string().optional(),
-        fps: mod.number().optional(),
-        status: mod.enum(["UNSPECIFIED", "PROCESSING", "FAILED", "READY"])
-      }).optional(),
-      photo: mod.object({
-        cameraMake: mod.string().optional(),
-        cameraModel: mod.string().optional(),
-        focalLength: mod.number().optional(),
-        apertureFNumber: mod.number().optional(),
-        isoEquivalent: mod.number().optional(),
-        exposureTime: mod.string().optional()
-      }).optional()
-    }),
-    contributorInfo: mod.object({ profilePictureBaseUrl: mod.string().optional(), displayName: mod.string().optional() }).optional()
-  });
-  var mediaItemsResponseSchema = mod.object({
-    accessToken: mod.string(),
-    refreshToken: mod.string(),
-    mediaItems: mod.preprocess(
-      (args) => Array.isArray(args) ? args : [],
-      mod.array(mediaItemSchema),
-      mod.array(mediaItemSchema)
-    ),
-    nextPageToken: mod.string().optional()
-  });
-
-  // ../../packages/data/download.ts
-  var downloadSchema = mod.object({ ["mediaItem" /* mediaItem */]: mediaItemSchema });
-  var downloadTaskSchema = taskSchema.extend({
-    ["data" /* data */]: mod.object({
-      ["mediaItem" /* mediaItem */]: mediaItemSchema.optional()
-    })
-  });
-  function getDownloadQueueRefPath({ userId, syncTaskId }) {
-    return `download-queue/${userId}/${syncTaskId}`;
-  }
-
-  // ../../packages/data/web.ts
-  var WEB = {
-    API: {
-      MEDIA_ITEMS: "/api/media-items",
-      OAUTH2: "/api/oauth2"
-    },
-    DATABASE: {
-      PATHS: {
-        LIBRARY_MEDIA_ITEMS: (userId, libraryId) => `user-owned/${userId}/library/${libraryId}/media-items`,
-        LIBRARY_IMPORT: (userId, libraryId) => `user-owned/${userId}/library/${libraryId}/import`,
-        SYNC_TASKS: (userId) => `user-owned/${userId}/sync-tasks`
-      }
-    },
-    FIREBASE: {
-      APP_NAME: "google-photos",
-      apiKey: "AIzaSyCwCbnCcsSyqLdpMGygRFGp-xMfdZDVSEA",
-      authDomain: "photos-tools-2022.firebaseapp.com",
-      projectId: "photos-tools-2022",
-      storageBucket: "photos-tools-2022.appspot.com",
-      messagingSenderId: "550579950350",
-      appId: "1:550579950350:web:d32a68a214c5c58a273d5f",
-      measurementId: "G-5M5ME2ZH0R"
-    },
-    FIRESTORE: {
-      COLLECTIONS: {
-        LIBRARIES: (userId) => `users/${userId}/libraries`,
-        LIBRARY: (userId, libraryId) => `users/${userId}/libraries/${libraryId}`
-      }
-    },
-    ROUTES: {
-      ROOT: "/",
-      PHOTOS: "/photos",
-      LIBRARY: (libraryId) => `/photos/library/${libraryId}`,
-      SYNC: "/photos/sync"
-    }
-  };
-
-  // src/sync-task.ts
-  var BATCH_SIZE = 10;
-  var ONE_HOUR_IN_MS = 36e5;
-  async function startSyncTask({
-    database: database2,
-    taskId,
-    userId
-  }) {
-    const syncTaskRefPath = getSyncTaskRefPath({ userId, taskId });
-    const syncTaskRef = ref(database2, syncTaskRefPath);
-    const task = await localforage_exports.getSyncTask(taskId);
-    const queue = Queue({
-      batchSize: BATCH_SIZE,
-      callback: async () => {
-        return new Promise((resolve) => {
-          const random = Math.random();
-          const timeout = random * 1e3 * 2;
-          const success = random > 0.5;
-          setTimeout(() => {
-            resolve({ success, message: `r: ${Math.round(random * 1e3) / 1e3}` });
-          }, timeout);
-        });
-      },
-      ref: ref(database2, getDownloadQueueRefPath({ userId, syncTaskId: taskId }))
-    });
-    const unsubscribeMetadata = onValue(queue.metadataRef, (dataSnapshot) => {
-      const value = dataSnapshot.val();
-      const parsed = metadataSchema.safeParse(value);
-      const hasNotStarted = !value;
-      let shouldAddNextPage = hasNotStarted;
-      if (parsed.success) {
-        const { activeCount, waitingCount } = parsed.data;
-        shouldAddNextPage = !activeCount && !waitingCount;
-        console.log({ activeCount, waitingCount, shouldAddNextPage });
-      }
-      console.log({ shouldAddNextPage, value });
-      shouldAddNextPage && task && addNextPage({ queue, syncTaskRef, task, taskId });
-    });
-    return {
-      queue,
-      unsubscribe: () => {
-        unsubscribeMetadata();
-        queue.stop();
-      }
-    };
-  }
-  async function addNextPage({
-    queue,
-    syncTaskRef,
-    task,
-    taskId
-  }) {
-    const isExpiredAccessToken = Date.now() - task.accessTokenCreated > ONE_HOUR_IN_MS;
-    const accessTokenCreated = isExpiredAccessToken ? Date.now() : task.accessTokenCreated;
-    const url = addParams(`${location.origin}${WEB.API.MEDIA_ITEMS}`, {
-      pageSize: 100,
-      pageToken: task.nextPageToken,
-      accessToken: isExpiredAccessToken ? void 0 : task.accessToken,
-      refreshToken: task.refreshToken
-    });
-    const response = await fetch(url);
-    const data = await response.json();
-    console.log({ data });
-    debugger;
-    const { mediaItems, accessToken, nextPageToken } = mediaItemsResponseSchema.parse(data);
-    const count = mediaItems.length;
-    const downloadTasks = mediaItems.map((mediaItem) => downloadSchema.parse({ ["mediaItem" /* mediaItem */]: mediaItem }));
-    await queue.add(downloadTasks);
-    await update(syncTaskRef, {
-      ["accessToken" /* accessToken */]: accessToken,
-      ["accessTokenCreated" /* accessTokenCreated */]: accessTokenCreated,
-      ["fileCount" /* fileCount */]: increment(count),
-      ["importedCount" /* importedCount */]: increment(count),
-      ["previousPageToken" /* previousPageToken */]: task.nextPageToken,
-      ["nextPageToken" /* nextPageToken */]: nextPageToken,
-      ["stage" /* stage */]: "downloading" /* downloading */
-    });
-    await localforage_exports.updateSyncTask(taskId, {
-      ["accessToken" /* accessToken */]: accessToken,
-      ["accessTokenCreated" /* accessTokenCreated */]: accessTokenCreated,
-      ["fileCount" /* fileCount */]: task.fileCount + count,
-      ["importedCount" /* importedCount */]: task.importedCount + count,
-      ["nextPageToken" /* nextPageToken */]: nextPageToken
-    });
-  }
-
   // ../../node_modules/tslib/modules/index.js
   var import_tslib = __toESM(require_tslib(), 1);
   var {
@@ -17787,10 +8309,10 @@
   }
   var prodErrorMap = _prodErrorMap;
   var _DEFAULT_AUTH_ERROR_FACTORY = new ErrorFactory("auth", "Firebase", _prodErrorMap());
-  var logClient2 = new Logger("@firebase/auth");
+  var logClient = new Logger("@firebase/auth");
   function _logError(msg, ...args) {
-    if (logClient2.logLevel <= LogLevel.ERROR) {
-      logClient2.error(`Auth (${SDK_VERSION}): ${msg}`, ...args);
+    if (logClient.logLevel <= LogLevel.ERROR) {
+      logClient.error(`Auth (${SDK_VERSION}): ${msg}`, ...args);
     }
   }
   function _fail(authOrCode, ...rest) {
@@ -18010,13 +8532,13 @@
           };
         }
       }
-      const query2 = querystring(Object.assign({ key: auth.config.apiKey }, params)).slice(1);
+      const query = querystring(Object.assign({ key: auth.config.apiKey }, params)).slice(1);
       const headers = await auth._getAdditionalHeaders();
       headers["Content-Type"] = "application/json";
       if (auth.languageCode) {
         headers["X-Firebase-Locale"] = auth.languageCode;
       }
-      return FetchProvider.fetch()(_getFinalTarget(auth, auth.config.apiHost, path, query2), Object.assign({
+      return FetchProvider.fetch()(_getFinalTarget(auth, auth.config.apiHost, path, query), Object.assign({
         method,
         headers,
         referrerPolicy: "no-referrer"
@@ -18072,8 +8594,8 @@
     }
     return serverResponse;
   }
-  function _getFinalTarget(auth, host, path, query2) {
-    const base = `${host}${path}?${query2}`;
+  function _getFinalTarget(auth, host, path, query) {
+    const base = `${host}${path}?${query}`;
     if (!auth.config.emulator) {
       return `${auth.config.apiScheme}://${base}`;
     }
@@ -21403,8 +11925,8 @@
     }
   };
   PhoneMultiFactorGenerator.FACTOR_ID = "phone";
-  var name3 = "@firebase/auth";
-  var version4 = "0.20.11";
+  var name2 = "@firebase/auth";
+  var version3 = "0.20.11";
   var AuthInterop = class {
     constructor(auth) {
       this.auth = auth;
@@ -21502,8 +12024,8 @@
       const auth = _castAuth(container.getProvider("auth").getImmediate());
       return ((auth2) => new AuthInterop(auth2))(auth);
     }, "PRIVATE").setInstantiationMode("EXPLICIT"));
-    registerVersion(name3, version4, getVersionForPlatform(clientPlatform));
-    registerVersion(name3, version4, "esm2017");
+    registerVersion(name2, version3, getVersionForPlatform(clientPlatform));
+    registerVersion(name2, version3, "esm2017");
   }
   var DEFAULT_ID_TOKEN_MAX_AGE = 5 * 60;
   var authIdTokenMaxAge = getExperimentalSetting("authIdTokenMaxAge") || DEFAULT_ID_TOKEN_MAX_AGE;
@@ -21553,8 +12075,7829 @@
   }
   registerAuth("Browser");
 
+  // ../../packages/data/web.ts
+  var WEB = {
+    API: {
+      MEDIA_ITEMS: "/api/media-items",
+      OAUTH2: "/api/oauth2"
+    },
+    DATABASE: {
+      PATHS: {
+        LIBRARY_MEDIA_ITEMS: (userId, libraryId) => `user-owned/${userId}/library/${libraryId}/media-items`,
+        LIBRARY_IMPORT: (userId, libraryId) => `user-owned/${userId}/library/${libraryId}/import`,
+        LIBRARY_DOWNLOAD: (userId, libraryId) => `user-owned/${userId}/library/${libraryId}/download`,
+        LIBRARY_DOWNLOAD_QUEUE: (userId, libraryId) => `user-owned/${userId}/library/${libraryId}/download-queue`,
+        SYNC_TASKS: (userId) => `user-owned/${userId}/sync-tasks`
+      }
+    },
+    FIREBASE: {
+      APP_NAME: "google-photos",
+      apiKey: "AIzaSyCwCbnCcsSyqLdpMGygRFGp-xMfdZDVSEA",
+      authDomain: "photos-tools-2022.firebaseapp.com",
+      projectId: "photos-tools-2022",
+      storageBucket: "photos-tools-2022.appspot.com",
+      messagingSenderId: "550579950350",
+      appId: "1:550579950350:web:d32a68a214c5c58a273d5f",
+      measurementId: "G-5M5ME2ZH0R"
+    },
+    FIRESTORE: {
+      COLLECTIONS: {
+        LIBRARIES: (userId) => `users/${userId}/libraries`,
+        LIBRARY: (userId, libraryId) => `users/${userId}/libraries/${libraryId}`
+      }
+    },
+    ROUTES: {
+      ROOT: "/",
+      PHOTOS: "/photos",
+      LIBRARY: (libraryId) => `/photos/library/${libraryId}`,
+      SYNC: "/photos/sync"
+    }
+  };
+
+  // ../../node_modules/@firebase/database/dist/index.esm2017.js
+  var name3 = "@firebase/database";
+  var version4 = "0.13.10";
+  var SDK_VERSION2 = "";
+  function setSDKVersion(version6) {
+    SDK_VERSION2 = version6;
+  }
+  var DOMStorageWrapper = class {
+    constructor(domStorage_) {
+      this.domStorage_ = domStorage_;
+      this.prefix_ = "firebase:";
+    }
+    set(key, value) {
+      if (value == null) {
+        this.domStorage_.removeItem(this.prefixedName_(key));
+      } else {
+        this.domStorage_.setItem(this.prefixedName_(key), stringify2(value));
+      }
+    }
+    get(key) {
+      const storedVal = this.domStorage_.getItem(this.prefixedName_(key));
+      if (storedVal == null) {
+        return null;
+      } else {
+        return jsonEval(storedVal);
+      }
+    }
+    remove(key) {
+      this.domStorage_.removeItem(this.prefixedName_(key));
+    }
+    prefixedName_(name5) {
+      return this.prefix_ + name5;
+    }
+    toString() {
+      return this.domStorage_.toString();
+    }
+  };
+  var MemoryStorage = class {
+    constructor() {
+      this.cache_ = {};
+      this.isInMemoryStorage = true;
+    }
+    set(key, value) {
+      if (value == null) {
+        delete this.cache_[key];
+      } else {
+        this.cache_[key] = value;
+      }
+    }
+    get(key) {
+      if (contains(this.cache_, key)) {
+        return this.cache_[key];
+      }
+      return null;
+    }
+    remove(key) {
+      delete this.cache_[key];
+    }
+  };
+  var createStoragefor = function(domStorageName) {
+    try {
+      if (typeof window !== "undefined" && typeof window[domStorageName] !== "undefined") {
+        const domStorage = window[domStorageName];
+        domStorage.setItem("firebase:sentinel", "cache");
+        domStorage.removeItem("firebase:sentinel");
+        return new DOMStorageWrapper(domStorage);
+      }
+    } catch (e2) {
+    }
+    return new MemoryStorage();
+  };
+  var PersistentStorage = createStoragefor("localStorage");
+  var SessionStorage = createStoragefor("sessionStorage");
+  var logClient2 = new Logger("@firebase/database");
+  var LUIDGenerator = function() {
+    let id = 1;
+    return function() {
+      return id++;
+    };
+  }();
+  var sha12 = function(str) {
+    const utf8Bytes = stringToByteArray(str);
+    const sha13 = new Sha1();
+    sha13.update(utf8Bytes);
+    const sha1Bytes = sha13.digest();
+    return base64.encodeByteArray(sha1Bytes);
+  };
+  var buildLogMessage_ = function(...varArgs) {
+    let message = "";
+    for (let i3 = 0; i3 < varArgs.length; i3++) {
+      const arg = varArgs[i3];
+      if (Array.isArray(arg) || arg && typeof arg === "object" && typeof arg.length === "number") {
+        message += buildLogMessage_.apply(null, arg);
+      } else if (typeof arg === "object") {
+        message += stringify2(arg);
+      } else {
+        message += arg;
+      }
+      message += " ";
+    }
+    return message;
+  };
+  var logger2 = null;
+  var firstLog_ = true;
+  var enableLogging$1 = function(logger_, persistent) {
+    assert(!persistent || logger_ === true || logger_ === false, "Can't turn on custom loggers persistently.");
+    if (logger_ === true) {
+      logClient2.logLevel = LogLevel.VERBOSE;
+      logger2 = logClient2.log.bind(logClient2);
+      if (persistent) {
+        SessionStorage.set("logging_enabled", true);
+      }
+    } else if (typeof logger_ === "function") {
+      logger2 = logger_;
+    } else {
+      logger2 = null;
+      SessionStorage.remove("logging_enabled");
+    }
+  };
+  var log = function(...varArgs) {
+    if (firstLog_ === true) {
+      firstLog_ = false;
+      if (logger2 === null && SessionStorage.get("logging_enabled") === true) {
+        enableLogging$1(true);
+      }
+    }
+    if (logger2) {
+      const message = buildLogMessage_.apply(null, varArgs);
+      logger2(message);
+    }
+  };
+  var logWrapper = function(prefix) {
+    return function(...varArgs) {
+      log(prefix, ...varArgs);
+    };
+  };
+  var error = function(...varArgs) {
+    const message = "FIREBASE INTERNAL ERROR: " + buildLogMessage_(...varArgs);
+    logClient2.error(message);
+  };
+  var fatal = function(...varArgs) {
+    const message = `FIREBASE FATAL ERROR: ${buildLogMessage_(...varArgs)}`;
+    logClient2.error(message);
+    throw new Error(message);
+  };
+  var warn = function(...varArgs) {
+    const message = "FIREBASE WARNING: " + buildLogMessage_(...varArgs);
+    logClient2.warn(message);
+  };
+  var warnIfPageIsSecure = function() {
+    if (typeof window !== "undefined" && window.location && window.location.protocol && window.location.protocol.indexOf("https:") !== -1) {
+      warn("Insecure Firebase access from a secure page. Please use https in calls to new Firebase().");
+    }
+  };
+  var isInvalidJSONNumber = function(data) {
+    return typeof data === "number" && (data !== data || data === Number.POSITIVE_INFINITY || data === Number.NEGATIVE_INFINITY);
+  };
+  var executeWhenDOMReady = function(fn3) {
+    if (isNodeSdk() || document.readyState === "complete") {
+      fn3();
+    } else {
+      let called = false;
+      const wrappedFn = function() {
+        if (!document.body) {
+          setTimeout(wrappedFn, Math.floor(10));
+          return;
+        }
+        if (!called) {
+          called = true;
+          fn3();
+        }
+      };
+      if (document.addEventListener) {
+        document.addEventListener("DOMContentLoaded", wrappedFn, false);
+        window.addEventListener("load", wrappedFn, false);
+      } else if (document.attachEvent) {
+        document.attachEvent("onreadystatechange", () => {
+          if (document.readyState === "complete") {
+            wrappedFn();
+          }
+        });
+        window.attachEvent("onload", wrappedFn);
+      }
+    }
+  };
+  var MIN_NAME = "[MIN_NAME]";
+  var MAX_NAME = "[MAX_NAME]";
+  var nameCompare = function(a3, b3) {
+    if (a3 === b3) {
+      return 0;
+    } else if (a3 === MIN_NAME || b3 === MAX_NAME) {
+      return -1;
+    } else if (b3 === MIN_NAME || a3 === MAX_NAME) {
+      return 1;
+    } else {
+      const aAsInt = tryParseInt(a3), bAsInt = tryParseInt(b3);
+      if (aAsInt !== null) {
+        if (bAsInt !== null) {
+          return aAsInt - bAsInt === 0 ? a3.length - b3.length : aAsInt - bAsInt;
+        } else {
+          return -1;
+        }
+      } else if (bAsInt !== null) {
+        return 1;
+      } else {
+        return a3 < b3 ? -1 : 1;
+      }
+    }
+  };
+  var stringCompare = function(a3, b3) {
+    if (a3 === b3) {
+      return 0;
+    } else if (a3 < b3) {
+      return -1;
+    } else {
+      return 1;
+    }
+  };
+  var requireKey = function(key, obj) {
+    if (obj && key in obj) {
+      return obj[key];
+    } else {
+      throw new Error("Missing required key (" + key + ") in object: " + stringify2(obj));
+    }
+  };
+  var ObjectToUniqueKey = function(obj) {
+    if (typeof obj !== "object" || obj === null) {
+      return stringify2(obj);
+    }
+    const keys = [];
+    for (const k3 in obj) {
+      keys.push(k3);
+    }
+    keys.sort();
+    let key = "{";
+    for (let i3 = 0; i3 < keys.length; i3++) {
+      if (i3 !== 0) {
+        key += ",";
+      }
+      key += stringify2(keys[i3]);
+      key += ":";
+      key += ObjectToUniqueKey(obj[keys[i3]]);
+    }
+    key += "}";
+    return key;
+  };
+  var splitStringBySize = function(str, segsize) {
+    const len = str.length;
+    if (len <= segsize) {
+      return [str];
+    }
+    const dataSegs = [];
+    for (let c2 = 0; c2 < len; c2 += segsize) {
+      if (c2 + segsize > len) {
+        dataSegs.push(str.substring(c2, len));
+      } else {
+        dataSegs.push(str.substring(c2, c2 + segsize));
+      }
+    }
+    return dataSegs;
+  };
+  function each(obj, fn3) {
+    for (const key in obj) {
+      if (obj.hasOwnProperty(key)) {
+        fn3(key, obj[key]);
+      }
+    }
+  }
+  var doubleToIEEE754String = function(v6) {
+    assert(!isInvalidJSONNumber(v6), "Invalid JSON number");
+    const ebits = 11, fbits = 52;
+    const bias = (1 << ebits - 1) - 1;
+    let s2, e2, f3, ln3, i3;
+    if (v6 === 0) {
+      e2 = 0;
+      f3 = 0;
+      s2 = 1 / v6 === -Infinity ? 1 : 0;
+    } else {
+      s2 = v6 < 0;
+      v6 = Math.abs(v6);
+      if (v6 >= Math.pow(2, 1 - bias)) {
+        ln3 = Math.min(Math.floor(Math.log(v6) / Math.LN2), bias);
+        e2 = ln3 + bias;
+        f3 = Math.round(v6 * Math.pow(2, fbits - ln3) - Math.pow(2, fbits));
+      } else {
+        e2 = 0;
+        f3 = Math.round(v6 / Math.pow(2, 1 - bias - fbits));
+      }
+    }
+    const bits = [];
+    for (i3 = fbits; i3; i3 -= 1) {
+      bits.push(f3 % 2 ? 1 : 0);
+      f3 = Math.floor(f3 / 2);
+    }
+    for (i3 = ebits; i3; i3 -= 1) {
+      bits.push(e2 % 2 ? 1 : 0);
+      e2 = Math.floor(e2 / 2);
+    }
+    bits.push(s2 ? 1 : 0);
+    bits.reverse();
+    const str = bits.join("");
+    let hexByteString = "";
+    for (i3 = 0; i3 < 64; i3 += 8) {
+      let hexByte = parseInt(str.substr(i3, 8), 2).toString(16);
+      if (hexByte.length === 1) {
+        hexByte = "0" + hexByte;
+      }
+      hexByteString = hexByteString + hexByte;
+    }
+    return hexByteString.toLowerCase();
+  };
+  var isChromeExtensionContentScript = function() {
+    return !!(typeof window === "object" && window["chrome"] && window["chrome"]["extension"] && !/^chrome/.test(window.location.href));
+  };
+  var isWindowsStoreApp = function() {
+    return typeof Windows === "object" && typeof Windows.UI === "object";
+  };
+  function errorForServerCode(code, query) {
+    let reason = "Unknown Error";
+    if (code === "too_big") {
+      reason = "The data requested exceeds the maximum size that can be accessed with a single request.";
+    } else if (code === "permission_denied") {
+      reason = "Client doesn't have permission to access the desired data.";
+    } else if (code === "unavailable") {
+      reason = "The service is unavailable";
+    }
+    const error2 = new Error(code + " at " + query._path.toString() + ": " + reason);
+    error2.code = code.toUpperCase();
+    return error2;
+  }
+  var INTEGER_REGEXP_ = new RegExp("^-?(0*)\\d{1,10}$");
+  var INTEGER_32_MIN = -2147483648;
+  var INTEGER_32_MAX = 2147483647;
+  var tryParseInt = function(str) {
+    if (INTEGER_REGEXP_.test(str)) {
+      const intVal = Number(str);
+      if (intVal >= INTEGER_32_MIN && intVal <= INTEGER_32_MAX) {
+        return intVal;
+      }
+    }
+    return null;
+  };
+  var exceptionGuard = function(fn3) {
+    try {
+      fn3();
+    } catch (e2) {
+      setTimeout(() => {
+        const stack = e2.stack || "";
+        warn("Exception was thrown by user callback.", stack);
+        throw e2;
+      }, Math.floor(0));
+    }
+  };
+  var beingCrawled = function() {
+    const userAgent = typeof window === "object" && window["navigator"] && window["navigator"]["userAgent"] || "";
+    return userAgent.search(/googlebot|google webmaster tools|bingbot|yahoo! slurp|baiduspider|yandexbot|duckduckbot/i) >= 0;
+  };
+  var setTimeoutNonBlocking = function(fn3, time) {
+    const timeout = setTimeout(fn3, time);
+    if (typeof timeout === "number" && typeof Deno !== "undefined" && Deno["unrefTimer"]) {
+      Deno.unrefTimer(timeout);
+    } else if (typeof timeout === "object" && timeout["unref"]) {
+      timeout["unref"]();
+    }
+    return timeout;
+  };
+  var AppCheckTokenProvider = class {
+    constructor(appName_, appCheckProvider) {
+      this.appName_ = appName_;
+      this.appCheckProvider = appCheckProvider;
+      this.appCheck = appCheckProvider === null || appCheckProvider === void 0 ? void 0 : appCheckProvider.getImmediate({ optional: true });
+      if (!this.appCheck) {
+        appCheckProvider === null || appCheckProvider === void 0 ? void 0 : appCheckProvider.get().then((appCheck) => this.appCheck = appCheck);
+      }
+    }
+    getToken(forceRefresh) {
+      if (!this.appCheck) {
+        return new Promise((resolve, reject) => {
+          setTimeout(() => {
+            if (this.appCheck) {
+              this.getToken(forceRefresh).then(resolve, reject);
+            } else {
+              resolve(null);
+            }
+          }, 0);
+        });
+      }
+      return this.appCheck.getToken(forceRefresh);
+    }
+    addTokenChangeListener(listener) {
+      var _a;
+      (_a = this.appCheckProvider) === null || _a === void 0 ? void 0 : _a.get().then((appCheck) => appCheck.addTokenListener(listener));
+    }
+    notifyForInvalidToken() {
+      warn(`Provided AppCheck credentials for the app named "${this.appName_}" are invalid. This usually indicates your app was not initialized correctly.`);
+    }
+  };
+  var FirebaseAuthTokenProvider = class {
+    constructor(appName_, firebaseOptions_, authProvider_) {
+      this.appName_ = appName_;
+      this.firebaseOptions_ = firebaseOptions_;
+      this.authProvider_ = authProvider_;
+      this.auth_ = null;
+      this.auth_ = authProvider_.getImmediate({ optional: true });
+      if (!this.auth_) {
+        authProvider_.onInit((auth) => this.auth_ = auth);
+      }
+    }
+    getToken(forceRefresh) {
+      if (!this.auth_) {
+        return new Promise((resolve, reject) => {
+          setTimeout(() => {
+            if (this.auth_) {
+              this.getToken(forceRefresh).then(resolve, reject);
+            } else {
+              resolve(null);
+            }
+          }, 0);
+        });
+      }
+      return this.auth_.getToken(forceRefresh).catch((error2) => {
+        if (error2 && error2.code === "auth/token-not-initialized") {
+          log("Got auth/token-not-initialized error.  Treating as null token.");
+          return null;
+        } else {
+          return Promise.reject(error2);
+        }
+      });
+    }
+    addTokenChangeListener(listener) {
+      if (this.auth_) {
+        this.auth_.addAuthTokenListener(listener);
+      } else {
+        this.authProvider_.get().then((auth) => auth.addAuthTokenListener(listener));
+      }
+    }
+    removeTokenChangeListener(listener) {
+      this.authProvider_.get().then((auth) => auth.removeAuthTokenListener(listener));
+    }
+    notifyForInvalidToken() {
+      let errorMessage = 'Provided authentication credentials for the app named "' + this.appName_ + '" are invalid. This usually indicates your app was not initialized correctly. ';
+      if ("credential" in this.firebaseOptions_) {
+        errorMessage += 'Make sure the "credential" property provided to initializeApp() is authorized to access the specified "databaseURL" and is from the correct project.';
+      } else if ("serviceAccount" in this.firebaseOptions_) {
+        errorMessage += 'Make sure the "serviceAccount" property provided to initializeApp() is authorized to access the specified "databaseURL" and is from the correct project.';
+      } else {
+        errorMessage += 'Make sure the "apiKey" and "databaseURL" properties provided to initializeApp() match the values provided for your app at https://console.firebase.google.com/.';
+      }
+      warn(errorMessage);
+    }
+  };
+  var EmulatorTokenProvider = class {
+    constructor(accessToken) {
+      this.accessToken = accessToken;
+    }
+    getToken(forceRefresh) {
+      return Promise.resolve({
+        accessToken: this.accessToken
+      });
+    }
+    addTokenChangeListener(listener) {
+      listener(this.accessToken);
+    }
+    removeTokenChangeListener(listener) {
+    }
+    notifyForInvalidToken() {
+    }
+  };
+  EmulatorTokenProvider.OWNER = "owner";
+  var PROTOCOL_VERSION = "5";
+  var VERSION_PARAM = "v";
+  var TRANSPORT_SESSION_PARAM = "s";
+  var REFERER_PARAM = "r";
+  var FORGE_REF = "f";
+  var FORGE_DOMAIN_RE = /(console\.firebase|firebase-console-\w+\.corp|firebase\.corp)\.google\.com/;
+  var LAST_SESSION_PARAM = "ls";
+  var APPLICATION_ID_PARAM = "p";
+  var APP_CHECK_TOKEN_PARAM = "ac";
+  var WEBSOCKET = "websocket";
+  var LONG_POLLING = "long_polling";
+  var RepoInfo = class {
+    constructor(host, secure, namespace, webSocketOnly, nodeAdmin = false, persistenceKey = "", includeNamespaceInQueryParams = false) {
+      this.secure = secure;
+      this.namespace = namespace;
+      this.webSocketOnly = webSocketOnly;
+      this.nodeAdmin = nodeAdmin;
+      this.persistenceKey = persistenceKey;
+      this.includeNamespaceInQueryParams = includeNamespaceInQueryParams;
+      this._host = host.toLowerCase();
+      this._domain = this._host.substr(this._host.indexOf(".") + 1);
+      this.internalHost = PersistentStorage.get("host:" + host) || this._host;
+    }
+    isCacheableHost() {
+      return this.internalHost.substr(0, 2) === "s-";
+    }
+    isCustomHost() {
+      return this._domain !== "firebaseio.com" && this._domain !== "firebaseio-demo.com";
+    }
+    get host() {
+      return this._host;
+    }
+    set host(newHost) {
+      if (newHost !== this.internalHost) {
+        this.internalHost = newHost;
+        if (this.isCacheableHost()) {
+          PersistentStorage.set("host:" + this._host, this.internalHost);
+        }
+      }
+    }
+    toString() {
+      let str = this.toURLString();
+      if (this.persistenceKey) {
+        str += "<" + this.persistenceKey + ">";
+      }
+      return str;
+    }
+    toURLString() {
+      const protocol = this.secure ? "https://" : "http://";
+      const query = this.includeNamespaceInQueryParams ? `?ns=${this.namespace}` : "";
+      return `${protocol}${this.host}/${query}`;
+    }
+  };
+  function repoInfoNeedsQueryParam(repoInfo) {
+    return repoInfo.host !== repoInfo.internalHost || repoInfo.isCustomHost() || repoInfo.includeNamespaceInQueryParams;
+  }
+  function repoInfoConnectionURL(repoInfo, type, params) {
+    assert(typeof type === "string", "typeof type must == string");
+    assert(typeof params === "object", "typeof params must == object");
+    let connURL;
+    if (type === WEBSOCKET) {
+      connURL = (repoInfo.secure ? "wss://" : "ws://") + repoInfo.internalHost + "/.ws?";
+    } else if (type === LONG_POLLING) {
+      connURL = (repoInfo.secure ? "https://" : "http://") + repoInfo.internalHost + "/.lp?";
+    } else {
+      throw new Error("Unknown connection type: " + type);
+    }
+    if (repoInfoNeedsQueryParam(repoInfo)) {
+      params["ns"] = repoInfo.namespace;
+    }
+    const pairs = [];
+    each(params, (key, value) => {
+      pairs.push(key + "=" + value);
+    });
+    return connURL + pairs.join("&");
+  }
+  var StatsCollection = class {
+    constructor() {
+      this.counters_ = {};
+    }
+    incrementCounter(name5, amount = 1) {
+      if (!contains(this.counters_, name5)) {
+        this.counters_[name5] = 0;
+      }
+      this.counters_[name5] += amount;
+    }
+    get() {
+      return deepCopy(this.counters_);
+    }
+  };
+  var collections = {};
+  var reporters = {};
+  function statsManagerGetCollection(repoInfo) {
+    const hashString = repoInfo.toString();
+    if (!collections[hashString]) {
+      collections[hashString] = new StatsCollection();
+    }
+    return collections[hashString];
+  }
+  function statsManagerGetOrCreateReporter(repoInfo, creatorFunction) {
+    const hashString = repoInfo.toString();
+    if (!reporters[hashString]) {
+      reporters[hashString] = creatorFunction();
+    }
+    return reporters[hashString];
+  }
+  var PacketReceiver = class {
+    constructor(onMessage_) {
+      this.onMessage_ = onMessage_;
+      this.pendingResponses = [];
+      this.currentResponseNum = 0;
+      this.closeAfterResponse = -1;
+      this.onClose = null;
+    }
+    closeAfter(responseNum, callback) {
+      this.closeAfterResponse = responseNum;
+      this.onClose = callback;
+      if (this.closeAfterResponse < this.currentResponseNum) {
+        this.onClose();
+        this.onClose = null;
+      }
+    }
+    handleResponse(requestNum, data) {
+      this.pendingResponses[requestNum] = data;
+      while (this.pendingResponses[this.currentResponseNum]) {
+        const toProcess = this.pendingResponses[this.currentResponseNum];
+        delete this.pendingResponses[this.currentResponseNum];
+        for (let i3 = 0; i3 < toProcess.length; ++i3) {
+          if (toProcess[i3]) {
+            exceptionGuard(() => {
+              this.onMessage_(toProcess[i3]);
+            });
+          }
+        }
+        if (this.currentResponseNum === this.closeAfterResponse) {
+          if (this.onClose) {
+            this.onClose();
+            this.onClose = null;
+          }
+          break;
+        }
+        this.currentResponseNum++;
+      }
+    }
+  };
+  var FIREBASE_LONGPOLL_START_PARAM = "start";
+  var FIREBASE_LONGPOLL_CLOSE_COMMAND = "close";
+  var FIREBASE_LONGPOLL_COMMAND_CB_NAME = "pLPCommand";
+  var FIREBASE_LONGPOLL_DATA_CB_NAME = "pRTLPCB";
+  var FIREBASE_LONGPOLL_ID_PARAM = "id";
+  var FIREBASE_LONGPOLL_PW_PARAM = "pw";
+  var FIREBASE_LONGPOLL_SERIAL_PARAM = "ser";
+  var FIREBASE_LONGPOLL_CALLBACK_ID_PARAM = "cb";
+  var FIREBASE_LONGPOLL_SEGMENT_NUM_PARAM = "seg";
+  var FIREBASE_LONGPOLL_SEGMENTS_IN_PACKET = "ts";
+  var FIREBASE_LONGPOLL_DATA_PARAM = "d";
+  var FIREBASE_LONGPOLL_DISCONN_FRAME_REQUEST_PARAM = "dframe";
+  var MAX_URL_DATA_SIZE = 1870;
+  var SEG_HEADER_SIZE = 30;
+  var MAX_PAYLOAD_SIZE = MAX_URL_DATA_SIZE - SEG_HEADER_SIZE;
+  var KEEPALIVE_REQUEST_INTERVAL = 25e3;
+  var LP_CONNECT_TIMEOUT = 3e4;
+  var BrowserPollConnection = class {
+    constructor(connId, repoInfo, applicationId, appCheckToken, authToken, transportSessionId, lastSessionId) {
+      this.connId = connId;
+      this.repoInfo = repoInfo;
+      this.applicationId = applicationId;
+      this.appCheckToken = appCheckToken;
+      this.authToken = authToken;
+      this.transportSessionId = transportSessionId;
+      this.lastSessionId = lastSessionId;
+      this.bytesSent = 0;
+      this.bytesReceived = 0;
+      this.everConnected_ = false;
+      this.log_ = logWrapper(connId);
+      this.stats_ = statsManagerGetCollection(repoInfo);
+      this.urlFn = (params) => {
+        if (this.appCheckToken) {
+          params[APP_CHECK_TOKEN_PARAM] = this.appCheckToken;
+        }
+        return repoInfoConnectionURL(repoInfo, LONG_POLLING, params);
+      };
+    }
+    open(onMessage, onDisconnect) {
+      this.curSegmentNum = 0;
+      this.onDisconnect_ = onDisconnect;
+      this.myPacketOrderer = new PacketReceiver(onMessage);
+      this.isClosed_ = false;
+      this.connectTimeoutTimer_ = setTimeout(() => {
+        this.log_("Timed out trying to connect.");
+        this.onClosed_();
+        this.connectTimeoutTimer_ = null;
+      }, Math.floor(LP_CONNECT_TIMEOUT));
+      executeWhenDOMReady(() => {
+        if (this.isClosed_) {
+          return;
+        }
+        this.scriptTagHolder = new FirebaseIFrameScriptHolder((...args) => {
+          const [command, arg1, arg2, arg3, arg4] = args;
+          this.incrementIncomingBytes_(args);
+          if (!this.scriptTagHolder) {
+            return;
+          }
+          if (this.connectTimeoutTimer_) {
+            clearTimeout(this.connectTimeoutTimer_);
+            this.connectTimeoutTimer_ = null;
+          }
+          this.everConnected_ = true;
+          if (command === FIREBASE_LONGPOLL_START_PARAM) {
+            this.id = arg1;
+            this.password = arg2;
+          } else if (command === FIREBASE_LONGPOLL_CLOSE_COMMAND) {
+            if (arg1) {
+              this.scriptTagHolder.sendNewPolls = false;
+              this.myPacketOrderer.closeAfter(arg1, () => {
+                this.onClosed_();
+              });
+            } else {
+              this.onClosed_();
+            }
+          } else {
+            throw new Error("Unrecognized command received: " + command);
+          }
+        }, (...args) => {
+          const [pN, data] = args;
+          this.incrementIncomingBytes_(args);
+          this.myPacketOrderer.handleResponse(pN, data);
+        }, () => {
+          this.onClosed_();
+        }, this.urlFn);
+        const urlParams = {};
+        urlParams[FIREBASE_LONGPOLL_START_PARAM] = "t";
+        urlParams[FIREBASE_LONGPOLL_SERIAL_PARAM] = Math.floor(Math.random() * 1e8);
+        if (this.scriptTagHolder.uniqueCallbackIdentifier) {
+          urlParams[FIREBASE_LONGPOLL_CALLBACK_ID_PARAM] = this.scriptTagHolder.uniqueCallbackIdentifier;
+        }
+        urlParams[VERSION_PARAM] = PROTOCOL_VERSION;
+        if (this.transportSessionId) {
+          urlParams[TRANSPORT_SESSION_PARAM] = this.transportSessionId;
+        }
+        if (this.lastSessionId) {
+          urlParams[LAST_SESSION_PARAM] = this.lastSessionId;
+        }
+        if (this.applicationId) {
+          urlParams[APPLICATION_ID_PARAM] = this.applicationId;
+        }
+        if (this.appCheckToken) {
+          urlParams[APP_CHECK_TOKEN_PARAM] = this.appCheckToken;
+        }
+        if (typeof location !== "undefined" && location.hostname && FORGE_DOMAIN_RE.test(location.hostname)) {
+          urlParams[REFERER_PARAM] = FORGE_REF;
+        }
+        const connectURL = this.urlFn(urlParams);
+        this.log_("Connecting via long-poll to " + connectURL);
+        this.scriptTagHolder.addTag(connectURL, () => {
+        });
+      });
+    }
+    start() {
+      this.scriptTagHolder.startLongPoll(this.id, this.password);
+      this.addDisconnectPingFrame(this.id, this.password);
+    }
+    static forceAllow() {
+      BrowserPollConnection.forceAllow_ = true;
+    }
+    static forceDisallow() {
+      BrowserPollConnection.forceDisallow_ = true;
+    }
+    static isAvailable() {
+      if (isNodeSdk()) {
+        return false;
+      } else if (BrowserPollConnection.forceAllow_) {
+        return true;
+      } else {
+        return !BrowserPollConnection.forceDisallow_ && typeof document !== "undefined" && document.createElement != null && !isChromeExtensionContentScript() && !isWindowsStoreApp();
+      }
+    }
+    markConnectionHealthy() {
+    }
+    shutdown_() {
+      this.isClosed_ = true;
+      if (this.scriptTagHolder) {
+        this.scriptTagHolder.close();
+        this.scriptTagHolder = null;
+      }
+      if (this.myDisconnFrame) {
+        document.body.removeChild(this.myDisconnFrame);
+        this.myDisconnFrame = null;
+      }
+      if (this.connectTimeoutTimer_) {
+        clearTimeout(this.connectTimeoutTimer_);
+        this.connectTimeoutTimer_ = null;
+      }
+    }
+    onClosed_() {
+      if (!this.isClosed_) {
+        this.log_("Longpoll is closing itself");
+        this.shutdown_();
+        if (this.onDisconnect_) {
+          this.onDisconnect_(this.everConnected_);
+          this.onDisconnect_ = null;
+        }
+      }
+    }
+    close() {
+      if (!this.isClosed_) {
+        this.log_("Longpoll is being closed.");
+        this.shutdown_();
+      }
+    }
+    send(data) {
+      const dataStr = stringify2(data);
+      this.bytesSent += dataStr.length;
+      this.stats_.incrementCounter("bytes_sent", dataStr.length);
+      const base64data = base64Encode(dataStr);
+      const dataSegs = splitStringBySize(base64data, MAX_PAYLOAD_SIZE);
+      for (let i3 = 0; i3 < dataSegs.length; i3++) {
+        this.scriptTagHolder.enqueueSegment(this.curSegmentNum, dataSegs.length, dataSegs[i3]);
+        this.curSegmentNum++;
+      }
+    }
+    addDisconnectPingFrame(id, pw) {
+      if (isNodeSdk()) {
+        return;
+      }
+      this.myDisconnFrame = document.createElement("iframe");
+      const urlParams = {};
+      urlParams[FIREBASE_LONGPOLL_DISCONN_FRAME_REQUEST_PARAM] = "t";
+      urlParams[FIREBASE_LONGPOLL_ID_PARAM] = id;
+      urlParams[FIREBASE_LONGPOLL_PW_PARAM] = pw;
+      this.myDisconnFrame.src = this.urlFn(urlParams);
+      this.myDisconnFrame.style.display = "none";
+      document.body.appendChild(this.myDisconnFrame);
+    }
+    incrementIncomingBytes_(args) {
+      const bytesReceived = stringify2(args).length;
+      this.bytesReceived += bytesReceived;
+      this.stats_.incrementCounter("bytes_received", bytesReceived);
+    }
+  };
+  var FirebaseIFrameScriptHolder = class {
+    constructor(commandCB, onMessageCB, onDisconnect, urlFn) {
+      this.onDisconnect = onDisconnect;
+      this.urlFn = urlFn;
+      this.outstandingRequests = /* @__PURE__ */ new Set();
+      this.pendingSegs = [];
+      this.currentSerial = Math.floor(Math.random() * 1e8);
+      this.sendNewPolls = true;
+      if (!isNodeSdk()) {
+        this.uniqueCallbackIdentifier = LUIDGenerator();
+        window[FIREBASE_LONGPOLL_COMMAND_CB_NAME + this.uniqueCallbackIdentifier] = commandCB;
+        window[FIREBASE_LONGPOLL_DATA_CB_NAME + this.uniqueCallbackIdentifier] = onMessageCB;
+        this.myIFrame = FirebaseIFrameScriptHolder.createIFrame_();
+        let script = "";
+        if (this.myIFrame.src && this.myIFrame.src.substr(0, "javascript:".length) === "javascript:") {
+          const currentDomain = document.domain;
+          script = '<script>document.domain="' + currentDomain + '";<\/script>';
+        }
+        const iframeContents = "<html><body>" + script + "</body></html>";
+        try {
+          this.myIFrame.doc.open();
+          this.myIFrame.doc.write(iframeContents);
+          this.myIFrame.doc.close();
+        } catch (e2) {
+          log("frame writing exception");
+          if (e2.stack) {
+            log(e2.stack);
+          }
+          log(e2);
+        }
+      } else {
+        this.commandCB = commandCB;
+        this.onMessageCB = onMessageCB;
+      }
+    }
+    static createIFrame_() {
+      const iframe = document.createElement("iframe");
+      iframe.style.display = "none";
+      if (document.body) {
+        document.body.appendChild(iframe);
+        try {
+          const a3 = iframe.contentWindow.document;
+          if (!a3) {
+            log("No IE domain setting required");
+          }
+        } catch (e2) {
+          const domain = document.domain;
+          iframe.src = "javascript:void((function(){document.open();document.domain='" + domain + "';document.close();})())";
+        }
+      } else {
+        throw "Document body has not initialized. Wait to initialize Firebase until after the document is ready.";
+      }
+      if (iframe.contentDocument) {
+        iframe.doc = iframe.contentDocument;
+      } else if (iframe.contentWindow) {
+        iframe.doc = iframe.contentWindow.document;
+      } else if (iframe.document) {
+        iframe.doc = iframe.document;
+      }
+      return iframe;
+    }
+    close() {
+      this.alive = false;
+      if (this.myIFrame) {
+        this.myIFrame.doc.body.innerHTML = "";
+        setTimeout(() => {
+          if (this.myIFrame !== null) {
+            document.body.removeChild(this.myIFrame);
+            this.myIFrame = null;
+          }
+        }, Math.floor(0));
+      }
+      const onDisconnect = this.onDisconnect;
+      if (onDisconnect) {
+        this.onDisconnect = null;
+        onDisconnect();
+      }
+    }
+    startLongPoll(id, pw) {
+      this.myID = id;
+      this.myPW = pw;
+      this.alive = true;
+      while (this.newRequest_()) {
+      }
+    }
+    newRequest_() {
+      if (this.alive && this.sendNewPolls && this.outstandingRequests.size < (this.pendingSegs.length > 0 ? 2 : 1)) {
+        this.currentSerial++;
+        const urlParams = {};
+        urlParams[FIREBASE_LONGPOLL_ID_PARAM] = this.myID;
+        urlParams[FIREBASE_LONGPOLL_PW_PARAM] = this.myPW;
+        urlParams[FIREBASE_LONGPOLL_SERIAL_PARAM] = this.currentSerial;
+        let theURL = this.urlFn(urlParams);
+        let curDataString = "";
+        let i3 = 0;
+        while (this.pendingSegs.length > 0) {
+          const nextSeg = this.pendingSegs[0];
+          if (nextSeg.d.length + SEG_HEADER_SIZE + curDataString.length <= MAX_URL_DATA_SIZE) {
+            const theSeg = this.pendingSegs.shift();
+            curDataString = curDataString + "&" + FIREBASE_LONGPOLL_SEGMENT_NUM_PARAM + i3 + "=" + theSeg.seg + "&" + FIREBASE_LONGPOLL_SEGMENTS_IN_PACKET + i3 + "=" + theSeg.ts + "&" + FIREBASE_LONGPOLL_DATA_PARAM + i3 + "=" + theSeg.d;
+            i3++;
+          } else {
+            break;
+          }
+        }
+        theURL = theURL + curDataString;
+        this.addLongPollTag_(theURL, this.currentSerial);
+        return true;
+      } else {
+        return false;
+      }
+    }
+    enqueueSegment(segnum, totalsegs, data) {
+      this.pendingSegs.push({ seg: segnum, ts: totalsegs, d: data });
+      if (this.alive) {
+        this.newRequest_();
+      }
+    }
+    addLongPollTag_(url, serial) {
+      this.outstandingRequests.add(serial);
+      const doNewRequest = () => {
+        this.outstandingRequests.delete(serial);
+        this.newRequest_();
+      };
+      const keepaliveTimeout = setTimeout(doNewRequest, Math.floor(KEEPALIVE_REQUEST_INTERVAL));
+      const readyStateCB = () => {
+        clearTimeout(keepaliveTimeout);
+        doNewRequest();
+      };
+      this.addTag(url, readyStateCB);
+    }
+    addTag(url, loadCB) {
+      if (isNodeSdk()) {
+        this.doNodeLongPoll(url, loadCB);
+      } else {
+        setTimeout(() => {
+          try {
+            if (!this.sendNewPolls) {
+              return;
+            }
+            const newScript = this.myIFrame.doc.createElement("script");
+            newScript.type = "text/javascript";
+            newScript.async = true;
+            newScript.src = url;
+            newScript.onload = newScript.onreadystatechange = function() {
+              const rstate = newScript.readyState;
+              if (!rstate || rstate === "loaded" || rstate === "complete") {
+                newScript.onload = newScript.onreadystatechange = null;
+                if (newScript.parentNode) {
+                  newScript.parentNode.removeChild(newScript);
+                }
+                loadCB();
+              }
+            };
+            newScript.onerror = () => {
+              log("Long-poll script failed to load: " + url);
+              this.sendNewPolls = false;
+              this.close();
+            };
+            this.myIFrame.doc.body.appendChild(newScript);
+          } catch (e2) {
+          }
+        }, Math.floor(1));
+      }
+    }
+  };
+  var WEBSOCKET_MAX_FRAME_SIZE = 16384;
+  var WEBSOCKET_KEEPALIVE_INTERVAL = 45e3;
+  var WebSocketImpl = null;
+  if (typeof MozWebSocket !== "undefined") {
+    WebSocketImpl = MozWebSocket;
+  } else if (typeof WebSocket !== "undefined") {
+    WebSocketImpl = WebSocket;
+  }
+  var WebSocketConnection = class {
+    constructor(connId, repoInfo, applicationId, appCheckToken, authToken, transportSessionId, lastSessionId) {
+      this.connId = connId;
+      this.applicationId = applicationId;
+      this.appCheckToken = appCheckToken;
+      this.authToken = authToken;
+      this.keepaliveTimer = null;
+      this.frames = null;
+      this.totalFrames = 0;
+      this.bytesSent = 0;
+      this.bytesReceived = 0;
+      this.log_ = logWrapper(this.connId);
+      this.stats_ = statsManagerGetCollection(repoInfo);
+      this.connURL = WebSocketConnection.connectionURL_(repoInfo, transportSessionId, lastSessionId, appCheckToken, applicationId);
+      this.nodeAdmin = repoInfo.nodeAdmin;
+    }
+    static connectionURL_(repoInfo, transportSessionId, lastSessionId, appCheckToken, applicationId) {
+      const urlParams = {};
+      urlParams[VERSION_PARAM] = PROTOCOL_VERSION;
+      if (!isNodeSdk() && typeof location !== "undefined" && location.hostname && FORGE_DOMAIN_RE.test(location.hostname)) {
+        urlParams[REFERER_PARAM] = FORGE_REF;
+      }
+      if (transportSessionId) {
+        urlParams[TRANSPORT_SESSION_PARAM] = transportSessionId;
+      }
+      if (lastSessionId) {
+        urlParams[LAST_SESSION_PARAM] = lastSessionId;
+      }
+      if (appCheckToken) {
+        urlParams[APP_CHECK_TOKEN_PARAM] = appCheckToken;
+      }
+      if (applicationId) {
+        urlParams[APPLICATION_ID_PARAM] = applicationId;
+      }
+      return repoInfoConnectionURL(repoInfo, WEBSOCKET, urlParams);
+    }
+    open(onMessage, onDisconnect) {
+      this.onDisconnect = onDisconnect;
+      this.onMessage = onMessage;
+      this.log_("Websocket connecting to " + this.connURL);
+      this.everConnected_ = false;
+      PersistentStorage.set("previous_websocket_failure", true);
+      try {
+        let options;
+        if (isNodeSdk()) {
+          const device = this.nodeAdmin ? "AdminNode" : "Node";
+          options = {
+            headers: {
+              "User-Agent": `Firebase/${PROTOCOL_VERSION}/${SDK_VERSION2}/${process.platform}/${device}`,
+              "X-Firebase-GMPID": this.applicationId || ""
+            }
+          };
+          if (this.authToken) {
+            options.headers["Authorization"] = `Bearer ${this.authToken}`;
+          }
+          if (this.appCheckToken) {
+            options.headers["X-Firebase-AppCheck"] = this.appCheckToken;
+          }
+          const env = process["env"];
+          const proxy = this.connURL.indexOf("wss://") === 0 ? env["HTTPS_PROXY"] || env["https_proxy"] : env["HTTP_PROXY"] || env["http_proxy"];
+          if (proxy) {
+            options["proxy"] = { origin: proxy };
+          }
+        }
+        this.mySock = new WebSocketImpl(this.connURL, [], options);
+      } catch (e2) {
+        this.log_("Error instantiating WebSocket.");
+        const error2 = e2.message || e2.data;
+        if (error2) {
+          this.log_(error2);
+        }
+        this.onClosed_();
+        return;
+      }
+      this.mySock.onopen = () => {
+        this.log_("Websocket connected.");
+        this.everConnected_ = true;
+      };
+      this.mySock.onclose = () => {
+        this.log_("Websocket connection was disconnected.");
+        this.mySock = null;
+        this.onClosed_();
+      };
+      this.mySock.onmessage = (m3) => {
+        this.handleIncomingFrame(m3);
+      };
+      this.mySock.onerror = (e2) => {
+        this.log_("WebSocket error.  Closing connection.");
+        const error2 = e2.message || e2.data;
+        if (error2) {
+          this.log_(error2);
+        }
+        this.onClosed_();
+      };
+    }
+    start() {
+    }
+    static forceDisallow() {
+      WebSocketConnection.forceDisallow_ = true;
+    }
+    static isAvailable() {
+      let isOldAndroid = false;
+      if (typeof navigator !== "undefined" && navigator.userAgent) {
+        const oldAndroidRegex = /Android ([0-9]{0,}\.[0-9]{0,})/;
+        const oldAndroidMatch = navigator.userAgent.match(oldAndroidRegex);
+        if (oldAndroidMatch && oldAndroidMatch.length > 1) {
+          if (parseFloat(oldAndroidMatch[1]) < 4.4) {
+            isOldAndroid = true;
+          }
+        }
+      }
+      return !isOldAndroid && WebSocketImpl !== null && !WebSocketConnection.forceDisallow_;
+    }
+    static previouslyFailed() {
+      return PersistentStorage.isInMemoryStorage || PersistentStorage.get("previous_websocket_failure") === true;
+    }
+    markConnectionHealthy() {
+      PersistentStorage.remove("previous_websocket_failure");
+    }
+    appendFrame_(data) {
+      this.frames.push(data);
+      if (this.frames.length === this.totalFrames) {
+        const fullMess = this.frames.join("");
+        this.frames = null;
+        const jsonMess = jsonEval(fullMess);
+        this.onMessage(jsonMess);
+      }
+    }
+    handleNewFrameCount_(frameCount) {
+      this.totalFrames = frameCount;
+      this.frames = [];
+    }
+    extractFrameCount_(data) {
+      assert(this.frames === null, "We already have a frame buffer");
+      if (data.length <= 6) {
+        const frameCount = Number(data);
+        if (!isNaN(frameCount)) {
+          this.handleNewFrameCount_(frameCount);
+          return null;
+        }
+      }
+      this.handleNewFrameCount_(1);
+      return data;
+    }
+    handleIncomingFrame(mess) {
+      if (this.mySock === null) {
+        return;
+      }
+      const data = mess["data"];
+      this.bytesReceived += data.length;
+      this.stats_.incrementCounter("bytes_received", data.length);
+      this.resetKeepAlive();
+      if (this.frames !== null) {
+        this.appendFrame_(data);
+      } else {
+        const remainingData = this.extractFrameCount_(data);
+        if (remainingData !== null) {
+          this.appendFrame_(remainingData);
+        }
+      }
+    }
+    send(data) {
+      this.resetKeepAlive();
+      const dataStr = stringify2(data);
+      this.bytesSent += dataStr.length;
+      this.stats_.incrementCounter("bytes_sent", dataStr.length);
+      const dataSegs = splitStringBySize(dataStr, WEBSOCKET_MAX_FRAME_SIZE);
+      if (dataSegs.length > 1) {
+        this.sendString_(String(dataSegs.length));
+      }
+      for (let i3 = 0; i3 < dataSegs.length; i3++) {
+        this.sendString_(dataSegs[i3]);
+      }
+    }
+    shutdown_() {
+      this.isClosed_ = true;
+      if (this.keepaliveTimer) {
+        clearInterval(this.keepaliveTimer);
+        this.keepaliveTimer = null;
+      }
+      if (this.mySock) {
+        this.mySock.close();
+        this.mySock = null;
+      }
+    }
+    onClosed_() {
+      if (!this.isClosed_) {
+        this.log_("WebSocket is closing itself");
+        this.shutdown_();
+        if (this.onDisconnect) {
+          this.onDisconnect(this.everConnected_);
+          this.onDisconnect = null;
+        }
+      }
+    }
+    close() {
+      if (!this.isClosed_) {
+        this.log_("WebSocket is being closed");
+        this.shutdown_();
+      }
+    }
+    resetKeepAlive() {
+      clearInterval(this.keepaliveTimer);
+      this.keepaliveTimer = setInterval(() => {
+        if (this.mySock) {
+          this.sendString_("0");
+        }
+        this.resetKeepAlive();
+      }, Math.floor(WEBSOCKET_KEEPALIVE_INTERVAL));
+    }
+    sendString_(str) {
+      try {
+        this.mySock.send(str);
+      } catch (e2) {
+        this.log_("Exception thrown from WebSocket.send():", e2.message || e2.data, "Closing connection.");
+        setTimeout(this.onClosed_.bind(this), 0);
+      }
+    }
+  };
+  WebSocketConnection.responsesRequiredToBeHealthy = 2;
+  WebSocketConnection.healthyTimeout = 3e4;
+  var TransportManager = class {
+    constructor(repoInfo) {
+      this.initTransports_(repoInfo);
+    }
+    static get ALL_TRANSPORTS() {
+      return [BrowserPollConnection, WebSocketConnection];
+    }
+    static get IS_TRANSPORT_INITIALIZED() {
+      return this.globalTransportInitialized_;
+    }
+    initTransports_(repoInfo) {
+      const isWebSocketsAvailable = WebSocketConnection && WebSocketConnection["isAvailable"]();
+      let isSkipPollConnection = isWebSocketsAvailable && !WebSocketConnection.previouslyFailed();
+      if (repoInfo.webSocketOnly) {
+        if (!isWebSocketsAvailable) {
+          warn("wss:// URL used, but browser isn't known to support websockets.  Trying anyway.");
+        }
+        isSkipPollConnection = true;
+      }
+      if (isSkipPollConnection) {
+        this.transports_ = [WebSocketConnection];
+      } else {
+        const transports = this.transports_ = [];
+        for (const transport of TransportManager.ALL_TRANSPORTS) {
+          if (transport && transport["isAvailable"]()) {
+            transports.push(transport);
+          }
+        }
+        TransportManager.globalTransportInitialized_ = true;
+      }
+    }
+    initialTransport() {
+      if (this.transports_.length > 0) {
+        return this.transports_[0];
+      } else {
+        throw new Error("No transports available");
+      }
+    }
+    upgradeTransport() {
+      if (this.transports_.length > 1) {
+        return this.transports_[1];
+      } else {
+        return null;
+      }
+    }
+  };
+  TransportManager.globalTransportInitialized_ = false;
+  var UPGRADE_TIMEOUT = 6e4;
+  var DELAY_BEFORE_SENDING_EXTRA_REQUESTS = 5e3;
+  var BYTES_SENT_HEALTHY_OVERRIDE = 10 * 1024;
+  var BYTES_RECEIVED_HEALTHY_OVERRIDE = 100 * 1024;
+  var MESSAGE_TYPE = "t";
+  var MESSAGE_DATA = "d";
+  var CONTROL_SHUTDOWN = "s";
+  var CONTROL_RESET = "r";
+  var CONTROL_ERROR = "e";
+  var CONTROL_PONG = "o";
+  var SWITCH_ACK = "a";
+  var END_TRANSMISSION = "n";
+  var PING = "p";
+  var SERVER_HELLO = "h";
+  var Connection = class {
+    constructor(id, repoInfo_, applicationId_, appCheckToken_, authToken_, onMessage_, onReady_, onDisconnect_, onKill_, lastSessionId) {
+      this.id = id;
+      this.repoInfo_ = repoInfo_;
+      this.applicationId_ = applicationId_;
+      this.appCheckToken_ = appCheckToken_;
+      this.authToken_ = authToken_;
+      this.onMessage_ = onMessage_;
+      this.onReady_ = onReady_;
+      this.onDisconnect_ = onDisconnect_;
+      this.onKill_ = onKill_;
+      this.lastSessionId = lastSessionId;
+      this.connectionCount = 0;
+      this.pendingDataMessages = [];
+      this.state_ = 0;
+      this.log_ = logWrapper("c:" + this.id + ":");
+      this.transportManager_ = new TransportManager(repoInfo_);
+      this.log_("Connection created");
+      this.start_();
+    }
+    start_() {
+      const conn = this.transportManager_.initialTransport();
+      this.conn_ = new conn(this.nextTransportId_(), this.repoInfo_, this.applicationId_, this.appCheckToken_, this.authToken_, null, this.lastSessionId);
+      this.primaryResponsesRequired_ = conn["responsesRequiredToBeHealthy"] || 0;
+      const onMessageReceived = this.connReceiver_(this.conn_);
+      const onConnectionLost = this.disconnReceiver_(this.conn_);
+      this.tx_ = this.conn_;
+      this.rx_ = this.conn_;
+      this.secondaryConn_ = null;
+      this.isHealthy_ = false;
+      setTimeout(() => {
+        this.conn_ && this.conn_.open(onMessageReceived, onConnectionLost);
+      }, Math.floor(0));
+      const healthyTimeoutMS = conn["healthyTimeout"] || 0;
+      if (healthyTimeoutMS > 0) {
+        this.healthyTimeout_ = setTimeoutNonBlocking(() => {
+          this.healthyTimeout_ = null;
+          if (!this.isHealthy_) {
+            if (this.conn_ && this.conn_.bytesReceived > BYTES_RECEIVED_HEALTHY_OVERRIDE) {
+              this.log_("Connection exceeded healthy timeout but has received " + this.conn_.bytesReceived + " bytes.  Marking connection healthy.");
+              this.isHealthy_ = true;
+              this.conn_.markConnectionHealthy();
+            } else if (this.conn_ && this.conn_.bytesSent > BYTES_SENT_HEALTHY_OVERRIDE) {
+              this.log_("Connection exceeded healthy timeout but has sent " + this.conn_.bytesSent + " bytes.  Leaving connection alive.");
+            } else {
+              this.log_("Closing unhealthy connection after timeout.");
+              this.close();
+            }
+          }
+        }, Math.floor(healthyTimeoutMS));
+      }
+    }
+    nextTransportId_() {
+      return "c:" + this.id + ":" + this.connectionCount++;
+    }
+    disconnReceiver_(conn) {
+      return (everConnected) => {
+        if (conn === this.conn_) {
+          this.onConnectionLost_(everConnected);
+        } else if (conn === this.secondaryConn_) {
+          this.log_("Secondary connection lost.");
+          this.onSecondaryConnectionLost_();
+        } else {
+          this.log_("closing an old connection");
+        }
+      };
+    }
+    connReceiver_(conn) {
+      return (message) => {
+        if (this.state_ !== 2) {
+          if (conn === this.rx_) {
+            this.onPrimaryMessageReceived_(message);
+          } else if (conn === this.secondaryConn_) {
+            this.onSecondaryMessageReceived_(message);
+          } else {
+            this.log_("message on old connection");
+          }
+        }
+      };
+    }
+    sendRequest(dataMsg) {
+      const msg = { t: "d", d: dataMsg };
+      this.sendData_(msg);
+    }
+    tryCleanupConnection() {
+      if (this.tx_ === this.secondaryConn_ && this.rx_ === this.secondaryConn_) {
+        this.log_("cleaning up and promoting a connection: " + this.secondaryConn_.connId);
+        this.conn_ = this.secondaryConn_;
+        this.secondaryConn_ = null;
+      }
+    }
+    onSecondaryControl_(controlData) {
+      if (MESSAGE_TYPE in controlData) {
+        const cmd = controlData[MESSAGE_TYPE];
+        if (cmd === SWITCH_ACK) {
+          this.upgradeIfSecondaryHealthy_();
+        } else if (cmd === CONTROL_RESET) {
+          this.log_("Got a reset on secondary, closing it");
+          this.secondaryConn_.close();
+          if (this.tx_ === this.secondaryConn_ || this.rx_ === this.secondaryConn_) {
+            this.close();
+          }
+        } else if (cmd === CONTROL_PONG) {
+          this.log_("got pong on secondary.");
+          this.secondaryResponsesRequired_--;
+          this.upgradeIfSecondaryHealthy_();
+        }
+      }
+    }
+    onSecondaryMessageReceived_(parsedData) {
+      const layer = requireKey("t", parsedData);
+      const data = requireKey("d", parsedData);
+      if (layer === "c") {
+        this.onSecondaryControl_(data);
+      } else if (layer === "d") {
+        this.pendingDataMessages.push(data);
+      } else {
+        throw new Error("Unknown protocol layer: " + layer);
+      }
+    }
+    upgradeIfSecondaryHealthy_() {
+      if (this.secondaryResponsesRequired_ <= 0) {
+        this.log_("Secondary connection is healthy.");
+        this.isHealthy_ = true;
+        this.secondaryConn_.markConnectionHealthy();
+        this.proceedWithUpgrade_();
+      } else {
+        this.log_("sending ping on secondary.");
+        this.secondaryConn_.send({ t: "c", d: { t: PING, d: {} } });
+      }
+    }
+    proceedWithUpgrade_() {
+      this.secondaryConn_.start();
+      this.log_("sending client ack on secondary");
+      this.secondaryConn_.send({ t: "c", d: { t: SWITCH_ACK, d: {} } });
+      this.log_("Ending transmission on primary");
+      this.conn_.send({ t: "c", d: { t: END_TRANSMISSION, d: {} } });
+      this.tx_ = this.secondaryConn_;
+      this.tryCleanupConnection();
+    }
+    onPrimaryMessageReceived_(parsedData) {
+      const layer = requireKey("t", parsedData);
+      const data = requireKey("d", parsedData);
+      if (layer === "c") {
+        this.onControl_(data);
+      } else if (layer === "d") {
+        this.onDataMessage_(data);
+      }
+    }
+    onDataMessage_(message) {
+      this.onPrimaryResponse_();
+      this.onMessage_(message);
+    }
+    onPrimaryResponse_() {
+      if (!this.isHealthy_) {
+        this.primaryResponsesRequired_--;
+        if (this.primaryResponsesRequired_ <= 0) {
+          this.log_("Primary connection is healthy.");
+          this.isHealthy_ = true;
+          this.conn_.markConnectionHealthy();
+        }
+      }
+    }
+    onControl_(controlData) {
+      const cmd = requireKey(MESSAGE_TYPE, controlData);
+      if (MESSAGE_DATA in controlData) {
+        const payload = controlData[MESSAGE_DATA];
+        if (cmd === SERVER_HELLO) {
+          this.onHandshake_(payload);
+        } else if (cmd === END_TRANSMISSION) {
+          this.log_("recvd end transmission on primary");
+          this.rx_ = this.secondaryConn_;
+          for (let i3 = 0; i3 < this.pendingDataMessages.length; ++i3) {
+            this.onDataMessage_(this.pendingDataMessages[i3]);
+          }
+          this.pendingDataMessages = [];
+          this.tryCleanupConnection();
+        } else if (cmd === CONTROL_SHUTDOWN) {
+          this.onConnectionShutdown_(payload);
+        } else if (cmd === CONTROL_RESET) {
+          this.onReset_(payload);
+        } else if (cmd === CONTROL_ERROR) {
+          error("Server Error: " + payload);
+        } else if (cmd === CONTROL_PONG) {
+          this.log_("got pong on primary.");
+          this.onPrimaryResponse_();
+          this.sendPingOnPrimaryIfNecessary_();
+        } else {
+          error("Unknown control packet command: " + cmd);
+        }
+      }
+    }
+    onHandshake_(handshake) {
+      const timestamp = handshake.ts;
+      const version6 = handshake.v;
+      const host = handshake.h;
+      this.sessionId = handshake.s;
+      this.repoInfo_.host = host;
+      if (this.state_ === 0) {
+        this.conn_.start();
+        this.onConnectionEstablished_(this.conn_, timestamp);
+        if (PROTOCOL_VERSION !== version6) {
+          warn("Protocol version mismatch detected");
+        }
+        this.tryStartUpgrade_();
+      }
+    }
+    tryStartUpgrade_() {
+      const conn = this.transportManager_.upgradeTransport();
+      if (conn) {
+        this.startUpgrade_(conn);
+      }
+    }
+    startUpgrade_(conn) {
+      this.secondaryConn_ = new conn(this.nextTransportId_(), this.repoInfo_, this.applicationId_, this.appCheckToken_, this.authToken_, this.sessionId);
+      this.secondaryResponsesRequired_ = conn["responsesRequiredToBeHealthy"] || 0;
+      const onMessage = this.connReceiver_(this.secondaryConn_);
+      const onDisconnect = this.disconnReceiver_(this.secondaryConn_);
+      this.secondaryConn_.open(onMessage, onDisconnect);
+      setTimeoutNonBlocking(() => {
+        if (this.secondaryConn_) {
+          this.log_("Timed out trying to upgrade.");
+          this.secondaryConn_.close();
+        }
+      }, Math.floor(UPGRADE_TIMEOUT));
+    }
+    onReset_(host) {
+      this.log_("Reset packet received.  New host: " + host);
+      this.repoInfo_.host = host;
+      if (this.state_ === 1) {
+        this.close();
+      } else {
+        this.closeConnections_();
+        this.start_();
+      }
+    }
+    onConnectionEstablished_(conn, timestamp) {
+      this.log_("Realtime connection established.");
+      this.conn_ = conn;
+      this.state_ = 1;
+      if (this.onReady_) {
+        this.onReady_(timestamp, this.sessionId);
+        this.onReady_ = null;
+      }
+      if (this.primaryResponsesRequired_ === 0) {
+        this.log_("Primary connection is healthy.");
+        this.isHealthy_ = true;
+      } else {
+        setTimeoutNonBlocking(() => {
+          this.sendPingOnPrimaryIfNecessary_();
+        }, Math.floor(DELAY_BEFORE_SENDING_EXTRA_REQUESTS));
+      }
+    }
+    sendPingOnPrimaryIfNecessary_() {
+      if (!this.isHealthy_ && this.state_ === 1) {
+        this.log_("sending ping on primary.");
+        this.sendData_({ t: "c", d: { t: PING, d: {} } });
+      }
+    }
+    onSecondaryConnectionLost_() {
+      const conn = this.secondaryConn_;
+      this.secondaryConn_ = null;
+      if (this.tx_ === conn || this.rx_ === conn) {
+        this.close();
+      }
+    }
+    onConnectionLost_(everConnected) {
+      this.conn_ = null;
+      if (!everConnected && this.state_ === 0) {
+        this.log_("Realtime connection failed.");
+        if (this.repoInfo_.isCacheableHost()) {
+          PersistentStorage.remove("host:" + this.repoInfo_.host);
+          this.repoInfo_.internalHost = this.repoInfo_.host;
+        }
+      } else if (this.state_ === 1) {
+        this.log_("Realtime connection lost.");
+      }
+      this.close();
+    }
+    onConnectionShutdown_(reason) {
+      this.log_("Connection shutdown command received. Shutting down...");
+      if (this.onKill_) {
+        this.onKill_(reason);
+        this.onKill_ = null;
+      }
+      this.onDisconnect_ = null;
+      this.close();
+    }
+    sendData_(data) {
+      if (this.state_ !== 1) {
+        throw "Connection is not connected";
+      } else {
+        this.tx_.send(data);
+      }
+    }
+    close() {
+      if (this.state_ !== 2) {
+        this.log_("Closing realtime connection.");
+        this.state_ = 2;
+        this.closeConnections_();
+        if (this.onDisconnect_) {
+          this.onDisconnect_();
+          this.onDisconnect_ = null;
+        }
+      }
+    }
+    closeConnections_() {
+      this.log_("Shutting down all connections");
+      if (this.conn_) {
+        this.conn_.close();
+        this.conn_ = null;
+      }
+      if (this.secondaryConn_) {
+        this.secondaryConn_.close();
+        this.secondaryConn_ = null;
+      }
+      if (this.healthyTimeout_) {
+        clearTimeout(this.healthyTimeout_);
+        this.healthyTimeout_ = null;
+      }
+    }
+  };
+  var ServerActions = class {
+    put(pathString, data, onComplete, hash) {
+    }
+    merge(pathString, data, onComplete, hash) {
+    }
+    refreshAuthToken(token) {
+    }
+    refreshAppCheckToken(token) {
+    }
+    onDisconnectPut(pathString, data, onComplete) {
+    }
+    onDisconnectMerge(pathString, data, onComplete) {
+    }
+    onDisconnectCancel(pathString, onComplete) {
+    }
+    reportStats(stats) {
+    }
+  };
+  var EventEmitter = class {
+    constructor(allowedEvents_) {
+      this.allowedEvents_ = allowedEvents_;
+      this.listeners_ = {};
+      assert(Array.isArray(allowedEvents_) && allowedEvents_.length > 0, "Requires a non-empty array");
+    }
+    trigger(eventType, ...varArgs) {
+      if (Array.isArray(this.listeners_[eventType])) {
+        const listeners = [...this.listeners_[eventType]];
+        for (let i3 = 0; i3 < listeners.length; i3++) {
+          listeners[i3].callback.apply(listeners[i3].context, varArgs);
+        }
+      }
+    }
+    on(eventType, callback, context) {
+      this.validateEventType_(eventType);
+      this.listeners_[eventType] = this.listeners_[eventType] || [];
+      this.listeners_[eventType].push({ callback, context });
+      const eventData = this.getInitialEvent(eventType);
+      if (eventData) {
+        callback.apply(context, eventData);
+      }
+    }
+    off(eventType, callback, context) {
+      this.validateEventType_(eventType);
+      const listeners = this.listeners_[eventType] || [];
+      for (let i3 = 0; i3 < listeners.length; i3++) {
+        if (listeners[i3].callback === callback && (!context || context === listeners[i3].context)) {
+          listeners.splice(i3, 1);
+          return;
+        }
+      }
+    }
+    validateEventType_(eventType) {
+      assert(this.allowedEvents_.find((et2) => {
+        return et2 === eventType;
+      }), "Unknown event: " + eventType);
+    }
+  };
+  var OnlineMonitor = class extends EventEmitter {
+    constructor() {
+      super(["online"]);
+      this.online_ = true;
+      if (typeof window !== "undefined" && typeof window.addEventListener !== "undefined" && !isMobileCordova()) {
+        window.addEventListener("online", () => {
+          if (!this.online_) {
+            this.online_ = true;
+            this.trigger("online", true);
+          }
+        }, false);
+        window.addEventListener("offline", () => {
+          if (this.online_) {
+            this.online_ = false;
+            this.trigger("online", false);
+          }
+        }, false);
+      }
+    }
+    static getInstance() {
+      return new OnlineMonitor();
+    }
+    getInitialEvent(eventType) {
+      assert(eventType === "online", "Unknown event type: " + eventType);
+      return [this.online_];
+    }
+    currentlyOnline() {
+      return this.online_;
+    }
+  };
+  var MAX_PATH_DEPTH = 32;
+  var MAX_PATH_LENGTH_BYTES = 768;
+  var Path = class {
+    constructor(pathOrString, pieceNum) {
+      if (pieceNum === void 0) {
+        this.pieces_ = pathOrString.split("/");
+        let copyTo = 0;
+        for (let i3 = 0; i3 < this.pieces_.length; i3++) {
+          if (this.pieces_[i3].length > 0) {
+            this.pieces_[copyTo] = this.pieces_[i3];
+            copyTo++;
+          }
+        }
+        this.pieces_.length = copyTo;
+        this.pieceNum_ = 0;
+      } else {
+        this.pieces_ = pathOrString;
+        this.pieceNum_ = pieceNum;
+      }
+    }
+    toString() {
+      let pathString = "";
+      for (let i3 = this.pieceNum_; i3 < this.pieces_.length; i3++) {
+        if (this.pieces_[i3] !== "") {
+          pathString += "/" + this.pieces_[i3];
+        }
+      }
+      return pathString || "/";
+    }
+  };
+  function newEmptyPath() {
+    return new Path("");
+  }
+  function pathGetFront(path) {
+    if (path.pieceNum_ >= path.pieces_.length) {
+      return null;
+    }
+    return path.pieces_[path.pieceNum_];
+  }
+  function pathGetLength(path) {
+    return path.pieces_.length - path.pieceNum_;
+  }
+  function pathPopFront(path) {
+    let pieceNum = path.pieceNum_;
+    if (pieceNum < path.pieces_.length) {
+      pieceNum++;
+    }
+    return new Path(path.pieces_, pieceNum);
+  }
+  function pathGetBack(path) {
+    if (path.pieceNum_ < path.pieces_.length) {
+      return path.pieces_[path.pieces_.length - 1];
+    }
+    return null;
+  }
+  function pathToUrlEncodedString(path) {
+    let pathString = "";
+    for (let i3 = path.pieceNum_; i3 < path.pieces_.length; i3++) {
+      if (path.pieces_[i3] !== "") {
+        pathString += "/" + encodeURIComponent(String(path.pieces_[i3]));
+      }
+    }
+    return pathString || "/";
+  }
+  function pathSlice(path, begin = 0) {
+    return path.pieces_.slice(path.pieceNum_ + begin);
+  }
+  function pathParent(path) {
+    if (path.pieceNum_ >= path.pieces_.length) {
+      return null;
+    }
+    const pieces = [];
+    for (let i3 = path.pieceNum_; i3 < path.pieces_.length - 1; i3++) {
+      pieces.push(path.pieces_[i3]);
+    }
+    return new Path(pieces, 0);
+  }
+  function pathChild(path, childPathObj) {
+    const pieces = [];
+    for (let i3 = path.pieceNum_; i3 < path.pieces_.length; i3++) {
+      pieces.push(path.pieces_[i3]);
+    }
+    if (childPathObj instanceof Path) {
+      for (let i3 = childPathObj.pieceNum_; i3 < childPathObj.pieces_.length; i3++) {
+        pieces.push(childPathObj.pieces_[i3]);
+      }
+    } else {
+      const childPieces = childPathObj.split("/");
+      for (let i3 = 0; i3 < childPieces.length; i3++) {
+        if (childPieces[i3].length > 0) {
+          pieces.push(childPieces[i3]);
+        }
+      }
+    }
+    return new Path(pieces, 0);
+  }
+  function pathIsEmpty(path) {
+    return path.pieceNum_ >= path.pieces_.length;
+  }
+  function newRelativePath(outerPath, innerPath) {
+    const outer = pathGetFront(outerPath), inner = pathGetFront(innerPath);
+    if (outer === null) {
+      return innerPath;
+    } else if (outer === inner) {
+      return newRelativePath(pathPopFront(outerPath), pathPopFront(innerPath));
+    } else {
+      throw new Error("INTERNAL ERROR: innerPath (" + innerPath + ") is not within outerPath (" + outerPath + ")");
+    }
+  }
+  function pathCompare(left, right) {
+    const leftKeys = pathSlice(left, 0);
+    const rightKeys = pathSlice(right, 0);
+    for (let i3 = 0; i3 < leftKeys.length && i3 < rightKeys.length; i3++) {
+      const cmp = nameCompare(leftKeys[i3], rightKeys[i3]);
+      if (cmp !== 0) {
+        return cmp;
+      }
+    }
+    if (leftKeys.length === rightKeys.length) {
+      return 0;
+    }
+    return leftKeys.length < rightKeys.length ? -1 : 1;
+  }
+  function pathEquals(path, other) {
+    if (pathGetLength(path) !== pathGetLength(other)) {
+      return false;
+    }
+    for (let i3 = path.pieceNum_, j2 = other.pieceNum_; i3 <= path.pieces_.length; i3++, j2++) {
+      if (path.pieces_[i3] !== other.pieces_[j2]) {
+        return false;
+      }
+    }
+    return true;
+  }
+  function pathContains(path, other) {
+    let i3 = path.pieceNum_;
+    let j2 = other.pieceNum_;
+    if (pathGetLength(path) > pathGetLength(other)) {
+      return false;
+    }
+    while (i3 < path.pieces_.length) {
+      if (path.pieces_[i3] !== other.pieces_[j2]) {
+        return false;
+      }
+      ++i3;
+      ++j2;
+    }
+    return true;
+  }
+  var ValidationPath = class {
+    constructor(path, errorPrefix_) {
+      this.errorPrefix_ = errorPrefix_;
+      this.parts_ = pathSlice(path, 0);
+      this.byteLength_ = Math.max(1, this.parts_.length);
+      for (let i3 = 0; i3 < this.parts_.length; i3++) {
+        this.byteLength_ += stringLength(this.parts_[i3]);
+      }
+      validationPathCheckValid(this);
+    }
+  };
+  function validationPathPush(validationPath, child2) {
+    if (validationPath.parts_.length > 0) {
+      validationPath.byteLength_ += 1;
+    }
+    validationPath.parts_.push(child2);
+    validationPath.byteLength_ += stringLength(child2);
+    validationPathCheckValid(validationPath);
+  }
+  function validationPathPop(validationPath) {
+    const last = validationPath.parts_.pop();
+    validationPath.byteLength_ -= stringLength(last);
+    if (validationPath.parts_.length > 0) {
+      validationPath.byteLength_ -= 1;
+    }
+  }
+  function validationPathCheckValid(validationPath) {
+    if (validationPath.byteLength_ > MAX_PATH_LENGTH_BYTES) {
+      throw new Error(validationPath.errorPrefix_ + "has a key path longer than " + MAX_PATH_LENGTH_BYTES + " bytes (" + validationPath.byteLength_ + ").");
+    }
+    if (validationPath.parts_.length > MAX_PATH_DEPTH) {
+      throw new Error(validationPath.errorPrefix_ + "path specified exceeds the maximum depth that can be written (" + MAX_PATH_DEPTH + ") or object contains a cycle " + validationPathToErrorString(validationPath));
+    }
+  }
+  function validationPathToErrorString(validationPath) {
+    if (validationPath.parts_.length === 0) {
+      return "";
+    }
+    return "in property '" + validationPath.parts_.join(".") + "'";
+  }
+  var VisibilityMonitor = class extends EventEmitter {
+    constructor() {
+      super(["visible"]);
+      let hidden;
+      let visibilityChange;
+      if (typeof document !== "undefined" && typeof document.addEventListener !== "undefined") {
+        if (typeof document["hidden"] !== "undefined") {
+          visibilityChange = "visibilitychange";
+          hidden = "hidden";
+        } else if (typeof document["mozHidden"] !== "undefined") {
+          visibilityChange = "mozvisibilitychange";
+          hidden = "mozHidden";
+        } else if (typeof document["msHidden"] !== "undefined") {
+          visibilityChange = "msvisibilitychange";
+          hidden = "msHidden";
+        } else if (typeof document["webkitHidden"] !== "undefined") {
+          visibilityChange = "webkitvisibilitychange";
+          hidden = "webkitHidden";
+        }
+      }
+      this.visible_ = true;
+      if (visibilityChange) {
+        document.addEventListener(visibilityChange, () => {
+          const visible = !document[hidden];
+          if (visible !== this.visible_) {
+            this.visible_ = visible;
+            this.trigger("visible", visible);
+          }
+        }, false);
+      }
+    }
+    static getInstance() {
+      return new VisibilityMonitor();
+    }
+    getInitialEvent(eventType) {
+      assert(eventType === "visible", "Unknown event type: " + eventType);
+      return [this.visible_];
+    }
+  };
+  var RECONNECT_MIN_DELAY = 1e3;
+  var RECONNECT_MAX_DELAY_DEFAULT = 60 * 5 * 1e3;
+  var RECONNECT_MAX_DELAY_FOR_ADMINS = 30 * 1e3;
+  var RECONNECT_DELAY_MULTIPLIER = 1.3;
+  var RECONNECT_DELAY_RESET_TIMEOUT = 3e4;
+  var SERVER_KILL_INTERRUPT_REASON = "server_kill";
+  var INVALID_TOKEN_THRESHOLD = 3;
+  var PersistentConnection = class extends ServerActions {
+    constructor(repoInfo_, applicationId_, onDataUpdate_, onConnectStatus_, onServerInfoUpdate_, authTokenProvider_, appCheckTokenProvider_, authOverride_) {
+      super();
+      this.repoInfo_ = repoInfo_;
+      this.applicationId_ = applicationId_;
+      this.onDataUpdate_ = onDataUpdate_;
+      this.onConnectStatus_ = onConnectStatus_;
+      this.onServerInfoUpdate_ = onServerInfoUpdate_;
+      this.authTokenProvider_ = authTokenProvider_;
+      this.appCheckTokenProvider_ = appCheckTokenProvider_;
+      this.authOverride_ = authOverride_;
+      this.id = PersistentConnection.nextPersistentConnectionId_++;
+      this.log_ = logWrapper("p:" + this.id + ":");
+      this.interruptReasons_ = {};
+      this.listens = /* @__PURE__ */ new Map();
+      this.outstandingPuts_ = [];
+      this.outstandingGets_ = [];
+      this.outstandingPutCount_ = 0;
+      this.outstandingGetCount_ = 0;
+      this.onDisconnectRequestQueue_ = [];
+      this.connected_ = false;
+      this.reconnectDelay_ = RECONNECT_MIN_DELAY;
+      this.maxReconnectDelay_ = RECONNECT_MAX_DELAY_DEFAULT;
+      this.securityDebugCallback_ = null;
+      this.lastSessionId = null;
+      this.establishConnectionTimer_ = null;
+      this.visible_ = false;
+      this.requestCBHash_ = {};
+      this.requestNumber_ = 0;
+      this.realtime_ = null;
+      this.authToken_ = null;
+      this.appCheckToken_ = null;
+      this.forceTokenRefresh_ = false;
+      this.invalidAuthTokenCount_ = 0;
+      this.invalidAppCheckTokenCount_ = 0;
+      this.firstConnection_ = true;
+      this.lastConnectionAttemptTime_ = null;
+      this.lastConnectionEstablishedTime_ = null;
+      if (authOverride_ && !isNodeSdk()) {
+        throw new Error("Auth override specified in options, but not supported on non Node.js platforms");
+      }
+      VisibilityMonitor.getInstance().on("visible", this.onVisible_, this);
+      if (repoInfo_.host.indexOf("fblocal") === -1) {
+        OnlineMonitor.getInstance().on("online", this.onOnline_, this);
+      }
+    }
+    sendRequest(action, body, onResponse) {
+      const curReqNum = ++this.requestNumber_;
+      const msg = { r: curReqNum, a: action, b: body };
+      this.log_(stringify2(msg));
+      assert(this.connected_, "sendRequest call when we're not connected not allowed.");
+      this.realtime_.sendRequest(msg);
+      if (onResponse) {
+        this.requestCBHash_[curReqNum] = onResponse;
+      }
+    }
+    get(query) {
+      this.initConnection_();
+      const deferred = new Deferred();
+      const request = {
+        p: query._path.toString(),
+        q: query._queryObject
+      };
+      const outstandingGet = {
+        action: "g",
+        request,
+        onComplete: (message) => {
+          const payload = message["d"];
+          if (message["s"] === "ok") {
+            deferred.resolve(payload);
+          } else {
+            deferred.reject(payload);
+          }
+        }
+      };
+      this.outstandingGets_.push(outstandingGet);
+      this.outstandingGetCount_++;
+      const index = this.outstandingGets_.length - 1;
+      if (this.connected_) {
+        this.sendGet_(index);
+      }
+      return deferred.promise;
+    }
+    listen(query, currentHashFn, tag, onComplete) {
+      this.initConnection_();
+      const queryId = query._queryIdentifier;
+      const pathString = query._path.toString();
+      this.log_("Listen called for " + pathString + " " + queryId);
+      if (!this.listens.has(pathString)) {
+        this.listens.set(pathString, /* @__PURE__ */ new Map());
+      }
+      assert(query._queryParams.isDefault() || !query._queryParams.loadsAllData(), "listen() called for non-default but complete query");
+      assert(!this.listens.get(pathString).has(queryId), `listen() called twice for same path/queryId.`);
+      const listenSpec = {
+        onComplete,
+        hashFn: currentHashFn,
+        query,
+        tag
+      };
+      this.listens.get(pathString).set(queryId, listenSpec);
+      if (this.connected_) {
+        this.sendListen_(listenSpec);
+      }
+    }
+    sendGet_(index) {
+      const get2 = this.outstandingGets_[index];
+      this.sendRequest("g", get2.request, (message) => {
+        delete this.outstandingGets_[index];
+        this.outstandingGetCount_--;
+        if (this.outstandingGetCount_ === 0) {
+          this.outstandingGets_ = [];
+        }
+        if (get2.onComplete) {
+          get2.onComplete(message);
+        }
+      });
+    }
+    sendListen_(listenSpec) {
+      const query = listenSpec.query;
+      const pathString = query._path.toString();
+      const queryId = query._queryIdentifier;
+      this.log_("Listen on " + pathString + " for " + queryId);
+      const req = { p: pathString };
+      const action = "q";
+      if (listenSpec.tag) {
+        req["q"] = query._queryObject;
+        req["t"] = listenSpec.tag;
+      }
+      req["h"] = listenSpec.hashFn();
+      this.sendRequest(action, req, (message) => {
+        const payload = message["d"];
+        const status = message["s"];
+        PersistentConnection.warnOnListenWarnings_(payload, query);
+        const currentListenSpec = this.listens.get(pathString) && this.listens.get(pathString).get(queryId);
+        if (currentListenSpec === listenSpec) {
+          this.log_("listen response", message);
+          if (status !== "ok") {
+            this.removeListen_(pathString, queryId);
+          }
+          if (listenSpec.onComplete) {
+            listenSpec.onComplete(status, payload);
+          }
+        }
+      });
+    }
+    static warnOnListenWarnings_(payload, query) {
+      if (payload && typeof payload === "object" && contains(payload, "w")) {
+        const warnings = safeGet(payload, "w");
+        if (Array.isArray(warnings) && ~warnings.indexOf("no_index")) {
+          const indexSpec = '".indexOn": "' + query._queryParams.getIndex().toString() + '"';
+          const indexPath = query._path.toString();
+          warn(`Using an unspecified index. Your data will be downloaded and filtered on the client. Consider adding ${indexSpec} at ${indexPath} to your security rules for better performance.`);
+        }
+      }
+    }
+    refreshAuthToken(token) {
+      this.authToken_ = token;
+      this.log_("Auth token refreshed");
+      if (this.authToken_) {
+        this.tryAuth();
+      } else {
+        if (this.connected_) {
+          this.sendRequest("unauth", {}, () => {
+          });
+        }
+      }
+      this.reduceReconnectDelayIfAdminCredential_(token);
+    }
+    reduceReconnectDelayIfAdminCredential_(credential) {
+      const isFirebaseSecret = credential && credential.length === 40;
+      if (isFirebaseSecret || isAdmin(credential)) {
+        this.log_("Admin auth credential detected.  Reducing max reconnect time.");
+        this.maxReconnectDelay_ = RECONNECT_MAX_DELAY_FOR_ADMINS;
+      }
+    }
+    refreshAppCheckToken(token) {
+      this.appCheckToken_ = token;
+      this.log_("App check token refreshed");
+      if (this.appCheckToken_) {
+        this.tryAppCheck();
+      } else {
+        if (this.connected_) {
+          this.sendRequest("unappeck", {}, () => {
+          });
+        }
+      }
+    }
+    tryAuth() {
+      if (this.connected_ && this.authToken_) {
+        const token = this.authToken_;
+        const authMethod = isValidFormat(token) ? "auth" : "gauth";
+        const requestData = { cred: token };
+        if (this.authOverride_ === null) {
+          requestData["noauth"] = true;
+        } else if (typeof this.authOverride_ === "object") {
+          requestData["authvar"] = this.authOverride_;
+        }
+        this.sendRequest(authMethod, requestData, (res) => {
+          const status = res["s"];
+          const data = res["d"] || "error";
+          if (this.authToken_ === token) {
+            if (status === "ok") {
+              this.invalidAuthTokenCount_ = 0;
+            } else {
+              this.onAuthRevoked_(status, data);
+            }
+          }
+        });
+      }
+    }
+    tryAppCheck() {
+      if (this.connected_ && this.appCheckToken_) {
+        this.sendRequest("appcheck", { "token": this.appCheckToken_ }, (res) => {
+          const status = res["s"];
+          const data = res["d"] || "error";
+          if (status === "ok") {
+            this.invalidAppCheckTokenCount_ = 0;
+          } else {
+            this.onAppCheckRevoked_(status, data);
+          }
+        });
+      }
+    }
+    unlisten(query, tag) {
+      const pathString = query._path.toString();
+      const queryId = query._queryIdentifier;
+      this.log_("Unlisten called for " + pathString + " " + queryId);
+      assert(query._queryParams.isDefault() || !query._queryParams.loadsAllData(), "unlisten() called for non-default but complete query");
+      const listen = this.removeListen_(pathString, queryId);
+      if (listen && this.connected_) {
+        this.sendUnlisten_(pathString, queryId, query._queryObject, tag);
+      }
+    }
+    sendUnlisten_(pathString, queryId, queryObj, tag) {
+      this.log_("Unlisten on " + pathString + " for " + queryId);
+      const req = { p: pathString };
+      const action = "n";
+      if (tag) {
+        req["q"] = queryObj;
+        req["t"] = tag;
+      }
+      this.sendRequest(action, req);
+    }
+    onDisconnectPut(pathString, data, onComplete) {
+      this.initConnection_();
+      if (this.connected_) {
+        this.sendOnDisconnect_("o", pathString, data, onComplete);
+      } else {
+        this.onDisconnectRequestQueue_.push({
+          pathString,
+          action: "o",
+          data,
+          onComplete
+        });
+      }
+    }
+    onDisconnectMerge(pathString, data, onComplete) {
+      this.initConnection_();
+      if (this.connected_) {
+        this.sendOnDisconnect_("om", pathString, data, onComplete);
+      } else {
+        this.onDisconnectRequestQueue_.push({
+          pathString,
+          action: "om",
+          data,
+          onComplete
+        });
+      }
+    }
+    onDisconnectCancel(pathString, onComplete) {
+      this.initConnection_();
+      if (this.connected_) {
+        this.sendOnDisconnect_("oc", pathString, null, onComplete);
+      } else {
+        this.onDisconnectRequestQueue_.push({
+          pathString,
+          action: "oc",
+          data: null,
+          onComplete
+        });
+      }
+    }
+    sendOnDisconnect_(action, pathString, data, onComplete) {
+      const request = { p: pathString, d: data };
+      this.log_("onDisconnect " + action, request);
+      this.sendRequest(action, request, (response) => {
+        if (onComplete) {
+          setTimeout(() => {
+            onComplete(response["s"], response["d"]);
+          }, Math.floor(0));
+        }
+      });
+    }
+    put(pathString, data, onComplete, hash) {
+      this.putInternal("p", pathString, data, onComplete, hash);
+    }
+    merge(pathString, data, onComplete, hash) {
+      this.putInternal("m", pathString, data, onComplete, hash);
+    }
+    putInternal(action, pathString, data, onComplete, hash) {
+      this.initConnection_();
+      const request = {
+        p: pathString,
+        d: data
+      };
+      if (hash !== void 0) {
+        request["h"] = hash;
+      }
+      this.outstandingPuts_.push({
+        action,
+        request,
+        onComplete
+      });
+      this.outstandingPutCount_++;
+      const index = this.outstandingPuts_.length - 1;
+      if (this.connected_) {
+        this.sendPut_(index);
+      } else {
+        this.log_("Buffering put: " + pathString);
+      }
+    }
+    sendPut_(index) {
+      const action = this.outstandingPuts_[index].action;
+      const request = this.outstandingPuts_[index].request;
+      const onComplete = this.outstandingPuts_[index].onComplete;
+      this.outstandingPuts_[index].queued = this.connected_;
+      this.sendRequest(action, request, (message) => {
+        this.log_(action + " response", message);
+        delete this.outstandingPuts_[index];
+        this.outstandingPutCount_--;
+        if (this.outstandingPutCount_ === 0) {
+          this.outstandingPuts_ = [];
+        }
+        if (onComplete) {
+          onComplete(message["s"], message["d"]);
+        }
+      });
+    }
+    reportStats(stats) {
+      if (this.connected_) {
+        const request = { c: stats };
+        this.log_("reportStats", request);
+        this.sendRequest("s", request, (result) => {
+          const status = result["s"];
+          if (status !== "ok") {
+            const errorReason = result["d"];
+            this.log_("reportStats", "Error sending stats: " + errorReason);
+          }
+        });
+      }
+    }
+    onDataMessage_(message) {
+      if ("r" in message) {
+        this.log_("from server: " + stringify2(message));
+        const reqNum = message["r"];
+        const onResponse = this.requestCBHash_[reqNum];
+        if (onResponse) {
+          delete this.requestCBHash_[reqNum];
+          onResponse(message["b"]);
+        }
+      } else if ("error" in message) {
+        throw "A server-side error has occurred: " + message["error"];
+      } else if ("a" in message) {
+        this.onDataPush_(message["a"], message["b"]);
+      }
+    }
+    onDataPush_(action, body) {
+      this.log_("handleServerMessage", action, body);
+      if (action === "d") {
+        this.onDataUpdate_(
+          body["p"],
+          body["d"],
+          false,
+          body["t"]
+        );
+      } else if (action === "m") {
+        this.onDataUpdate_(
+          body["p"],
+          body["d"],
+          true,
+          body["t"]
+        );
+      } else if (action === "c") {
+        this.onListenRevoked_(body["p"], body["q"]);
+      } else if (action === "ac") {
+        this.onAuthRevoked_(body["s"], body["d"]);
+      } else if (action === "apc") {
+        this.onAppCheckRevoked_(body["s"], body["d"]);
+      } else if (action === "sd") {
+        this.onSecurityDebugPacket_(body);
+      } else {
+        error("Unrecognized action received from server: " + stringify2(action) + "\nAre you using the latest client?");
+      }
+    }
+    onReady_(timestamp, sessionId) {
+      this.log_("connection ready");
+      this.connected_ = true;
+      this.lastConnectionEstablishedTime_ = new Date().getTime();
+      this.handleTimestamp_(timestamp);
+      this.lastSessionId = sessionId;
+      if (this.firstConnection_) {
+        this.sendConnectStats_();
+      }
+      this.restoreState_();
+      this.firstConnection_ = false;
+      this.onConnectStatus_(true);
+    }
+    scheduleConnect_(timeout) {
+      assert(!this.realtime_, "Scheduling a connect when we're already connected/ing?");
+      if (this.establishConnectionTimer_) {
+        clearTimeout(this.establishConnectionTimer_);
+      }
+      this.establishConnectionTimer_ = setTimeout(() => {
+        this.establishConnectionTimer_ = null;
+        this.establishConnection_();
+      }, Math.floor(timeout));
+    }
+    initConnection_() {
+      if (!this.realtime_ && this.firstConnection_) {
+        this.scheduleConnect_(0);
+      }
+    }
+    onVisible_(visible) {
+      if (visible && !this.visible_ && this.reconnectDelay_ === this.maxReconnectDelay_) {
+        this.log_("Window became visible.  Reducing delay.");
+        this.reconnectDelay_ = RECONNECT_MIN_DELAY;
+        if (!this.realtime_) {
+          this.scheduleConnect_(0);
+        }
+      }
+      this.visible_ = visible;
+    }
+    onOnline_(online) {
+      if (online) {
+        this.log_("Browser went online.");
+        this.reconnectDelay_ = RECONNECT_MIN_DELAY;
+        if (!this.realtime_) {
+          this.scheduleConnect_(0);
+        }
+      } else {
+        this.log_("Browser went offline.  Killing connection.");
+        if (this.realtime_) {
+          this.realtime_.close();
+        }
+      }
+    }
+    onRealtimeDisconnect_() {
+      this.log_("data client disconnected");
+      this.connected_ = false;
+      this.realtime_ = null;
+      this.cancelSentTransactions_();
+      this.requestCBHash_ = {};
+      if (this.shouldReconnect_()) {
+        if (!this.visible_) {
+          this.log_("Window isn't visible.  Delaying reconnect.");
+          this.reconnectDelay_ = this.maxReconnectDelay_;
+          this.lastConnectionAttemptTime_ = new Date().getTime();
+        } else if (this.lastConnectionEstablishedTime_) {
+          const timeSinceLastConnectSucceeded = new Date().getTime() - this.lastConnectionEstablishedTime_;
+          if (timeSinceLastConnectSucceeded > RECONNECT_DELAY_RESET_TIMEOUT) {
+            this.reconnectDelay_ = RECONNECT_MIN_DELAY;
+          }
+          this.lastConnectionEstablishedTime_ = null;
+        }
+        const timeSinceLastConnectAttempt = new Date().getTime() - this.lastConnectionAttemptTime_;
+        let reconnectDelay = Math.max(0, this.reconnectDelay_ - timeSinceLastConnectAttempt);
+        reconnectDelay = Math.random() * reconnectDelay;
+        this.log_("Trying to reconnect in " + reconnectDelay + "ms");
+        this.scheduleConnect_(reconnectDelay);
+        this.reconnectDelay_ = Math.min(this.maxReconnectDelay_, this.reconnectDelay_ * RECONNECT_DELAY_MULTIPLIER);
+      }
+      this.onConnectStatus_(false);
+    }
+    async establishConnection_() {
+      if (this.shouldReconnect_()) {
+        this.log_("Making a connection attempt");
+        this.lastConnectionAttemptTime_ = new Date().getTime();
+        this.lastConnectionEstablishedTime_ = null;
+        const onDataMessage = this.onDataMessage_.bind(this);
+        const onReady = this.onReady_.bind(this);
+        const onDisconnect = this.onRealtimeDisconnect_.bind(this);
+        const connId = this.id + ":" + PersistentConnection.nextConnectionId_++;
+        const lastSessionId = this.lastSessionId;
+        let canceled = false;
+        let connection = null;
+        const closeFn = function() {
+          if (connection) {
+            connection.close();
+          } else {
+            canceled = true;
+            onDisconnect();
+          }
+        };
+        const sendRequestFn = function(msg) {
+          assert(connection, "sendRequest call when we're not connected not allowed.");
+          connection.sendRequest(msg);
+        };
+        this.realtime_ = {
+          close: closeFn,
+          sendRequest: sendRequestFn
+        };
+        const forceRefresh = this.forceTokenRefresh_;
+        this.forceTokenRefresh_ = false;
+        try {
+          const [authToken, appCheckToken] = await Promise.all([
+            this.authTokenProvider_.getToken(forceRefresh),
+            this.appCheckTokenProvider_.getToken(forceRefresh)
+          ]);
+          if (!canceled) {
+            log("getToken() completed. Creating connection.");
+            this.authToken_ = authToken && authToken.accessToken;
+            this.appCheckToken_ = appCheckToken && appCheckToken.token;
+            connection = new Connection(
+              connId,
+              this.repoInfo_,
+              this.applicationId_,
+              this.appCheckToken_,
+              this.authToken_,
+              onDataMessage,
+              onReady,
+              onDisconnect,
+              (reason) => {
+                warn(reason + " (" + this.repoInfo_.toString() + ")");
+                this.interrupt(SERVER_KILL_INTERRUPT_REASON);
+              },
+              lastSessionId
+            );
+          } else {
+            log("getToken() completed but was canceled");
+          }
+        } catch (error2) {
+          this.log_("Failed to get token: " + error2);
+          if (!canceled) {
+            if (this.repoInfo_.nodeAdmin) {
+              warn(error2);
+            }
+            closeFn();
+          }
+        }
+      }
+    }
+    interrupt(reason) {
+      log("Interrupting connection for reason: " + reason);
+      this.interruptReasons_[reason] = true;
+      if (this.realtime_) {
+        this.realtime_.close();
+      } else {
+        if (this.establishConnectionTimer_) {
+          clearTimeout(this.establishConnectionTimer_);
+          this.establishConnectionTimer_ = null;
+        }
+        if (this.connected_) {
+          this.onRealtimeDisconnect_();
+        }
+      }
+    }
+    resume(reason) {
+      log("Resuming connection for reason: " + reason);
+      delete this.interruptReasons_[reason];
+      if (isEmpty(this.interruptReasons_)) {
+        this.reconnectDelay_ = RECONNECT_MIN_DELAY;
+        if (!this.realtime_) {
+          this.scheduleConnect_(0);
+        }
+      }
+    }
+    handleTimestamp_(timestamp) {
+      const delta = timestamp - new Date().getTime();
+      this.onServerInfoUpdate_({ serverTimeOffset: delta });
+    }
+    cancelSentTransactions_() {
+      for (let i3 = 0; i3 < this.outstandingPuts_.length; i3++) {
+        const put = this.outstandingPuts_[i3];
+        if (put && "h" in put.request && put.queued) {
+          if (put.onComplete) {
+            put.onComplete("disconnect");
+          }
+          delete this.outstandingPuts_[i3];
+          this.outstandingPutCount_--;
+        }
+      }
+      if (this.outstandingPutCount_ === 0) {
+        this.outstandingPuts_ = [];
+      }
+    }
+    onListenRevoked_(pathString, query) {
+      let queryId;
+      if (!query) {
+        queryId = "default";
+      } else {
+        queryId = query.map((q3) => ObjectToUniqueKey(q3)).join("$");
+      }
+      const listen = this.removeListen_(pathString, queryId);
+      if (listen && listen.onComplete) {
+        listen.onComplete("permission_denied");
+      }
+    }
+    removeListen_(pathString, queryId) {
+      const normalizedPathString = new Path(pathString).toString();
+      let listen;
+      if (this.listens.has(normalizedPathString)) {
+        const map2 = this.listens.get(normalizedPathString);
+        listen = map2.get(queryId);
+        map2.delete(queryId);
+        if (map2.size === 0) {
+          this.listens.delete(normalizedPathString);
+        }
+      } else {
+        listen = void 0;
+      }
+      return listen;
+    }
+    onAuthRevoked_(statusCode, explanation) {
+      log("Auth token revoked: " + statusCode + "/" + explanation);
+      this.authToken_ = null;
+      this.forceTokenRefresh_ = true;
+      this.realtime_.close();
+      if (statusCode === "invalid_token" || statusCode === "permission_denied") {
+        this.invalidAuthTokenCount_++;
+        if (this.invalidAuthTokenCount_ >= INVALID_TOKEN_THRESHOLD) {
+          this.reconnectDelay_ = RECONNECT_MAX_DELAY_FOR_ADMINS;
+          this.authTokenProvider_.notifyForInvalidToken();
+        }
+      }
+    }
+    onAppCheckRevoked_(statusCode, explanation) {
+      log("App check token revoked: " + statusCode + "/" + explanation);
+      this.appCheckToken_ = null;
+      this.forceTokenRefresh_ = true;
+      if (statusCode === "invalid_token" || statusCode === "permission_denied") {
+        this.invalidAppCheckTokenCount_++;
+        if (this.invalidAppCheckTokenCount_ >= INVALID_TOKEN_THRESHOLD) {
+          this.appCheckTokenProvider_.notifyForInvalidToken();
+        }
+      }
+    }
+    onSecurityDebugPacket_(body) {
+      if (this.securityDebugCallback_) {
+        this.securityDebugCallback_(body);
+      } else {
+        if ("msg" in body) {
+          console.log("FIREBASE: " + body["msg"].replace("\n", "\nFIREBASE: "));
+        }
+      }
+    }
+    restoreState_() {
+      this.tryAuth();
+      this.tryAppCheck();
+      for (const queries of this.listens.values()) {
+        for (const listenSpec of queries.values()) {
+          this.sendListen_(listenSpec);
+        }
+      }
+      for (let i3 = 0; i3 < this.outstandingPuts_.length; i3++) {
+        if (this.outstandingPuts_[i3]) {
+          this.sendPut_(i3);
+        }
+      }
+      while (this.onDisconnectRequestQueue_.length) {
+        const request = this.onDisconnectRequestQueue_.shift();
+        this.sendOnDisconnect_(request.action, request.pathString, request.data, request.onComplete);
+      }
+      for (let i3 = 0; i3 < this.outstandingGets_.length; i3++) {
+        if (this.outstandingGets_[i3]) {
+          this.sendGet_(i3);
+        }
+      }
+    }
+    sendConnectStats_() {
+      const stats = {};
+      let clientName = "js";
+      if (isNodeSdk()) {
+        if (this.repoInfo_.nodeAdmin) {
+          clientName = "admin_node";
+        } else {
+          clientName = "node";
+        }
+      }
+      stats["sdk." + clientName + "." + SDK_VERSION2.replace(/\./g, "-")] = 1;
+      if (isMobileCordova()) {
+        stats["framework.cordova"] = 1;
+      } else if (isReactNative()) {
+        stats["framework.reactnative"] = 1;
+      }
+      this.reportStats(stats);
+    }
+    shouldReconnect_() {
+      const online = OnlineMonitor.getInstance().currentlyOnline();
+      return isEmpty(this.interruptReasons_) && online;
+    }
+  };
+  PersistentConnection.nextPersistentConnectionId_ = 0;
+  PersistentConnection.nextConnectionId_ = 0;
+  var NamedNode = class {
+    constructor(name5, node) {
+      this.name = name5;
+      this.node = node;
+    }
+    static Wrap(name5, node) {
+      return new NamedNode(name5, node);
+    }
+  };
+  var Index = class {
+    getCompare() {
+      return this.compare.bind(this);
+    }
+    indexedValueChanged(oldNode, newNode) {
+      const oldWrapped = new NamedNode(MIN_NAME, oldNode);
+      const newWrapped = new NamedNode(MIN_NAME, newNode);
+      return this.compare(oldWrapped, newWrapped) !== 0;
+    }
+    minPost() {
+      return NamedNode.MIN;
+    }
+  };
+  var __EMPTY_NODE;
+  var KeyIndex = class extends Index {
+    static get __EMPTY_NODE() {
+      return __EMPTY_NODE;
+    }
+    static set __EMPTY_NODE(val) {
+      __EMPTY_NODE = val;
+    }
+    compare(a3, b3) {
+      return nameCompare(a3.name, b3.name);
+    }
+    isDefinedOn(node) {
+      throw assertionError("KeyIndex.isDefinedOn not expected to be called.");
+    }
+    indexedValueChanged(oldNode, newNode) {
+      return false;
+    }
+    minPost() {
+      return NamedNode.MIN;
+    }
+    maxPost() {
+      return new NamedNode(MAX_NAME, __EMPTY_NODE);
+    }
+    makePost(indexValue, name5) {
+      assert(typeof indexValue === "string", "KeyIndex indexValue must always be a string.");
+      return new NamedNode(indexValue, __EMPTY_NODE);
+    }
+    toString() {
+      return ".key";
+    }
+  };
+  var KEY_INDEX = new KeyIndex();
+  var SortedMapIterator = class {
+    constructor(node, startKey, comparator, isReverse_, resultGenerator_ = null) {
+      this.isReverse_ = isReverse_;
+      this.resultGenerator_ = resultGenerator_;
+      this.nodeStack_ = [];
+      let cmp = 1;
+      while (!node.isEmpty()) {
+        node = node;
+        cmp = startKey ? comparator(node.key, startKey) : 1;
+        if (isReverse_) {
+          cmp *= -1;
+        }
+        if (cmp < 0) {
+          if (this.isReverse_) {
+            node = node.left;
+          } else {
+            node = node.right;
+          }
+        } else if (cmp === 0) {
+          this.nodeStack_.push(node);
+          break;
+        } else {
+          this.nodeStack_.push(node);
+          if (this.isReverse_) {
+            node = node.right;
+          } else {
+            node = node.left;
+          }
+        }
+      }
+    }
+    getNext() {
+      if (this.nodeStack_.length === 0) {
+        return null;
+      }
+      let node = this.nodeStack_.pop();
+      let result;
+      if (this.resultGenerator_) {
+        result = this.resultGenerator_(node.key, node.value);
+      } else {
+        result = { key: node.key, value: node.value };
+      }
+      if (this.isReverse_) {
+        node = node.left;
+        while (!node.isEmpty()) {
+          this.nodeStack_.push(node);
+          node = node.right;
+        }
+      } else {
+        node = node.right;
+        while (!node.isEmpty()) {
+          this.nodeStack_.push(node);
+          node = node.left;
+        }
+      }
+      return result;
+    }
+    hasNext() {
+      return this.nodeStack_.length > 0;
+    }
+    peek() {
+      if (this.nodeStack_.length === 0) {
+        return null;
+      }
+      const node = this.nodeStack_[this.nodeStack_.length - 1];
+      if (this.resultGenerator_) {
+        return this.resultGenerator_(node.key, node.value);
+      } else {
+        return { key: node.key, value: node.value };
+      }
+    }
+  };
+  var LLRBNode = class {
+    constructor(key, value, color, left, right) {
+      this.key = key;
+      this.value = value;
+      this.color = color != null ? color : LLRBNode.RED;
+      this.left = left != null ? left : SortedMap.EMPTY_NODE;
+      this.right = right != null ? right : SortedMap.EMPTY_NODE;
+    }
+    copy(key, value, color, left, right) {
+      return new LLRBNode(key != null ? key : this.key, value != null ? value : this.value, color != null ? color : this.color, left != null ? left : this.left, right != null ? right : this.right);
+    }
+    count() {
+      return this.left.count() + 1 + this.right.count();
+    }
+    isEmpty() {
+      return false;
+    }
+    inorderTraversal(action) {
+      return this.left.inorderTraversal(action) || !!action(this.key, this.value) || this.right.inorderTraversal(action);
+    }
+    reverseTraversal(action) {
+      return this.right.reverseTraversal(action) || action(this.key, this.value) || this.left.reverseTraversal(action);
+    }
+    min_() {
+      if (this.left.isEmpty()) {
+        return this;
+      } else {
+        return this.left.min_();
+      }
+    }
+    minKey() {
+      return this.min_().key;
+    }
+    maxKey() {
+      if (this.right.isEmpty()) {
+        return this.key;
+      } else {
+        return this.right.maxKey();
+      }
+    }
+    insert(key, value, comparator) {
+      let n3 = this;
+      const cmp = comparator(key, n3.key);
+      if (cmp < 0) {
+        n3 = n3.copy(null, null, null, n3.left.insert(key, value, comparator), null);
+      } else if (cmp === 0) {
+        n3 = n3.copy(null, value, null, null, null);
+      } else {
+        n3 = n3.copy(null, null, null, null, n3.right.insert(key, value, comparator));
+      }
+      return n3.fixUp_();
+    }
+    removeMin_() {
+      if (this.left.isEmpty()) {
+        return SortedMap.EMPTY_NODE;
+      }
+      let n3 = this;
+      if (!n3.left.isRed_() && !n3.left.left.isRed_()) {
+        n3 = n3.moveRedLeft_();
+      }
+      n3 = n3.copy(null, null, null, n3.left.removeMin_(), null);
+      return n3.fixUp_();
+    }
+    remove(key, comparator) {
+      let n3, smallest;
+      n3 = this;
+      if (comparator(key, n3.key) < 0) {
+        if (!n3.left.isEmpty() && !n3.left.isRed_() && !n3.left.left.isRed_()) {
+          n3 = n3.moveRedLeft_();
+        }
+        n3 = n3.copy(null, null, null, n3.left.remove(key, comparator), null);
+      } else {
+        if (n3.left.isRed_()) {
+          n3 = n3.rotateRight_();
+        }
+        if (!n3.right.isEmpty() && !n3.right.isRed_() && !n3.right.left.isRed_()) {
+          n3 = n3.moveRedRight_();
+        }
+        if (comparator(key, n3.key) === 0) {
+          if (n3.right.isEmpty()) {
+            return SortedMap.EMPTY_NODE;
+          } else {
+            smallest = n3.right.min_();
+            n3 = n3.copy(smallest.key, smallest.value, null, null, n3.right.removeMin_());
+          }
+        }
+        n3 = n3.copy(null, null, null, null, n3.right.remove(key, comparator));
+      }
+      return n3.fixUp_();
+    }
+    isRed_() {
+      return this.color;
+    }
+    fixUp_() {
+      let n3 = this;
+      if (n3.right.isRed_() && !n3.left.isRed_()) {
+        n3 = n3.rotateLeft_();
+      }
+      if (n3.left.isRed_() && n3.left.left.isRed_()) {
+        n3 = n3.rotateRight_();
+      }
+      if (n3.left.isRed_() && n3.right.isRed_()) {
+        n3 = n3.colorFlip_();
+      }
+      return n3;
+    }
+    moveRedLeft_() {
+      let n3 = this.colorFlip_();
+      if (n3.right.left.isRed_()) {
+        n3 = n3.copy(null, null, null, null, n3.right.rotateRight_());
+        n3 = n3.rotateLeft_();
+        n3 = n3.colorFlip_();
+      }
+      return n3;
+    }
+    moveRedRight_() {
+      let n3 = this.colorFlip_();
+      if (n3.left.left.isRed_()) {
+        n3 = n3.rotateRight_();
+        n3 = n3.colorFlip_();
+      }
+      return n3;
+    }
+    rotateLeft_() {
+      const nl = this.copy(null, null, LLRBNode.RED, null, this.right.left);
+      return this.right.copy(null, null, this.color, nl, null);
+    }
+    rotateRight_() {
+      const nr2 = this.copy(null, null, LLRBNode.RED, this.left.right, null);
+      return this.left.copy(null, null, this.color, null, nr2);
+    }
+    colorFlip_() {
+      const left = this.left.copy(null, null, !this.left.color, null, null);
+      const right = this.right.copy(null, null, !this.right.color, null, null);
+      return this.copy(null, null, !this.color, left, right);
+    }
+    checkMaxDepth_() {
+      const blackDepth = this.check_();
+      return Math.pow(2, blackDepth) <= this.count() + 1;
+    }
+    check_() {
+      if (this.isRed_() && this.left.isRed_()) {
+        throw new Error("Red node has red child(" + this.key + "," + this.value + ")");
+      }
+      if (this.right.isRed_()) {
+        throw new Error("Right child of (" + this.key + "," + this.value + ") is red");
+      }
+      const blackDepth = this.left.check_();
+      if (blackDepth !== this.right.check_()) {
+        throw new Error("Black depths differ");
+      } else {
+        return blackDepth + (this.isRed_() ? 0 : 1);
+      }
+    }
+  };
+  LLRBNode.RED = true;
+  LLRBNode.BLACK = false;
+  var LLRBEmptyNode = class {
+    copy(key, value, color, left, right) {
+      return this;
+    }
+    insert(key, value, comparator) {
+      return new LLRBNode(key, value, null);
+    }
+    remove(key, comparator) {
+      return this;
+    }
+    count() {
+      return 0;
+    }
+    isEmpty() {
+      return true;
+    }
+    inorderTraversal(action) {
+      return false;
+    }
+    reverseTraversal(action) {
+      return false;
+    }
+    minKey() {
+      return null;
+    }
+    maxKey() {
+      return null;
+    }
+    check_() {
+      return 0;
+    }
+    isRed_() {
+      return false;
+    }
+  };
+  var SortedMap = class {
+    constructor(comparator_, root_ = SortedMap.EMPTY_NODE) {
+      this.comparator_ = comparator_;
+      this.root_ = root_;
+    }
+    insert(key, value) {
+      return new SortedMap(this.comparator_, this.root_.insert(key, value, this.comparator_).copy(null, null, LLRBNode.BLACK, null, null));
+    }
+    remove(key) {
+      return new SortedMap(this.comparator_, this.root_.remove(key, this.comparator_).copy(null, null, LLRBNode.BLACK, null, null));
+    }
+    get(key) {
+      let cmp;
+      let node = this.root_;
+      while (!node.isEmpty()) {
+        cmp = this.comparator_(key, node.key);
+        if (cmp === 0) {
+          return node.value;
+        } else if (cmp < 0) {
+          node = node.left;
+        } else if (cmp > 0) {
+          node = node.right;
+        }
+      }
+      return null;
+    }
+    getPredecessorKey(key) {
+      let cmp, node = this.root_, rightParent = null;
+      while (!node.isEmpty()) {
+        cmp = this.comparator_(key, node.key);
+        if (cmp === 0) {
+          if (!node.left.isEmpty()) {
+            node = node.left;
+            while (!node.right.isEmpty()) {
+              node = node.right;
+            }
+            return node.key;
+          } else if (rightParent) {
+            return rightParent.key;
+          } else {
+            return null;
+          }
+        } else if (cmp < 0) {
+          node = node.left;
+        } else if (cmp > 0) {
+          rightParent = node;
+          node = node.right;
+        }
+      }
+      throw new Error("Attempted to find predecessor key for a nonexistent key.  What gives?");
+    }
+    isEmpty() {
+      return this.root_.isEmpty();
+    }
+    count() {
+      return this.root_.count();
+    }
+    minKey() {
+      return this.root_.minKey();
+    }
+    maxKey() {
+      return this.root_.maxKey();
+    }
+    inorderTraversal(action) {
+      return this.root_.inorderTraversal(action);
+    }
+    reverseTraversal(action) {
+      return this.root_.reverseTraversal(action);
+    }
+    getIterator(resultGenerator) {
+      return new SortedMapIterator(this.root_, null, this.comparator_, false, resultGenerator);
+    }
+    getIteratorFrom(key, resultGenerator) {
+      return new SortedMapIterator(this.root_, key, this.comparator_, false, resultGenerator);
+    }
+    getReverseIteratorFrom(key, resultGenerator) {
+      return new SortedMapIterator(this.root_, key, this.comparator_, true, resultGenerator);
+    }
+    getReverseIterator(resultGenerator) {
+      return new SortedMapIterator(this.root_, null, this.comparator_, true, resultGenerator);
+    }
+  };
+  SortedMap.EMPTY_NODE = new LLRBEmptyNode();
+  function NAME_ONLY_COMPARATOR(left, right) {
+    return nameCompare(left.name, right.name);
+  }
+  function NAME_COMPARATOR(left, right) {
+    return nameCompare(left, right);
+  }
+  var MAX_NODE$2;
+  function setMaxNode$1(val) {
+    MAX_NODE$2 = val;
+  }
+  var priorityHashText = function(priority) {
+    if (typeof priority === "number") {
+      return "number:" + doubleToIEEE754String(priority);
+    } else {
+      return "string:" + priority;
+    }
+  };
+  var validatePriorityNode = function(priorityNode) {
+    if (priorityNode.isLeafNode()) {
+      const val = priorityNode.val();
+      assert(typeof val === "string" || typeof val === "number" || typeof val === "object" && contains(val, ".sv"), "Priority must be a string or number.");
+    } else {
+      assert(priorityNode === MAX_NODE$2 || priorityNode.isEmpty(), "priority of unexpected type.");
+    }
+    assert(priorityNode === MAX_NODE$2 || priorityNode.getPriority().isEmpty(), "Priority nodes can't have a priority of their own.");
+  };
+  var __childrenNodeConstructor;
+  var LeafNode = class {
+    constructor(value_, priorityNode_ = LeafNode.__childrenNodeConstructor.EMPTY_NODE) {
+      this.value_ = value_;
+      this.priorityNode_ = priorityNode_;
+      this.lazyHash_ = null;
+      assert(this.value_ !== void 0 && this.value_ !== null, "LeafNode shouldn't be created with null/undefined value.");
+      validatePriorityNode(this.priorityNode_);
+    }
+    static set __childrenNodeConstructor(val) {
+      __childrenNodeConstructor = val;
+    }
+    static get __childrenNodeConstructor() {
+      return __childrenNodeConstructor;
+    }
+    isLeafNode() {
+      return true;
+    }
+    getPriority() {
+      return this.priorityNode_;
+    }
+    updatePriority(newPriorityNode) {
+      return new LeafNode(this.value_, newPriorityNode);
+    }
+    getImmediateChild(childName) {
+      if (childName === ".priority") {
+        return this.priorityNode_;
+      } else {
+        return LeafNode.__childrenNodeConstructor.EMPTY_NODE;
+      }
+    }
+    getChild(path) {
+      if (pathIsEmpty(path)) {
+        return this;
+      } else if (pathGetFront(path) === ".priority") {
+        return this.priorityNode_;
+      } else {
+        return LeafNode.__childrenNodeConstructor.EMPTY_NODE;
+      }
+    }
+    hasChild() {
+      return false;
+    }
+    getPredecessorChildName(childName, childNode) {
+      return null;
+    }
+    updateImmediateChild(childName, newChildNode) {
+      if (childName === ".priority") {
+        return this.updatePriority(newChildNode);
+      } else if (newChildNode.isEmpty() && childName !== ".priority") {
+        return this;
+      } else {
+        return LeafNode.__childrenNodeConstructor.EMPTY_NODE.updateImmediateChild(childName, newChildNode).updatePriority(this.priorityNode_);
+      }
+    }
+    updateChild(path, newChildNode) {
+      const front = pathGetFront(path);
+      if (front === null) {
+        return newChildNode;
+      } else if (newChildNode.isEmpty() && front !== ".priority") {
+        return this;
+      } else {
+        assert(front !== ".priority" || pathGetLength(path) === 1, ".priority must be the last token in a path");
+        return this.updateImmediateChild(front, LeafNode.__childrenNodeConstructor.EMPTY_NODE.updateChild(pathPopFront(path), newChildNode));
+      }
+    }
+    isEmpty() {
+      return false;
+    }
+    numChildren() {
+      return 0;
+    }
+    forEachChild(index, action) {
+      return false;
+    }
+    val(exportFormat) {
+      if (exportFormat && !this.getPriority().isEmpty()) {
+        return {
+          ".value": this.getValue(),
+          ".priority": this.getPriority().val()
+        };
+      } else {
+        return this.getValue();
+      }
+    }
+    hash() {
+      if (this.lazyHash_ === null) {
+        let toHash = "";
+        if (!this.priorityNode_.isEmpty()) {
+          toHash += "priority:" + priorityHashText(this.priorityNode_.val()) + ":";
+        }
+        const type = typeof this.value_;
+        toHash += type + ":";
+        if (type === "number") {
+          toHash += doubleToIEEE754String(this.value_);
+        } else {
+          toHash += this.value_;
+        }
+        this.lazyHash_ = sha12(toHash);
+      }
+      return this.lazyHash_;
+    }
+    getValue() {
+      return this.value_;
+    }
+    compareTo(other) {
+      if (other === LeafNode.__childrenNodeConstructor.EMPTY_NODE) {
+        return 1;
+      } else if (other instanceof LeafNode.__childrenNodeConstructor) {
+        return -1;
+      } else {
+        assert(other.isLeafNode(), "Unknown node type");
+        return this.compareToLeafNode_(other);
+      }
+    }
+    compareToLeafNode_(otherLeaf) {
+      const otherLeafType = typeof otherLeaf.value_;
+      const thisLeafType = typeof this.value_;
+      const otherIndex = LeafNode.VALUE_TYPE_ORDER.indexOf(otherLeafType);
+      const thisIndex = LeafNode.VALUE_TYPE_ORDER.indexOf(thisLeafType);
+      assert(otherIndex >= 0, "Unknown leaf type: " + otherLeafType);
+      assert(thisIndex >= 0, "Unknown leaf type: " + thisLeafType);
+      if (otherIndex === thisIndex) {
+        if (thisLeafType === "object") {
+          return 0;
+        } else {
+          if (this.value_ < otherLeaf.value_) {
+            return -1;
+          } else if (this.value_ === otherLeaf.value_) {
+            return 0;
+          } else {
+            return 1;
+          }
+        }
+      } else {
+        return thisIndex - otherIndex;
+      }
+    }
+    withIndex() {
+      return this;
+    }
+    isIndexed() {
+      return true;
+    }
+    equals(other) {
+      if (other === this) {
+        return true;
+      } else if (other.isLeafNode()) {
+        const otherLeaf = other;
+        return this.value_ === otherLeaf.value_ && this.priorityNode_.equals(otherLeaf.priorityNode_);
+      } else {
+        return false;
+      }
+    }
+  };
+  LeafNode.VALUE_TYPE_ORDER = ["object", "boolean", "number", "string"];
+  var nodeFromJSON$1;
+  var MAX_NODE$1;
+  function setNodeFromJSON(val) {
+    nodeFromJSON$1 = val;
+  }
+  function setMaxNode(val) {
+    MAX_NODE$1 = val;
+  }
+  var PriorityIndex = class extends Index {
+    compare(a3, b3) {
+      const aPriority = a3.node.getPriority();
+      const bPriority = b3.node.getPriority();
+      const indexCmp = aPriority.compareTo(bPriority);
+      if (indexCmp === 0) {
+        return nameCompare(a3.name, b3.name);
+      } else {
+        return indexCmp;
+      }
+    }
+    isDefinedOn(node) {
+      return !node.getPriority().isEmpty();
+    }
+    indexedValueChanged(oldNode, newNode) {
+      return !oldNode.getPriority().equals(newNode.getPriority());
+    }
+    minPost() {
+      return NamedNode.MIN;
+    }
+    maxPost() {
+      return new NamedNode(MAX_NAME, new LeafNode("[PRIORITY-POST]", MAX_NODE$1));
+    }
+    makePost(indexValue, name5) {
+      const priorityNode = nodeFromJSON$1(indexValue);
+      return new NamedNode(name5, new LeafNode("[PRIORITY-POST]", priorityNode));
+    }
+    toString() {
+      return ".priority";
+    }
+  };
+  var PRIORITY_INDEX = new PriorityIndex();
+  var LOG_2 = Math.log(2);
+  var Base12Num = class {
+    constructor(length) {
+      const logBase2 = (num) => parseInt(Math.log(num) / LOG_2, 10);
+      const bitMask = (bits) => parseInt(Array(bits + 1).join("1"), 2);
+      this.count = logBase2(length + 1);
+      this.current_ = this.count - 1;
+      const mask = bitMask(this.count);
+      this.bits_ = length + 1 & mask;
+    }
+    nextBitIsOne() {
+      const result = !(this.bits_ & 1 << this.current_);
+      this.current_--;
+      return result;
+    }
+  };
+  var buildChildSet = function(childList, cmp, keyFn, mapSortFn) {
+    childList.sort(cmp);
+    const buildBalancedTree = function(low, high) {
+      const length = high - low;
+      let namedNode;
+      let key;
+      if (length === 0) {
+        return null;
+      } else if (length === 1) {
+        namedNode = childList[low];
+        key = keyFn ? keyFn(namedNode) : namedNode;
+        return new LLRBNode(key, namedNode.node, LLRBNode.BLACK, null, null);
+      } else {
+        const middle = parseInt(length / 2, 10) + low;
+        const left = buildBalancedTree(low, middle);
+        const right = buildBalancedTree(middle + 1, high);
+        namedNode = childList[middle];
+        key = keyFn ? keyFn(namedNode) : namedNode;
+        return new LLRBNode(key, namedNode.node, LLRBNode.BLACK, left, right);
+      }
+    };
+    const buildFrom12Array = function(base122) {
+      let node = null;
+      let root2 = null;
+      let index = childList.length;
+      const buildPennant = function(chunkSize, color) {
+        const low = index - chunkSize;
+        const high = index;
+        index -= chunkSize;
+        const childTree = buildBalancedTree(low + 1, high);
+        const namedNode = childList[low];
+        const key = keyFn ? keyFn(namedNode) : namedNode;
+        attachPennant(new LLRBNode(key, namedNode.node, color, null, childTree));
+      };
+      const attachPennant = function(pennant) {
+        if (node) {
+          node.left = pennant;
+          node = pennant;
+        } else {
+          root2 = pennant;
+          node = pennant;
+        }
+      };
+      for (let i3 = 0; i3 < base122.count; ++i3) {
+        const isOne = base122.nextBitIsOne();
+        const chunkSize = Math.pow(2, base122.count - (i3 + 1));
+        if (isOne) {
+          buildPennant(chunkSize, LLRBNode.BLACK);
+        } else {
+          buildPennant(chunkSize, LLRBNode.BLACK);
+          buildPennant(chunkSize, LLRBNode.RED);
+        }
+      }
+      return root2;
+    };
+    const base12 = new Base12Num(childList.length);
+    const root = buildFrom12Array(base12);
+    return new SortedMap(mapSortFn || cmp, root);
+  };
+  var _defaultIndexMap;
+  var fallbackObject = {};
+  var IndexMap = class {
+    constructor(indexes_, indexSet_) {
+      this.indexes_ = indexes_;
+      this.indexSet_ = indexSet_;
+    }
+    static get Default() {
+      assert(fallbackObject && PRIORITY_INDEX, "ChildrenNode.ts has not been loaded");
+      _defaultIndexMap = _defaultIndexMap || new IndexMap({ ".priority": fallbackObject }, { ".priority": PRIORITY_INDEX });
+      return _defaultIndexMap;
+    }
+    get(indexKey) {
+      const sortedMap = safeGet(this.indexes_, indexKey);
+      if (!sortedMap) {
+        throw new Error("No index defined for " + indexKey);
+      }
+      if (sortedMap instanceof SortedMap) {
+        return sortedMap;
+      } else {
+        return null;
+      }
+    }
+    hasIndex(indexDefinition) {
+      return contains(this.indexSet_, indexDefinition.toString());
+    }
+    addIndex(indexDefinition, existingChildren) {
+      assert(indexDefinition !== KEY_INDEX, "KeyIndex always exists and isn't meant to be added to the IndexMap.");
+      const childList = [];
+      let sawIndexedValue = false;
+      const iter = existingChildren.getIterator(NamedNode.Wrap);
+      let next = iter.getNext();
+      while (next) {
+        sawIndexedValue = sawIndexedValue || indexDefinition.isDefinedOn(next.node);
+        childList.push(next);
+        next = iter.getNext();
+      }
+      let newIndex;
+      if (sawIndexedValue) {
+        newIndex = buildChildSet(childList, indexDefinition.getCompare());
+      } else {
+        newIndex = fallbackObject;
+      }
+      const indexName = indexDefinition.toString();
+      const newIndexSet = Object.assign({}, this.indexSet_);
+      newIndexSet[indexName] = indexDefinition;
+      const newIndexes = Object.assign({}, this.indexes_);
+      newIndexes[indexName] = newIndex;
+      return new IndexMap(newIndexes, newIndexSet);
+    }
+    addToIndexes(namedNode, existingChildren) {
+      const newIndexes = map(this.indexes_, (indexedChildren, indexName) => {
+        const index = safeGet(this.indexSet_, indexName);
+        assert(index, "Missing index implementation for " + indexName);
+        if (indexedChildren === fallbackObject) {
+          if (index.isDefinedOn(namedNode.node)) {
+            const childList = [];
+            const iter = existingChildren.getIterator(NamedNode.Wrap);
+            let next = iter.getNext();
+            while (next) {
+              if (next.name !== namedNode.name) {
+                childList.push(next);
+              }
+              next = iter.getNext();
+            }
+            childList.push(namedNode);
+            return buildChildSet(childList, index.getCompare());
+          } else {
+            return fallbackObject;
+          }
+        } else {
+          const existingSnap = existingChildren.get(namedNode.name);
+          let newChildren = indexedChildren;
+          if (existingSnap) {
+            newChildren = newChildren.remove(new NamedNode(namedNode.name, existingSnap));
+          }
+          return newChildren.insert(namedNode, namedNode.node);
+        }
+      });
+      return new IndexMap(newIndexes, this.indexSet_);
+    }
+    removeFromIndexes(namedNode, existingChildren) {
+      const newIndexes = map(this.indexes_, (indexedChildren) => {
+        if (indexedChildren === fallbackObject) {
+          return indexedChildren;
+        } else {
+          const existingSnap = existingChildren.get(namedNode.name);
+          if (existingSnap) {
+            return indexedChildren.remove(new NamedNode(namedNode.name, existingSnap));
+          } else {
+            return indexedChildren;
+          }
+        }
+      });
+      return new IndexMap(newIndexes, this.indexSet_);
+    }
+  };
+  var EMPTY_NODE;
+  var ChildrenNode = class {
+    constructor(children_, priorityNode_, indexMap_) {
+      this.children_ = children_;
+      this.priorityNode_ = priorityNode_;
+      this.indexMap_ = indexMap_;
+      this.lazyHash_ = null;
+      if (this.priorityNode_) {
+        validatePriorityNode(this.priorityNode_);
+      }
+      if (this.children_.isEmpty()) {
+        assert(!this.priorityNode_ || this.priorityNode_.isEmpty(), "An empty node cannot have a priority");
+      }
+    }
+    static get EMPTY_NODE() {
+      return EMPTY_NODE || (EMPTY_NODE = new ChildrenNode(new SortedMap(NAME_COMPARATOR), null, IndexMap.Default));
+    }
+    isLeafNode() {
+      return false;
+    }
+    getPriority() {
+      return this.priorityNode_ || EMPTY_NODE;
+    }
+    updatePriority(newPriorityNode) {
+      if (this.children_.isEmpty()) {
+        return this;
+      } else {
+        return new ChildrenNode(this.children_, newPriorityNode, this.indexMap_);
+      }
+    }
+    getImmediateChild(childName) {
+      if (childName === ".priority") {
+        return this.getPriority();
+      } else {
+        const child2 = this.children_.get(childName);
+        return child2 === null ? EMPTY_NODE : child2;
+      }
+    }
+    getChild(path) {
+      const front = pathGetFront(path);
+      if (front === null) {
+        return this;
+      }
+      return this.getImmediateChild(front).getChild(pathPopFront(path));
+    }
+    hasChild(childName) {
+      return this.children_.get(childName) !== null;
+    }
+    updateImmediateChild(childName, newChildNode) {
+      assert(newChildNode, "We should always be passing snapshot nodes");
+      if (childName === ".priority") {
+        return this.updatePriority(newChildNode);
+      } else {
+        const namedNode = new NamedNode(childName, newChildNode);
+        let newChildren, newIndexMap;
+        if (newChildNode.isEmpty()) {
+          newChildren = this.children_.remove(childName);
+          newIndexMap = this.indexMap_.removeFromIndexes(namedNode, this.children_);
+        } else {
+          newChildren = this.children_.insert(childName, newChildNode);
+          newIndexMap = this.indexMap_.addToIndexes(namedNode, this.children_);
+        }
+        const newPriority = newChildren.isEmpty() ? EMPTY_NODE : this.priorityNode_;
+        return new ChildrenNode(newChildren, newPriority, newIndexMap);
+      }
+    }
+    updateChild(path, newChildNode) {
+      const front = pathGetFront(path);
+      if (front === null) {
+        return newChildNode;
+      } else {
+        assert(pathGetFront(path) !== ".priority" || pathGetLength(path) === 1, ".priority must be the last token in a path");
+        const newImmediateChild = this.getImmediateChild(front).updateChild(pathPopFront(path), newChildNode);
+        return this.updateImmediateChild(front, newImmediateChild);
+      }
+    }
+    isEmpty() {
+      return this.children_.isEmpty();
+    }
+    numChildren() {
+      return this.children_.count();
+    }
+    val(exportFormat) {
+      if (this.isEmpty()) {
+        return null;
+      }
+      const obj = {};
+      let numKeys = 0, maxKey = 0, allIntegerKeys = true;
+      this.forEachChild(PRIORITY_INDEX, (key, childNode) => {
+        obj[key] = childNode.val(exportFormat);
+        numKeys++;
+        if (allIntegerKeys && ChildrenNode.INTEGER_REGEXP_.test(key)) {
+          maxKey = Math.max(maxKey, Number(key));
+        } else {
+          allIntegerKeys = false;
+        }
+      });
+      if (!exportFormat && allIntegerKeys && maxKey < 2 * numKeys) {
+        const array = [];
+        for (const key in obj) {
+          array[key] = obj[key];
+        }
+        return array;
+      } else {
+        if (exportFormat && !this.getPriority().isEmpty()) {
+          obj[".priority"] = this.getPriority().val();
+        }
+        return obj;
+      }
+    }
+    hash() {
+      if (this.lazyHash_ === null) {
+        let toHash = "";
+        if (!this.getPriority().isEmpty()) {
+          toHash += "priority:" + priorityHashText(this.getPriority().val()) + ":";
+        }
+        this.forEachChild(PRIORITY_INDEX, (key, childNode) => {
+          const childHash = childNode.hash();
+          if (childHash !== "") {
+            toHash += ":" + key + ":" + childHash;
+          }
+        });
+        this.lazyHash_ = toHash === "" ? "" : sha12(toHash);
+      }
+      return this.lazyHash_;
+    }
+    getPredecessorChildName(childName, childNode, index) {
+      const idx = this.resolveIndex_(index);
+      if (idx) {
+        const predecessor = idx.getPredecessorKey(new NamedNode(childName, childNode));
+        return predecessor ? predecessor.name : null;
+      } else {
+        return this.children_.getPredecessorKey(childName);
+      }
+    }
+    getFirstChildName(indexDefinition) {
+      const idx = this.resolveIndex_(indexDefinition);
+      if (idx) {
+        const minKey = idx.minKey();
+        return minKey && minKey.name;
+      } else {
+        return this.children_.minKey();
+      }
+    }
+    getFirstChild(indexDefinition) {
+      const minKey = this.getFirstChildName(indexDefinition);
+      if (minKey) {
+        return new NamedNode(minKey, this.children_.get(minKey));
+      } else {
+        return null;
+      }
+    }
+    getLastChildName(indexDefinition) {
+      const idx = this.resolveIndex_(indexDefinition);
+      if (idx) {
+        const maxKey = idx.maxKey();
+        return maxKey && maxKey.name;
+      } else {
+        return this.children_.maxKey();
+      }
+    }
+    getLastChild(indexDefinition) {
+      const maxKey = this.getLastChildName(indexDefinition);
+      if (maxKey) {
+        return new NamedNode(maxKey, this.children_.get(maxKey));
+      } else {
+        return null;
+      }
+    }
+    forEachChild(index, action) {
+      const idx = this.resolveIndex_(index);
+      if (idx) {
+        return idx.inorderTraversal((wrappedNode) => {
+          return action(wrappedNode.name, wrappedNode.node);
+        });
+      } else {
+        return this.children_.inorderTraversal(action);
+      }
+    }
+    getIterator(indexDefinition) {
+      return this.getIteratorFrom(indexDefinition.minPost(), indexDefinition);
+    }
+    getIteratorFrom(startPost, indexDefinition) {
+      const idx = this.resolveIndex_(indexDefinition);
+      if (idx) {
+        return idx.getIteratorFrom(startPost, (key) => key);
+      } else {
+        const iterator = this.children_.getIteratorFrom(startPost.name, NamedNode.Wrap);
+        let next = iterator.peek();
+        while (next != null && indexDefinition.compare(next, startPost) < 0) {
+          iterator.getNext();
+          next = iterator.peek();
+        }
+        return iterator;
+      }
+    }
+    getReverseIterator(indexDefinition) {
+      return this.getReverseIteratorFrom(indexDefinition.maxPost(), indexDefinition);
+    }
+    getReverseIteratorFrom(endPost, indexDefinition) {
+      const idx = this.resolveIndex_(indexDefinition);
+      if (idx) {
+        return idx.getReverseIteratorFrom(endPost, (key) => {
+          return key;
+        });
+      } else {
+        const iterator = this.children_.getReverseIteratorFrom(endPost.name, NamedNode.Wrap);
+        let next = iterator.peek();
+        while (next != null && indexDefinition.compare(next, endPost) > 0) {
+          iterator.getNext();
+          next = iterator.peek();
+        }
+        return iterator;
+      }
+    }
+    compareTo(other) {
+      if (this.isEmpty()) {
+        if (other.isEmpty()) {
+          return 0;
+        } else {
+          return -1;
+        }
+      } else if (other.isLeafNode() || other.isEmpty()) {
+        return 1;
+      } else if (other === MAX_NODE) {
+        return -1;
+      } else {
+        return 0;
+      }
+    }
+    withIndex(indexDefinition) {
+      if (indexDefinition === KEY_INDEX || this.indexMap_.hasIndex(indexDefinition)) {
+        return this;
+      } else {
+        const newIndexMap = this.indexMap_.addIndex(indexDefinition, this.children_);
+        return new ChildrenNode(this.children_, this.priorityNode_, newIndexMap);
+      }
+    }
+    isIndexed(index) {
+      return index === KEY_INDEX || this.indexMap_.hasIndex(index);
+    }
+    equals(other) {
+      if (other === this) {
+        return true;
+      } else if (other.isLeafNode()) {
+        return false;
+      } else {
+        const otherChildrenNode = other;
+        if (!this.getPriority().equals(otherChildrenNode.getPriority())) {
+          return false;
+        } else if (this.children_.count() === otherChildrenNode.children_.count()) {
+          const thisIter = this.getIterator(PRIORITY_INDEX);
+          const otherIter = otherChildrenNode.getIterator(PRIORITY_INDEX);
+          let thisCurrent = thisIter.getNext();
+          let otherCurrent = otherIter.getNext();
+          while (thisCurrent && otherCurrent) {
+            if (thisCurrent.name !== otherCurrent.name || !thisCurrent.node.equals(otherCurrent.node)) {
+              return false;
+            }
+            thisCurrent = thisIter.getNext();
+            otherCurrent = otherIter.getNext();
+          }
+          return thisCurrent === null && otherCurrent === null;
+        } else {
+          return false;
+        }
+      }
+    }
+    resolveIndex_(indexDefinition) {
+      if (indexDefinition === KEY_INDEX) {
+        return null;
+      } else {
+        return this.indexMap_.get(indexDefinition.toString());
+      }
+    }
+  };
+  ChildrenNode.INTEGER_REGEXP_ = /^(0|[1-9]\d*)$/;
+  var MaxNode = class extends ChildrenNode {
+    constructor() {
+      super(new SortedMap(NAME_COMPARATOR), ChildrenNode.EMPTY_NODE, IndexMap.Default);
+    }
+    compareTo(other) {
+      if (other === this) {
+        return 0;
+      } else {
+        return 1;
+      }
+    }
+    equals(other) {
+      return other === this;
+    }
+    getPriority() {
+      return this;
+    }
+    getImmediateChild(childName) {
+      return ChildrenNode.EMPTY_NODE;
+    }
+    isEmpty() {
+      return false;
+    }
+  };
+  var MAX_NODE = new MaxNode();
+  Object.defineProperties(NamedNode, {
+    MIN: {
+      value: new NamedNode(MIN_NAME, ChildrenNode.EMPTY_NODE)
+    },
+    MAX: {
+      value: new NamedNode(MAX_NAME, MAX_NODE)
+    }
+  });
+  KeyIndex.__EMPTY_NODE = ChildrenNode.EMPTY_NODE;
+  LeafNode.__childrenNodeConstructor = ChildrenNode;
+  setMaxNode$1(MAX_NODE);
+  setMaxNode(MAX_NODE);
+  var USE_HINZE = true;
+  function nodeFromJSON(json, priority = null) {
+    if (json === null) {
+      return ChildrenNode.EMPTY_NODE;
+    }
+    if (typeof json === "object" && ".priority" in json) {
+      priority = json[".priority"];
+    }
+    assert(priority === null || typeof priority === "string" || typeof priority === "number" || typeof priority === "object" && ".sv" in priority, "Invalid priority type found: " + typeof priority);
+    if (typeof json === "object" && ".value" in json && json[".value"] !== null) {
+      json = json[".value"];
+    }
+    if (typeof json !== "object" || ".sv" in json) {
+      const jsonLeaf = json;
+      return new LeafNode(jsonLeaf, nodeFromJSON(priority));
+    }
+    if (!(json instanceof Array) && USE_HINZE) {
+      const children = [];
+      let childrenHavePriority = false;
+      const hinzeJsonObj = json;
+      each(hinzeJsonObj, (key, child2) => {
+        if (key.substring(0, 1) !== ".") {
+          const childNode = nodeFromJSON(child2);
+          if (!childNode.isEmpty()) {
+            childrenHavePriority = childrenHavePriority || !childNode.getPriority().isEmpty();
+            children.push(new NamedNode(key, childNode));
+          }
+        }
+      });
+      if (children.length === 0) {
+        return ChildrenNode.EMPTY_NODE;
+      }
+      const childSet = buildChildSet(children, NAME_ONLY_COMPARATOR, (namedNode) => namedNode.name, NAME_COMPARATOR);
+      if (childrenHavePriority) {
+        const sortedChildSet = buildChildSet(children, PRIORITY_INDEX.getCompare());
+        return new ChildrenNode(childSet, nodeFromJSON(priority), new IndexMap({ ".priority": sortedChildSet }, { ".priority": PRIORITY_INDEX }));
+      } else {
+        return new ChildrenNode(childSet, nodeFromJSON(priority), IndexMap.Default);
+      }
+    } else {
+      let node = ChildrenNode.EMPTY_NODE;
+      each(json, (key, childData) => {
+        if (contains(json, key)) {
+          if (key.substring(0, 1) !== ".") {
+            const childNode = nodeFromJSON(childData);
+            if (childNode.isLeafNode() || !childNode.isEmpty()) {
+              node = node.updateImmediateChild(key, childNode);
+            }
+          }
+        }
+      });
+      return node.updatePriority(nodeFromJSON(priority));
+    }
+  }
+  setNodeFromJSON(nodeFromJSON);
+  var PathIndex = class extends Index {
+    constructor(indexPath_) {
+      super();
+      this.indexPath_ = indexPath_;
+      assert(!pathIsEmpty(indexPath_) && pathGetFront(indexPath_) !== ".priority", "Can't create PathIndex with empty path or .priority key");
+    }
+    extractChild(snap) {
+      return snap.getChild(this.indexPath_);
+    }
+    isDefinedOn(node) {
+      return !node.getChild(this.indexPath_).isEmpty();
+    }
+    compare(a3, b3) {
+      const aChild = this.extractChild(a3.node);
+      const bChild = this.extractChild(b3.node);
+      const indexCmp = aChild.compareTo(bChild);
+      if (indexCmp === 0) {
+        return nameCompare(a3.name, b3.name);
+      } else {
+        return indexCmp;
+      }
+    }
+    makePost(indexValue, name5) {
+      const valueNode = nodeFromJSON(indexValue);
+      const node = ChildrenNode.EMPTY_NODE.updateChild(this.indexPath_, valueNode);
+      return new NamedNode(name5, node);
+    }
+    maxPost() {
+      const node = ChildrenNode.EMPTY_NODE.updateChild(this.indexPath_, MAX_NODE);
+      return new NamedNode(MAX_NAME, node);
+    }
+    toString() {
+      return pathSlice(this.indexPath_, 0).join("/");
+    }
+  };
+  var ValueIndex = class extends Index {
+    compare(a3, b3) {
+      const indexCmp = a3.node.compareTo(b3.node);
+      if (indexCmp === 0) {
+        return nameCompare(a3.name, b3.name);
+      } else {
+        return indexCmp;
+      }
+    }
+    isDefinedOn(node) {
+      return true;
+    }
+    indexedValueChanged(oldNode, newNode) {
+      return !oldNode.equals(newNode);
+    }
+    minPost() {
+      return NamedNode.MIN;
+    }
+    maxPost() {
+      return NamedNode.MAX;
+    }
+    makePost(indexValue, name5) {
+      const valueNode = nodeFromJSON(indexValue);
+      return new NamedNode(name5, valueNode);
+    }
+    toString() {
+      return ".value";
+    }
+  };
+  var VALUE_INDEX = new ValueIndex();
+  var PUSH_CHARS = "-0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz";
+  var nextPushId = function() {
+    let lastPushTime = 0;
+    const lastRandChars = [];
+    return function(now) {
+      const duplicateTime = now === lastPushTime;
+      lastPushTime = now;
+      let i3;
+      const timeStampChars = new Array(8);
+      for (i3 = 7; i3 >= 0; i3--) {
+        timeStampChars[i3] = PUSH_CHARS.charAt(now % 64);
+        now = Math.floor(now / 64);
+      }
+      assert(now === 0, "Cannot push at time == 0");
+      let id = timeStampChars.join("");
+      if (!duplicateTime) {
+        for (i3 = 0; i3 < 12; i3++) {
+          lastRandChars[i3] = Math.floor(Math.random() * 64);
+        }
+      } else {
+        for (i3 = 11; i3 >= 0 && lastRandChars[i3] === 63; i3--) {
+          lastRandChars[i3] = 0;
+        }
+        lastRandChars[i3]++;
+      }
+      for (i3 = 0; i3 < 12; i3++) {
+        id += PUSH_CHARS.charAt(lastRandChars[i3]);
+      }
+      assert(id.length === 20, "nextPushId: Length should be 20.");
+      return id;
+    };
+  }();
+  function changeValue(snapshotNode) {
+    return { type: "value", snapshotNode };
+  }
+  function changeChildAdded(childName, snapshotNode) {
+    return { type: "child_added", snapshotNode, childName };
+  }
+  function changeChildRemoved(childName, snapshotNode) {
+    return { type: "child_removed", snapshotNode, childName };
+  }
+  function changeChildChanged(childName, snapshotNode, oldSnap) {
+    return {
+      type: "child_changed",
+      snapshotNode,
+      childName,
+      oldSnap
+    };
+  }
+  function changeChildMoved(childName, snapshotNode) {
+    return { type: "child_moved", snapshotNode, childName };
+  }
+  var IndexedFilter = class {
+    constructor(index_) {
+      this.index_ = index_;
+    }
+    updateChild(snap, key, newChild, affectedPath, source, optChangeAccumulator) {
+      assert(snap.isIndexed(this.index_), "A node must be indexed if only a child is updated");
+      const oldChild = snap.getImmediateChild(key);
+      if (oldChild.getChild(affectedPath).equals(newChild.getChild(affectedPath))) {
+        if (oldChild.isEmpty() === newChild.isEmpty()) {
+          return snap;
+        }
+      }
+      if (optChangeAccumulator != null) {
+        if (newChild.isEmpty()) {
+          if (snap.hasChild(key)) {
+            optChangeAccumulator.trackChildChange(changeChildRemoved(key, oldChild));
+          } else {
+            assert(snap.isLeafNode(), "A child remove without an old child only makes sense on a leaf node");
+          }
+        } else if (oldChild.isEmpty()) {
+          optChangeAccumulator.trackChildChange(changeChildAdded(key, newChild));
+        } else {
+          optChangeAccumulator.trackChildChange(changeChildChanged(key, newChild, oldChild));
+        }
+      }
+      if (snap.isLeafNode() && newChild.isEmpty()) {
+        return snap;
+      } else {
+        return snap.updateImmediateChild(key, newChild).withIndex(this.index_);
+      }
+    }
+    updateFullNode(oldSnap, newSnap, optChangeAccumulator) {
+      if (optChangeAccumulator != null) {
+        if (!oldSnap.isLeafNode()) {
+          oldSnap.forEachChild(PRIORITY_INDEX, (key, childNode) => {
+            if (!newSnap.hasChild(key)) {
+              optChangeAccumulator.trackChildChange(changeChildRemoved(key, childNode));
+            }
+          });
+        }
+        if (!newSnap.isLeafNode()) {
+          newSnap.forEachChild(PRIORITY_INDEX, (key, childNode) => {
+            if (oldSnap.hasChild(key)) {
+              const oldChild = oldSnap.getImmediateChild(key);
+              if (!oldChild.equals(childNode)) {
+                optChangeAccumulator.trackChildChange(changeChildChanged(key, childNode, oldChild));
+              }
+            } else {
+              optChangeAccumulator.trackChildChange(changeChildAdded(key, childNode));
+            }
+          });
+        }
+      }
+      return newSnap.withIndex(this.index_);
+    }
+    updatePriority(oldSnap, newPriority) {
+      if (oldSnap.isEmpty()) {
+        return ChildrenNode.EMPTY_NODE;
+      } else {
+        return oldSnap.updatePriority(newPriority);
+      }
+    }
+    filtersNodes() {
+      return false;
+    }
+    getIndexedFilter() {
+      return this;
+    }
+    getIndex() {
+      return this.index_;
+    }
+  };
+  var RangedFilter = class {
+    constructor(params) {
+      this.indexedFilter_ = new IndexedFilter(params.getIndex());
+      this.index_ = params.getIndex();
+      this.startPost_ = RangedFilter.getStartPost_(params);
+      this.endPost_ = RangedFilter.getEndPost_(params);
+    }
+    getStartPost() {
+      return this.startPost_;
+    }
+    getEndPost() {
+      return this.endPost_;
+    }
+    matches(node) {
+      return this.index_.compare(this.getStartPost(), node) <= 0 && this.index_.compare(node, this.getEndPost()) <= 0;
+    }
+    updateChild(snap, key, newChild, affectedPath, source, optChangeAccumulator) {
+      if (!this.matches(new NamedNode(key, newChild))) {
+        newChild = ChildrenNode.EMPTY_NODE;
+      }
+      return this.indexedFilter_.updateChild(snap, key, newChild, affectedPath, source, optChangeAccumulator);
+    }
+    updateFullNode(oldSnap, newSnap, optChangeAccumulator) {
+      if (newSnap.isLeafNode()) {
+        newSnap = ChildrenNode.EMPTY_NODE;
+      }
+      let filtered = newSnap.withIndex(this.index_);
+      filtered = filtered.updatePriority(ChildrenNode.EMPTY_NODE);
+      const self2 = this;
+      newSnap.forEachChild(PRIORITY_INDEX, (key, childNode) => {
+        if (!self2.matches(new NamedNode(key, childNode))) {
+          filtered = filtered.updateImmediateChild(key, ChildrenNode.EMPTY_NODE);
+        }
+      });
+      return this.indexedFilter_.updateFullNode(oldSnap, filtered, optChangeAccumulator);
+    }
+    updatePriority(oldSnap, newPriority) {
+      return oldSnap;
+    }
+    filtersNodes() {
+      return true;
+    }
+    getIndexedFilter() {
+      return this.indexedFilter_;
+    }
+    getIndex() {
+      return this.index_;
+    }
+    static getStartPost_(params) {
+      if (params.hasStart()) {
+        const startName = params.getIndexStartName();
+        return params.getIndex().makePost(params.getIndexStartValue(), startName);
+      } else {
+        return params.getIndex().minPost();
+      }
+    }
+    static getEndPost_(params) {
+      if (params.hasEnd()) {
+        const endName = params.getIndexEndName();
+        return params.getIndex().makePost(params.getIndexEndValue(), endName);
+      } else {
+        return params.getIndex().maxPost();
+      }
+    }
+  };
+  var LimitedFilter = class {
+    constructor(params) {
+      this.rangedFilter_ = new RangedFilter(params);
+      this.index_ = params.getIndex();
+      this.limit_ = params.getLimit();
+      this.reverse_ = !params.isViewFromLeft();
+    }
+    updateChild(snap, key, newChild, affectedPath, source, optChangeAccumulator) {
+      if (!this.rangedFilter_.matches(new NamedNode(key, newChild))) {
+        newChild = ChildrenNode.EMPTY_NODE;
+      }
+      if (snap.getImmediateChild(key).equals(newChild)) {
+        return snap;
+      } else if (snap.numChildren() < this.limit_) {
+        return this.rangedFilter_.getIndexedFilter().updateChild(snap, key, newChild, affectedPath, source, optChangeAccumulator);
+      } else {
+        return this.fullLimitUpdateChild_(snap, key, newChild, source, optChangeAccumulator);
+      }
+    }
+    updateFullNode(oldSnap, newSnap, optChangeAccumulator) {
+      let filtered;
+      if (newSnap.isLeafNode() || newSnap.isEmpty()) {
+        filtered = ChildrenNode.EMPTY_NODE.withIndex(this.index_);
+      } else {
+        if (this.limit_ * 2 < newSnap.numChildren() && newSnap.isIndexed(this.index_)) {
+          filtered = ChildrenNode.EMPTY_NODE.withIndex(this.index_);
+          let iterator;
+          if (this.reverse_) {
+            iterator = newSnap.getReverseIteratorFrom(this.rangedFilter_.getEndPost(), this.index_);
+          } else {
+            iterator = newSnap.getIteratorFrom(this.rangedFilter_.getStartPost(), this.index_);
+          }
+          let count = 0;
+          while (iterator.hasNext() && count < this.limit_) {
+            const next = iterator.getNext();
+            let inRange;
+            if (this.reverse_) {
+              inRange = this.index_.compare(this.rangedFilter_.getStartPost(), next) <= 0;
+            } else {
+              inRange = this.index_.compare(next, this.rangedFilter_.getEndPost()) <= 0;
+            }
+            if (inRange) {
+              filtered = filtered.updateImmediateChild(next.name, next.node);
+              count++;
+            } else {
+              break;
+            }
+          }
+        } else {
+          filtered = newSnap.withIndex(this.index_);
+          filtered = filtered.updatePriority(ChildrenNode.EMPTY_NODE);
+          let startPost;
+          let endPost;
+          let cmp;
+          let iterator;
+          if (this.reverse_) {
+            iterator = filtered.getReverseIterator(this.index_);
+            startPost = this.rangedFilter_.getEndPost();
+            endPost = this.rangedFilter_.getStartPost();
+            const indexCompare = this.index_.getCompare();
+            cmp = (a3, b3) => indexCompare(b3, a3);
+          } else {
+            iterator = filtered.getIterator(this.index_);
+            startPost = this.rangedFilter_.getStartPost();
+            endPost = this.rangedFilter_.getEndPost();
+            cmp = this.index_.getCompare();
+          }
+          let count = 0;
+          let foundStartPost = false;
+          while (iterator.hasNext()) {
+            const next = iterator.getNext();
+            if (!foundStartPost && cmp(startPost, next) <= 0) {
+              foundStartPost = true;
+            }
+            const inRange = foundStartPost && count < this.limit_ && cmp(next, endPost) <= 0;
+            if (inRange) {
+              count++;
+            } else {
+              filtered = filtered.updateImmediateChild(next.name, ChildrenNode.EMPTY_NODE);
+            }
+          }
+        }
+      }
+      return this.rangedFilter_.getIndexedFilter().updateFullNode(oldSnap, filtered, optChangeAccumulator);
+    }
+    updatePriority(oldSnap, newPriority) {
+      return oldSnap;
+    }
+    filtersNodes() {
+      return true;
+    }
+    getIndexedFilter() {
+      return this.rangedFilter_.getIndexedFilter();
+    }
+    getIndex() {
+      return this.index_;
+    }
+    fullLimitUpdateChild_(snap, childKey, childSnap, source, changeAccumulator) {
+      let cmp;
+      if (this.reverse_) {
+        const indexCmp = this.index_.getCompare();
+        cmp = (a3, b3) => indexCmp(b3, a3);
+      } else {
+        cmp = this.index_.getCompare();
+      }
+      const oldEventCache = snap;
+      assert(oldEventCache.numChildren() === this.limit_, "");
+      const newChildNamedNode = new NamedNode(childKey, childSnap);
+      const windowBoundary = this.reverse_ ? oldEventCache.getFirstChild(this.index_) : oldEventCache.getLastChild(this.index_);
+      const inRange = this.rangedFilter_.matches(newChildNamedNode);
+      if (oldEventCache.hasChild(childKey)) {
+        const oldChildSnap = oldEventCache.getImmediateChild(childKey);
+        let nextChild = source.getChildAfterChild(this.index_, windowBoundary, this.reverse_);
+        while (nextChild != null && (nextChild.name === childKey || oldEventCache.hasChild(nextChild.name))) {
+          nextChild = source.getChildAfterChild(this.index_, nextChild, this.reverse_);
+        }
+        const compareNext = nextChild == null ? 1 : cmp(nextChild, newChildNamedNode);
+        const remainsInWindow = inRange && !childSnap.isEmpty() && compareNext >= 0;
+        if (remainsInWindow) {
+          if (changeAccumulator != null) {
+            changeAccumulator.trackChildChange(changeChildChanged(childKey, childSnap, oldChildSnap));
+          }
+          return oldEventCache.updateImmediateChild(childKey, childSnap);
+        } else {
+          if (changeAccumulator != null) {
+            changeAccumulator.trackChildChange(changeChildRemoved(childKey, oldChildSnap));
+          }
+          const newEventCache = oldEventCache.updateImmediateChild(childKey, ChildrenNode.EMPTY_NODE);
+          const nextChildInRange = nextChild != null && this.rangedFilter_.matches(nextChild);
+          if (nextChildInRange) {
+            if (changeAccumulator != null) {
+              changeAccumulator.trackChildChange(changeChildAdded(nextChild.name, nextChild.node));
+            }
+            return newEventCache.updateImmediateChild(nextChild.name, nextChild.node);
+          } else {
+            return newEventCache;
+          }
+        }
+      } else if (childSnap.isEmpty()) {
+        return snap;
+      } else if (inRange) {
+        if (cmp(windowBoundary, newChildNamedNode) >= 0) {
+          if (changeAccumulator != null) {
+            changeAccumulator.trackChildChange(changeChildRemoved(windowBoundary.name, windowBoundary.node));
+            changeAccumulator.trackChildChange(changeChildAdded(childKey, childSnap));
+          }
+          return oldEventCache.updateImmediateChild(childKey, childSnap).updateImmediateChild(windowBoundary.name, ChildrenNode.EMPTY_NODE);
+        } else {
+          return snap;
+        }
+      } else {
+        return snap;
+      }
+    }
+  };
+  var QueryParams = class {
+    constructor() {
+      this.limitSet_ = false;
+      this.startSet_ = false;
+      this.startNameSet_ = false;
+      this.startAfterSet_ = false;
+      this.endSet_ = false;
+      this.endNameSet_ = false;
+      this.endBeforeSet_ = false;
+      this.limit_ = 0;
+      this.viewFrom_ = "";
+      this.indexStartValue_ = null;
+      this.indexStartName_ = "";
+      this.indexEndValue_ = null;
+      this.indexEndName_ = "";
+      this.index_ = PRIORITY_INDEX;
+    }
+    hasStart() {
+      return this.startSet_;
+    }
+    hasStartAfter() {
+      return this.startAfterSet_;
+    }
+    hasEndBefore() {
+      return this.endBeforeSet_;
+    }
+    isViewFromLeft() {
+      if (this.viewFrom_ === "") {
+        return this.startSet_;
+      } else {
+        return this.viewFrom_ === "l";
+      }
+    }
+    getIndexStartValue() {
+      assert(this.startSet_, "Only valid if start has been set");
+      return this.indexStartValue_;
+    }
+    getIndexStartName() {
+      assert(this.startSet_, "Only valid if start has been set");
+      if (this.startNameSet_) {
+        return this.indexStartName_;
+      } else {
+        return MIN_NAME;
+      }
+    }
+    hasEnd() {
+      return this.endSet_;
+    }
+    getIndexEndValue() {
+      assert(this.endSet_, "Only valid if end has been set");
+      return this.indexEndValue_;
+    }
+    getIndexEndName() {
+      assert(this.endSet_, "Only valid if end has been set");
+      if (this.endNameSet_) {
+        return this.indexEndName_;
+      } else {
+        return MAX_NAME;
+      }
+    }
+    hasLimit() {
+      return this.limitSet_;
+    }
+    hasAnchoredLimit() {
+      return this.limitSet_ && this.viewFrom_ !== "";
+    }
+    getLimit() {
+      assert(this.limitSet_, "Only valid if limit has been set");
+      return this.limit_;
+    }
+    getIndex() {
+      return this.index_;
+    }
+    loadsAllData() {
+      return !(this.startSet_ || this.endSet_ || this.limitSet_);
+    }
+    isDefault() {
+      return this.loadsAllData() && this.index_ === PRIORITY_INDEX;
+    }
+    copy() {
+      const copy = new QueryParams();
+      copy.limitSet_ = this.limitSet_;
+      copy.limit_ = this.limit_;
+      copy.startSet_ = this.startSet_;
+      copy.indexStartValue_ = this.indexStartValue_;
+      copy.startNameSet_ = this.startNameSet_;
+      copy.indexStartName_ = this.indexStartName_;
+      copy.endSet_ = this.endSet_;
+      copy.indexEndValue_ = this.indexEndValue_;
+      copy.endNameSet_ = this.endNameSet_;
+      copy.indexEndName_ = this.indexEndName_;
+      copy.index_ = this.index_;
+      copy.viewFrom_ = this.viewFrom_;
+      return copy;
+    }
+  };
+  function queryParamsGetNodeFilter(queryParams) {
+    if (queryParams.loadsAllData()) {
+      return new IndexedFilter(queryParams.getIndex());
+    } else if (queryParams.hasLimit()) {
+      return new LimitedFilter(queryParams);
+    } else {
+      return new RangedFilter(queryParams);
+    }
+  }
+  function queryParamsToRestQueryStringParameters(queryParams) {
+    const qs = {};
+    if (queryParams.isDefault()) {
+      return qs;
+    }
+    let orderBy;
+    if (queryParams.index_ === PRIORITY_INDEX) {
+      orderBy = "$priority";
+    } else if (queryParams.index_ === VALUE_INDEX) {
+      orderBy = "$value";
+    } else if (queryParams.index_ === KEY_INDEX) {
+      orderBy = "$key";
+    } else {
+      assert(queryParams.index_ instanceof PathIndex, "Unrecognized index type!");
+      orderBy = queryParams.index_.toString();
+    }
+    qs["orderBy"] = stringify2(orderBy);
+    if (queryParams.startSet_) {
+      qs["startAt"] = stringify2(queryParams.indexStartValue_);
+      if (queryParams.startNameSet_) {
+        qs["startAt"] += "," + stringify2(queryParams.indexStartName_);
+      }
+    }
+    if (queryParams.endSet_) {
+      qs["endAt"] = stringify2(queryParams.indexEndValue_);
+      if (queryParams.endNameSet_) {
+        qs["endAt"] += "," + stringify2(queryParams.indexEndName_);
+      }
+    }
+    if (queryParams.limitSet_) {
+      if (queryParams.isViewFromLeft()) {
+        qs["limitToFirst"] = queryParams.limit_;
+      } else {
+        qs["limitToLast"] = queryParams.limit_;
+      }
+    }
+    return qs;
+  }
+  function queryParamsGetQueryObject(queryParams) {
+    const obj = {};
+    if (queryParams.startSet_) {
+      obj["sp"] = queryParams.indexStartValue_;
+      if (queryParams.startNameSet_) {
+        obj["sn"] = queryParams.indexStartName_;
+      }
+    }
+    if (queryParams.endSet_) {
+      obj["ep"] = queryParams.indexEndValue_;
+      if (queryParams.endNameSet_) {
+        obj["en"] = queryParams.indexEndName_;
+      }
+    }
+    if (queryParams.limitSet_) {
+      obj["l"] = queryParams.limit_;
+      let viewFrom = queryParams.viewFrom_;
+      if (viewFrom === "") {
+        if (queryParams.isViewFromLeft()) {
+          viewFrom = "l";
+        } else {
+          viewFrom = "r";
+        }
+      }
+      obj["vf"] = viewFrom;
+    }
+    if (queryParams.index_ !== PRIORITY_INDEX) {
+      obj["i"] = queryParams.index_.toString();
+    }
+    return obj;
+  }
+  var ReadonlyRestClient = class extends ServerActions {
+    constructor(repoInfo_, onDataUpdate_, authTokenProvider_, appCheckTokenProvider_) {
+      super();
+      this.repoInfo_ = repoInfo_;
+      this.onDataUpdate_ = onDataUpdate_;
+      this.authTokenProvider_ = authTokenProvider_;
+      this.appCheckTokenProvider_ = appCheckTokenProvider_;
+      this.log_ = logWrapper("p:rest:");
+      this.listens_ = {};
+    }
+    reportStats(stats) {
+      throw new Error("Method not implemented.");
+    }
+    static getListenId_(query, tag) {
+      if (tag !== void 0) {
+        return "tag$" + tag;
+      } else {
+        assert(query._queryParams.isDefault(), "should have a tag if it's not a default query.");
+        return query._path.toString();
+      }
+    }
+    listen(query, currentHashFn, tag, onComplete) {
+      const pathString = query._path.toString();
+      this.log_("Listen called for " + pathString + " " + query._queryIdentifier);
+      const listenId = ReadonlyRestClient.getListenId_(query, tag);
+      const thisListen = {};
+      this.listens_[listenId] = thisListen;
+      const queryStringParameters = queryParamsToRestQueryStringParameters(query._queryParams);
+      this.restRequest_(pathString + ".json", queryStringParameters, (error2, result) => {
+        let data = result;
+        if (error2 === 404) {
+          data = null;
+          error2 = null;
+        }
+        if (error2 === null) {
+          this.onDataUpdate_(pathString, data, false, tag);
+        }
+        if (safeGet(this.listens_, listenId) === thisListen) {
+          let status;
+          if (!error2) {
+            status = "ok";
+          } else if (error2 === 401) {
+            status = "permission_denied";
+          } else {
+            status = "rest_error:" + error2;
+          }
+          onComplete(status, null);
+        }
+      });
+    }
+    unlisten(query, tag) {
+      const listenId = ReadonlyRestClient.getListenId_(query, tag);
+      delete this.listens_[listenId];
+    }
+    get(query) {
+      const queryStringParameters = queryParamsToRestQueryStringParameters(query._queryParams);
+      const pathString = query._path.toString();
+      const deferred = new Deferred();
+      this.restRequest_(pathString + ".json", queryStringParameters, (error2, result) => {
+        let data = result;
+        if (error2 === 404) {
+          data = null;
+          error2 = null;
+        }
+        if (error2 === null) {
+          this.onDataUpdate_(
+            pathString,
+            data,
+            false,
+            null
+          );
+          deferred.resolve(data);
+        } else {
+          deferred.reject(new Error(data));
+        }
+      });
+      return deferred.promise;
+    }
+    refreshAuthToken(token) {
+    }
+    restRequest_(pathString, queryStringParameters = {}, callback) {
+      queryStringParameters["format"] = "export";
+      return Promise.all([
+        this.authTokenProvider_.getToken(false),
+        this.appCheckTokenProvider_.getToken(false)
+      ]).then(([authToken, appCheckToken]) => {
+        if (authToken && authToken.accessToken) {
+          queryStringParameters["auth"] = authToken.accessToken;
+        }
+        if (appCheckToken && appCheckToken.token) {
+          queryStringParameters["ac"] = appCheckToken.token;
+        }
+        const url = (this.repoInfo_.secure ? "https://" : "http://") + this.repoInfo_.host + pathString + "?ns=" + this.repoInfo_.namespace + querystring(queryStringParameters);
+        this.log_("Sending REST request for " + url);
+        const xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = () => {
+          if (callback && xhr.readyState === 4) {
+            this.log_("REST Response for " + url + " received. status:", xhr.status, "response:", xhr.responseText);
+            let res = null;
+            if (xhr.status >= 200 && xhr.status < 300) {
+              try {
+                res = jsonEval(xhr.responseText);
+              } catch (e2) {
+                warn("Failed to parse JSON response for " + url + ": " + xhr.responseText);
+              }
+              callback(null, res);
+            } else {
+              if (xhr.status !== 401 && xhr.status !== 404) {
+                warn("Got unsuccessful REST response for " + url + " Status: " + xhr.status);
+              }
+              callback(xhr.status);
+            }
+            callback = null;
+          }
+        };
+        xhr.open("GET", url, true);
+        xhr.send();
+      });
+    }
+  };
+  var SnapshotHolder = class {
+    constructor() {
+      this.rootNode_ = ChildrenNode.EMPTY_NODE;
+    }
+    getNode(path) {
+      return this.rootNode_.getChild(path);
+    }
+    updateSnapshot(path, newSnapshotNode) {
+      this.rootNode_ = this.rootNode_.updateChild(path, newSnapshotNode);
+    }
+  };
+  function newSparseSnapshotTree() {
+    return {
+      value: null,
+      children: /* @__PURE__ */ new Map()
+    };
+  }
+  function sparseSnapshotTreeRemember(sparseSnapshotTree, path, data) {
+    if (pathIsEmpty(path)) {
+      sparseSnapshotTree.value = data;
+      sparseSnapshotTree.children.clear();
+    } else if (sparseSnapshotTree.value !== null) {
+      sparseSnapshotTree.value = sparseSnapshotTree.value.updateChild(path, data);
+    } else {
+      const childKey = pathGetFront(path);
+      if (!sparseSnapshotTree.children.has(childKey)) {
+        sparseSnapshotTree.children.set(childKey, newSparseSnapshotTree());
+      }
+      const child2 = sparseSnapshotTree.children.get(childKey);
+      path = pathPopFront(path);
+      sparseSnapshotTreeRemember(child2, path, data);
+    }
+  }
+  function sparseSnapshotTreeForEachTree(sparseSnapshotTree, prefixPath, func) {
+    if (sparseSnapshotTree.value !== null) {
+      func(prefixPath, sparseSnapshotTree.value);
+    } else {
+      sparseSnapshotTreeForEachChild(sparseSnapshotTree, (key, tree) => {
+        const path = new Path(prefixPath.toString() + "/" + key);
+        sparseSnapshotTreeForEachTree(tree, path, func);
+      });
+    }
+  }
+  function sparseSnapshotTreeForEachChild(sparseSnapshotTree, func) {
+    sparseSnapshotTree.children.forEach((tree, key) => {
+      func(key, tree);
+    });
+  }
+  var StatsListener = class {
+    constructor(collection_) {
+      this.collection_ = collection_;
+      this.last_ = null;
+    }
+    get() {
+      const newStats = this.collection_.get();
+      const delta = Object.assign({}, newStats);
+      if (this.last_) {
+        each(this.last_, (stat, value) => {
+          delta[stat] = delta[stat] - value;
+        });
+      }
+      this.last_ = newStats;
+      return delta;
+    }
+  };
+  var FIRST_STATS_MIN_TIME = 10 * 1e3;
+  var FIRST_STATS_MAX_TIME = 30 * 1e3;
+  var REPORT_STATS_INTERVAL = 5 * 60 * 1e3;
+  var StatsReporter = class {
+    constructor(collection, server_) {
+      this.server_ = server_;
+      this.statsToReport_ = {};
+      this.statsListener_ = new StatsListener(collection);
+      const timeout = FIRST_STATS_MIN_TIME + (FIRST_STATS_MAX_TIME - FIRST_STATS_MIN_TIME) * Math.random();
+      setTimeoutNonBlocking(this.reportStats_.bind(this), Math.floor(timeout));
+    }
+    reportStats_() {
+      const stats = this.statsListener_.get();
+      const reportedStats = {};
+      let haveStatsToReport = false;
+      each(stats, (stat, value) => {
+        if (value > 0 && contains(this.statsToReport_, stat)) {
+          reportedStats[stat] = value;
+          haveStatsToReport = true;
+        }
+      });
+      if (haveStatsToReport) {
+        this.server_.reportStats(reportedStats);
+      }
+      setTimeoutNonBlocking(this.reportStats_.bind(this), Math.floor(Math.random() * 2 * REPORT_STATS_INTERVAL));
+    }
+  };
+  var OperationType2;
+  (function(OperationType3) {
+    OperationType3[OperationType3["OVERWRITE"] = 0] = "OVERWRITE";
+    OperationType3[OperationType3["MERGE"] = 1] = "MERGE";
+    OperationType3[OperationType3["ACK_USER_WRITE"] = 2] = "ACK_USER_WRITE";
+    OperationType3[OperationType3["LISTEN_COMPLETE"] = 3] = "LISTEN_COMPLETE";
+  })(OperationType2 || (OperationType2 = {}));
+  function newOperationSourceUser() {
+    return {
+      fromUser: true,
+      fromServer: false,
+      queryId: null,
+      tagged: false
+    };
+  }
+  function newOperationSourceServer() {
+    return {
+      fromUser: false,
+      fromServer: true,
+      queryId: null,
+      tagged: false
+    };
+  }
+  function newOperationSourceServerTaggedQuery(queryId) {
+    return {
+      fromUser: false,
+      fromServer: true,
+      queryId,
+      tagged: true
+    };
+  }
+  var AckUserWrite = class {
+    constructor(path, affectedTree, revert) {
+      this.path = path;
+      this.affectedTree = affectedTree;
+      this.revert = revert;
+      this.type = OperationType2.ACK_USER_WRITE;
+      this.source = newOperationSourceUser();
+    }
+    operationForChild(childName) {
+      if (!pathIsEmpty(this.path)) {
+        assert(pathGetFront(this.path) === childName, "operationForChild called for unrelated child.");
+        return new AckUserWrite(pathPopFront(this.path), this.affectedTree, this.revert);
+      } else if (this.affectedTree.value != null) {
+        assert(this.affectedTree.children.isEmpty(), "affectedTree should not have overlapping affected paths.");
+        return this;
+      } else {
+        const childTree = this.affectedTree.subtree(new Path(childName));
+        return new AckUserWrite(newEmptyPath(), childTree, this.revert);
+      }
+    }
+  };
+  var ListenComplete = class {
+    constructor(source, path) {
+      this.source = source;
+      this.path = path;
+      this.type = OperationType2.LISTEN_COMPLETE;
+    }
+    operationForChild(childName) {
+      if (pathIsEmpty(this.path)) {
+        return new ListenComplete(this.source, newEmptyPath());
+      } else {
+        return new ListenComplete(this.source, pathPopFront(this.path));
+      }
+    }
+  };
+  var Overwrite = class {
+    constructor(source, path, snap) {
+      this.source = source;
+      this.path = path;
+      this.snap = snap;
+      this.type = OperationType2.OVERWRITE;
+    }
+    operationForChild(childName) {
+      if (pathIsEmpty(this.path)) {
+        return new Overwrite(this.source, newEmptyPath(), this.snap.getImmediateChild(childName));
+      } else {
+        return new Overwrite(this.source, pathPopFront(this.path), this.snap);
+      }
+    }
+  };
+  var Merge = class {
+    constructor(source, path, children) {
+      this.source = source;
+      this.path = path;
+      this.children = children;
+      this.type = OperationType2.MERGE;
+    }
+    operationForChild(childName) {
+      if (pathIsEmpty(this.path)) {
+        const childTree = this.children.subtree(new Path(childName));
+        if (childTree.isEmpty()) {
+          return null;
+        } else if (childTree.value) {
+          return new Overwrite(this.source, newEmptyPath(), childTree.value);
+        } else {
+          return new Merge(this.source, newEmptyPath(), childTree);
+        }
+      } else {
+        assert(pathGetFront(this.path) === childName, "Can't get a merge for a child not on the path of the operation");
+        return new Merge(this.source, pathPopFront(this.path), this.children);
+      }
+    }
+    toString() {
+      return "Operation(" + this.path + ": " + this.source.toString() + " merge: " + this.children.toString() + ")";
+    }
+  };
+  var CacheNode = class {
+    constructor(node_, fullyInitialized_, filtered_) {
+      this.node_ = node_;
+      this.fullyInitialized_ = fullyInitialized_;
+      this.filtered_ = filtered_;
+    }
+    isFullyInitialized() {
+      return this.fullyInitialized_;
+    }
+    isFiltered() {
+      return this.filtered_;
+    }
+    isCompleteForPath(path) {
+      if (pathIsEmpty(path)) {
+        return this.isFullyInitialized() && !this.filtered_;
+      }
+      const childKey = pathGetFront(path);
+      return this.isCompleteForChild(childKey);
+    }
+    isCompleteForChild(key) {
+      return this.isFullyInitialized() && !this.filtered_ || this.node_.hasChild(key);
+    }
+    getNode() {
+      return this.node_;
+    }
+  };
+  var EventGenerator = class {
+    constructor(query_) {
+      this.query_ = query_;
+      this.index_ = this.query_._queryParams.getIndex();
+    }
+  };
+  function eventGeneratorGenerateEventsForChanges(eventGenerator, changes, eventCache, eventRegistrations) {
+    const events = [];
+    const moves = [];
+    changes.forEach((change) => {
+      if (change.type === "child_changed" && eventGenerator.index_.indexedValueChanged(change.oldSnap, change.snapshotNode)) {
+        moves.push(changeChildMoved(change.childName, change.snapshotNode));
+      }
+    });
+    eventGeneratorGenerateEventsForType(eventGenerator, events, "child_removed", changes, eventRegistrations, eventCache);
+    eventGeneratorGenerateEventsForType(eventGenerator, events, "child_added", changes, eventRegistrations, eventCache);
+    eventGeneratorGenerateEventsForType(eventGenerator, events, "child_moved", moves, eventRegistrations, eventCache);
+    eventGeneratorGenerateEventsForType(eventGenerator, events, "child_changed", changes, eventRegistrations, eventCache);
+    eventGeneratorGenerateEventsForType(eventGenerator, events, "value", changes, eventRegistrations, eventCache);
+    return events;
+  }
+  function eventGeneratorGenerateEventsForType(eventGenerator, events, eventType, changes, registrations, eventCache) {
+    const filteredChanges = changes.filter((change) => change.type === eventType);
+    filteredChanges.sort((a3, b3) => eventGeneratorCompareChanges(eventGenerator, a3, b3));
+    filteredChanges.forEach((change) => {
+      const materializedChange = eventGeneratorMaterializeSingleChange(eventGenerator, change, eventCache);
+      registrations.forEach((registration) => {
+        if (registration.respondsTo(change.type)) {
+          events.push(registration.createEvent(materializedChange, eventGenerator.query_));
+        }
+      });
+    });
+  }
+  function eventGeneratorMaterializeSingleChange(eventGenerator, change, eventCache) {
+    if (change.type === "value" || change.type === "child_removed") {
+      return change;
+    } else {
+      change.prevName = eventCache.getPredecessorChildName(change.childName, change.snapshotNode, eventGenerator.index_);
+      return change;
+    }
+  }
+  function eventGeneratorCompareChanges(eventGenerator, a3, b3) {
+    if (a3.childName == null || b3.childName == null) {
+      throw assertionError("Should only compare child_ events.");
+    }
+    const aWrapped = new NamedNode(a3.childName, a3.snapshotNode);
+    const bWrapped = new NamedNode(b3.childName, b3.snapshotNode);
+    return eventGenerator.index_.compare(aWrapped, bWrapped);
+  }
+  function newViewCache(eventCache, serverCache) {
+    return { eventCache, serverCache };
+  }
+  function viewCacheUpdateEventSnap(viewCache, eventSnap, complete, filtered) {
+    return newViewCache(new CacheNode(eventSnap, complete, filtered), viewCache.serverCache);
+  }
+  function viewCacheUpdateServerSnap(viewCache, serverSnap, complete, filtered) {
+    return newViewCache(viewCache.eventCache, new CacheNode(serverSnap, complete, filtered));
+  }
+  function viewCacheGetCompleteEventSnap(viewCache) {
+    return viewCache.eventCache.isFullyInitialized() ? viewCache.eventCache.getNode() : null;
+  }
+  function viewCacheGetCompleteServerSnap(viewCache) {
+    return viewCache.serverCache.isFullyInitialized() ? viewCache.serverCache.getNode() : null;
+  }
+  var emptyChildrenSingleton;
+  var EmptyChildren = () => {
+    if (!emptyChildrenSingleton) {
+      emptyChildrenSingleton = new SortedMap(stringCompare);
+    }
+    return emptyChildrenSingleton;
+  };
+  var ImmutableTree = class {
+    constructor(value, children = EmptyChildren()) {
+      this.value = value;
+      this.children = children;
+    }
+    static fromObject(obj) {
+      let tree = new ImmutableTree(null);
+      each(obj, (childPath, childSnap) => {
+        tree = tree.set(new Path(childPath), childSnap);
+      });
+      return tree;
+    }
+    isEmpty() {
+      return this.value === null && this.children.isEmpty();
+    }
+    findRootMostMatchingPathAndValue(relativePath, predicate) {
+      if (this.value != null && predicate(this.value)) {
+        return { path: newEmptyPath(), value: this.value };
+      } else {
+        if (pathIsEmpty(relativePath)) {
+          return null;
+        } else {
+          const front = pathGetFront(relativePath);
+          const child2 = this.children.get(front);
+          if (child2 !== null) {
+            const childExistingPathAndValue = child2.findRootMostMatchingPathAndValue(pathPopFront(relativePath), predicate);
+            if (childExistingPathAndValue != null) {
+              const fullPath = pathChild(new Path(front), childExistingPathAndValue.path);
+              return { path: fullPath, value: childExistingPathAndValue.value };
+            } else {
+              return null;
+            }
+          } else {
+            return null;
+          }
+        }
+      }
+    }
+    findRootMostValueAndPath(relativePath) {
+      return this.findRootMostMatchingPathAndValue(relativePath, () => true);
+    }
+    subtree(relativePath) {
+      if (pathIsEmpty(relativePath)) {
+        return this;
+      } else {
+        const front = pathGetFront(relativePath);
+        const childTree = this.children.get(front);
+        if (childTree !== null) {
+          return childTree.subtree(pathPopFront(relativePath));
+        } else {
+          return new ImmutableTree(null);
+        }
+      }
+    }
+    set(relativePath, toSet) {
+      if (pathIsEmpty(relativePath)) {
+        return new ImmutableTree(toSet, this.children);
+      } else {
+        const front = pathGetFront(relativePath);
+        const child2 = this.children.get(front) || new ImmutableTree(null);
+        const newChild = child2.set(pathPopFront(relativePath), toSet);
+        const newChildren = this.children.insert(front, newChild);
+        return new ImmutableTree(this.value, newChildren);
+      }
+    }
+    remove(relativePath) {
+      if (pathIsEmpty(relativePath)) {
+        if (this.children.isEmpty()) {
+          return new ImmutableTree(null);
+        } else {
+          return new ImmutableTree(null, this.children);
+        }
+      } else {
+        const front = pathGetFront(relativePath);
+        const child2 = this.children.get(front);
+        if (child2) {
+          const newChild = child2.remove(pathPopFront(relativePath));
+          let newChildren;
+          if (newChild.isEmpty()) {
+            newChildren = this.children.remove(front);
+          } else {
+            newChildren = this.children.insert(front, newChild);
+          }
+          if (this.value === null && newChildren.isEmpty()) {
+            return new ImmutableTree(null);
+          } else {
+            return new ImmutableTree(this.value, newChildren);
+          }
+        } else {
+          return this;
+        }
+      }
+    }
+    get(relativePath) {
+      if (pathIsEmpty(relativePath)) {
+        return this.value;
+      } else {
+        const front = pathGetFront(relativePath);
+        const child2 = this.children.get(front);
+        if (child2) {
+          return child2.get(pathPopFront(relativePath));
+        } else {
+          return null;
+        }
+      }
+    }
+    setTree(relativePath, newTree) {
+      if (pathIsEmpty(relativePath)) {
+        return newTree;
+      } else {
+        const front = pathGetFront(relativePath);
+        const child2 = this.children.get(front) || new ImmutableTree(null);
+        const newChild = child2.setTree(pathPopFront(relativePath), newTree);
+        let newChildren;
+        if (newChild.isEmpty()) {
+          newChildren = this.children.remove(front);
+        } else {
+          newChildren = this.children.insert(front, newChild);
+        }
+        return new ImmutableTree(this.value, newChildren);
+      }
+    }
+    fold(fn3) {
+      return this.fold_(newEmptyPath(), fn3);
+    }
+    fold_(pathSoFar, fn3) {
+      const accum = {};
+      this.children.inorderTraversal((childKey, childTree) => {
+        accum[childKey] = childTree.fold_(pathChild(pathSoFar, childKey), fn3);
+      });
+      return fn3(pathSoFar, this.value, accum);
+    }
+    findOnPath(path, f3) {
+      return this.findOnPath_(path, newEmptyPath(), f3);
+    }
+    findOnPath_(pathToFollow, pathSoFar, f3) {
+      const result = this.value ? f3(pathSoFar, this.value) : false;
+      if (result) {
+        return result;
+      } else {
+        if (pathIsEmpty(pathToFollow)) {
+          return null;
+        } else {
+          const front = pathGetFront(pathToFollow);
+          const nextChild = this.children.get(front);
+          if (nextChild) {
+            return nextChild.findOnPath_(pathPopFront(pathToFollow), pathChild(pathSoFar, front), f3);
+          } else {
+            return null;
+          }
+        }
+      }
+    }
+    foreachOnPath(path, f3) {
+      return this.foreachOnPath_(path, newEmptyPath(), f3);
+    }
+    foreachOnPath_(pathToFollow, currentRelativePath, f3) {
+      if (pathIsEmpty(pathToFollow)) {
+        return this;
+      } else {
+        if (this.value) {
+          f3(currentRelativePath, this.value);
+        }
+        const front = pathGetFront(pathToFollow);
+        const nextChild = this.children.get(front);
+        if (nextChild) {
+          return nextChild.foreachOnPath_(pathPopFront(pathToFollow), pathChild(currentRelativePath, front), f3);
+        } else {
+          return new ImmutableTree(null);
+        }
+      }
+    }
+    foreach(f3) {
+      this.foreach_(newEmptyPath(), f3);
+    }
+    foreach_(currentRelativePath, f3) {
+      this.children.inorderTraversal((childName, childTree) => {
+        childTree.foreach_(pathChild(currentRelativePath, childName), f3);
+      });
+      if (this.value) {
+        f3(currentRelativePath, this.value);
+      }
+    }
+    foreachChild(f3) {
+      this.children.inorderTraversal((childName, childTree) => {
+        if (childTree.value) {
+          f3(childName, childTree.value);
+        }
+      });
+    }
+  };
+  var CompoundWrite = class {
+    constructor(writeTree_) {
+      this.writeTree_ = writeTree_;
+    }
+    static empty() {
+      return new CompoundWrite(new ImmutableTree(null));
+    }
+  };
+  function compoundWriteAddWrite(compoundWrite, path, node) {
+    if (pathIsEmpty(path)) {
+      return new CompoundWrite(new ImmutableTree(node));
+    } else {
+      const rootmost = compoundWrite.writeTree_.findRootMostValueAndPath(path);
+      if (rootmost != null) {
+        const rootMostPath = rootmost.path;
+        let value = rootmost.value;
+        const relativePath = newRelativePath(rootMostPath, path);
+        value = value.updateChild(relativePath, node);
+        return new CompoundWrite(compoundWrite.writeTree_.set(rootMostPath, value));
+      } else {
+        const subtree = new ImmutableTree(node);
+        const newWriteTree2 = compoundWrite.writeTree_.setTree(path, subtree);
+        return new CompoundWrite(newWriteTree2);
+      }
+    }
+  }
+  function compoundWriteAddWrites(compoundWrite, path, updates) {
+    let newWrite = compoundWrite;
+    each(updates, (childKey, node) => {
+      newWrite = compoundWriteAddWrite(newWrite, pathChild(path, childKey), node);
+    });
+    return newWrite;
+  }
+  function compoundWriteRemoveWrite(compoundWrite, path) {
+    if (pathIsEmpty(path)) {
+      return CompoundWrite.empty();
+    } else {
+      const newWriteTree2 = compoundWrite.writeTree_.setTree(path, new ImmutableTree(null));
+      return new CompoundWrite(newWriteTree2);
+    }
+  }
+  function compoundWriteHasCompleteWrite(compoundWrite, path) {
+    return compoundWriteGetCompleteNode(compoundWrite, path) != null;
+  }
+  function compoundWriteGetCompleteNode(compoundWrite, path) {
+    const rootmost = compoundWrite.writeTree_.findRootMostValueAndPath(path);
+    if (rootmost != null) {
+      return compoundWrite.writeTree_.get(rootmost.path).getChild(newRelativePath(rootmost.path, path));
+    } else {
+      return null;
+    }
+  }
+  function compoundWriteGetCompleteChildren(compoundWrite) {
+    const children = [];
+    const node = compoundWrite.writeTree_.value;
+    if (node != null) {
+      if (!node.isLeafNode()) {
+        node.forEachChild(PRIORITY_INDEX, (childName, childNode) => {
+          children.push(new NamedNode(childName, childNode));
+        });
+      }
+    } else {
+      compoundWrite.writeTree_.children.inorderTraversal((childName, childTree) => {
+        if (childTree.value != null) {
+          children.push(new NamedNode(childName, childTree.value));
+        }
+      });
+    }
+    return children;
+  }
+  function compoundWriteChildCompoundWrite(compoundWrite, path) {
+    if (pathIsEmpty(path)) {
+      return compoundWrite;
+    } else {
+      const shadowingNode = compoundWriteGetCompleteNode(compoundWrite, path);
+      if (shadowingNode != null) {
+        return new CompoundWrite(new ImmutableTree(shadowingNode));
+      } else {
+        return new CompoundWrite(compoundWrite.writeTree_.subtree(path));
+      }
+    }
+  }
+  function compoundWriteIsEmpty(compoundWrite) {
+    return compoundWrite.writeTree_.isEmpty();
+  }
+  function compoundWriteApply(compoundWrite, node) {
+    return applySubtreeWrite(newEmptyPath(), compoundWrite.writeTree_, node);
+  }
+  function applySubtreeWrite(relativePath, writeTree, node) {
+    if (writeTree.value != null) {
+      return node.updateChild(relativePath, writeTree.value);
+    } else {
+      let priorityWrite = null;
+      writeTree.children.inorderTraversal((childKey, childTree) => {
+        if (childKey === ".priority") {
+          assert(childTree.value !== null, "Priority writes must always be leaf nodes");
+          priorityWrite = childTree.value;
+        } else {
+          node = applySubtreeWrite(pathChild(relativePath, childKey), childTree, node);
+        }
+      });
+      if (!node.getChild(relativePath).isEmpty() && priorityWrite !== null) {
+        node = node.updateChild(pathChild(relativePath, ".priority"), priorityWrite);
+      }
+      return node;
+    }
+  }
+  function writeTreeChildWrites(writeTree, path) {
+    return newWriteTreeRef(path, writeTree);
+  }
+  function writeTreeAddOverwrite(writeTree, path, snap, writeId, visible) {
+    assert(writeId > writeTree.lastWriteId, "Stacking an older write on top of newer ones");
+    if (visible === void 0) {
+      visible = true;
+    }
+    writeTree.allWrites.push({
+      path,
+      snap,
+      writeId,
+      visible
+    });
+    if (visible) {
+      writeTree.visibleWrites = compoundWriteAddWrite(writeTree.visibleWrites, path, snap);
+    }
+    writeTree.lastWriteId = writeId;
+  }
+  function writeTreeAddMerge(writeTree, path, changedChildren, writeId) {
+    assert(writeId > writeTree.lastWriteId, "Stacking an older merge on top of newer ones");
+    writeTree.allWrites.push({
+      path,
+      children: changedChildren,
+      writeId,
+      visible: true
+    });
+    writeTree.visibleWrites = compoundWriteAddWrites(writeTree.visibleWrites, path, changedChildren);
+    writeTree.lastWriteId = writeId;
+  }
+  function writeTreeGetWrite(writeTree, writeId) {
+    for (let i3 = 0; i3 < writeTree.allWrites.length; i3++) {
+      const record = writeTree.allWrites[i3];
+      if (record.writeId === writeId) {
+        return record;
+      }
+    }
+    return null;
+  }
+  function writeTreeRemoveWrite(writeTree, writeId) {
+    const idx = writeTree.allWrites.findIndex((s2) => {
+      return s2.writeId === writeId;
+    });
+    assert(idx >= 0, "removeWrite called with nonexistent writeId.");
+    const writeToRemove = writeTree.allWrites[idx];
+    writeTree.allWrites.splice(idx, 1);
+    let removedWriteWasVisible = writeToRemove.visible;
+    let removedWriteOverlapsWithOtherWrites = false;
+    let i3 = writeTree.allWrites.length - 1;
+    while (removedWriteWasVisible && i3 >= 0) {
+      const currentWrite = writeTree.allWrites[i3];
+      if (currentWrite.visible) {
+        if (i3 >= idx && writeTreeRecordContainsPath_(currentWrite, writeToRemove.path)) {
+          removedWriteWasVisible = false;
+        } else if (pathContains(writeToRemove.path, currentWrite.path)) {
+          removedWriteOverlapsWithOtherWrites = true;
+        }
+      }
+      i3--;
+    }
+    if (!removedWriteWasVisible) {
+      return false;
+    } else if (removedWriteOverlapsWithOtherWrites) {
+      writeTreeResetTree_(writeTree);
+      return true;
+    } else {
+      if (writeToRemove.snap) {
+        writeTree.visibleWrites = compoundWriteRemoveWrite(writeTree.visibleWrites, writeToRemove.path);
+      } else {
+        const children = writeToRemove.children;
+        each(children, (childName) => {
+          writeTree.visibleWrites = compoundWriteRemoveWrite(writeTree.visibleWrites, pathChild(writeToRemove.path, childName));
+        });
+      }
+      return true;
+    }
+  }
+  function writeTreeRecordContainsPath_(writeRecord, path) {
+    if (writeRecord.snap) {
+      return pathContains(writeRecord.path, path);
+    } else {
+      for (const childName in writeRecord.children) {
+        if (writeRecord.children.hasOwnProperty(childName) && pathContains(pathChild(writeRecord.path, childName), path)) {
+          return true;
+        }
+      }
+      return false;
+    }
+  }
+  function writeTreeResetTree_(writeTree) {
+    writeTree.visibleWrites = writeTreeLayerTree_(writeTree.allWrites, writeTreeDefaultFilter_, newEmptyPath());
+    if (writeTree.allWrites.length > 0) {
+      writeTree.lastWriteId = writeTree.allWrites[writeTree.allWrites.length - 1].writeId;
+    } else {
+      writeTree.lastWriteId = -1;
+    }
+  }
+  function writeTreeDefaultFilter_(write) {
+    return write.visible;
+  }
+  function writeTreeLayerTree_(writes, filter, treeRoot) {
+    let compoundWrite = CompoundWrite.empty();
+    for (let i3 = 0; i3 < writes.length; ++i3) {
+      const write = writes[i3];
+      if (filter(write)) {
+        const writePath = write.path;
+        let relativePath;
+        if (write.snap) {
+          if (pathContains(treeRoot, writePath)) {
+            relativePath = newRelativePath(treeRoot, writePath);
+            compoundWrite = compoundWriteAddWrite(compoundWrite, relativePath, write.snap);
+          } else if (pathContains(writePath, treeRoot)) {
+            relativePath = newRelativePath(writePath, treeRoot);
+            compoundWrite = compoundWriteAddWrite(compoundWrite, newEmptyPath(), write.snap.getChild(relativePath));
+          } else
+            ;
+        } else if (write.children) {
+          if (pathContains(treeRoot, writePath)) {
+            relativePath = newRelativePath(treeRoot, writePath);
+            compoundWrite = compoundWriteAddWrites(compoundWrite, relativePath, write.children);
+          } else if (pathContains(writePath, treeRoot)) {
+            relativePath = newRelativePath(writePath, treeRoot);
+            if (pathIsEmpty(relativePath)) {
+              compoundWrite = compoundWriteAddWrites(compoundWrite, newEmptyPath(), write.children);
+            } else {
+              const child2 = safeGet(write.children, pathGetFront(relativePath));
+              if (child2) {
+                const deepNode = child2.getChild(pathPopFront(relativePath));
+                compoundWrite = compoundWriteAddWrite(compoundWrite, newEmptyPath(), deepNode);
+              }
+            }
+          } else
+            ;
+        } else {
+          throw assertionError("WriteRecord should have .snap or .children");
+        }
+      }
+    }
+    return compoundWrite;
+  }
+  function writeTreeCalcCompleteEventCache(writeTree, treePath, completeServerCache, writeIdsToExclude, includeHiddenWrites) {
+    if (!writeIdsToExclude && !includeHiddenWrites) {
+      const shadowingNode = compoundWriteGetCompleteNode(writeTree.visibleWrites, treePath);
+      if (shadowingNode != null) {
+        return shadowingNode;
+      } else {
+        const subMerge = compoundWriteChildCompoundWrite(writeTree.visibleWrites, treePath);
+        if (compoundWriteIsEmpty(subMerge)) {
+          return completeServerCache;
+        } else if (completeServerCache == null && !compoundWriteHasCompleteWrite(subMerge, newEmptyPath())) {
+          return null;
+        } else {
+          const layeredCache = completeServerCache || ChildrenNode.EMPTY_NODE;
+          return compoundWriteApply(subMerge, layeredCache);
+        }
+      }
+    } else {
+      const merge = compoundWriteChildCompoundWrite(writeTree.visibleWrites, treePath);
+      if (!includeHiddenWrites && compoundWriteIsEmpty(merge)) {
+        return completeServerCache;
+      } else {
+        if (!includeHiddenWrites && completeServerCache == null && !compoundWriteHasCompleteWrite(merge, newEmptyPath())) {
+          return null;
+        } else {
+          const filter = function(write) {
+            return (write.visible || includeHiddenWrites) && (!writeIdsToExclude || !~writeIdsToExclude.indexOf(write.writeId)) && (pathContains(write.path, treePath) || pathContains(treePath, write.path));
+          };
+          const mergeAtPath = writeTreeLayerTree_(writeTree.allWrites, filter, treePath);
+          const layeredCache = completeServerCache || ChildrenNode.EMPTY_NODE;
+          return compoundWriteApply(mergeAtPath, layeredCache);
+        }
+      }
+    }
+  }
+  function writeTreeCalcCompleteEventChildren(writeTree, treePath, completeServerChildren) {
+    let completeChildren = ChildrenNode.EMPTY_NODE;
+    const topLevelSet = compoundWriteGetCompleteNode(writeTree.visibleWrites, treePath);
+    if (topLevelSet) {
+      if (!topLevelSet.isLeafNode()) {
+        topLevelSet.forEachChild(PRIORITY_INDEX, (childName, childSnap) => {
+          completeChildren = completeChildren.updateImmediateChild(childName, childSnap);
+        });
+      }
+      return completeChildren;
+    } else if (completeServerChildren) {
+      const merge = compoundWriteChildCompoundWrite(writeTree.visibleWrites, treePath);
+      completeServerChildren.forEachChild(PRIORITY_INDEX, (childName, childNode) => {
+        const node = compoundWriteApply(compoundWriteChildCompoundWrite(merge, new Path(childName)), childNode);
+        completeChildren = completeChildren.updateImmediateChild(childName, node);
+      });
+      compoundWriteGetCompleteChildren(merge).forEach((namedNode) => {
+        completeChildren = completeChildren.updateImmediateChild(namedNode.name, namedNode.node);
+      });
+      return completeChildren;
+    } else {
+      const merge = compoundWriteChildCompoundWrite(writeTree.visibleWrites, treePath);
+      compoundWriteGetCompleteChildren(merge).forEach((namedNode) => {
+        completeChildren = completeChildren.updateImmediateChild(namedNode.name, namedNode.node);
+      });
+      return completeChildren;
+    }
+  }
+  function writeTreeCalcEventCacheAfterServerOverwrite(writeTree, treePath, childPath, existingEventSnap, existingServerSnap) {
+    assert(existingEventSnap || existingServerSnap, "Either existingEventSnap or existingServerSnap must exist");
+    const path = pathChild(treePath, childPath);
+    if (compoundWriteHasCompleteWrite(writeTree.visibleWrites, path)) {
+      return null;
+    } else {
+      const childMerge = compoundWriteChildCompoundWrite(writeTree.visibleWrites, path);
+      if (compoundWriteIsEmpty(childMerge)) {
+        return existingServerSnap.getChild(childPath);
+      } else {
+        return compoundWriteApply(childMerge, existingServerSnap.getChild(childPath));
+      }
+    }
+  }
+  function writeTreeCalcCompleteChild(writeTree, treePath, childKey, existingServerSnap) {
+    const path = pathChild(treePath, childKey);
+    const shadowingNode = compoundWriteGetCompleteNode(writeTree.visibleWrites, path);
+    if (shadowingNode != null) {
+      return shadowingNode;
+    } else {
+      if (existingServerSnap.isCompleteForChild(childKey)) {
+        const childMerge = compoundWriteChildCompoundWrite(writeTree.visibleWrites, path);
+        return compoundWriteApply(childMerge, existingServerSnap.getNode().getImmediateChild(childKey));
+      } else {
+        return null;
+      }
+    }
+  }
+  function writeTreeShadowingWrite(writeTree, path) {
+    return compoundWriteGetCompleteNode(writeTree.visibleWrites, path);
+  }
+  function writeTreeCalcIndexedSlice(writeTree, treePath, completeServerData, startPost, count, reverse, index) {
+    let toIterate;
+    const merge = compoundWriteChildCompoundWrite(writeTree.visibleWrites, treePath);
+    const shadowingNode = compoundWriteGetCompleteNode(merge, newEmptyPath());
+    if (shadowingNode != null) {
+      toIterate = shadowingNode;
+    } else if (completeServerData != null) {
+      toIterate = compoundWriteApply(merge, completeServerData);
+    } else {
+      return [];
+    }
+    toIterate = toIterate.withIndex(index);
+    if (!toIterate.isEmpty() && !toIterate.isLeafNode()) {
+      const nodes = [];
+      const cmp = index.getCompare();
+      const iter = reverse ? toIterate.getReverseIteratorFrom(startPost, index) : toIterate.getIteratorFrom(startPost, index);
+      let next = iter.getNext();
+      while (next && nodes.length < count) {
+        if (cmp(next, startPost) !== 0) {
+          nodes.push(next);
+        }
+        next = iter.getNext();
+      }
+      return nodes;
+    } else {
+      return [];
+    }
+  }
+  function newWriteTree() {
+    return {
+      visibleWrites: CompoundWrite.empty(),
+      allWrites: [],
+      lastWriteId: -1
+    };
+  }
+  function writeTreeRefCalcCompleteEventCache(writeTreeRef, completeServerCache, writeIdsToExclude, includeHiddenWrites) {
+    return writeTreeCalcCompleteEventCache(writeTreeRef.writeTree, writeTreeRef.treePath, completeServerCache, writeIdsToExclude, includeHiddenWrites);
+  }
+  function writeTreeRefCalcCompleteEventChildren(writeTreeRef, completeServerChildren) {
+    return writeTreeCalcCompleteEventChildren(writeTreeRef.writeTree, writeTreeRef.treePath, completeServerChildren);
+  }
+  function writeTreeRefCalcEventCacheAfterServerOverwrite(writeTreeRef, path, existingEventSnap, existingServerSnap) {
+    return writeTreeCalcEventCacheAfterServerOverwrite(writeTreeRef.writeTree, writeTreeRef.treePath, path, existingEventSnap, existingServerSnap);
+  }
+  function writeTreeRefShadowingWrite(writeTreeRef, path) {
+    return writeTreeShadowingWrite(writeTreeRef.writeTree, pathChild(writeTreeRef.treePath, path));
+  }
+  function writeTreeRefCalcIndexedSlice(writeTreeRef, completeServerData, startPost, count, reverse, index) {
+    return writeTreeCalcIndexedSlice(writeTreeRef.writeTree, writeTreeRef.treePath, completeServerData, startPost, count, reverse, index);
+  }
+  function writeTreeRefCalcCompleteChild(writeTreeRef, childKey, existingServerCache) {
+    return writeTreeCalcCompleteChild(writeTreeRef.writeTree, writeTreeRef.treePath, childKey, existingServerCache);
+  }
+  function writeTreeRefChild(writeTreeRef, childName) {
+    return newWriteTreeRef(pathChild(writeTreeRef.treePath, childName), writeTreeRef.writeTree);
+  }
+  function newWriteTreeRef(path, writeTree) {
+    return {
+      treePath: path,
+      writeTree
+    };
+  }
+  var ChildChangeAccumulator = class {
+    constructor() {
+      this.changeMap = /* @__PURE__ */ new Map();
+    }
+    trackChildChange(change) {
+      const type = change.type;
+      const childKey = change.childName;
+      assert(type === "child_added" || type === "child_changed" || type === "child_removed", "Only child changes supported for tracking");
+      assert(childKey !== ".priority", "Only non-priority child changes can be tracked.");
+      const oldChange = this.changeMap.get(childKey);
+      if (oldChange) {
+        const oldType = oldChange.type;
+        if (type === "child_added" && oldType === "child_removed") {
+          this.changeMap.set(childKey, changeChildChanged(childKey, change.snapshotNode, oldChange.snapshotNode));
+        } else if (type === "child_removed" && oldType === "child_added") {
+          this.changeMap.delete(childKey);
+        } else if (type === "child_removed" && oldType === "child_changed") {
+          this.changeMap.set(childKey, changeChildRemoved(childKey, oldChange.oldSnap));
+        } else if (type === "child_changed" && oldType === "child_added") {
+          this.changeMap.set(childKey, changeChildAdded(childKey, change.snapshotNode));
+        } else if (type === "child_changed" && oldType === "child_changed") {
+          this.changeMap.set(childKey, changeChildChanged(childKey, change.snapshotNode, oldChange.oldSnap));
+        } else {
+          throw assertionError("Illegal combination of changes: " + change + " occurred after " + oldChange);
+        }
+      } else {
+        this.changeMap.set(childKey, change);
+      }
+    }
+    getChanges() {
+      return Array.from(this.changeMap.values());
+    }
+  };
+  var NoCompleteChildSource_ = class {
+    getCompleteChild(childKey) {
+      return null;
+    }
+    getChildAfterChild(index, child2, reverse) {
+      return null;
+    }
+  };
+  var NO_COMPLETE_CHILD_SOURCE = new NoCompleteChildSource_();
+  var WriteTreeCompleteChildSource = class {
+    constructor(writes_, viewCache_, optCompleteServerCache_ = null) {
+      this.writes_ = writes_;
+      this.viewCache_ = viewCache_;
+      this.optCompleteServerCache_ = optCompleteServerCache_;
+    }
+    getCompleteChild(childKey) {
+      const node = this.viewCache_.eventCache;
+      if (node.isCompleteForChild(childKey)) {
+        return node.getNode().getImmediateChild(childKey);
+      } else {
+        const serverNode = this.optCompleteServerCache_ != null ? new CacheNode(this.optCompleteServerCache_, true, false) : this.viewCache_.serverCache;
+        return writeTreeRefCalcCompleteChild(this.writes_, childKey, serverNode);
+      }
+    }
+    getChildAfterChild(index, child2, reverse) {
+      const completeServerData = this.optCompleteServerCache_ != null ? this.optCompleteServerCache_ : viewCacheGetCompleteServerSnap(this.viewCache_);
+      const nodes = writeTreeRefCalcIndexedSlice(this.writes_, completeServerData, child2, 1, reverse, index);
+      if (nodes.length === 0) {
+        return null;
+      } else {
+        return nodes[0];
+      }
+    }
+  };
+  function newViewProcessor(filter) {
+    return { filter };
+  }
+  function viewProcessorAssertIndexed(viewProcessor, viewCache) {
+    assert(viewCache.eventCache.getNode().isIndexed(viewProcessor.filter.getIndex()), "Event snap not indexed");
+    assert(viewCache.serverCache.getNode().isIndexed(viewProcessor.filter.getIndex()), "Server snap not indexed");
+  }
+  function viewProcessorApplyOperation(viewProcessor, oldViewCache, operation, writesCache, completeCache) {
+    const accumulator = new ChildChangeAccumulator();
+    let newViewCache2, filterServerNode;
+    if (operation.type === OperationType2.OVERWRITE) {
+      const overwrite = operation;
+      if (overwrite.source.fromUser) {
+        newViewCache2 = viewProcessorApplyUserOverwrite(viewProcessor, oldViewCache, overwrite.path, overwrite.snap, writesCache, completeCache, accumulator);
+      } else {
+        assert(overwrite.source.fromServer, "Unknown source.");
+        filterServerNode = overwrite.source.tagged || oldViewCache.serverCache.isFiltered() && !pathIsEmpty(overwrite.path);
+        newViewCache2 = viewProcessorApplyServerOverwrite(viewProcessor, oldViewCache, overwrite.path, overwrite.snap, writesCache, completeCache, filterServerNode, accumulator);
+      }
+    } else if (operation.type === OperationType2.MERGE) {
+      const merge = operation;
+      if (merge.source.fromUser) {
+        newViewCache2 = viewProcessorApplyUserMerge(viewProcessor, oldViewCache, merge.path, merge.children, writesCache, completeCache, accumulator);
+      } else {
+        assert(merge.source.fromServer, "Unknown source.");
+        filterServerNode = merge.source.tagged || oldViewCache.serverCache.isFiltered();
+        newViewCache2 = viewProcessorApplyServerMerge(viewProcessor, oldViewCache, merge.path, merge.children, writesCache, completeCache, filterServerNode, accumulator);
+      }
+    } else if (operation.type === OperationType2.ACK_USER_WRITE) {
+      const ackUserWrite = operation;
+      if (!ackUserWrite.revert) {
+        newViewCache2 = viewProcessorAckUserWrite(viewProcessor, oldViewCache, ackUserWrite.path, ackUserWrite.affectedTree, writesCache, completeCache, accumulator);
+      } else {
+        newViewCache2 = viewProcessorRevertUserWrite(viewProcessor, oldViewCache, ackUserWrite.path, writesCache, completeCache, accumulator);
+      }
+    } else if (operation.type === OperationType2.LISTEN_COMPLETE) {
+      newViewCache2 = viewProcessorListenComplete(viewProcessor, oldViewCache, operation.path, writesCache, accumulator);
+    } else {
+      throw assertionError("Unknown operation type: " + operation.type);
+    }
+    const changes = accumulator.getChanges();
+    viewProcessorMaybeAddValueEvent(oldViewCache, newViewCache2, changes);
+    return { viewCache: newViewCache2, changes };
+  }
+  function viewProcessorMaybeAddValueEvent(oldViewCache, newViewCache2, accumulator) {
+    const eventSnap = newViewCache2.eventCache;
+    if (eventSnap.isFullyInitialized()) {
+      const isLeafOrEmpty = eventSnap.getNode().isLeafNode() || eventSnap.getNode().isEmpty();
+      const oldCompleteSnap = viewCacheGetCompleteEventSnap(oldViewCache);
+      if (accumulator.length > 0 || !oldViewCache.eventCache.isFullyInitialized() || isLeafOrEmpty && !eventSnap.getNode().equals(oldCompleteSnap) || !eventSnap.getNode().getPriority().equals(oldCompleteSnap.getPriority())) {
+        accumulator.push(changeValue(viewCacheGetCompleteEventSnap(newViewCache2)));
+      }
+    }
+  }
+  function viewProcessorGenerateEventCacheAfterServerEvent(viewProcessor, viewCache, changePath, writesCache, source, accumulator) {
+    const oldEventSnap = viewCache.eventCache;
+    if (writeTreeRefShadowingWrite(writesCache, changePath) != null) {
+      return viewCache;
+    } else {
+      let newEventCache, serverNode;
+      if (pathIsEmpty(changePath)) {
+        assert(viewCache.serverCache.isFullyInitialized(), "If change path is empty, we must have complete server data");
+        if (viewCache.serverCache.isFiltered()) {
+          const serverCache = viewCacheGetCompleteServerSnap(viewCache);
+          const completeChildren = serverCache instanceof ChildrenNode ? serverCache : ChildrenNode.EMPTY_NODE;
+          const completeEventChildren = writeTreeRefCalcCompleteEventChildren(writesCache, completeChildren);
+          newEventCache = viewProcessor.filter.updateFullNode(viewCache.eventCache.getNode(), completeEventChildren, accumulator);
+        } else {
+          const completeNode = writeTreeRefCalcCompleteEventCache(writesCache, viewCacheGetCompleteServerSnap(viewCache));
+          newEventCache = viewProcessor.filter.updateFullNode(viewCache.eventCache.getNode(), completeNode, accumulator);
+        }
+      } else {
+        const childKey = pathGetFront(changePath);
+        if (childKey === ".priority") {
+          assert(pathGetLength(changePath) === 1, "Can't have a priority with additional path components");
+          const oldEventNode = oldEventSnap.getNode();
+          serverNode = viewCache.serverCache.getNode();
+          const updatedPriority = writeTreeRefCalcEventCacheAfterServerOverwrite(writesCache, changePath, oldEventNode, serverNode);
+          if (updatedPriority != null) {
+            newEventCache = viewProcessor.filter.updatePriority(oldEventNode, updatedPriority);
+          } else {
+            newEventCache = oldEventSnap.getNode();
+          }
+        } else {
+          const childChangePath = pathPopFront(changePath);
+          let newEventChild;
+          if (oldEventSnap.isCompleteForChild(childKey)) {
+            serverNode = viewCache.serverCache.getNode();
+            const eventChildUpdate = writeTreeRefCalcEventCacheAfterServerOverwrite(writesCache, changePath, oldEventSnap.getNode(), serverNode);
+            if (eventChildUpdate != null) {
+              newEventChild = oldEventSnap.getNode().getImmediateChild(childKey).updateChild(childChangePath, eventChildUpdate);
+            } else {
+              newEventChild = oldEventSnap.getNode().getImmediateChild(childKey);
+            }
+          } else {
+            newEventChild = writeTreeRefCalcCompleteChild(writesCache, childKey, viewCache.serverCache);
+          }
+          if (newEventChild != null) {
+            newEventCache = viewProcessor.filter.updateChild(oldEventSnap.getNode(), childKey, newEventChild, childChangePath, source, accumulator);
+          } else {
+            newEventCache = oldEventSnap.getNode();
+          }
+        }
+      }
+      return viewCacheUpdateEventSnap(viewCache, newEventCache, oldEventSnap.isFullyInitialized() || pathIsEmpty(changePath), viewProcessor.filter.filtersNodes());
+    }
+  }
+  function viewProcessorApplyServerOverwrite(viewProcessor, oldViewCache, changePath, changedSnap, writesCache, completeCache, filterServerNode, accumulator) {
+    const oldServerSnap = oldViewCache.serverCache;
+    let newServerCache;
+    const serverFilter = filterServerNode ? viewProcessor.filter : viewProcessor.filter.getIndexedFilter();
+    if (pathIsEmpty(changePath)) {
+      newServerCache = serverFilter.updateFullNode(oldServerSnap.getNode(), changedSnap, null);
+    } else if (serverFilter.filtersNodes() && !oldServerSnap.isFiltered()) {
+      const newServerNode = oldServerSnap.getNode().updateChild(changePath, changedSnap);
+      newServerCache = serverFilter.updateFullNode(oldServerSnap.getNode(), newServerNode, null);
+    } else {
+      const childKey = pathGetFront(changePath);
+      if (!oldServerSnap.isCompleteForPath(changePath) && pathGetLength(changePath) > 1) {
+        return oldViewCache;
+      }
+      const childChangePath = pathPopFront(changePath);
+      const childNode = oldServerSnap.getNode().getImmediateChild(childKey);
+      const newChildNode = childNode.updateChild(childChangePath, changedSnap);
+      if (childKey === ".priority") {
+        newServerCache = serverFilter.updatePriority(oldServerSnap.getNode(), newChildNode);
+      } else {
+        newServerCache = serverFilter.updateChild(oldServerSnap.getNode(), childKey, newChildNode, childChangePath, NO_COMPLETE_CHILD_SOURCE, null);
+      }
+    }
+    const newViewCache2 = viewCacheUpdateServerSnap(oldViewCache, newServerCache, oldServerSnap.isFullyInitialized() || pathIsEmpty(changePath), serverFilter.filtersNodes());
+    const source = new WriteTreeCompleteChildSource(writesCache, newViewCache2, completeCache);
+    return viewProcessorGenerateEventCacheAfterServerEvent(viewProcessor, newViewCache2, changePath, writesCache, source, accumulator);
+  }
+  function viewProcessorApplyUserOverwrite(viewProcessor, oldViewCache, changePath, changedSnap, writesCache, completeCache, accumulator) {
+    const oldEventSnap = oldViewCache.eventCache;
+    let newViewCache2, newEventCache;
+    const source = new WriteTreeCompleteChildSource(writesCache, oldViewCache, completeCache);
+    if (pathIsEmpty(changePath)) {
+      newEventCache = viewProcessor.filter.updateFullNode(oldViewCache.eventCache.getNode(), changedSnap, accumulator);
+      newViewCache2 = viewCacheUpdateEventSnap(oldViewCache, newEventCache, true, viewProcessor.filter.filtersNodes());
+    } else {
+      const childKey = pathGetFront(changePath);
+      if (childKey === ".priority") {
+        newEventCache = viewProcessor.filter.updatePriority(oldViewCache.eventCache.getNode(), changedSnap);
+        newViewCache2 = viewCacheUpdateEventSnap(oldViewCache, newEventCache, oldEventSnap.isFullyInitialized(), oldEventSnap.isFiltered());
+      } else {
+        const childChangePath = pathPopFront(changePath);
+        const oldChild = oldEventSnap.getNode().getImmediateChild(childKey);
+        let newChild;
+        if (pathIsEmpty(childChangePath)) {
+          newChild = changedSnap;
+        } else {
+          const childNode = source.getCompleteChild(childKey);
+          if (childNode != null) {
+            if (pathGetBack(childChangePath) === ".priority" && childNode.getChild(pathParent(childChangePath)).isEmpty()) {
+              newChild = childNode;
+            } else {
+              newChild = childNode.updateChild(childChangePath, changedSnap);
+            }
+          } else {
+            newChild = ChildrenNode.EMPTY_NODE;
+          }
+        }
+        if (!oldChild.equals(newChild)) {
+          const newEventSnap = viewProcessor.filter.updateChild(oldEventSnap.getNode(), childKey, newChild, childChangePath, source, accumulator);
+          newViewCache2 = viewCacheUpdateEventSnap(oldViewCache, newEventSnap, oldEventSnap.isFullyInitialized(), viewProcessor.filter.filtersNodes());
+        } else {
+          newViewCache2 = oldViewCache;
+        }
+      }
+    }
+    return newViewCache2;
+  }
+  function viewProcessorCacheHasChild(viewCache, childKey) {
+    return viewCache.eventCache.isCompleteForChild(childKey);
+  }
+  function viewProcessorApplyUserMerge(viewProcessor, viewCache, path, changedChildren, writesCache, serverCache, accumulator) {
+    let curViewCache = viewCache;
+    changedChildren.foreach((relativePath, childNode) => {
+      const writePath = pathChild(path, relativePath);
+      if (viewProcessorCacheHasChild(viewCache, pathGetFront(writePath))) {
+        curViewCache = viewProcessorApplyUserOverwrite(viewProcessor, curViewCache, writePath, childNode, writesCache, serverCache, accumulator);
+      }
+    });
+    changedChildren.foreach((relativePath, childNode) => {
+      const writePath = pathChild(path, relativePath);
+      if (!viewProcessorCacheHasChild(viewCache, pathGetFront(writePath))) {
+        curViewCache = viewProcessorApplyUserOverwrite(viewProcessor, curViewCache, writePath, childNode, writesCache, serverCache, accumulator);
+      }
+    });
+    return curViewCache;
+  }
+  function viewProcessorApplyMerge(viewProcessor, node, merge) {
+    merge.foreach((relativePath, childNode) => {
+      node = node.updateChild(relativePath, childNode);
+    });
+    return node;
+  }
+  function viewProcessorApplyServerMerge(viewProcessor, viewCache, path, changedChildren, writesCache, serverCache, filterServerNode, accumulator) {
+    if (viewCache.serverCache.getNode().isEmpty() && !viewCache.serverCache.isFullyInitialized()) {
+      return viewCache;
+    }
+    let curViewCache = viewCache;
+    let viewMergeTree;
+    if (pathIsEmpty(path)) {
+      viewMergeTree = changedChildren;
+    } else {
+      viewMergeTree = new ImmutableTree(null).setTree(path, changedChildren);
+    }
+    const serverNode = viewCache.serverCache.getNode();
+    viewMergeTree.children.inorderTraversal((childKey, childTree) => {
+      if (serverNode.hasChild(childKey)) {
+        const serverChild = viewCache.serverCache.getNode().getImmediateChild(childKey);
+        const newChild = viewProcessorApplyMerge(viewProcessor, serverChild, childTree);
+        curViewCache = viewProcessorApplyServerOverwrite(viewProcessor, curViewCache, new Path(childKey), newChild, writesCache, serverCache, filterServerNode, accumulator);
+      }
+    });
+    viewMergeTree.children.inorderTraversal((childKey, childMergeTree) => {
+      const isUnknownDeepMerge = !viewCache.serverCache.isCompleteForChild(childKey) && childMergeTree.value === null;
+      if (!serverNode.hasChild(childKey) && !isUnknownDeepMerge) {
+        const serverChild = viewCache.serverCache.getNode().getImmediateChild(childKey);
+        const newChild = viewProcessorApplyMerge(viewProcessor, serverChild, childMergeTree);
+        curViewCache = viewProcessorApplyServerOverwrite(viewProcessor, curViewCache, new Path(childKey), newChild, writesCache, serverCache, filterServerNode, accumulator);
+      }
+    });
+    return curViewCache;
+  }
+  function viewProcessorAckUserWrite(viewProcessor, viewCache, ackPath, affectedTree, writesCache, completeCache, accumulator) {
+    if (writeTreeRefShadowingWrite(writesCache, ackPath) != null) {
+      return viewCache;
+    }
+    const filterServerNode = viewCache.serverCache.isFiltered();
+    const serverCache = viewCache.serverCache;
+    if (affectedTree.value != null) {
+      if (pathIsEmpty(ackPath) && serverCache.isFullyInitialized() || serverCache.isCompleteForPath(ackPath)) {
+        return viewProcessorApplyServerOverwrite(viewProcessor, viewCache, ackPath, serverCache.getNode().getChild(ackPath), writesCache, completeCache, filterServerNode, accumulator);
+      } else if (pathIsEmpty(ackPath)) {
+        let changedChildren = new ImmutableTree(null);
+        serverCache.getNode().forEachChild(KEY_INDEX, (name5, node) => {
+          changedChildren = changedChildren.set(new Path(name5), node);
+        });
+        return viewProcessorApplyServerMerge(viewProcessor, viewCache, ackPath, changedChildren, writesCache, completeCache, filterServerNode, accumulator);
+      } else {
+        return viewCache;
+      }
+    } else {
+      let changedChildren = new ImmutableTree(null);
+      affectedTree.foreach((mergePath, value) => {
+        const serverCachePath = pathChild(ackPath, mergePath);
+        if (serverCache.isCompleteForPath(serverCachePath)) {
+          changedChildren = changedChildren.set(mergePath, serverCache.getNode().getChild(serverCachePath));
+        }
+      });
+      return viewProcessorApplyServerMerge(viewProcessor, viewCache, ackPath, changedChildren, writesCache, completeCache, filterServerNode, accumulator);
+    }
+  }
+  function viewProcessorListenComplete(viewProcessor, viewCache, path, writesCache, accumulator) {
+    const oldServerNode = viewCache.serverCache;
+    const newViewCache2 = viewCacheUpdateServerSnap(viewCache, oldServerNode.getNode(), oldServerNode.isFullyInitialized() || pathIsEmpty(path), oldServerNode.isFiltered());
+    return viewProcessorGenerateEventCacheAfterServerEvent(viewProcessor, newViewCache2, path, writesCache, NO_COMPLETE_CHILD_SOURCE, accumulator);
+  }
+  function viewProcessorRevertUserWrite(viewProcessor, viewCache, path, writesCache, completeServerCache, accumulator) {
+    let complete;
+    if (writeTreeRefShadowingWrite(writesCache, path) != null) {
+      return viewCache;
+    } else {
+      const source = new WriteTreeCompleteChildSource(writesCache, viewCache, completeServerCache);
+      const oldEventCache = viewCache.eventCache.getNode();
+      let newEventCache;
+      if (pathIsEmpty(path) || pathGetFront(path) === ".priority") {
+        let newNode;
+        if (viewCache.serverCache.isFullyInitialized()) {
+          newNode = writeTreeRefCalcCompleteEventCache(writesCache, viewCacheGetCompleteServerSnap(viewCache));
+        } else {
+          const serverChildren = viewCache.serverCache.getNode();
+          assert(serverChildren instanceof ChildrenNode, "serverChildren would be complete if leaf node");
+          newNode = writeTreeRefCalcCompleteEventChildren(writesCache, serverChildren);
+        }
+        newNode = newNode;
+        newEventCache = viewProcessor.filter.updateFullNode(oldEventCache, newNode, accumulator);
+      } else {
+        const childKey = pathGetFront(path);
+        let newChild = writeTreeRefCalcCompleteChild(writesCache, childKey, viewCache.serverCache);
+        if (newChild == null && viewCache.serverCache.isCompleteForChild(childKey)) {
+          newChild = oldEventCache.getImmediateChild(childKey);
+        }
+        if (newChild != null) {
+          newEventCache = viewProcessor.filter.updateChild(oldEventCache, childKey, newChild, pathPopFront(path), source, accumulator);
+        } else if (viewCache.eventCache.getNode().hasChild(childKey)) {
+          newEventCache = viewProcessor.filter.updateChild(oldEventCache, childKey, ChildrenNode.EMPTY_NODE, pathPopFront(path), source, accumulator);
+        } else {
+          newEventCache = oldEventCache;
+        }
+        if (newEventCache.isEmpty() && viewCache.serverCache.isFullyInitialized()) {
+          complete = writeTreeRefCalcCompleteEventCache(writesCache, viewCacheGetCompleteServerSnap(viewCache));
+          if (complete.isLeafNode()) {
+            newEventCache = viewProcessor.filter.updateFullNode(newEventCache, complete, accumulator);
+          }
+        }
+      }
+      complete = viewCache.serverCache.isFullyInitialized() || writeTreeRefShadowingWrite(writesCache, newEmptyPath()) != null;
+      return viewCacheUpdateEventSnap(viewCache, newEventCache, complete, viewProcessor.filter.filtersNodes());
+    }
+  }
+  var View = class {
+    constructor(query_, initialViewCache) {
+      this.query_ = query_;
+      this.eventRegistrations_ = [];
+      const params = this.query_._queryParams;
+      const indexFilter = new IndexedFilter(params.getIndex());
+      const filter = queryParamsGetNodeFilter(params);
+      this.processor_ = newViewProcessor(filter);
+      const initialServerCache = initialViewCache.serverCache;
+      const initialEventCache = initialViewCache.eventCache;
+      const serverSnap = indexFilter.updateFullNode(ChildrenNode.EMPTY_NODE, initialServerCache.getNode(), null);
+      const eventSnap = filter.updateFullNode(ChildrenNode.EMPTY_NODE, initialEventCache.getNode(), null);
+      const newServerCache = new CacheNode(serverSnap, initialServerCache.isFullyInitialized(), indexFilter.filtersNodes());
+      const newEventCache = new CacheNode(eventSnap, initialEventCache.isFullyInitialized(), filter.filtersNodes());
+      this.viewCache_ = newViewCache(newEventCache, newServerCache);
+      this.eventGenerator_ = new EventGenerator(this.query_);
+    }
+    get query() {
+      return this.query_;
+    }
+  };
+  function viewGetServerCache(view) {
+    return view.viewCache_.serverCache.getNode();
+  }
+  function viewGetCompleteNode(view) {
+    return viewCacheGetCompleteEventSnap(view.viewCache_);
+  }
+  function viewGetCompleteServerCache(view, path) {
+    const cache = viewCacheGetCompleteServerSnap(view.viewCache_);
+    if (cache) {
+      if (view.query._queryParams.loadsAllData() || !pathIsEmpty(path) && !cache.getImmediateChild(pathGetFront(path)).isEmpty()) {
+        return cache.getChild(path);
+      }
+    }
+    return null;
+  }
+  function viewIsEmpty(view) {
+    return view.eventRegistrations_.length === 0;
+  }
+  function viewAddEventRegistration(view, eventRegistration) {
+    view.eventRegistrations_.push(eventRegistration);
+  }
+  function viewRemoveEventRegistration(view, eventRegistration, cancelError) {
+    const cancelEvents = [];
+    if (cancelError) {
+      assert(eventRegistration == null, "A cancel should cancel all event registrations.");
+      const path = view.query._path;
+      view.eventRegistrations_.forEach((registration) => {
+        const maybeEvent = registration.createCancelEvent(cancelError, path);
+        if (maybeEvent) {
+          cancelEvents.push(maybeEvent);
+        }
+      });
+    }
+    if (eventRegistration) {
+      let remaining = [];
+      for (let i3 = 0; i3 < view.eventRegistrations_.length; ++i3) {
+        const existing = view.eventRegistrations_[i3];
+        if (!existing.matches(eventRegistration)) {
+          remaining.push(existing);
+        } else if (eventRegistration.hasAnyCallback()) {
+          remaining = remaining.concat(view.eventRegistrations_.slice(i3 + 1));
+          break;
+        }
+      }
+      view.eventRegistrations_ = remaining;
+    } else {
+      view.eventRegistrations_ = [];
+    }
+    return cancelEvents;
+  }
+  function viewApplyOperation(view, operation, writesCache, completeServerCache) {
+    if (operation.type === OperationType2.MERGE && operation.source.queryId !== null) {
+      assert(viewCacheGetCompleteServerSnap(view.viewCache_), "We should always have a full cache before handling merges");
+      assert(viewCacheGetCompleteEventSnap(view.viewCache_), "Missing event cache, even though we have a server cache");
+    }
+    const oldViewCache = view.viewCache_;
+    const result = viewProcessorApplyOperation(view.processor_, oldViewCache, operation, writesCache, completeServerCache);
+    viewProcessorAssertIndexed(view.processor_, result.viewCache);
+    assert(result.viewCache.serverCache.isFullyInitialized() || !oldViewCache.serverCache.isFullyInitialized(), "Once a server snap is complete, it should never go back");
+    view.viewCache_ = result.viewCache;
+    return viewGenerateEventsForChanges_(view, result.changes, result.viewCache.eventCache.getNode(), null);
+  }
+  function viewGetInitialEvents(view, registration) {
+    const eventSnap = view.viewCache_.eventCache;
+    const initialChanges = [];
+    if (!eventSnap.getNode().isLeafNode()) {
+      const eventNode = eventSnap.getNode();
+      eventNode.forEachChild(PRIORITY_INDEX, (key, childNode) => {
+        initialChanges.push(changeChildAdded(key, childNode));
+      });
+    }
+    if (eventSnap.isFullyInitialized()) {
+      initialChanges.push(changeValue(eventSnap.getNode()));
+    }
+    return viewGenerateEventsForChanges_(view, initialChanges, eventSnap.getNode(), registration);
+  }
+  function viewGenerateEventsForChanges_(view, changes, eventCache, eventRegistration) {
+    const registrations = eventRegistration ? [eventRegistration] : view.eventRegistrations_;
+    return eventGeneratorGenerateEventsForChanges(view.eventGenerator_, changes, eventCache, registrations);
+  }
+  var referenceConstructor$1;
+  var SyncPoint = class {
+    constructor() {
+      this.views = /* @__PURE__ */ new Map();
+    }
+  };
+  function syncPointSetReferenceConstructor(val) {
+    assert(!referenceConstructor$1, "__referenceConstructor has already been defined");
+    referenceConstructor$1 = val;
+  }
+  function syncPointGetReferenceConstructor() {
+    assert(referenceConstructor$1, "Reference.ts has not been loaded");
+    return referenceConstructor$1;
+  }
+  function syncPointIsEmpty(syncPoint) {
+    return syncPoint.views.size === 0;
+  }
+  function syncPointApplyOperation(syncPoint, operation, writesCache, optCompleteServerCache) {
+    const queryId = operation.source.queryId;
+    if (queryId !== null) {
+      const view = syncPoint.views.get(queryId);
+      assert(view != null, "SyncTree gave us an op for an invalid query.");
+      return viewApplyOperation(view, operation, writesCache, optCompleteServerCache);
+    } else {
+      let events = [];
+      for (const view of syncPoint.views.values()) {
+        events = events.concat(viewApplyOperation(view, operation, writesCache, optCompleteServerCache));
+      }
+      return events;
+    }
+  }
+  function syncPointGetView(syncPoint, query, writesCache, serverCache, serverCacheComplete) {
+    const queryId = query._queryIdentifier;
+    const view = syncPoint.views.get(queryId);
+    if (!view) {
+      let eventCache = writeTreeRefCalcCompleteEventCache(writesCache, serverCacheComplete ? serverCache : null);
+      let eventCacheComplete = false;
+      if (eventCache) {
+        eventCacheComplete = true;
+      } else if (serverCache instanceof ChildrenNode) {
+        eventCache = writeTreeRefCalcCompleteEventChildren(writesCache, serverCache);
+        eventCacheComplete = false;
+      } else {
+        eventCache = ChildrenNode.EMPTY_NODE;
+        eventCacheComplete = false;
+      }
+      const viewCache = newViewCache(new CacheNode(eventCache, eventCacheComplete, false), new CacheNode(serverCache, serverCacheComplete, false));
+      return new View(query, viewCache);
+    }
+    return view;
+  }
+  function syncPointAddEventRegistration(syncPoint, query, eventRegistration, writesCache, serverCache, serverCacheComplete) {
+    const view = syncPointGetView(syncPoint, query, writesCache, serverCache, serverCacheComplete);
+    if (!syncPoint.views.has(query._queryIdentifier)) {
+      syncPoint.views.set(query._queryIdentifier, view);
+    }
+    viewAddEventRegistration(view, eventRegistration);
+    return viewGetInitialEvents(view, eventRegistration);
+  }
+  function syncPointRemoveEventRegistration(syncPoint, query, eventRegistration, cancelError) {
+    const queryId = query._queryIdentifier;
+    const removed = [];
+    let cancelEvents = [];
+    const hadCompleteView = syncPointHasCompleteView(syncPoint);
+    if (queryId === "default") {
+      for (const [viewQueryId, view] of syncPoint.views.entries()) {
+        cancelEvents = cancelEvents.concat(viewRemoveEventRegistration(view, eventRegistration, cancelError));
+        if (viewIsEmpty(view)) {
+          syncPoint.views.delete(viewQueryId);
+          if (!view.query._queryParams.loadsAllData()) {
+            removed.push(view.query);
+          }
+        }
+      }
+    } else {
+      const view = syncPoint.views.get(queryId);
+      if (view) {
+        cancelEvents = cancelEvents.concat(viewRemoveEventRegistration(view, eventRegistration, cancelError));
+        if (viewIsEmpty(view)) {
+          syncPoint.views.delete(queryId);
+          if (!view.query._queryParams.loadsAllData()) {
+            removed.push(view.query);
+          }
+        }
+      }
+    }
+    if (hadCompleteView && !syncPointHasCompleteView(syncPoint)) {
+      removed.push(new (syncPointGetReferenceConstructor())(query._repo, query._path));
+    }
+    return { removed, events: cancelEvents };
+  }
+  function syncPointGetQueryViews(syncPoint) {
+    const result = [];
+    for (const view of syncPoint.views.values()) {
+      if (!view.query._queryParams.loadsAllData()) {
+        result.push(view);
+      }
+    }
+    return result;
+  }
+  function syncPointGetCompleteServerCache(syncPoint, path) {
+    let serverCache = null;
+    for (const view of syncPoint.views.values()) {
+      serverCache = serverCache || viewGetCompleteServerCache(view, path);
+    }
+    return serverCache;
+  }
+  function syncPointViewForQuery(syncPoint, query) {
+    const params = query._queryParams;
+    if (params.loadsAllData()) {
+      return syncPointGetCompleteView(syncPoint);
+    } else {
+      const queryId = query._queryIdentifier;
+      return syncPoint.views.get(queryId);
+    }
+  }
+  function syncPointViewExistsForQuery(syncPoint, query) {
+    return syncPointViewForQuery(syncPoint, query) != null;
+  }
+  function syncPointHasCompleteView(syncPoint) {
+    return syncPointGetCompleteView(syncPoint) != null;
+  }
+  function syncPointGetCompleteView(syncPoint) {
+    for (const view of syncPoint.views.values()) {
+      if (view.query._queryParams.loadsAllData()) {
+        return view;
+      }
+    }
+    return null;
+  }
+  var referenceConstructor;
+  function syncTreeSetReferenceConstructor(val) {
+    assert(!referenceConstructor, "__referenceConstructor has already been defined");
+    referenceConstructor = val;
+  }
+  function syncTreeGetReferenceConstructor() {
+    assert(referenceConstructor, "Reference.ts has not been loaded");
+    return referenceConstructor;
+  }
+  var syncTreeNextQueryTag_ = 1;
+  var SyncTree = class {
+    constructor(listenProvider_) {
+      this.listenProvider_ = listenProvider_;
+      this.syncPointTree_ = new ImmutableTree(null);
+      this.pendingWriteTree_ = newWriteTree();
+      this.tagToQueryMap = /* @__PURE__ */ new Map();
+      this.queryToTagMap = /* @__PURE__ */ new Map();
+    }
+  };
+  function syncTreeApplyUserOverwrite(syncTree, path, newData, writeId, visible) {
+    writeTreeAddOverwrite(syncTree.pendingWriteTree_, path, newData, writeId, visible);
+    if (!visible) {
+      return [];
+    } else {
+      return syncTreeApplyOperationToSyncPoints_(syncTree, new Overwrite(newOperationSourceUser(), path, newData));
+    }
+  }
+  function syncTreeApplyUserMerge(syncTree, path, changedChildren, writeId) {
+    writeTreeAddMerge(syncTree.pendingWriteTree_, path, changedChildren, writeId);
+    const changeTree = ImmutableTree.fromObject(changedChildren);
+    return syncTreeApplyOperationToSyncPoints_(syncTree, new Merge(newOperationSourceUser(), path, changeTree));
+  }
+  function syncTreeAckUserWrite(syncTree, writeId, revert = false) {
+    const write = writeTreeGetWrite(syncTree.pendingWriteTree_, writeId);
+    const needToReevaluate = writeTreeRemoveWrite(syncTree.pendingWriteTree_, writeId);
+    if (!needToReevaluate) {
+      return [];
+    } else {
+      let affectedTree = new ImmutableTree(null);
+      if (write.snap != null) {
+        affectedTree = affectedTree.set(newEmptyPath(), true);
+      } else {
+        each(write.children, (pathString) => {
+          affectedTree = affectedTree.set(new Path(pathString), true);
+        });
+      }
+      return syncTreeApplyOperationToSyncPoints_(syncTree, new AckUserWrite(write.path, affectedTree, revert));
+    }
+  }
+  function syncTreeApplyServerOverwrite(syncTree, path, newData) {
+    return syncTreeApplyOperationToSyncPoints_(syncTree, new Overwrite(newOperationSourceServer(), path, newData));
+  }
+  function syncTreeApplyServerMerge(syncTree, path, changedChildren) {
+    const changeTree = ImmutableTree.fromObject(changedChildren);
+    return syncTreeApplyOperationToSyncPoints_(syncTree, new Merge(newOperationSourceServer(), path, changeTree));
+  }
+  function syncTreeApplyListenComplete(syncTree, path) {
+    return syncTreeApplyOperationToSyncPoints_(syncTree, new ListenComplete(newOperationSourceServer(), path));
+  }
+  function syncTreeApplyTaggedListenComplete(syncTree, path, tag) {
+    const queryKey = syncTreeQueryKeyForTag_(syncTree, tag);
+    if (queryKey) {
+      const r3 = syncTreeParseQueryKey_(queryKey);
+      const queryPath = r3.path, queryId = r3.queryId;
+      const relativePath = newRelativePath(queryPath, path);
+      const op = new ListenComplete(newOperationSourceServerTaggedQuery(queryId), relativePath);
+      return syncTreeApplyTaggedOperation_(syncTree, queryPath, op);
+    } else {
+      return [];
+    }
+  }
+  function syncTreeRemoveEventRegistration(syncTree, query, eventRegistration, cancelError, skipListenerDedup = false) {
+    const path = query._path;
+    const maybeSyncPoint = syncTree.syncPointTree_.get(path);
+    let cancelEvents = [];
+    if (maybeSyncPoint && (query._queryIdentifier === "default" || syncPointViewExistsForQuery(maybeSyncPoint, query))) {
+      const removedAndEvents = syncPointRemoveEventRegistration(maybeSyncPoint, query, eventRegistration, cancelError);
+      if (syncPointIsEmpty(maybeSyncPoint)) {
+        syncTree.syncPointTree_ = syncTree.syncPointTree_.remove(path);
+      }
+      const removed = removedAndEvents.removed;
+      cancelEvents = removedAndEvents.events;
+      if (!skipListenerDedup) {
+        const removingDefault = -1 !== removed.findIndex((query2) => {
+          return query2._queryParams.loadsAllData();
+        });
+        const covered = syncTree.syncPointTree_.findOnPath(path, (relativePath, parentSyncPoint) => syncPointHasCompleteView(parentSyncPoint));
+        if (removingDefault && !covered) {
+          const subtree = syncTree.syncPointTree_.subtree(path);
+          if (!subtree.isEmpty()) {
+            const newViews = syncTreeCollectDistinctViewsForSubTree_(subtree);
+            for (let i3 = 0; i3 < newViews.length; ++i3) {
+              const view = newViews[i3], newQuery = view.query;
+              const listener = syncTreeCreateListenerForView_(syncTree, view);
+              syncTree.listenProvider_.startListening(syncTreeQueryForListening_(newQuery), syncTreeTagForQuery(syncTree, newQuery), listener.hashFn, listener.onComplete);
+            }
+          }
+        }
+        if (!covered && removed.length > 0 && !cancelError) {
+          if (removingDefault) {
+            const defaultTag = null;
+            syncTree.listenProvider_.stopListening(syncTreeQueryForListening_(query), defaultTag);
+          } else {
+            removed.forEach((queryToRemove) => {
+              const tagToRemove = syncTree.queryToTagMap.get(syncTreeMakeQueryKey_(queryToRemove));
+              syncTree.listenProvider_.stopListening(syncTreeQueryForListening_(queryToRemove), tagToRemove);
+            });
+          }
+        }
+      }
+      syncTreeRemoveTags_(syncTree, removed);
+    }
+    return cancelEvents;
+  }
+  function syncTreeApplyTaggedQueryOverwrite(syncTree, path, snap, tag) {
+    const queryKey = syncTreeQueryKeyForTag_(syncTree, tag);
+    if (queryKey != null) {
+      const r3 = syncTreeParseQueryKey_(queryKey);
+      const queryPath = r3.path, queryId = r3.queryId;
+      const relativePath = newRelativePath(queryPath, path);
+      const op = new Overwrite(newOperationSourceServerTaggedQuery(queryId), relativePath, snap);
+      return syncTreeApplyTaggedOperation_(syncTree, queryPath, op);
+    } else {
+      return [];
+    }
+  }
+  function syncTreeApplyTaggedQueryMerge(syncTree, path, changedChildren, tag) {
+    const queryKey = syncTreeQueryKeyForTag_(syncTree, tag);
+    if (queryKey) {
+      const r3 = syncTreeParseQueryKey_(queryKey);
+      const queryPath = r3.path, queryId = r3.queryId;
+      const relativePath = newRelativePath(queryPath, path);
+      const changeTree = ImmutableTree.fromObject(changedChildren);
+      const op = new Merge(newOperationSourceServerTaggedQuery(queryId), relativePath, changeTree);
+      return syncTreeApplyTaggedOperation_(syncTree, queryPath, op);
+    } else {
+      return [];
+    }
+  }
+  function syncTreeAddEventRegistration(syncTree, query, eventRegistration, skipSetupListener = false) {
+    const path = query._path;
+    let serverCache = null;
+    let foundAncestorDefaultView = false;
+    syncTree.syncPointTree_.foreachOnPath(path, (pathToSyncPoint, sp) => {
+      const relativePath = newRelativePath(pathToSyncPoint, path);
+      serverCache = serverCache || syncPointGetCompleteServerCache(sp, relativePath);
+      foundAncestorDefaultView = foundAncestorDefaultView || syncPointHasCompleteView(sp);
+    });
+    let syncPoint = syncTree.syncPointTree_.get(path);
+    if (!syncPoint) {
+      syncPoint = new SyncPoint();
+      syncTree.syncPointTree_ = syncTree.syncPointTree_.set(path, syncPoint);
+    } else {
+      foundAncestorDefaultView = foundAncestorDefaultView || syncPointHasCompleteView(syncPoint);
+      serverCache = serverCache || syncPointGetCompleteServerCache(syncPoint, newEmptyPath());
+    }
+    let serverCacheComplete;
+    if (serverCache != null) {
+      serverCacheComplete = true;
+    } else {
+      serverCacheComplete = false;
+      serverCache = ChildrenNode.EMPTY_NODE;
+      const subtree = syncTree.syncPointTree_.subtree(path);
+      subtree.foreachChild((childName, childSyncPoint) => {
+        const completeCache = syncPointGetCompleteServerCache(childSyncPoint, newEmptyPath());
+        if (completeCache) {
+          serverCache = serverCache.updateImmediateChild(childName, completeCache);
+        }
+      });
+    }
+    const viewAlreadyExists = syncPointViewExistsForQuery(syncPoint, query);
+    if (!viewAlreadyExists && !query._queryParams.loadsAllData()) {
+      const queryKey = syncTreeMakeQueryKey_(query);
+      assert(!syncTree.queryToTagMap.has(queryKey), "View does not exist, but we have a tag");
+      const tag = syncTreeGetNextQueryTag_();
+      syncTree.queryToTagMap.set(queryKey, tag);
+      syncTree.tagToQueryMap.set(tag, queryKey);
+    }
+    const writesCache = writeTreeChildWrites(syncTree.pendingWriteTree_, path);
+    let events = syncPointAddEventRegistration(syncPoint, query, eventRegistration, writesCache, serverCache, serverCacheComplete);
+    if (!viewAlreadyExists && !foundAncestorDefaultView && !skipSetupListener) {
+      const view = syncPointViewForQuery(syncPoint, query);
+      events = events.concat(syncTreeSetupListener_(syncTree, query, view));
+    }
+    return events;
+  }
+  function syncTreeCalcCompleteEventCache(syncTree, path, writeIdsToExclude) {
+    const includeHiddenSets = true;
+    const writeTree = syncTree.pendingWriteTree_;
+    const serverCache = syncTree.syncPointTree_.findOnPath(path, (pathSoFar, syncPoint) => {
+      const relativePath = newRelativePath(pathSoFar, path);
+      const serverCache2 = syncPointGetCompleteServerCache(syncPoint, relativePath);
+      if (serverCache2) {
+        return serverCache2;
+      }
+    });
+    return writeTreeCalcCompleteEventCache(writeTree, path, serverCache, writeIdsToExclude, includeHiddenSets);
+  }
+  function syncTreeGetServerValue(syncTree, query) {
+    const path = query._path;
+    let serverCache = null;
+    syncTree.syncPointTree_.foreachOnPath(path, (pathToSyncPoint, sp) => {
+      const relativePath = newRelativePath(pathToSyncPoint, path);
+      serverCache = serverCache || syncPointGetCompleteServerCache(sp, relativePath);
+    });
+    let syncPoint = syncTree.syncPointTree_.get(path);
+    if (!syncPoint) {
+      syncPoint = new SyncPoint();
+      syncTree.syncPointTree_ = syncTree.syncPointTree_.set(path, syncPoint);
+    } else {
+      serverCache = serverCache || syncPointGetCompleteServerCache(syncPoint, newEmptyPath());
+    }
+    const serverCacheComplete = serverCache != null;
+    const serverCacheNode = serverCacheComplete ? new CacheNode(serverCache, true, false) : null;
+    const writesCache = writeTreeChildWrites(syncTree.pendingWriteTree_, query._path);
+    const view = syncPointGetView(syncPoint, query, writesCache, serverCacheComplete ? serverCacheNode.getNode() : ChildrenNode.EMPTY_NODE, serverCacheComplete);
+    return viewGetCompleteNode(view);
+  }
+  function syncTreeApplyOperationToSyncPoints_(syncTree, operation) {
+    return syncTreeApplyOperationHelper_(
+      operation,
+      syncTree.syncPointTree_,
+      null,
+      writeTreeChildWrites(syncTree.pendingWriteTree_, newEmptyPath())
+    );
+  }
+  function syncTreeApplyOperationHelper_(operation, syncPointTree, serverCache, writesCache) {
+    if (pathIsEmpty(operation.path)) {
+      return syncTreeApplyOperationDescendantsHelper_(operation, syncPointTree, serverCache, writesCache);
+    } else {
+      const syncPoint = syncPointTree.get(newEmptyPath());
+      if (serverCache == null && syncPoint != null) {
+        serverCache = syncPointGetCompleteServerCache(syncPoint, newEmptyPath());
+      }
+      let events = [];
+      const childName = pathGetFront(operation.path);
+      const childOperation = operation.operationForChild(childName);
+      const childTree = syncPointTree.children.get(childName);
+      if (childTree && childOperation) {
+        const childServerCache = serverCache ? serverCache.getImmediateChild(childName) : null;
+        const childWritesCache = writeTreeRefChild(writesCache, childName);
+        events = events.concat(syncTreeApplyOperationHelper_(childOperation, childTree, childServerCache, childWritesCache));
+      }
+      if (syncPoint) {
+        events = events.concat(syncPointApplyOperation(syncPoint, operation, writesCache, serverCache));
+      }
+      return events;
+    }
+  }
+  function syncTreeApplyOperationDescendantsHelper_(operation, syncPointTree, serverCache, writesCache) {
+    const syncPoint = syncPointTree.get(newEmptyPath());
+    if (serverCache == null && syncPoint != null) {
+      serverCache = syncPointGetCompleteServerCache(syncPoint, newEmptyPath());
+    }
+    let events = [];
+    syncPointTree.children.inorderTraversal((childName, childTree) => {
+      const childServerCache = serverCache ? serverCache.getImmediateChild(childName) : null;
+      const childWritesCache = writeTreeRefChild(writesCache, childName);
+      const childOperation = operation.operationForChild(childName);
+      if (childOperation) {
+        events = events.concat(syncTreeApplyOperationDescendantsHelper_(childOperation, childTree, childServerCache, childWritesCache));
+      }
+    });
+    if (syncPoint) {
+      events = events.concat(syncPointApplyOperation(syncPoint, operation, writesCache, serverCache));
+    }
+    return events;
+  }
+  function syncTreeCreateListenerForView_(syncTree, view) {
+    const query = view.query;
+    const tag = syncTreeTagForQuery(syncTree, query);
+    return {
+      hashFn: () => {
+        const cache = viewGetServerCache(view) || ChildrenNode.EMPTY_NODE;
+        return cache.hash();
+      },
+      onComplete: (status) => {
+        if (status === "ok") {
+          if (tag) {
+            return syncTreeApplyTaggedListenComplete(syncTree, query._path, tag);
+          } else {
+            return syncTreeApplyListenComplete(syncTree, query._path);
+          }
+        } else {
+          const error2 = errorForServerCode(status, query);
+          return syncTreeRemoveEventRegistration(
+            syncTree,
+            query,
+            null,
+            error2
+          );
+        }
+      }
+    };
+  }
+  function syncTreeTagForQuery(syncTree, query) {
+    const queryKey = syncTreeMakeQueryKey_(query);
+    return syncTree.queryToTagMap.get(queryKey);
+  }
+  function syncTreeMakeQueryKey_(query) {
+    return query._path.toString() + "$" + query._queryIdentifier;
+  }
+  function syncTreeQueryKeyForTag_(syncTree, tag) {
+    return syncTree.tagToQueryMap.get(tag);
+  }
+  function syncTreeParseQueryKey_(queryKey) {
+    const splitIndex = queryKey.indexOf("$");
+    assert(splitIndex !== -1 && splitIndex < queryKey.length - 1, "Bad queryKey.");
+    return {
+      queryId: queryKey.substr(splitIndex + 1),
+      path: new Path(queryKey.substr(0, splitIndex))
+    };
+  }
+  function syncTreeApplyTaggedOperation_(syncTree, queryPath, operation) {
+    const syncPoint = syncTree.syncPointTree_.get(queryPath);
+    assert(syncPoint, "Missing sync point for query tag that we're tracking");
+    const writesCache = writeTreeChildWrites(syncTree.pendingWriteTree_, queryPath);
+    return syncPointApplyOperation(syncPoint, operation, writesCache, null);
+  }
+  function syncTreeCollectDistinctViewsForSubTree_(subtree) {
+    return subtree.fold((relativePath, maybeChildSyncPoint, childMap) => {
+      if (maybeChildSyncPoint && syncPointHasCompleteView(maybeChildSyncPoint)) {
+        const completeView = syncPointGetCompleteView(maybeChildSyncPoint);
+        return [completeView];
+      } else {
+        let views = [];
+        if (maybeChildSyncPoint) {
+          views = syncPointGetQueryViews(maybeChildSyncPoint);
+        }
+        each(childMap, (_key, childViews) => {
+          views = views.concat(childViews);
+        });
+        return views;
+      }
+    });
+  }
+  function syncTreeQueryForListening_(query) {
+    if (query._queryParams.loadsAllData() && !query._queryParams.isDefault()) {
+      return new (syncTreeGetReferenceConstructor())(query._repo, query._path);
+    } else {
+      return query;
+    }
+  }
+  function syncTreeRemoveTags_(syncTree, queries) {
+    for (let j2 = 0; j2 < queries.length; ++j2) {
+      const removedQuery = queries[j2];
+      if (!removedQuery._queryParams.loadsAllData()) {
+        const removedQueryKey = syncTreeMakeQueryKey_(removedQuery);
+        const removedQueryTag = syncTree.queryToTagMap.get(removedQueryKey);
+        syncTree.queryToTagMap.delete(removedQueryKey);
+        syncTree.tagToQueryMap.delete(removedQueryTag);
+      }
+    }
+  }
+  function syncTreeGetNextQueryTag_() {
+    return syncTreeNextQueryTag_++;
+  }
+  function syncTreeSetupListener_(syncTree, query, view) {
+    const path = query._path;
+    const tag = syncTreeTagForQuery(syncTree, query);
+    const listener = syncTreeCreateListenerForView_(syncTree, view);
+    const events = syncTree.listenProvider_.startListening(syncTreeQueryForListening_(query), tag, listener.hashFn, listener.onComplete);
+    const subtree = syncTree.syncPointTree_.subtree(path);
+    if (tag) {
+      assert(!syncPointHasCompleteView(subtree.value), "If we're adding a query, it shouldn't be shadowed");
+    } else {
+      const queriesToStop = subtree.fold((relativePath, maybeChildSyncPoint, childMap) => {
+        if (!pathIsEmpty(relativePath) && maybeChildSyncPoint && syncPointHasCompleteView(maybeChildSyncPoint)) {
+          return [syncPointGetCompleteView(maybeChildSyncPoint).query];
+        } else {
+          let queries = [];
+          if (maybeChildSyncPoint) {
+            queries = queries.concat(syncPointGetQueryViews(maybeChildSyncPoint).map((view2) => view2.query));
+          }
+          each(childMap, (_key, childQueries) => {
+            queries = queries.concat(childQueries);
+          });
+          return queries;
+        }
+      });
+      for (let i3 = 0; i3 < queriesToStop.length; ++i3) {
+        const queryToStop = queriesToStop[i3];
+        syncTree.listenProvider_.stopListening(syncTreeQueryForListening_(queryToStop), syncTreeTagForQuery(syncTree, queryToStop));
+      }
+    }
+    return events;
+  }
+  var ExistingValueProvider = class {
+    constructor(node_) {
+      this.node_ = node_;
+    }
+    getImmediateChild(childName) {
+      const child2 = this.node_.getImmediateChild(childName);
+      return new ExistingValueProvider(child2);
+    }
+    node() {
+      return this.node_;
+    }
+  };
+  var DeferredValueProvider = class {
+    constructor(syncTree, path) {
+      this.syncTree_ = syncTree;
+      this.path_ = path;
+    }
+    getImmediateChild(childName) {
+      const childPath = pathChild(this.path_, childName);
+      return new DeferredValueProvider(this.syncTree_, childPath);
+    }
+    node() {
+      return syncTreeCalcCompleteEventCache(this.syncTree_, this.path_);
+    }
+  };
+  var generateWithValues = function(values) {
+    values = values || {};
+    values["timestamp"] = values["timestamp"] || new Date().getTime();
+    return values;
+  };
+  var resolveDeferredLeafValue = function(value, existingVal, serverValues) {
+    if (!value || typeof value !== "object") {
+      return value;
+    }
+    assert(".sv" in value, "Unexpected leaf node or priority contents");
+    if (typeof value[".sv"] === "string") {
+      return resolveScalarDeferredValue(value[".sv"], existingVal, serverValues);
+    } else if (typeof value[".sv"] === "object") {
+      return resolveComplexDeferredValue(value[".sv"], existingVal);
+    } else {
+      assert(false, "Unexpected server value: " + JSON.stringify(value, null, 2));
+    }
+  };
+  var resolveScalarDeferredValue = function(op, existing, serverValues) {
+    switch (op) {
+      case "timestamp":
+        return serverValues["timestamp"];
+      default:
+        assert(false, "Unexpected server value: " + op);
+    }
+  };
+  var resolveComplexDeferredValue = function(op, existing, unused) {
+    if (!op.hasOwnProperty("increment")) {
+      assert(false, "Unexpected server value: " + JSON.stringify(op, null, 2));
+    }
+    const delta = op["increment"];
+    if (typeof delta !== "number") {
+      assert(false, "Unexpected increment value: " + delta);
+    }
+    const existingNode = existing.node();
+    assert(existingNode !== null && typeof existingNode !== "undefined", "Expected ChildrenNode.EMPTY_NODE for nulls");
+    if (!existingNode.isLeafNode()) {
+      return delta;
+    }
+    const leaf = existingNode;
+    const existingVal = leaf.getValue();
+    if (typeof existingVal !== "number") {
+      return delta;
+    }
+    return existingVal + delta;
+  };
+  var resolveDeferredValueTree = function(path, node, syncTree, serverValues) {
+    return resolveDeferredValue(node, new DeferredValueProvider(syncTree, path), serverValues);
+  };
+  var resolveDeferredValueSnapshot = function(node, existing, serverValues) {
+    return resolveDeferredValue(node, new ExistingValueProvider(existing), serverValues);
+  };
+  function resolveDeferredValue(node, existingVal, serverValues) {
+    const rawPri = node.getPriority().val();
+    const priority = resolveDeferredLeafValue(rawPri, existingVal.getImmediateChild(".priority"), serverValues);
+    let newNode;
+    if (node.isLeafNode()) {
+      const leafNode = node;
+      const value = resolveDeferredLeafValue(leafNode.getValue(), existingVal, serverValues);
+      if (value !== leafNode.getValue() || priority !== leafNode.getPriority().val()) {
+        return new LeafNode(value, nodeFromJSON(priority));
+      } else {
+        return node;
+      }
+    } else {
+      const childrenNode = node;
+      newNode = childrenNode;
+      if (priority !== childrenNode.getPriority().val()) {
+        newNode = newNode.updatePriority(new LeafNode(priority));
+      }
+      childrenNode.forEachChild(PRIORITY_INDEX, (childName, childNode) => {
+        const newChildNode = resolveDeferredValue(childNode, existingVal.getImmediateChild(childName), serverValues);
+        if (newChildNode !== childNode) {
+          newNode = newNode.updateImmediateChild(childName, newChildNode);
+        }
+      });
+      return newNode;
+    }
+  }
+  var Tree = class {
+    constructor(name5 = "", parent = null, node = { children: {}, childCount: 0 }) {
+      this.name = name5;
+      this.parent = parent;
+      this.node = node;
+    }
+  };
+  function treeSubTree(tree, pathObj) {
+    let path = pathObj instanceof Path ? pathObj : new Path(pathObj);
+    let child2 = tree, next = pathGetFront(path);
+    while (next !== null) {
+      const childNode = safeGet(child2.node.children, next) || {
+        children: {},
+        childCount: 0
+      };
+      child2 = new Tree(next, child2, childNode);
+      path = pathPopFront(path);
+      next = pathGetFront(path);
+    }
+    return child2;
+  }
+  function treeGetValue(tree) {
+    return tree.node.value;
+  }
+  function treeSetValue(tree, value) {
+    tree.node.value = value;
+    treeUpdateParents(tree);
+  }
+  function treeHasChildren(tree) {
+    return tree.node.childCount > 0;
+  }
+  function treeIsEmpty(tree) {
+    return treeGetValue(tree) === void 0 && !treeHasChildren(tree);
+  }
+  function treeForEachChild(tree, action) {
+    each(tree.node.children, (child2, childTree) => {
+      action(new Tree(child2, tree, childTree));
+    });
+  }
+  function treeForEachDescendant(tree, action, includeSelf, childrenFirst) {
+    if (includeSelf && !childrenFirst) {
+      action(tree);
+    }
+    treeForEachChild(tree, (child2) => {
+      treeForEachDescendant(child2, action, true, childrenFirst);
+    });
+    if (includeSelf && childrenFirst) {
+      action(tree);
+    }
+  }
+  function treeForEachAncestor(tree, action, includeSelf) {
+    let node = includeSelf ? tree : tree.parent;
+    while (node !== null) {
+      if (action(node)) {
+        return true;
+      }
+      node = node.parent;
+    }
+    return false;
+  }
+  function treeGetPath(tree) {
+    return new Path(tree.parent === null ? tree.name : treeGetPath(tree.parent) + "/" + tree.name);
+  }
+  function treeUpdateParents(tree) {
+    if (tree.parent !== null) {
+      treeUpdateChild(tree.parent, tree.name, tree);
+    }
+  }
+  function treeUpdateChild(tree, childName, child2) {
+    const childEmpty = treeIsEmpty(child2);
+    const childExists = contains(tree.node.children, childName);
+    if (childEmpty && childExists) {
+      delete tree.node.children[childName];
+      tree.node.childCount--;
+      treeUpdateParents(tree);
+    } else if (!childEmpty && !childExists) {
+      tree.node.children[childName] = child2.node;
+      tree.node.childCount++;
+      treeUpdateParents(tree);
+    }
+  }
+  var INVALID_KEY_REGEX_ = /[\[\].#$\/\u0000-\u001F\u007F]/;
+  var INVALID_PATH_REGEX_ = /[\[\].#$\u0000-\u001F\u007F]/;
+  var MAX_LEAF_SIZE_ = 10 * 1024 * 1024;
+  var isValidKey2 = function(key) {
+    return typeof key === "string" && key.length !== 0 && !INVALID_KEY_REGEX_.test(key);
+  };
+  var isValidPathString = function(pathString) {
+    return typeof pathString === "string" && pathString.length !== 0 && !INVALID_PATH_REGEX_.test(pathString);
+  };
+  var isValidRootPathString = function(pathString) {
+    if (pathString) {
+      pathString = pathString.replace(/^\/*\.info(\/|$)/, "/");
+    }
+    return isValidPathString(pathString);
+  };
+  var isValidPriority = function(priority) {
+    return priority === null || typeof priority === "string" || typeof priority === "number" && !isInvalidJSONNumber(priority) || priority && typeof priority === "object" && contains(priority, ".sv");
+  };
+  var validateFirebaseDataArg = function(fnName, value, path, optional) {
+    if (optional && value === void 0) {
+      return;
+    }
+    validateFirebaseData(errorPrefix(fnName, "value"), value, path);
+  };
+  var validateFirebaseData = function(errorPrefix2, data, path_) {
+    const path = path_ instanceof Path ? new ValidationPath(path_, errorPrefix2) : path_;
+    if (data === void 0) {
+      throw new Error(errorPrefix2 + "contains undefined " + validationPathToErrorString(path));
+    }
+    if (typeof data === "function") {
+      throw new Error(errorPrefix2 + "contains a function " + validationPathToErrorString(path) + " with contents = " + data.toString());
+    }
+    if (isInvalidJSONNumber(data)) {
+      throw new Error(errorPrefix2 + "contains " + data.toString() + " " + validationPathToErrorString(path));
+    }
+    if (typeof data === "string" && data.length > MAX_LEAF_SIZE_ / 3 && stringLength(data) > MAX_LEAF_SIZE_) {
+      throw new Error(errorPrefix2 + "contains a string greater than " + MAX_LEAF_SIZE_ + " utf8 bytes " + validationPathToErrorString(path) + " ('" + data.substring(0, 50) + "...')");
+    }
+    if (data && typeof data === "object") {
+      let hasDotValue = false;
+      let hasActualChild = false;
+      each(data, (key, value) => {
+        if (key === ".value") {
+          hasDotValue = true;
+        } else if (key !== ".priority" && key !== ".sv") {
+          hasActualChild = true;
+          if (!isValidKey2(key)) {
+            throw new Error(errorPrefix2 + " contains an invalid key (" + key + ") " + validationPathToErrorString(path) + `.  Keys must be non-empty strings and can't contain ".", "#", "$", "/", "[", or "]"`);
+          }
+        }
+        validationPathPush(path, key);
+        validateFirebaseData(errorPrefix2, value, path);
+        validationPathPop(path);
+      });
+      if (hasDotValue && hasActualChild) {
+        throw new Error(errorPrefix2 + ' contains ".value" child ' + validationPathToErrorString(path) + " in addition to actual children.");
+      }
+    }
+  };
+  var validateFirebaseMergePaths = function(errorPrefix2, mergePaths) {
+    let i3, curPath;
+    for (i3 = 0; i3 < mergePaths.length; i3++) {
+      curPath = mergePaths[i3];
+      const keys = pathSlice(curPath);
+      for (let j2 = 0; j2 < keys.length; j2++) {
+        if (keys[j2] === ".priority" && j2 === keys.length - 1)
+          ;
+        else if (!isValidKey2(keys[j2])) {
+          throw new Error(errorPrefix2 + "contains an invalid key (" + keys[j2] + ") in path " + curPath.toString() + `. Keys must be non-empty strings and can't contain ".", "#", "$", "/", "[", or "]"`);
+        }
+      }
+    }
+    mergePaths.sort(pathCompare);
+    let prevPath = null;
+    for (i3 = 0; i3 < mergePaths.length; i3++) {
+      curPath = mergePaths[i3];
+      if (prevPath !== null && pathContains(prevPath, curPath)) {
+        throw new Error(errorPrefix2 + "contains a path " + prevPath.toString() + " that is ancestor of another path " + curPath.toString());
+      }
+      prevPath = curPath;
+    }
+  };
+  var validateFirebaseMergeDataArg = function(fnName, data, path, optional) {
+    if (optional && data === void 0) {
+      return;
+    }
+    const errorPrefix$1 = errorPrefix(fnName, "values");
+    if (!(data && typeof data === "object") || Array.isArray(data)) {
+      throw new Error(errorPrefix$1 + " must be an object containing the children to replace.");
+    }
+    const mergePaths = [];
+    each(data, (key, value) => {
+      const curPath = new Path(key);
+      validateFirebaseData(errorPrefix$1, value, pathChild(path, curPath));
+      if (pathGetBack(curPath) === ".priority") {
+        if (!isValidPriority(value)) {
+          throw new Error(errorPrefix$1 + "contains an invalid value for '" + curPath.toString() + "', which must be a valid Firebase priority (a string, finite number, server value, or null).");
+        }
+      }
+      mergePaths.push(curPath);
+    });
+    validateFirebaseMergePaths(errorPrefix$1, mergePaths);
+  };
+  var validatePathString = function(fnName, argumentName, pathString, optional) {
+    if (optional && pathString === void 0) {
+      return;
+    }
+    if (!isValidPathString(pathString)) {
+      throw new Error(errorPrefix(fnName, argumentName) + 'was an invalid path = "' + pathString + `". Paths must be non-empty strings and can't contain ".", "#", "$", "[", or "]"`);
+    }
+  };
+  var validateRootPathString = function(fnName, argumentName, pathString, optional) {
+    if (pathString) {
+      pathString = pathString.replace(/^\/*\.info(\/|$)/, "/");
+    }
+    validatePathString(fnName, argumentName, pathString, optional);
+  };
+  var validateWritablePath = function(fnName, path) {
+    if (pathGetFront(path) === ".info") {
+      throw new Error(fnName + " failed = Can't modify data under /.info/");
+    }
+  };
+  var validateUrl = function(fnName, parsedUrl) {
+    const pathString = parsedUrl.path.toString();
+    if (!(typeof parsedUrl.repoInfo.host === "string") || parsedUrl.repoInfo.host.length === 0 || !isValidKey2(parsedUrl.repoInfo.namespace) && parsedUrl.repoInfo.host.split(":")[0] !== "localhost" || pathString.length !== 0 && !isValidRootPathString(pathString)) {
+      throw new Error(errorPrefix(fnName, "url") + `must be a valid firebase URL and the path can't contain ".", "#", "$", "[", or "]".`);
+    }
+  };
+  var EventQueue = class {
+    constructor() {
+      this.eventLists_ = [];
+      this.recursionDepth_ = 0;
+    }
+  };
+  function eventQueueQueueEvents(eventQueue, eventDataList) {
+    let currList = null;
+    for (let i3 = 0; i3 < eventDataList.length; i3++) {
+      const data = eventDataList[i3];
+      const path = data.getPath();
+      if (currList !== null && !pathEquals(path, currList.path)) {
+        eventQueue.eventLists_.push(currList);
+        currList = null;
+      }
+      if (currList === null) {
+        currList = { events: [], path };
+      }
+      currList.events.push(data);
+    }
+    if (currList) {
+      eventQueue.eventLists_.push(currList);
+    }
+  }
+  function eventQueueRaiseEventsForChangedPath(eventQueue, changedPath, eventDataList) {
+    eventQueueQueueEvents(eventQueue, eventDataList);
+    eventQueueRaiseQueuedEventsMatchingPredicate(eventQueue, (eventPath) => pathContains(eventPath, changedPath) || pathContains(changedPath, eventPath));
+  }
+  function eventQueueRaiseQueuedEventsMatchingPredicate(eventQueue, predicate) {
+    eventQueue.recursionDepth_++;
+    let sentAll = true;
+    for (let i3 = 0; i3 < eventQueue.eventLists_.length; i3++) {
+      const eventList = eventQueue.eventLists_[i3];
+      if (eventList) {
+        const eventPath = eventList.path;
+        if (predicate(eventPath)) {
+          eventListRaise(eventQueue.eventLists_[i3]);
+          eventQueue.eventLists_[i3] = null;
+        } else {
+          sentAll = false;
+        }
+      }
+    }
+    if (sentAll) {
+      eventQueue.eventLists_ = [];
+    }
+    eventQueue.recursionDepth_--;
+  }
+  function eventListRaise(eventList) {
+    for (let i3 = 0; i3 < eventList.events.length; i3++) {
+      const eventData = eventList.events[i3];
+      if (eventData !== null) {
+        eventList.events[i3] = null;
+        const eventFn = eventData.getEventRunner();
+        if (logger2) {
+          log("event: " + eventData.toString());
+        }
+        exceptionGuard(eventFn);
+      }
+    }
+  }
+  var INTERRUPT_REASON = "repo_interrupt";
+  var MAX_TRANSACTION_RETRIES = 25;
+  var Repo = class {
+    constructor(repoInfo_, forceRestClient_, authTokenProvider_, appCheckProvider_) {
+      this.repoInfo_ = repoInfo_;
+      this.forceRestClient_ = forceRestClient_;
+      this.authTokenProvider_ = authTokenProvider_;
+      this.appCheckProvider_ = appCheckProvider_;
+      this.dataUpdateCount = 0;
+      this.statsListener_ = null;
+      this.eventQueue_ = new EventQueue();
+      this.nextWriteId_ = 1;
+      this.interceptServerDataCallback_ = null;
+      this.onDisconnect_ = newSparseSnapshotTree();
+      this.transactionQueueTree_ = new Tree();
+      this.persistentConnection_ = null;
+      this.key = this.repoInfo_.toURLString();
+    }
+    toString() {
+      return (this.repoInfo_.secure ? "https://" : "http://") + this.repoInfo_.host;
+    }
+  };
+  function repoStart(repo, appId, authOverride) {
+    repo.stats_ = statsManagerGetCollection(repo.repoInfo_);
+    if (repo.forceRestClient_ || beingCrawled()) {
+      repo.server_ = new ReadonlyRestClient(repo.repoInfo_, (pathString, data, isMerge, tag) => {
+        repoOnDataUpdate(repo, pathString, data, isMerge, tag);
+      }, repo.authTokenProvider_, repo.appCheckProvider_);
+      setTimeout(() => repoOnConnectStatus(repo, true), 0);
+    } else {
+      if (typeof authOverride !== "undefined" && authOverride !== null) {
+        if (typeof authOverride !== "object") {
+          throw new Error("Only objects are supported for option databaseAuthVariableOverride");
+        }
+        try {
+          stringify2(authOverride);
+        } catch (e2) {
+          throw new Error("Invalid authOverride provided: " + e2);
+        }
+      }
+      repo.persistentConnection_ = new PersistentConnection(repo.repoInfo_, appId, (pathString, data, isMerge, tag) => {
+        repoOnDataUpdate(repo, pathString, data, isMerge, tag);
+      }, (connectStatus) => {
+        repoOnConnectStatus(repo, connectStatus);
+      }, (updates) => {
+        repoOnServerInfoUpdate(repo, updates);
+      }, repo.authTokenProvider_, repo.appCheckProvider_, authOverride);
+      repo.server_ = repo.persistentConnection_;
+    }
+    repo.authTokenProvider_.addTokenChangeListener((token) => {
+      repo.server_.refreshAuthToken(token);
+    });
+    repo.appCheckProvider_.addTokenChangeListener((result) => {
+      repo.server_.refreshAppCheckToken(result.token);
+    });
+    repo.statsReporter_ = statsManagerGetOrCreateReporter(repo.repoInfo_, () => new StatsReporter(repo.stats_, repo.server_));
+    repo.infoData_ = new SnapshotHolder();
+    repo.infoSyncTree_ = new SyncTree({
+      startListening: (query, tag, currentHashFn, onComplete) => {
+        let infoEvents = [];
+        const node = repo.infoData_.getNode(query._path);
+        if (!node.isEmpty()) {
+          infoEvents = syncTreeApplyServerOverwrite(repo.infoSyncTree_, query._path, node);
+          setTimeout(() => {
+            onComplete("ok");
+          }, 0);
+        }
+        return infoEvents;
+      },
+      stopListening: () => {
+      }
+    });
+    repoUpdateInfo(repo, "connected", false);
+    repo.serverSyncTree_ = new SyncTree({
+      startListening: (query, tag, currentHashFn, onComplete) => {
+        repo.server_.listen(query, currentHashFn, tag, (status, data) => {
+          const events = onComplete(status, data);
+          eventQueueRaiseEventsForChangedPath(repo.eventQueue_, query._path, events);
+        });
+        return [];
+      },
+      stopListening: (query, tag) => {
+        repo.server_.unlisten(query, tag);
+      }
+    });
+  }
+  function repoServerTime(repo) {
+    const offsetNode = repo.infoData_.getNode(new Path(".info/serverTimeOffset"));
+    const offset = offsetNode.val() || 0;
+    return new Date().getTime() + offset;
+  }
+  function repoGenerateServerValues(repo) {
+    return generateWithValues({
+      timestamp: repoServerTime(repo)
+    });
+  }
+  function repoOnDataUpdate(repo, pathString, data, isMerge, tag) {
+    repo.dataUpdateCount++;
+    const path = new Path(pathString);
+    data = repo.interceptServerDataCallback_ ? repo.interceptServerDataCallback_(pathString, data) : data;
+    let events = [];
+    if (tag) {
+      if (isMerge) {
+        const taggedChildren = map(data, (raw) => nodeFromJSON(raw));
+        events = syncTreeApplyTaggedQueryMerge(repo.serverSyncTree_, path, taggedChildren, tag);
+      } else {
+        const taggedSnap = nodeFromJSON(data);
+        events = syncTreeApplyTaggedQueryOverwrite(repo.serverSyncTree_, path, taggedSnap, tag);
+      }
+    } else if (isMerge) {
+      const changedChildren = map(data, (raw) => nodeFromJSON(raw));
+      events = syncTreeApplyServerMerge(repo.serverSyncTree_, path, changedChildren);
+    } else {
+      const snap = nodeFromJSON(data);
+      events = syncTreeApplyServerOverwrite(repo.serverSyncTree_, path, snap);
+    }
+    let affectedPath = path;
+    if (events.length > 0) {
+      affectedPath = repoRerunTransactions(repo, path);
+    }
+    eventQueueRaiseEventsForChangedPath(repo.eventQueue_, affectedPath, events);
+  }
+  function repoOnConnectStatus(repo, connectStatus) {
+    repoUpdateInfo(repo, "connected", connectStatus);
+    if (connectStatus === false) {
+      repoRunOnDisconnectEvents(repo);
+    }
+  }
+  function repoOnServerInfoUpdate(repo, updates) {
+    each(updates, (key, value) => {
+      repoUpdateInfo(repo, key, value);
+    });
+  }
+  function repoUpdateInfo(repo, pathString, value) {
+    const path = new Path("/.info/" + pathString);
+    const newNode = nodeFromJSON(value);
+    repo.infoData_.updateSnapshot(path, newNode);
+    const events = syncTreeApplyServerOverwrite(repo.infoSyncTree_, path, newNode);
+    eventQueueRaiseEventsForChangedPath(repo.eventQueue_, path, events);
+  }
+  function repoGetNextWriteId(repo) {
+    return repo.nextWriteId_++;
+  }
+  function repoGetValue(repo, query, eventRegistration) {
+    const cached = syncTreeGetServerValue(repo.serverSyncTree_, query);
+    if (cached != null) {
+      return Promise.resolve(cached);
+    }
+    return repo.server_.get(query).then((payload) => {
+      const node = nodeFromJSON(payload).withIndex(query._queryParams.getIndex());
+      syncTreeAddEventRegistration(repo.serverSyncTree_, query, eventRegistration, true);
+      let events;
+      if (query._queryParams.loadsAllData()) {
+        events = syncTreeApplyServerOverwrite(repo.serverSyncTree_, query._path, node);
+      } else {
+        const tag = syncTreeTagForQuery(repo.serverSyncTree_, query);
+        events = syncTreeApplyTaggedQueryOverwrite(repo.serverSyncTree_, query._path, node, tag);
+      }
+      eventQueueRaiseEventsForChangedPath(repo.eventQueue_, query._path, events);
+      syncTreeRemoveEventRegistration(repo.serverSyncTree_, query, eventRegistration, null, true);
+      return node;
+    }, (err) => {
+      repoLog(repo, "get for query " + stringify2(query) + " failed: " + err);
+      return Promise.reject(new Error(err));
+    });
+  }
+  function repoSetWithPriority(repo, path, newVal, newPriority, onComplete) {
+    repoLog(repo, "set", {
+      path: path.toString(),
+      value: newVal,
+      priority: newPriority
+    });
+    const serverValues = repoGenerateServerValues(repo);
+    const newNodeUnresolved = nodeFromJSON(newVal, newPriority);
+    const existing = syncTreeCalcCompleteEventCache(repo.serverSyncTree_, path);
+    const newNode = resolveDeferredValueSnapshot(newNodeUnresolved, existing, serverValues);
+    const writeId = repoGetNextWriteId(repo);
+    const events = syncTreeApplyUserOverwrite(repo.serverSyncTree_, path, newNode, writeId, true);
+    eventQueueQueueEvents(repo.eventQueue_, events);
+    repo.server_.put(path.toString(), newNodeUnresolved.val(true), (status, errorReason) => {
+      const success = status === "ok";
+      if (!success) {
+        warn("set at " + path + " failed: " + status);
+      }
+      const clearEvents = syncTreeAckUserWrite(repo.serverSyncTree_, writeId, !success);
+      eventQueueRaiseEventsForChangedPath(repo.eventQueue_, path, clearEvents);
+      repoCallOnCompleteCallback(repo, onComplete, status, errorReason);
+    });
+    const affectedPath = repoAbortTransactions(repo, path);
+    repoRerunTransactions(repo, affectedPath);
+    eventQueueRaiseEventsForChangedPath(repo.eventQueue_, affectedPath, []);
+  }
+  function repoUpdate(repo, path, childrenToMerge, onComplete) {
+    repoLog(repo, "update", { path: path.toString(), value: childrenToMerge });
+    let empty = true;
+    const serverValues = repoGenerateServerValues(repo);
+    const changedChildren = {};
+    each(childrenToMerge, (changedKey, changedValue) => {
+      empty = false;
+      changedChildren[changedKey] = resolveDeferredValueTree(pathChild(path, changedKey), nodeFromJSON(changedValue), repo.serverSyncTree_, serverValues);
+    });
+    if (!empty) {
+      const writeId = repoGetNextWriteId(repo);
+      const events = syncTreeApplyUserMerge(repo.serverSyncTree_, path, changedChildren, writeId);
+      eventQueueQueueEvents(repo.eventQueue_, events);
+      repo.server_.merge(path.toString(), childrenToMerge, (status, errorReason) => {
+        const success = status === "ok";
+        if (!success) {
+          warn("update at " + path + " failed: " + status);
+        }
+        const clearEvents = syncTreeAckUserWrite(repo.serverSyncTree_, writeId, !success);
+        const affectedPath = clearEvents.length > 0 ? repoRerunTransactions(repo, path) : path;
+        eventQueueRaiseEventsForChangedPath(repo.eventQueue_, affectedPath, clearEvents);
+        repoCallOnCompleteCallback(repo, onComplete, status, errorReason);
+      });
+      each(childrenToMerge, (changedPath) => {
+        const affectedPath = repoAbortTransactions(repo, pathChild(path, changedPath));
+        repoRerunTransactions(repo, affectedPath);
+      });
+      eventQueueRaiseEventsForChangedPath(repo.eventQueue_, path, []);
+    } else {
+      log("update() called with empty data.  Don't do anything.");
+      repoCallOnCompleteCallback(repo, onComplete, "ok", void 0);
+    }
+  }
+  function repoRunOnDisconnectEvents(repo) {
+    repoLog(repo, "onDisconnectEvents");
+    const serverValues = repoGenerateServerValues(repo);
+    const resolvedOnDisconnectTree = newSparseSnapshotTree();
+    sparseSnapshotTreeForEachTree(repo.onDisconnect_, newEmptyPath(), (path, node) => {
+      const resolved = resolveDeferredValueTree(path, node, repo.serverSyncTree_, serverValues);
+      sparseSnapshotTreeRemember(resolvedOnDisconnectTree, path, resolved);
+    });
+    let events = [];
+    sparseSnapshotTreeForEachTree(resolvedOnDisconnectTree, newEmptyPath(), (path, snap) => {
+      events = events.concat(syncTreeApplyServerOverwrite(repo.serverSyncTree_, path, snap));
+      const affectedPath = repoAbortTransactions(repo, path);
+      repoRerunTransactions(repo, affectedPath);
+    });
+    repo.onDisconnect_ = newSparseSnapshotTree();
+    eventQueueRaiseEventsForChangedPath(repo.eventQueue_, newEmptyPath(), events);
+  }
+  function repoInterrupt(repo) {
+    if (repo.persistentConnection_) {
+      repo.persistentConnection_.interrupt(INTERRUPT_REASON);
+    }
+  }
+  function repoLog(repo, ...varArgs) {
+    let prefix = "";
+    if (repo.persistentConnection_) {
+      prefix = repo.persistentConnection_.id + ":";
+    }
+    log(prefix, ...varArgs);
+  }
+  function repoCallOnCompleteCallback(repo, callback, status, errorReason) {
+    if (callback) {
+      exceptionGuard(() => {
+        if (status === "ok") {
+          callback(null);
+        } else {
+          const code = (status || "error").toUpperCase();
+          let message = code;
+          if (errorReason) {
+            message += ": " + errorReason;
+          }
+          const error2 = new Error(message);
+          error2.code = code;
+          callback(error2);
+        }
+      });
+    }
+  }
+  function repoGetLatestState(repo, path, excludeSets) {
+    return syncTreeCalcCompleteEventCache(repo.serverSyncTree_, path, excludeSets) || ChildrenNode.EMPTY_NODE;
+  }
+  function repoSendReadyTransactions(repo, node = repo.transactionQueueTree_) {
+    if (!node) {
+      repoPruneCompletedTransactionsBelowNode(repo, node);
+    }
+    if (treeGetValue(node)) {
+      const queue = repoBuildTransactionQueue(repo, node);
+      assert(queue.length > 0, "Sending zero length transaction queue");
+      const allRun = queue.every((transaction) => transaction.status === 0);
+      if (allRun) {
+        repoSendTransactionQueue(repo, treeGetPath(node), queue);
+      }
+    } else if (treeHasChildren(node)) {
+      treeForEachChild(node, (childNode) => {
+        repoSendReadyTransactions(repo, childNode);
+      });
+    }
+  }
+  function repoSendTransactionQueue(repo, path, queue) {
+    const setsToIgnore = queue.map((txn) => {
+      return txn.currentWriteId;
+    });
+    const latestState = repoGetLatestState(repo, path, setsToIgnore);
+    let snapToSend = latestState;
+    const latestHash = latestState.hash();
+    for (let i3 = 0; i3 < queue.length; i3++) {
+      const txn = queue[i3];
+      assert(txn.status === 0, "tryToSendTransactionQueue_: items in queue should all be run.");
+      txn.status = 1;
+      txn.retryCount++;
+      const relativePath = newRelativePath(path, txn.path);
+      snapToSend = snapToSend.updateChild(relativePath, txn.currentOutputSnapshotRaw);
+    }
+    const dataToSend = snapToSend.val(true);
+    const pathToSend = path;
+    repo.server_.put(pathToSend.toString(), dataToSend, (status) => {
+      repoLog(repo, "transaction put response", {
+        path: pathToSend.toString(),
+        status
+      });
+      let events = [];
+      if (status === "ok") {
+        const callbacks = [];
+        for (let i3 = 0; i3 < queue.length; i3++) {
+          queue[i3].status = 2;
+          events = events.concat(syncTreeAckUserWrite(repo.serverSyncTree_, queue[i3].currentWriteId));
+          if (queue[i3].onComplete) {
+            callbacks.push(() => queue[i3].onComplete(null, true, queue[i3].currentOutputSnapshotResolved));
+          }
+          queue[i3].unwatcher();
+        }
+        repoPruneCompletedTransactionsBelowNode(repo, treeSubTree(repo.transactionQueueTree_, path));
+        repoSendReadyTransactions(repo, repo.transactionQueueTree_);
+        eventQueueRaiseEventsForChangedPath(repo.eventQueue_, path, events);
+        for (let i3 = 0; i3 < callbacks.length; i3++) {
+          exceptionGuard(callbacks[i3]);
+        }
+      } else {
+        if (status === "datastale") {
+          for (let i3 = 0; i3 < queue.length; i3++) {
+            if (queue[i3].status === 3) {
+              queue[i3].status = 4;
+            } else {
+              queue[i3].status = 0;
+            }
+          }
+        } else {
+          warn("transaction at " + pathToSend.toString() + " failed: " + status);
+          for (let i3 = 0; i3 < queue.length; i3++) {
+            queue[i3].status = 4;
+            queue[i3].abortReason = status;
+          }
+        }
+        repoRerunTransactions(repo, path);
+      }
+    }, latestHash);
+  }
+  function repoRerunTransactions(repo, changedPath) {
+    const rootMostTransactionNode = repoGetAncestorTransactionNode(repo, changedPath);
+    const path = treeGetPath(rootMostTransactionNode);
+    const queue = repoBuildTransactionQueue(repo, rootMostTransactionNode);
+    repoRerunTransactionQueue(repo, queue, path);
+    return path;
+  }
+  function repoRerunTransactionQueue(repo, queue, path) {
+    if (queue.length === 0) {
+      return;
+    }
+    const callbacks = [];
+    let events = [];
+    const txnsToRerun = queue.filter((q3) => {
+      return q3.status === 0;
+    });
+    const setsToIgnore = txnsToRerun.map((q3) => {
+      return q3.currentWriteId;
+    });
+    for (let i3 = 0; i3 < queue.length; i3++) {
+      const transaction = queue[i3];
+      const relativePath = newRelativePath(path, transaction.path);
+      let abortTransaction = false, abortReason;
+      assert(relativePath !== null, "rerunTransactionsUnderNode_: relativePath should not be null.");
+      if (transaction.status === 4) {
+        abortTransaction = true;
+        abortReason = transaction.abortReason;
+        events = events.concat(syncTreeAckUserWrite(repo.serverSyncTree_, transaction.currentWriteId, true));
+      } else if (transaction.status === 0) {
+        if (transaction.retryCount >= MAX_TRANSACTION_RETRIES) {
+          abortTransaction = true;
+          abortReason = "maxretry";
+          events = events.concat(syncTreeAckUserWrite(repo.serverSyncTree_, transaction.currentWriteId, true));
+        } else {
+          const currentNode = repoGetLatestState(repo, transaction.path, setsToIgnore);
+          transaction.currentInputSnapshot = currentNode;
+          const newData = queue[i3].update(currentNode.val());
+          if (newData !== void 0) {
+            validateFirebaseData("transaction failed: Data returned ", newData, transaction.path);
+            let newDataNode = nodeFromJSON(newData);
+            const hasExplicitPriority = typeof newData === "object" && newData != null && contains(newData, ".priority");
+            if (!hasExplicitPriority) {
+              newDataNode = newDataNode.updatePriority(currentNode.getPriority());
+            }
+            const oldWriteId = transaction.currentWriteId;
+            const serverValues = repoGenerateServerValues(repo);
+            const newNodeResolved = resolveDeferredValueSnapshot(newDataNode, currentNode, serverValues);
+            transaction.currentOutputSnapshotRaw = newDataNode;
+            transaction.currentOutputSnapshotResolved = newNodeResolved;
+            transaction.currentWriteId = repoGetNextWriteId(repo);
+            setsToIgnore.splice(setsToIgnore.indexOf(oldWriteId), 1);
+            events = events.concat(syncTreeApplyUserOverwrite(repo.serverSyncTree_, transaction.path, newNodeResolved, transaction.currentWriteId, transaction.applyLocally));
+            events = events.concat(syncTreeAckUserWrite(repo.serverSyncTree_, oldWriteId, true));
+          } else {
+            abortTransaction = true;
+            abortReason = "nodata";
+            events = events.concat(syncTreeAckUserWrite(repo.serverSyncTree_, transaction.currentWriteId, true));
+          }
+        }
+      }
+      eventQueueRaiseEventsForChangedPath(repo.eventQueue_, path, events);
+      events = [];
+      if (abortTransaction) {
+        queue[i3].status = 2;
+        (function(unwatcher) {
+          setTimeout(unwatcher, Math.floor(0));
+        })(queue[i3].unwatcher);
+        if (queue[i3].onComplete) {
+          if (abortReason === "nodata") {
+            callbacks.push(() => queue[i3].onComplete(null, false, queue[i3].currentInputSnapshot));
+          } else {
+            callbacks.push(() => queue[i3].onComplete(new Error(abortReason), false, null));
+          }
+        }
+      }
+    }
+    repoPruneCompletedTransactionsBelowNode(repo, repo.transactionQueueTree_);
+    for (let i3 = 0; i3 < callbacks.length; i3++) {
+      exceptionGuard(callbacks[i3]);
+    }
+    repoSendReadyTransactions(repo, repo.transactionQueueTree_);
+  }
+  function repoGetAncestorTransactionNode(repo, path) {
+    let front;
+    let transactionNode = repo.transactionQueueTree_;
+    front = pathGetFront(path);
+    while (front !== null && treeGetValue(transactionNode) === void 0) {
+      transactionNode = treeSubTree(transactionNode, front);
+      path = pathPopFront(path);
+      front = pathGetFront(path);
+    }
+    return transactionNode;
+  }
+  function repoBuildTransactionQueue(repo, transactionNode) {
+    const transactionQueue = [];
+    repoAggregateTransactionQueuesForNode(repo, transactionNode, transactionQueue);
+    transactionQueue.sort((a3, b3) => a3.order - b3.order);
+    return transactionQueue;
+  }
+  function repoAggregateTransactionQueuesForNode(repo, node, queue) {
+    const nodeQueue = treeGetValue(node);
+    if (nodeQueue) {
+      for (let i3 = 0; i3 < nodeQueue.length; i3++) {
+        queue.push(nodeQueue[i3]);
+      }
+    }
+    treeForEachChild(node, (child2) => {
+      repoAggregateTransactionQueuesForNode(repo, child2, queue);
+    });
+  }
+  function repoPruneCompletedTransactionsBelowNode(repo, node) {
+    const queue = treeGetValue(node);
+    if (queue) {
+      let to = 0;
+      for (let from = 0; from < queue.length; from++) {
+        if (queue[from].status !== 2) {
+          queue[to] = queue[from];
+          to++;
+        }
+      }
+      queue.length = to;
+      treeSetValue(node, queue.length > 0 ? queue : void 0);
+    }
+    treeForEachChild(node, (childNode) => {
+      repoPruneCompletedTransactionsBelowNode(repo, childNode);
+    });
+  }
+  function repoAbortTransactions(repo, path) {
+    const affectedPath = treeGetPath(repoGetAncestorTransactionNode(repo, path));
+    const transactionNode = treeSubTree(repo.transactionQueueTree_, path);
+    treeForEachAncestor(transactionNode, (node) => {
+      repoAbortTransactionsOnNode(repo, node);
+    });
+    repoAbortTransactionsOnNode(repo, transactionNode);
+    treeForEachDescendant(transactionNode, (node) => {
+      repoAbortTransactionsOnNode(repo, node);
+    });
+    return affectedPath;
+  }
+  function repoAbortTransactionsOnNode(repo, node) {
+    const queue = treeGetValue(node);
+    if (queue) {
+      const callbacks = [];
+      let events = [];
+      let lastSent = -1;
+      for (let i3 = 0; i3 < queue.length; i3++) {
+        if (queue[i3].status === 3)
+          ;
+        else if (queue[i3].status === 1) {
+          assert(lastSent === i3 - 1, "All SENT items should be at beginning of queue.");
+          lastSent = i3;
+          queue[i3].status = 3;
+          queue[i3].abortReason = "set";
+        } else {
+          assert(queue[i3].status === 0, "Unexpected transaction status in abort");
+          queue[i3].unwatcher();
+          events = events.concat(syncTreeAckUserWrite(repo.serverSyncTree_, queue[i3].currentWriteId, true));
+          if (queue[i3].onComplete) {
+            callbacks.push(queue[i3].onComplete.bind(null, new Error("set"), false, null));
+          }
+        }
+      }
+      if (lastSent === -1) {
+        treeSetValue(node, void 0);
+      } else {
+        queue.length = lastSent + 1;
+      }
+      eventQueueRaiseEventsForChangedPath(repo.eventQueue_, treeGetPath(node), events);
+      for (let i3 = 0; i3 < callbacks.length; i3++) {
+        exceptionGuard(callbacks[i3]);
+      }
+    }
+  }
+  function decodePath(pathString) {
+    let pathStringDecoded = "";
+    const pieces = pathString.split("/");
+    for (let i3 = 0; i3 < pieces.length; i3++) {
+      if (pieces[i3].length > 0) {
+        let piece = pieces[i3];
+        try {
+          piece = decodeURIComponent(piece.replace(/\+/g, " "));
+        } catch (e2) {
+        }
+        pathStringDecoded += "/" + piece;
+      }
+    }
+    return pathStringDecoded;
+  }
+  function decodeQuery(queryString) {
+    const results = {};
+    if (queryString.charAt(0) === "?") {
+      queryString = queryString.substring(1);
+    }
+    for (const segment of queryString.split("&")) {
+      if (segment.length === 0) {
+        continue;
+      }
+      const kv = segment.split("=");
+      if (kv.length === 2) {
+        results[decodeURIComponent(kv[0])] = decodeURIComponent(kv[1]);
+      } else {
+        warn(`Invalid query segment '${segment}' in query '${queryString}'`);
+      }
+    }
+    return results;
+  }
+  var parseRepoInfo = function(dataURL, nodeAdmin) {
+    const parsedUrl = parseDatabaseURL(dataURL), namespace = parsedUrl.namespace;
+    if (parsedUrl.domain === "firebase.com") {
+      fatal(parsedUrl.host + " is no longer supported. Please use <YOUR FIREBASE>.firebaseio.com instead");
+    }
+    if ((!namespace || namespace === "undefined") && parsedUrl.domain !== "localhost") {
+      fatal("Cannot parse Firebase url. Please use https://<YOUR FIREBASE>.firebaseio.com");
+    }
+    if (!parsedUrl.secure) {
+      warnIfPageIsSecure();
+    }
+    const webSocketOnly = parsedUrl.scheme === "ws" || parsedUrl.scheme === "wss";
+    return {
+      repoInfo: new RepoInfo(
+        parsedUrl.host,
+        parsedUrl.secure,
+        namespace,
+        webSocketOnly,
+        nodeAdmin,
+        "",
+        namespace !== parsedUrl.subdomain
+      ),
+      path: new Path(parsedUrl.pathString)
+    };
+  };
+  var parseDatabaseURL = function(dataURL) {
+    let host = "", domain = "", subdomain = "", pathString = "", namespace = "";
+    let secure = true, scheme = "https", port = 443;
+    if (typeof dataURL === "string") {
+      let colonInd = dataURL.indexOf("//");
+      if (colonInd >= 0) {
+        scheme = dataURL.substring(0, colonInd - 1);
+        dataURL = dataURL.substring(colonInd + 2);
+      }
+      let slashInd = dataURL.indexOf("/");
+      if (slashInd === -1) {
+        slashInd = dataURL.length;
+      }
+      let questionMarkInd = dataURL.indexOf("?");
+      if (questionMarkInd === -1) {
+        questionMarkInd = dataURL.length;
+      }
+      host = dataURL.substring(0, Math.min(slashInd, questionMarkInd));
+      if (slashInd < questionMarkInd) {
+        pathString = decodePath(dataURL.substring(slashInd, questionMarkInd));
+      }
+      const queryParams = decodeQuery(dataURL.substring(Math.min(dataURL.length, questionMarkInd)));
+      colonInd = host.indexOf(":");
+      if (colonInd >= 0) {
+        secure = scheme === "https" || scheme === "wss";
+        port = parseInt(host.substring(colonInd + 1), 10);
+      } else {
+        colonInd = host.length;
+      }
+      const hostWithoutPort = host.slice(0, colonInd);
+      if (hostWithoutPort.toLowerCase() === "localhost") {
+        domain = "localhost";
+      } else if (hostWithoutPort.split(".").length <= 2) {
+        domain = hostWithoutPort;
+      } else {
+        const dotInd = host.indexOf(".");
+        subdomain = host.substring(0, dotInd).toLowerCase();
+        domain = host.substring(dotInd + 1);
+        namespace = subdomain;
+      }
+      if ("ns" in queryParams) {
+        namespace = queryParams["ns"];
+      }
+    }
+    return {
+      host,
+      port,
+      domain,
+      subdomain,
+      secure,
+      scheme,
+      pathString,
+      namespace
+    };
+  };
+  var DataEvent = class {
+    constructor(eventType, eventRegistration, snapshot, prevName) {
+      this.eventType = eventType;
+      this.eventRegistration = eventRegistration;
+      this.snapshot = snapshot;
+      this.prevName = prevName;
+    }
+    getPath() {
+      const ref2 = this.snapshot.ref;
+      if (this.eventType === "value") {
+        return ref2._path;
+      } else {
+        return ref2.parent._path;
+      }
+    }
+    getEventType() {
+      return this.eventType;
+    }
+    getEventRunner() {
+      return this.eventRegistration.getEventRunner(this);
+    }
+    toString() {
+      return this.getPath().toString() + ":" + this.eventType + ":" + stringify2(this.snapshot.exportVal());
+    }
+  };
+  var CancelEvent = class {
+    constructor(eventRegistration, error2, path) {
+      this.eventRegistration = eventRegistration;
+      this.error = error2;
+      this.path = path;
+    }
+    getPath() {
+      return this.path;
+    }
+    getEventType() {
+      return "cancel";
+    }
+    getEventRunner() {
+      return this.eventRegistration.getEventRunner(this);
+    }
+    toString() {
+      return this.path.toString() + ":cancel";
+    }
+  };
+  var CallbackContext = class {
+    constructor(snapshotCallback, cancelCallback) {
+      this.snapshotCallback = snapshotCallback;
+      this.cancelCallback = cancelCallback;
+    }
+    onValue(expDataSnapshot, previousChildName) {
+      this.snapshotCallback.call(null, expDataSnapshot, previousChildName);
+    }
+    onCancel(error2) {
+      assert(this.hasCancelCallback, "Raising a cancel event on a listener with no cancel callback");
+      return this.cancelCallback.call(null, error2);
+    }
+    get hasCancelCallback() {
+      return !!this.cancelCallback;
+    }
+    matches(other) {
+      return this.snapshotCallback === other.snapshotCallback || this.snapshotCallback.userCallback !== void 0 && this.snapshotCallback.userCallback === other.snapshotCallback.userCallback && this.snapshotCallback.context === other.snapshotCallback.context;
+    }
+  };
+  var QueryImpl = class {
+    constructor(_repo, _path, _queryParams, _orderByCalled) {
+      this._repo = _repo;
+      this._path = _path;
+      this._queryParams = _queryParams;
+      this._orderByCalled = _orderByCalled;
+    }
+    get key() {
+      if (pathIsEmpty(this._path)) {
+        return null;
+      } else {
+        return pathGetBack(this._path);
+      }
+    }
+    get ref() {
+      return new ReferenceImpl(this._repo, this._path);
+    }
+    get _queryIdentifier() {
+      const obj = queryParamsGetQueryObject(this._queryParams);
+      const id = ObjectToUniqueKey(obj);
+      return id === "{}" ? "default" : id;
+    }
+    get _queryObject() {
+      return queryParamsGetQueryObject(this._queryParams);
+    }
+    isEqual(other) {
+      other = getModularInstance(other);
+      if (!(other instanceof QueryImpl)) {
+        return false;
+      }
+      const sameRepo = this._repo === other._repo;
+      const samePath = pathEquals(this._path, other._path);
+      const sameQueryIdentifier = this._queryIdentifier === other._queryIdentifier;
+      return sameRepo && samePath && sameQueryIdentifier;
+    }
+    toJSON() {
+      return this.toString();
+    }
+    toString() {
+      return this._repo.toString() + pathToUrlEncodedString(this._path);
+    }
+  };
+  var ReferenceImpl = class extends QueryImpl {
+    constructor(repo, path) {
+      super(repo, path, new QueryParams(), false);
+    }
+    get parent() {
+      const parentPath = pathParent(this._path);
+      return parentPath === null ? null : new ReferenceImpl(this._repo, parentPath);
+    }
+    get root() {
+      let ref2 = this;
+      while (ref2.parent !== null) {
+        ref2 = ref2.parent;
+      }
+      return ref2;
+    }
+  };
+  var DataSnapshot = class {
+    constructor(_node, ref2, _index) {
+      this._node = _node;
+      this.ref = ref2;
+      this._index = _index;
+    }
+    get priority() {
+      return this._node.getPriority().val();
+    }
+    get key() {
+      return this.ref.key;
+    }
+    get size() {
+      return this._node.numChildren();
+    }
+    child(path) {
+      const childPath = new Path(path);
+      const childRef = child(this.ref, path);
+      return new DataSnapshot(this._node.getChild(childPath), childRef, PRIORITY_INDEX);
+    }
+    exists() {
+      return !this._node.isEmpty();
+    }
+    exportVal() {
+      return this._node.val(true);
+    }
+    forEach(action) {
+      if (this._node.isLeafNode()) {
+        return false;
+      }
+      const childrenNode = this._node;
+      return !!childrenNode.forEachChild(this._index, (key, node) => {
+        return action(new DataSnapshot(node, child(this.ref, key), PRIORITY_INDEX));
+      });
+    }
+    hasChild(path) {
+      const childPath = new Path(path);
+      return !this._node.getChild(childPath).isEmpty();
+    }
+    hasChildren() {
+      if (this._node.isLeafNode()) {
+        return false;
+      } else {
+        return !this._node.isEmpty();
+      }
+    }
+    toJSON() {
+      return this.exportVal();
+    }
+    val() {
+      return this._node.val();
+    }
+  };
+  function ref(db2, path) {
+    db2 = getModularInstance(db2);
+    db2._checkNotDeleted("ref");
+    return path !== void 0 ? child(db2._root, path) : db2._root;
+  }
+  function child(parent, path) {
+    parent = getModularInstance(parent);
+    if (pathGetFront(parent._path) === null) {
+      validateRootPathString("child", "path", path, false);
+    } else {
+      validatePathString("child", "path", path, false);
+    }
+    return new ReferenceImpl(parent._repo, pathChild(parent._path, path));
+  }
+  function remove(ref2) {
+    validateWritablePath("remove", ref2._path);
+    return set(ref2, null);
+  }
+  function set(ref2, value) {
+    ref2 = getModularInstance(ref2);
+    validateWritablePath("set", ref2._path);
+    validateFirebaseDataArg("set", value, ref2._path, false);
+    const deferred = new Deferred();
+    repoSetWithPriority(
+      ref2._repo,
+      ref2._path,
+      value,
+      null,
+      deferred.wrapCallback(() => {
+      })
+    );
+    return deferred.promise;
+  }
+  function update(ref2, values) {
+    validateFirebaseMergeDataArg("update", values, ref2._path, false);
+    const deferred = new Deferred();
+    repoUpdate(ref2._repo, ref2._path, values, deferred.wrapCallback(() => {
+    }));
+    return deferred.promise;
+  }
+  function get(query) {
+    query = getModularInstance(query);
+    const callbackContext = new CallbackContext(() => {
+    });
+    const container = new ValueEventRegistration(callbackContext);
+    return repoGetValue(query._repo, query, container).then((node) => {
+      return new DataSnapshot(node, new ReferenceImpl(query._repo, query._path), query._queryParams.getIndex());
+    });
+  }
+  var ValueEventRegistration = class {
+    constructor(callbackContext) {
+      this.callbackContext = callbackContext;
+    }
+    respondsTo(eventType) {
+      return eventType === "value";
+    }
+    createEvent(change, query) {
+      const index = query._queryParams.getIndex();
+      return new DataEvent("value", this, new DataSnapshot(change.snapshotNode, new ReferenceImpl(query._repo, query._path), index));
+    }
+    getEventRunner(eventData) {
+      if (eventData.getEventType() === "cancel") {
+        return () => this.callbackContext.onCancel(eventData.error);
+      } else {
+        return () => this.callbackContext.onValue(eventData.snapshot, null);
+      }
+    }
+    createCancelEvent(error2, path) {
+      if (this.callbackContext.hasCancelCallback) {
+        return new CancelEvent(this, error2, path);
+      } else {
+        return null;
+      }
+    }
+    matches(other) {
+      if (!(other instanceof ValueEventRegistration)) {
+        return false;
+      } else if (!other.callbackContext || !this.callbackContext) {
+        return true;
+      } else {
+        return other.callbackContext.matches(this.callbackContext);
+      }
+    }
+    hasAnyCallback() {
+      return this.callbackContext !== null;
+    }
+  };
+  syncPointSetReferenceConstructor(ReferenceImpl);
+  syncTreeSetReferenceConstructor(ReferenceImpl);
+  var FIREBASE_DATABASE_EMULATOR_HOST_VAR = "FIREBASE_DATABASE_EMULATOR_HOST";
+  var repos = {};
+  var useRestClient = false;
+  function repoManagerApplyEmulatorSettings(repo, host, port, tokenProvider) {
+    repo.repoInfo_ = new RepoInfo(
+      `${host}:${port}`,
+      false,
+      repo.repoInfo_.namespace,
+      repo.repoInfo_.webSocketOnly,
+      repo.repoInfo_.nodeAdmin,
+      repo.repoInfo_.persistenceKey,
+      repo.repoInfo_.includeNamespaceInQueryParams
+    );
+    if (tokenProvider) {
+      repo.authTokenProvider_ = tokenProvider;
+    }
+  }
+  function repoManagerDatabaseFromApp(app2, authProvider, appCheckProvider, url, nodeAdmin) {
+    let dbUrl = url || app2.options.databaseURL;
+    if (dbUrl === void 0) {
+      if (!app2.options.projectId) {
+        fatal("Can't determine Firebase Database URL. Be sure to include  a Project ID when calling firebase.initializeApp().");
+      }
+      log("Using default host for project ", app2.options.projectId);
+      dbUrl = `${app2.options.projectId}-default-rtdb.firebaseio.com`;
+    }
+    let parsedUrl = parseRepoInfo(dbUrl, nodeAdmin);
+    let repoInfo = parsedUrl.repoInfo;
+    let isEmulator;
+    let dbEmulatorHost = void 0;
+    if (typeof process !== "undefined" && process.env) {
+      dbEmulatorHost = process.env[FIREBASE_DATABASE_EMULATOR_HOST_VAR];
+    }
+    if (dbEmulatorHost) {
+      isEmulator = true;
+      dbUrl = `http://${dbEmulatorHost}?ns=${repoInfo.namespace}`;
+      parsedUrl = parseRepoInfo(dbUrl, nodeAdmin);
+      repoInfo = parsedUrl.repoInfo;
+    } else {
+      isEmulator = !parsedUrl.repoInfo.secure;
+    }
+    const authTokenProvider = nodeAdmin && isEmulator ? new EmulatorTokenProvider(EmulatorTokenProvider.OWNER) : new FirebaseAuthTokenProvider(app2.name, app2.options, authProvider);
+    validateUrl("Invalid Firebase Database URL", parsedUrl);
+    if (!pathIsEmpty(parsedUrl.path)) {
+      fatal("Database URL must point to the root of a Firebase Database (not including a child path).");
+    }
+    const repo = repoManagerCreateRepo(repoInfo, app2, authTokenProvider, new AppCheckTokenProvider(app2.name, appCheckProvider));
+    return new Database(repo, app2);
+  }
+  function repoManagerDeleteRepo(repo, appName) {
+    const appRepos = repos[appName];
+    if (!appRepos || appRepos[repo.key] !== repo) {
+      fatal(`Database ${appName}(${repo.repoInfo_}) has already been deleted.`);
+    }
+    repoInterrupt(repo);
+    delete appRepos[repo.key];
+  }
+  function repoManagerCreateRepo(repoInfo, app2, authTokenProvider, appCheckProvider) {
+    let appRepos = repos[app2.name];
+    if (!appRepos) {
+      appRepos = {};
+      repos[app2.name] = appRepos;
+    }
+    let repo = appRepos[repoInfo.toURLString()];
+    if (repo) {
+      fatal("Database initialized multiple times. Please make sure the format of the database URL matches with each database() call.");
+    }
+    repo = new Repo(repoInfo, useRestClient, authTokenProvider, appCheckProvider);
+    appRepos[repoInfo.toURLString()] = repo;
+    return repo;
+  }
+  var Database = class {
+    constructor(_repoInternal, app2) {
+      this._repoInternal = _repoInternal;
+      this.app = app2;
+      this["type"] = "database";
+      this._instanceStarted = false;
+    }
+    get _repo() {
+      if (!this._instanceStarted) {
+        repoStart(this._repoInternal, this.app.options.appId, this.app.options["databaseAuthVariableOverride"]);
+        this._instanceStarted = true;
+      }
+      return this._repoInternal;
+    }
+    get _root() {
+      if (!this._rootInternal) {
+        this._rootInternal = new ReferenceImpl(this._repo, newEmptyPath());
+      }
+      return this._rootInternal;
+    }
+    _delete() {
+      if (this._rootInternal !== null) {
+        repoManagerDeleteRepo(this._repo, this.app.name);
+        this._repoInternal = null;
+        this._rootInternal = null;
+      }
+      return Promise.resolve();
+    }
+    _checkNotDeleted(apiName) {
+      if (this._rootInternal === null) {
+        fatal("Cannot call " + apiName + " on a deleted database.");
+      }
+    }
+  };
+  function getDatabase(app2 = getApp(), url) {
+    const db2 = _getProvider(app2, "database").getImmediate({
+      identifier: url
+    });
+    const emulator = getDefaultEmulatorHostnameAndPort("database");
+    if (emulator) {
+      connectDatabaseEmulator(db2, ...emulator);
+    }
+    return db2;
+  }
+  function connectDatabaseEmulator(db2, host, port, options = {}) {
+    db2 = getModularInstance(db2);
+    db2._checkNotDeleted("useEmulator");
+    if (db2._instanceStarted) {
+      fatal("Cannot call useEmulator() after instance has already been initialized.");
+    }
+    const repo = db2._repoInternal;
+    let tokenProvider = void 0;
+    if (repo.repoInfo_.nodeAdmin) {
+      if (options.mockUserToken) {
+        fatal('mockUserToken is not supported by the Admin SDK. For client access with mock users, please use the "firebase" package instead of "firebase-admin".');
+      }
+      tokenProvider = new EmulatorTokenProvider(EmulatorTokenProvider.OWNER);
+    } else if (options.mockUserToken) {
+      const token = typeof options.mockUserToken === "string" ? options.mockUserToken : createMockUserToken(options.mockUserToken, db2.app.options.projectId);
+      tokenProvider = new EmulatorTokenProvider(token);
+    }
+    repoManagerApplyEmulatorSettings(repo, host, port, tokenProvider);
+  }
+  function registerDatabase(variant) {
+    setSDKVersion(SDK_VERSION);
+    _registerComponent(new Component("database", (container, { instanceIdentifier: url }) => {
+      const app2 = container.getProvider("app").getImmediate();
+      const authProvider = container.getProvider("auth-internal");
+      const appCheckProvider = container.getProvider("app-check-internal");
+      return repoManagerDatabaseFromApp(app2, authProvider, appCheckProvider, url);
+    }, "PUBLIC").setMultipleInstances(true));
+    registerVersion(name3, version4, variant);
+    registerVersion(name3, version4, "esm2017");
+  }
+  function increment(delta) {
+    return {
+      ".sv": {
+        "increment": delta
+      }
+    };
+  }
+  PersistentConnection.prototype.simpleListen = function(pathString, onComplete) {
+    this.sendRequest("q", { p: pathString }, onComplete);
+  };
+  PersistentConnection.prototype.echo = function(data, onEcho) {
+    this.sendRequest("echo", { d: data }, onEcho);
+  };
+  registerDatabase();
+
   // ../../node_modules/@firebase/firestore/dist/lite/index.browser.esm2017.js
-  var d2 = class {
+  var d = class {
     constructor(t3) {
       this.uid = t3;
     }
@@ -21568,28 +19911,28 @@
       return t3.uid === this.uid;
     }
   };
-  d2.UNAUTHENTICATED = new d2(null), d2.GOOGLE_CREDENTIALS = new d2("google-credentials-uid"), d2.FIRST_PARTY = new d2("first-party-uid"), d2.MOCK_USER = new d2("mock-user");
-  var w2 = "9.14.0";
-  var m2 = new Logger("@firebase/firestore");
-  function y2(t3, ...e2) {
-    if (m2.logLevel <= LogLevel.DEBUG) {
-      const n3 = e2.map(v2);
-      m2.debug(`Firestore (${w2}): ${t3}`, ...n3);
+  d.UNAUTHENTICATED = new d(null), d.GOOGLE_CREDENTIALS = new d("google-credentials-uid"), d.FIRST_PARTY = new d("first-party-uid"), d.MOCK_USER = new d("mock-user");
+  var w = "9.14.0";
+  var m = new Logger("@firebase/firestore");
+  function y(t3, ...e2) {
+    if (m.logLevel <= LogLevel.DEBUG) {
+      const n3 = e2.map(v);
+      m.debug(`Firestore (${w}): ${t3}`, ...n3);
     }
   }
-  function _2(t3, ...e2) {
-    if (m2.logLevel <= LogLevel.ERROR) {
-      const n3 = e2.map(v2);
-      m2.error(`Firestore (${w2}): ${t3}`, ...n3);
+  function _(t3, ...e2) {
+    if (m.logLevel <= LogLevel.ERROR) {
+      const n3 = e2.map(v);
+      m.error(`Firestore (${w}): ${t3}`, ...n3);
     }
   }
-  function g2(t3, ...e2) {
-    if (m2.logLevel <= LogLevel.WARN) {
-      const n3 = e2.map(v2);
-      m2.warn(`Firestore (${w2}): ${t3}`, ...n3);
+  function g(t3, ...e2) {
+    if (m.logLevel <= LogLevel.WARN) {
+      const n3 = e2.map(v);
+      m.warn(`Firestore (${w}): ${t3}`, ...n3);
     }
   }
-  function v2(t3) {
+  function v(t3) {
     if ("string" == typeof t3)
       return t3;
     try {
@@ -21599,54 +19942,54 @@
     }
     var e2;
   }
-  function b2(t3 = "Unexpected state") {
-    const e2 = `FIRESTORE (${w2}) INTERNAL ASSERTION FAILED: ` + t3;
-    throw _2(e2), new Error(e2);
+  function b(t3 = "Unexpected state") {
+    const e2 = `FIRESTORE (${w}) INTERNAL ASSERTION FAILED: ` + t3;
+    throw _(e2), new Error(e2);
   }
-  function E2(t3, e2) {
-    t3 || b2();
+  function E(t3, e2) {
+    t3 || b();
   }
-  function I2(t3, e2) {
+  function I(t3, e2) {
     return t3;
   }
   var T = "ok";
-  var A2 = "cancelled";
-  var R2 = "unknown";
-  var P2 = "invalid-argument";
-  var V2 = "deadline-exceeded";
+  var A = "cancelled";
+  var R = "unknown";
+  var P = "invalid-argument";
+  var V = "deadline-exceeded";
   var N = "not-found";
-  var D2 = "permission-denied";
-  var x2 = "unauthenticated";
-  var F2 = "resource-exhausted";
-  var S2 = "failed-precondition";
-  var q2 = "aborted";
-  var O2 = "out-of-range";
-  var k2 = "unimplemented";
-  var C2 = "internal";
-  var L2 = "unavailable";
-  var U2 = class extends FirebaseError {
+  var D = "permission-denied";
+  var x = "unauthenticated";
+  var F = "resource-exhausted";
+  var S = "failed-precondition";
+  var q = "aborted";
+  var O = "out-of-range";
+  var k = "unimplemented";
+  var C = "internal";
+  var L = "unavailable";
+  var U = class extends FirebaseError {
     constructor(t3, e2) {
       super(t3, e2), this.code = t3, this.message = e2, this.toString = () => `${this.name}: [code=${this.code}]: ${this.message}`;
     }
   };
-  var B2 = class {
+  var B = class {
     constructor(t3, e2) {
       this.user = e2, this.type = "OAuth", this.headers = /* @__PURE__ */ new Map(), this.headers.set("Authorization", `Bearer ${t3}`);
     }
   };
-  var Q2 = class {
+  var Q = class {
     getToken() {
       return Promise.resolve(null);
     }
     invalidateToken() {
     }
     start(t3, e2) {
-      t3.enqueueRetryable(() => e2(d2.UNAUTHENTICATED));
+      t3.enqueueRetryable(() => e2(d.UNAUTHENTICATED));
     }
     shutdown() {
     }
   };
-  var z2 = class {
+  var z = class {
     constructor(t3) {
       this.token = t3, this.changeListener = null;
     }
@@ -21662,14 +20005,14 @@
       this.changeListener = null;
     }
   };
-  var G2 = class {
+  var G = class {
     constructor(t3) {
       this.auth = null, t3.onInit((t4) => {
         this.auth = t4;
       });
     }
     getToken() {
-      return this.auth ? this.auth.getToken().then((t3) => t3 ? (E2("string" == typeof t3.accessToken), new B2(t3.accessToken, new d2(this.auth.getUid()))) : null) : Promise.resolve(null);
+      return this.auth ? this.auth.getToken().then((t3) => t3 ? (E("string" == typeof t3.accessToken), new B(t3.accessToken, new d(this.auth.getUid()))) : null) : Promise.resolve(null);
     }
     invalidateToken() {
     }
@@ -21678,12 +20021,12 @@
     shutdown() {
     }
   };
-  var W2 = class {
+  var W = class {
     constructor(t3, e2, n3, r3) {
-      this.t = t3, this.i = e2, this.o = n3, this.u = r3, this.type = "FirstParty", this.user = d2.FIRST_PARTY, this.h = /* @__PURE__ */ new Map();
+      this.t = t3, this.i = e2, this.o = n3, this.u = r3, this.type = "FirstParty", this.user = d.FIRST_PARTY, this.h = /* @__PURE__ */ new Map();
     }
     l() {
-      return this.u ? this.u() : (E2(!("object" != typeof this.t || null === this.t || !this.t.auth || !this.t.auth.getAuthHeaderValueForFirstParty)), this.t.auth.getAuthHeaderValueForFirstParty([]));
+      return this.u ? this.u() : (E(!("object" != typeof this.t || null === this.t || !this.t.auth || !this.t.auth.getAuthHeaderValueForFirstParty)), this.t.auth.getAuthHeaderValueForFirstParty([]));
     }
     get headers() {
       this.h.set("X-Goog-AuthUser", this.i);
@@ -21696,29 +20039,29 @@
       this.t = t3, this.i = e2, this.o = n3, this.u = r3;
     }
     getToken() {
-      return Promise.resolve(new W2(this.t, this.i, this.o, this.u));
+      return Promise.resolve(new W(this.t, this.i, this.o, this.u));
     }
     start(t3, e2) {
-      t3.enqueueRetryable(() => e2(d2.FIRST_PARTY));
+      t3.enqueueRetryable(() => e2(d.FIRST_PARTY));
     }
     shutdown() {
     }
     invalidateToken() {
     }
   };
-  var Y2 = class {
+  var Y = class {
     constructor(t3) {
       this.value = t3, this.type = "AppCheck", this.headers = /* @__PURE__ */ new Map(), t3 && t3.length > 0 && this.headers.set("x-firebase-appcheck", this.value);
     }
   };
-  var H2 = class {
+  var H = class {
     constructor(t3) {
       this.m = t3, this.appCheck = null, t3.onInit((t4) => {
         this.appCheck = t4;
       });
     }
     getToken() {
-      return this.appCheck ? this.appCheck.getToken().then((t3) => t3 ? (E2("string" == typeof t3.token), new Y2(t3.token)) : null) : Promise.resolve(null);
+      return this.appCheck ? this.appCheck.getToken().then((t3) => t3 ? (E("string" == typeof t3.token), new Y(t3.token)) : null) : Promise.resolve(null);
     }
     invalidateToken() {
     }
@@ -21732,33 +20075,33 @@
       this.databaseId = t3, this.appId = e2, this.persistenceKey = n3, this.host = r3, this.ssl = s2, this.forceLongPolling = i3, this.autoDetectLongPolling = o2, this.useFetchStreams = u2;
     }
   };
-  var X2 = class {
+  var X = class {
     constructor(t3, e2) {
       this.projectId = t3, this.database = e2 || "(default)";
     }
     static empty() {
-      return new X2("", "");
+      return new X("", "");
     }
     get isDefaultDatabase() {
       return "(default)" === this.database;
     }
     isEqual(t3) {
-      return t3 instanceof X2 && t3.projectId === this.projectId && t3.database === this.database;
+      return t3 instanceof X && t3.projectId === this.projectId && t3.database === this.database;
     }
   };
-  var Z2 = class {
+  var Z = class {
     constructor(t3, e2, n3) {
-      void 0 === e2 ? e2 = 0 : e2 > t3.length && b2(), void 0 === n3 ? n3 = t3.length - e2 : n3 > t3.length - e2 && b2(), this.segments = t3, this.offset = e2, this.len = n3;
+      void 0 === e2 ? e2 = 0 : e2 > t3.length && b(), void 0 === n3 ? n3 = t3.length - e2 : n3 > t3.length - e2 && b(), this.segments = t3, this.offset = e2, this.len = n3;
     }
     get length() {
       return this.len;
     }
     isEqual(t3) {
-      return 0 === Z2.comparator(this, t3);
+      return 0 === Z.comparator(this, t3);
     }
     child(t3) {
       const e2 = this.segments.slice(this.offset, this.limit());
-      return t3 instanceof Z2 ? t3.forEach((t4) => {
+      return t3 instanceof Z ? t3.forEach((t4) => {
         e2.push(t4);
       }) : e2.push(t3), this.construct(e2);
     }
@@ -21818,7 +20161,7 @@
       return t3.length < e2.length ? -1 : t3.length > e2.length ? 1 : 0;
     }
   };
-  var tt = class extends Z2 {
+  var tt = class extends Z {
     construct(t3, e2, n3) {
       return new tt(t3, e2, n3);
     }
@@ -21832,7 +20175,7 @@
       const e2 = [];
       for (const n3 of t3) {
         if (n3.indexOf("//") >= 0)
-          throw new U2(P2, `Invalid segment (${n3}). Paths must not contain // in them.`);
+          throw new U(P, `Invalid segment (${n3}). Paths must not contain // in them.`);
         e2.push(...n3.split("/").filter((t4) => t4.length > 0));
       }
       return new tt(e2);
@@ -21842,7 +20185,7 @@
     }
   };
   var et = /^[_a-zA-Z][_a-zA-Z0-9]*$/;
-  var nt = class extends Z2 {
+  var nt = class extends Z {
     construct(t3, e2, n3) {
       return new nt(t3, e2, n3);
     }
@@ -21866,7 +20209,7 @@
       let n3 = "", r3 = 0;
       const s2 = () => {
         if (0 === n3.length)
-          throw new U2(P2, `Invalid field path (${t3}). Paths must not be empty, begin with '.', end with '.', or contain '..'`);
+          throw new U(P, `Invalid field path (${t3}). Paths must not be empty, begin with '.', end with '.', or contain '..'`);
         e2.push(n3), n3 = "";
       };
       let i3 = false;
@@ -21874,16 +20217,16 @@
         const e3 = t3[r3];
         if ("\\" === e3) {
           if (r3 + 1 === t3.length)
-            throw new U2(P2, "Path has trailing escape character: " + t3);
+            throw new U(P, "Path has trailing escape character: " + t3);
           const e4 = t3[r3 + 1];
           if ("\\" !== e4 && "." !== e4 && "`" !== e4)
-            throw new U2(P2, "Path has invalid escape sequence: " + t3);
+            throw new U(P, "Path has invalid escape sequence: " + t3);
           n3 += e4, r3 += 2;
         } else
           "`" === e3 ? (i3 = !i3, r3++) : "." !== e3 || i3 ? (n3 += e3, r3++) : (s2(), r3++);
       }
       if (s2(), i3)
-        throw new U2(P2, "Unterminated ` in path: " + t3);
+        throw new U(P, "Unterminated ` in path: " + t3);
       return new nt(e2);
     }
     static emptyPath() {
@@ -21933,11 +20276,11 @@
   };
   function st(t3, e2, n3) {
     if (!n3)
-      throw new U2(P2, `Function ${t3}() cannot be called with an empty ${e2}.`);
+      throw new U(P, `Function ${t3}() cannot be called with an empty ${e2}.`);
   }
   function it(t3) {
     if (!rt.isDocumentKey(t3))
-      throw new U2(P2, `Invalid document reference. Document references must have an even number of segments, but ${t3} has ${t3.length}.`);
+      throw new U(P, `Invalid document reference. Document references must have an even number of segments, but ${t3} has ${t3.length}.`);
   }
   function ut(t3) {
     if (void 0 === t3)
@@ -21960,15 +20303,15 @@
         return e2 ? `a custom ${e2} object` : "an object";
       }
     }
-    return "function" == typeof t3 ? "a function" : b2();
+    return "function" == typeof t3 ? "a function" : b();
   }
   function ct(t3, e2) {
     if ("_delegate" in t3 && (t3 = t3._delegate), !(t3 instanceof e2)) {
       if (e2.name === t3.constructor.name)
-        throw new U2(P2, "Type does not match the expected instance. Did you pass a reference from a different Firestore SDK?");
+        throw new U(P, "Type does not match the expected instance. Did you pass a reference from a different Firestore SDK?");
       {
         const n3 = ut(t3);
-        throw new U2(P2, `Expected type '${e2.name}', but it was: ${n3}`);
+        throw new U(P, `Expected type '${e2.name}', but it was: ${n3}`);
       }
     }
     return t3;
@@ -21986,36 +20329,36 @@
   var wt;
   function mt(t3) {
     if (void 0 === t3)
-      return _2("RPC_ERROR", "HTTP error has no status"), R2;
+      return _("RPC_ERROR", "HTTP error has no status"), R;
     switch (t3) {
       case 200:
         return T;
       case 400:
-        return S2;
+        return S;
       case 401:
-        return x2;
+        return x;
       case 403:
-        return D2;
+        return D;
       case 404:
         return N;
       case 409:
-        return q2;
+        return q;
       case 416:
-        return O2;
+        return O;
       case 429:
-        return F2;
+        return F;
       case 499:
-        return A2;
+        return A;
       case 500:
-        return R2;
+        return R;
       case 501:
-        return k2;
+        return k;
       case 503:
-        return L2;
+        return L;
       case 504:
-        return V2;
+        return V;
       default:
-        return t3 >= 200 && t3 < 300 ? T : t3 >= 400 && t3 < 500 ? S2 : t3 >= 500 && t3 < 600 ? C2 : R2;
+        return t3 >= 200 && t3 < 300 ? T : t3 >= 400 && t3 < 500 ? S : t3 >= 500 && t3 < 600 ? C : R;
     }
   }
   (wt = dt || (dt = {}))[wt.OK = 0] = "OK", wt[wt.CANCELLED = 1] = "CANCELLED", wt[wt.UNKNOWN = 2] = "UNKNOWN", wt[wt.INVALID_ARGUMENT = 3] = "INVALID_ARGUMENT", wt[wt.DEADLINE_EXCEEDED = 4] = "DEADLINE_EXCEEDED", wt[wt.NOT_FOUND = 5] = "NOT_FOUND", wt[wt.ALREADY_EXISTS = 6] = "ALREADY_EXISTS", wt[wt.PERMISSION_DENIED = 7] = "PERMISSION_DENIED", wt[wt.UNAUTHENTICATED = 16] = "UNAUTHENTICATED", wt[wt.RESOURCE_EXHAUSTED = 8] = "RESOURCE_EXHAUSTED", wt[wt.FAILED_PRECONDITION = 9] = "FAILED_PRECONDITION", wt[wt.ABORTED = 10] = "ABORTED", wt[wt.OUT_OF_RANGE = 11] = "OUT_OF_RANGE", wt[wt.UNIMPLEMENTED = 12] = "UNIMPLEMENTED", wt[wt.INTERNAL = 13] = "INTERNAL", wt[wt.UNAVAILABLE = 14] = "UNAVAILABLE", wt[wt.DATA_LOSS = 15] = "DATA_LOSS";
@@ -22030,17 +20373,17 @@
     }
     I(t3, e2, n3, r3, s2) {
       const i3 = this.T(t3, e2);
-      y2("RestConnection", "Sending: ", i3, n3);
+      y("RestConnection", "Sending: ", i3, n3);
       const o2 = {};
-      return this.A(o2, r3, s2), this.R(t3, i3, o2, n3).then((t4) => (y2("RestConnection", "Received: ", t4), t4), (e3) => {
-        throw g2("RestConnection", `${t3} failed with error: `, e3, "url: ", i3, "request:", n3), e3;
+      return this.A(o2, r3, s2), this.R(t3, i3, o2, n3).then((t4) => (y("RestConnection", "Received: ", t4), t4), (e3) => {
+        throw g("RestConnection", `${t3} failed with error: `, e3, "url: ", i3, "request:", n3), e3;
       });
     }
     P(t3, e2, n3, r3, s2, i3) {
       return this.I(t3, e2, n3, r3, s2);
     }
     A(t3, e2, n3) {
-      t3["X-Goog-Api-Client"] = "gl-js/ fire/" + w2, t3["Content-Type"] = "text/plain", this.databaseInfo.appId && (t3["X-Firebase-GMPID"] = this.databaseInfo.appId), e2 && e2.headers.forEach((e3, n4) => t3[n4] = e3), n3 && n3.headers.forEach((e3, n4) => t3[n4] = e3);
+      t3["X-Goog-Api-Client"] = "gl-js/ fire/" + w, t3["Content-Type"] = "text/plain", this.databaseInfo.appId && (t3["X-Firebase-GMPID"] = this.databaseInfo.appId), e2 && e2.headers.forEach((e3, n4) => t3[n4] = e3), n3 && n3.headers.forEach((e3, n4) => t3[n4] = e3);
     }
     T(t3, e2) {
       const n3 = ft[t3];
@@ -22064,13 +20407,13 @@
           body: i3
         });
       } catch (t4) {
-        throw new U2(mt(t4.status), "Request failed with error: " + t4.statusText);
+        throw new U(mt(t4.status), "Request failed with error: " + t4.statusText);
       }
       if (!o2.ok) {
         let t4 = await o2.json();
         Array.isArray(t4) && (t4 = t4[0]);
         const e3 = null === (s2 = null == t4 ? void 0 : t4.error) || void 0 === s2 ? void 0 : s2.message;
-        throw new U2(mt(o2.status), `Request failed with error: ${null != e3 ? e3 : o2.statusText}`);
+        throw new U(mt(o2.status), `Request failed with error: ${null != e3 ? e3 : o2.statusText}`);
       }
       return o2.json();
     }
@@ -22105,13 +20448,13 @@
   var bt = class {
     constructor(t3, e2) {
       if (this.seconds = t3, this.nanoseconds = e2, e2 < 0)
-        throw new U2(P2, "Timestamp nanoseconds out of range: " + e2);
+        throw new U(P, "Timestamp nanoseconds out of range: " + e2);
       if (e2 >= 1e9)
-        throw new U2(P2, "Timestamp nanoseconds out of range: " + e2);
+        throw new U(P, "Timestamp nanoseconds out of range: " + e2);
       if (t3 < -62135596800)
-        throw new U2(P2, "Timestamp seconds out of range: " + t3);
+        throw new U(P, "Timestamp seconds out of range: " + t3);
       if (t3 >= 253402300800)
-        throw new U2(P2, "Timestamp seconds out of range: " + t3);
+        throw new U(P, "Timestamp seconds out of range: " + t3);
     }
     static now() {
       return bt.fromMillis(Date.now());
@@ -22381,12 +20724,12 @@
     }
     check() {
       if (this.isRed() && this.left.isRed())
-        throw b2();
+        throw b();
       if (this.right.isRed())
-        throw b2();
+        throw b();
       const t3 = this.left.check();
       if (t3 !== this.right.check())
-        throw b2();
+        throw b();
       return t3 + (this.isRed() ? 0 : 1);
     }
   };
@@ -22396,19 +20739,19 @@
       this.size = 0;
     }
     get key() {
-      throw b2();
+      throw b();
     }
     get value() {
-      throw b2();
+      throw b();
     }
     get color() {
-      throw b2();
+      throw b();
     }
     get left() {
-      throw b2();
+      throw b();
     }
     get right() {
-      throw b2();
+      throw b();
     }
     copy(t3, e2, n3, r3, s2) {
       return this;
@@ -22625,10 +20968,10 @@
   Dt.EMPTY_BYTE_STRING = new Dt("");
   var xt = new RegExp(/^\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d(?:\.(\d+))?Z$/);
   function Ft(t3) {
-    if (E2(!!t3), "string" == typeof t3) {
+    if (E(!!t3), "string" == typeof t3) {
       let e2 = 0;
       const n3 = xt.exec(t3);
-      if (E2(!!n3), n3[1]) {
+      if (E(!!n3), n3[1]) {
         let t4 = n3[1];
         t4 = (t4 + "000000000").substr(0, 9), e2 = Number(t4);
       }
@@ -22664,7 +21007,7 @@
   function Mt(t3) {
     return "nullValue" in t3 ? 0 : "booleanValue" in t3 ? 1 : "integerValue" in t3 || "doubleValue" in t3 ? 2 : "timestampValue" in t3 ? 3 : "stringValue" in t3 ? 5 : "bytesValue" in t3 ? 6 : "referenceValue" in t3 ? 7 : "geoPointValue" in t3 ? 8 : "arrayValue" in t3 ? 9 : "mapValue" in t3 ? Ot(t3) ? 4 : function(t4) {
       return "__max__" === (((t4.mapValue || {}).fields || {}).__type__ || {}).stringValue;
-    }(t3) ? 9007199254740991 : 10 : b2();
+    }(t3) ? 9007199254740991 : 10 : b();
   }
   function Ut(t3, e2) {
     if (t3 === e2)
@@ -22722,7 +21065,7 @@
           return true;
         }(t3, e2);
       default:
-        return b2();
+        return b();
     }
   }
   function Yt(t3) {
@@ -23039,7 +21382,7 @@
     return ke(t3, e2.toTimestamp());
   }
   function Me(t3) {
-    return E2(!!t3), Et.fromTimestamp(function(t4) {
+    return E(!!t3), Et.fromTimestamp(function(t4) {
       const e2 = Ft(t4);
       return new bt(e2.seconds, e2.nanos);
     }(t3));
@@ -23055,13 +21398,13 @@
   function Be(t3, e2) {
     const n3 = function(t4) {
       const e3 = tt.fromString(t4);
-      return E2(tn2(e3)), e3;
+      return E(tn(e3)), e3;
     }(e2);
     if (n3.get(1) !== t3.databaseId.projectId)
-      throw new U2(P2, "Tried to deserialize key from different project: " + n3.get(1) + " vs " + t3.databaseId.projectId);
+      throw new U(P, "Tried to deserialize key from different project: " + n3.get(1) + " vs " + t3.databaseId.projectId);
     if (n3.get(3) !== t3.databaseId.database)
-      throw new U2(P2, "Tried to deserialize key from different database: " + n3.get(3) + " vs " + t3.databaseId.database);
-    return new rt((E2((r3 = n3).length > 4 && "documents" === r3.get(4)), r3.popFirst(5)));
+      throw new U(P, "Tried to deserialize key from different database: " + n3.get(3) + " vs " + t3.databaseId.database);
+    return new rt((E((r3 = n3).length > 4 && "documents" === r3.get(4)), r3.popFirst(5)));
     var r3;
   }
   function ze(t3) {
@@ -23075,7 +21418,7 @@
   }
   function We(t3, e2) {
     return "found" in e2 ? function(t4, e3) {
-      E2(!!e3.found), e3.found.name, e3.found.updateTime;
+      E(!!e3.found), e3.found.name, e3.found.updateTime;
       const n3 = Be(t4, e3.found.name), r3 = Me(e3.found.updateTime), s2 = new Jt({
         mapValue: {
           fields: e3.found.fields
@@ -23083,10 +21426,10 @@
       });
       return Xt.newFoundDocument(n3, r3, s2);
     }(t3, e2) : "missing" in e2 ? function(t4, e3) {
-      E2(!!e3.missing), E2(!!e3.readTime);
+      E(!!e3.missing), E(!!e3.readTime);
       const n3 = Be(t4, e3.missing), r3 = Me(e3.readTime);
       return Xt.newNoDocument(n3, r3);
-    }(t3, e2) : b2();
+    }(t3, e2) : b();
   }
   function Ke(t3, e2) {
     let n3;
@@ -23105,7 +21448,7 @@
       };
     else {
       if (!(e2 instanceof Fe))
-        return b2();
+        return b();
       n3 = {
         verify: je(t3, e2.key)
       };
@@ -23136,13 +21479,13 @@
           fieldPath: e3.field.canonicalString(),
           increment: n4.M
         };
-      throw b2();
+      throw b();
     }(0, t4))), e2.precondition.isNone || (n3.currentDocument = function(t4, e3) {
       return void 0 !== e3.updateTime ? {
         updateTime: Le(t4, e3.updateTime)
       } : void 0 !== e3.exists ? {
         exists: e3.exists
-      } : b2();
+      } : b();
     }(t3, e2.precondition)), n3;
   }
   function Ze(t3) {
@@ -23151,43 +21494,43 @@
       fieldPaths: e2
     };
   }
-  function tn2(t3) {
+  function tn(t3) {
     return t3.length >= 4 && "projects" === t3.get(0) && "databases" === t3.get(2);
   }
-  function en2(t3) {
+  function en(t3) {
     return new Oe(t3, true);
   }
-  var rn2 = class extends class {
+  var rn = class extends class {
   } {
     constructor(t3, e2, n3, r3) {
       super(), this.authCredentials = t3, this.appCheckCredentials = e2, this.connection = n3, this.L = r3, this.tt = false;
     }
     et() {
       if (this.tt)
-        throw new U2(S2, "The client has already been terminated.");
+        throw new U(S, "The client has already been terminated.");
     }
     I(t3, e2, n3) {
       return this.et(), Promise.all([this.authCredentials.getToken(), this.appCheckCredentials.getToken()]).then(([r3, s2]) => this.connection.I(t3, e2, n3, r3, s2)).catch((t4) => {
-        throw "FirebaseError" === t4.name ? (t4.code === x2 && (this.authCredentials.invalidateToken(), this.appCheckCredentials.invalidateToken()), t4) : new U2(R2, t4.toString());
+        throw "FirebaseError" === t4.name ? (t4.code === x && (this.authCredentials.invalidateToken(), this.appCheckCredentials.invalidateToken()), t4) : new U(R, t4.toString());
       });
     }
     P(t3, e2, n3, r3) {
       return this.et(), Promise.all([this.authCredentials.getToken(), this.appCheckCredentials.getToken()]).then(([s2, i3]) => this.connection.P(t3, e2, n3, s2, i3, r3)).catch((t4) => {
-        throw "FirebaseError" === t4.name ? (t4.code === x2 && (this.authCredentials.invalidateToken(), this.appCheckCredentials.invalidateToken()), t4) : new U2(R2, t4.toString());
+        throw "FirebaseError" === t4.name ? (t4.code === x && (this.authCredentials.invalidateToken(), this.appCheckCredentials.invalidateToken()), t4) : new U(R, t4.toString());
       });
     }
     terminate() {
       this.tt = true;
     }
   };
-  async function sn2(t3, e2) {
-    const n3 = I2(t3), r3 = ze(n3.L) + "/documents", s2 = {
+  async function sn(t3, e2) {
+    const n3 = I(t3), r3 = ze(n3.L) + "/documents", s2 = {
       writes: e2.map((t4) => Ke(n3.L, t4))
     };
     await n3.I("Commit", r3, s2);
   }
-  async function on2(t3, e2) {
-    const n3 = I2(t3), r3 = ze(n3.L) + "/documents", s2 = {
+  async function on(t3, e2) {
+    const n3 = I(t3), r3 = ze(n3.L) + "/documents", s2 = {
       documents: e2.map((t4) => je(n3.L, t4))
     }, i3 = await n3.P("BatchGetDocuments", r3, s2, e2.length), o2 = /* @__PURE__ */ new Map();
     i3.forEach((t4) => {
@@ -23197,31 +21540,31 @@
     const u2 = [];
     return e2.forEach((t4) => {
       const e3 = o2.get(t4.toString());
-      E2(!!e3), u2.push(e3);
+      E(!!e3), u2.push(e3);
     }), u2;
   }
-  var an2 = /* @__PURE__ */ new Map();
+  var an = /* @__PURE__ */ new Map();
   function hn(t3) {
     if (t3._terminated)
-      throw new U2(S2, "The client has already been terminated.");
-    if (!an2.has(t3)) {
-      y2("ComponentProvider", "Initializing Datastore");
+      throw new U(S, "The client has already been terminated.");
+    if (!an.has(t3)) {
+      y("ComponentProvider", "Initializing Datastore");
       const i3 = function(t4) {
         return new pt(t4, fetch.bind(null));
-      }((e2 = t3._databaseId, n3 = t3.app.options.appId || "", r3 = t3._persistenceKey, s2 = t3._freezeSettings(), new J(e2, n3, r3, s2.host, s2.ssl, s2.experimentalForceLongPolling, s2.experimentalAutoDetectLongPolling, s2.useFetchStreams))), o2 = en2(t3._databaseId), u2 = function(t4, e3, n4, r4) {
-        return new rn2(t4, e3, n4, r4);
+      }((e2 = t3._databaseId, n3 = t3.app.options.appId || "", r3 = t3._persistenceKey, s2 = t3._freezeSettings(), new J(e2, n3, r3, s2.host, s2.ssl, s2.experimentalForceLongPolling, s2.experimentalAutoDetectLongPolling, s2.useFetchStreams))), o2 = en(t3._databaseId), u2 = function(t4, e3, n4, r4) {
+        return new rn(t4, e3, n4, r4);
       }(t3._authCredentials, t3._appCheckCredentials, i3, o2);
-      an2.set(t3, u2);
+      an.set(t3, u2);
     }
     var e2, n3, r3, s2;
-    return an2.get(t3);
+    return an.get(t3);
   }
-  var ln2 = class {
+  var ln = class {
     constructor(t3) {
       var e2;
       if (void 0 === t3.host) {
         if (void 0 !== t3.ssl)
-          throw new U2(P2, "Can't provide ssl option if host option is not set");
+          throw new U(P, "Can't provide ssl option if host option is not set");
         this.host = "firestore.googleapis.com", this.ssl = true;
       } else
         this.host = t3.host, this.ssl = null === (e2 = t3.ssl) || void 0 === e2 || e2;
@@ -23229,25 +21572,25 @@
         this.cacheSizeBytes = 41943040;
       else {
         if (-1 !== t3.cacheSizeBytes && t3.cacheSizeBytes < 1048576)
-          throw new U2(P2, "cacheSizeBytes must be at least 1048576");
+          throw new U(P, "cacheSizeBytes must be at least 1048576");
         this.cacheSizeBytes = t3.cacheSizeBytes;
       }
       this.experimentalForceLongPolling = !!t3.experimentalForceLongPolling, this.experimentalAutoDetectLongPolling = !!t3.experimentalAutoDetectLongPolling, this.useFetchStreams = !!t3.useFetchStreams, function(t4, e3, n3, r3) {
         if (true === e3 && true === r3)
-          throw new U2(P2, `${t4} and ${n3} cannot be used together.`);
+          throw new U(P, `${t4} and ${n3} cannot be used together.`);
       }("experimentalForceLongPolling", t3.experimentalForceLongPolling, "experimentalAutoDetectLongPolling", t3.experimentalAutoDetectLongPolling);
     }
     isEqual(t3) {
       return this.host === t3.host && this.ssl === t3.ssl && this.credentials === t3.credentials && this.cacheSizeBytes === t3.cacheSizeBytes && this.experimentalForceLongPolling === t3.experimentalForceLongPolling && this.experimentalAutoDetectLongPolling === t3.experimentalAutoDetectLongPolling && this.ignoreUndefinedProperties === t3.ignoreUndefinedProperties && this.useFetchStreams === t3.useFetchStreams;
     }
   };
-  var fn2 = class {
+  var fn = class {
     constructor(t3, e2, n3, r3) {
-      this._authCredentials = t3, this._appCheckCredentials = e2, this._databaseId = n3, this._app = r3, this.type = "firestore-lite", this._persistenceKey = "(lite)", this._settings = new ln2({}), this._settingsFrozen = false;
+      this._authCredentials = t3, this._appCheckCredentials = e2, this._databaseId = n3, this._app = r3, this.type = "firestore-lite", this._persistenceKey = "(lite)", this._settings = new ln({}), this._settingsFrozen = false;
     }
     get app() {
       if (!this._app)
-        throw new U2(S2, "Firestore was not initialized using the Firebase SDK. 'app' is not available");
+        throw new U(S, "Firestore was not initialized using the Firebase SDK. 'app' is not available");
       return this._app;
     }
     get _initialized() {
@@ -23258,10 +21601,10 @@
     }
     _setSettings(t3) {
       if (this._settingsFrozen)
-        throw new U2(S2, "Firestore has already been started and its settings can no longer be changed. You can only modify settings before calling any other methods on a Firestore object.");
-      this._settings = new ln2(t3), void 0 !== t3.credentials && (this._authCredentials = function(t4) {
+        throw new U(S, "Firestore has already been started and its settings can no longer be changed. You can only modify settings before calling any other methods on a Firestore object.");
+      this._settings = new ln(t3), void 0 !== t3.credentials && (this._authCredentials = function(t4) {
         if (!t4)
-          return new Q2();
+          return new Q();
         switch (t4.type) {
           case "gapi":
             const e2 = t4.client;
@@ -23269,7 +21612,7 @@
           case "provider":
             return t4.client;
           default:
-            throw new U2(P2, "makeAuthCredentialsProvider failed due to invalid credential type");
+            throw new U(P, "makeAuthCredentialsProvider failed due to invalid credential type");
         }
       }(t3.credentials));
     }
@@ -23291,8 +21634,8 @@
     }
     _terminate() {
       return function(t3) {
-        const e2 = an2.get(t3);
-        e2 && (y2("ComponentProvider", "Removing Datastore"), an2.delete(t3), e2.terminate());
+        const e2 = an.get(t3);
+        e2 && (y("ComponentProvider", "Removing Datastore"), an.delete(t3), e2.terminate());
       }(this), Promise.resolve();
     }
   };
@@ -23308,25 +21651,25 @@
   }
   function mn(t3, e2, n3, r3 = {}) {
     var s2;
-    const i3 = (t3 = ct(t3, fn2))._getSettings();
-    if ("firestore.googleapis.com" !== i3.host && i3.host !== e2 && g2("Host has been set in both settings() and useEmulator(), emulator host will be used"), t3._setSettings(Object.assign(Object.assign({}, i3), {
+    const i3 = (t3 = ct(t3, fn))._getSettings();
+    if ("firestore.googleapis.com" !== i3.host && i3.host !== e2 && g("Host has been set in both settings() and useEmulator(), emulator host will be used"), t3._setSettings(Object.assign(Object.assign({}, i3), {
       host: `${e2}:${n3}`,
       ssl: false
     })), r3.mockUserToken) {
       let e3, n4;
       if ("string" == typeof r3.mockUserToken)
-        e3 = r3.mockUserToken, n4 = d2.MOCK_USER;
+        e3 = r3.mockUserToken, n4 = d.MOCK_USER;
       else {
         e3 = createMockUserToken(r3.mockUserToken, null === (s2 = t3._app) || void 0 === s2 ? void 0 : s2.options.projectId);
         const i4 = r3.mockUserToken.sub || r3.mockUserToken.user_id;
         if (!i4)
-          throw new U2(P2, "mockUserToken must contain 'sub' or 'user_id' field!");
-        n4 = new d2(i4);
+          throw new U(P, "mockUserToken must contain 'sub' or 'user_id' field!");
+        n4 = new d(i4);
       }
-      t3._authCredentials = new z2(new B2(e3, n4));
+      t3._authCredentials = new z(new B(e3, n4));
     }
   }
-  var vn2 = class {
+  var vn = class {
     constructor(t3, e2, n3) {
       this.converter = e2, this._key = n3, this.type = "document", this.firestore = t3;
     }
@@ -23343,7 +21686,7 @@
       return new En(this.firestore, this.converter, this._key.path.popLast());
     }
     withConverter(t3) {
-      return new vn2(this.firestore, t3, this._key);
+      return new vn(this.firestore, t3, this._key);
     }
   };
   var bn = class {
@@ -23366,7 +21709,7 @@
     }
     get parent() {
       const t3 = this._path.popLast();
-      return t3.isEmpty() ? null : new vn2(
+      return t3.isEmpty() ? null : new vn(
         this.firestore,
         null,
         new rt(t3)
@@ -23377,19 +21720,19 @@
     }
   };
   function An(t3, e2, ...n3) {
-    if (t3 = getModularInstance(t3), 1 === arguments.length && (e2 = _t.$()), st("doc", "path", e2), t3 instanceof fn2) {
+    if (t3 = getModularInstance(t3), 1 === arguments.length && (e2 = _t.$()), st("doc", "path", e2), t3 instanceof fn) {
       const r3 = tt.fromString(e2, ...n3);
-      return it(r3), new vn2(
+      return it(r3), new vn(
         t3,
         null,
         new rt(r3)
       );
     }
     {
-      if (!(t3 instanceof vn2 || t3 instanceof En))
-        throw new U2(P2, "Expected first argument to collection() to be a CollectionReference, a DocumentReference or FirebaseFirestore");
+      if (!(t3 instanceof vn || t3 instanceof En))
+        throw new U(P, "Expected first argument to collection() to be a CollectionReference, a DocumentReference or FirebaseFirestore");
       const r3 = t3._path.child(tt.fromString(e2, ...n3));
-      return it(r3), new vn2(t3.firestore, t3 instanceof En ? t3.converter : null, new rt(r3));
+      return it(r3), new vn(t3.firestore, t3 instanceof En ? t3.converter : null, new rt(r3));
     }
   }
   var Vn = class {
@@ -23400,7 +21743,7 @@
       try {
         return new Vn(Dt.fromBase64String(t3));
       } catch (t4) {
-        throw new U2(P2, "Failed to construct data from Base64 string: " + t4);
+        throw new U(P, "Failed to construct data from Base64 string: " + t4);
       }
     }
     static fromUint8Array(t3) {
@@ -23423,7 +21766,7 @@
     constructor(...t3) {
       for (let e2 = 0; e2 < t3.length; ++e2)
         if (0 === t3[e2].length)
-          throw new U2(P2, "Invalid field name at argument $(i + 1). Field names must not be empty.");
+          throw new U(P, "Invalid field name at argument $(i + 1). Field names must not be empty.");
       this._internalPath = new nt(t3);
     }
     isEqual(t3) {
@@ -23438,9 +21781,9 @@
   var xn = class {
     constructor(t3, e2) {
       if (!isFinite(t3) || t3 < -90 || t3 > 90)
-        throw new U2(P2, "Latitude must be a number between -90 and 90, but was: " + t3);
+        throw new U(P, "Latitude must be a number between -90 and 90, but was: " + t3);
       if (!isFinite(e2) || e2 < -180 || e2 > 180)
-        throw new U2(P2, "Longitude must be a number between -180 and 180, but was: " + e2);
+        throw new U(P, "Longitude must be a number between -180 and 180, but was: " + e2);
       this._lat = t3, this._long = e2;
     }
     get latitude() {
@@ -23481,7 +21824,7 @@
       case 4:
         return false;
       default:
-        throw b2();
+        throw b();
     }
   }
   var kn = class {
@@ -23539,7 +21882,7 @@
   };
   var Cn = class {
     constructor(t3, e2, n3) {
-      this.databaseId = t3, this.ignoreUndefinedProperties = e2, this.L = n3 || en2(t3);
+      this.databaseId = t3, this.ignoreUndefinedProperties = e2, this.L = n3 || en(t3);
     }
     dt(t3, e2, n3, r3 = false) {
       return new kn({
@@ -23553,7 +21896,7 @@
     }
   };
   function Ln(t3) {
-    const e2 = t3._freezeSettings(), n3 = en2(t3._databaseId);
+    const e2 = t3._freezeSettings(), n3 = en(t3._databaseId);
     return new Cn(t3._databaseId, !!e2.ignoreUndefinedProperties, n3);
   }
   var Un = class extends Dn {
@@ -23587,7 +21930,7 @@
   function Kn(t3, e2, n3, r3, s2, i3) {
     const o2 = t3.dt(1, e2, n3), u2 = [tr(e2, r3, n3)], c2 = [s2];
     if (i3.length % 2 != 0)
-      throw new U2(P2, `Function ${e2}() needs to be called with an even number of arguments that alternate between field names and values.`);
+      throw new U(P, `Function ${e2}() needs to be called with an even number of arguments that alternate between field names and values.`);
     for (let t4 = 0; t4 < i3.length; t4 += 2)
       u2.push(tr(e2, i3[t4])), c2.push(i3[t4 + 1]);
     const a3 = [], h2 = Jt.empty();
@@ -23680,7 +22023,7 @@
         return {
           bytesValue: Ce(e3.L, t4._byteString)
         };
-      if (t4 instanceof vn2) {
+      if (t4 instanceof vn) {
         const n3 = e3.databaseId, r3 = t4.firestore._databaseId;
         if (!r3.isEqual(n3))
           throw e3.ht(`Document reference is for database ${r3.projectId}/${r3.database} but should be for database ${n3.projectId}/${n3.database}`);
@@ -23708,7 +22051,7 @@
     };
   }
   function Xn(t3) {
-    return !("object" != typeof t3 || null === t3 || t3 instanceof Array || t3 instanceof Date || t3 instanceof bt || t3 instanceof xn || t3 instanceof Vn || t3 instanceof vn2 || t3 instanceof Dn);
+    return !("object" != typeof t3 || null === t3 || t3 instanceof Array || t3 instanceof Date || t3 instanceof bt || t3 instanceof xn || t3 instanceof Vn || t3 instanceof vn || t3 instanceof Dn);
   }
   function Zn(t3, e2, n3) {
     if (!Xn(n3) || !function(t4) {
@@ -23758,7 +22101,7 @@
     let u2 = `Function ${e2}() called with invalid data`;
     n3 && (u2 += " (via `toFirestore()`)"), u2 += ". ";
     let c2 = "";
-    return (i3 || o2) && (c2 += " (found", i3 && (c2 += ` in field ${r3}`), o2 && (c2 += ` in document ${s2}`), c2 += ")"), new U2(P2, u2 + t3 + c2);
+    return (i3 || o2) && (c2 += " (found", i3 && (c2 += ` in field ${r3}`), o2 && (c2 += ` in document ${s2}`), c2 += ")"), new U(P, u2 + t3 + c2);
   }
   function sr(t3, e2) {
     return t3.some((t4) => t4.isEqual(e2));
@@ -23771,7 +22114,7 @@
       return this._key.path.lastSegment();
     }
     get ref() {
-      return new vn2(this._firestore, this._converter, this._key);
+      return new vn(this._firestore, this._converter, this._key);
     }
     exists() {
       return null !== this._document;
@@ -23833,7 +22176,7 @@
         case 10:
           return this.convertObject(t3.mapValue, e2);
         default:
-          throw b2();
+          throw b();
       }
     }
     convertObject(t3, e2) {
@@ -23865,9 +22208,9 @@
     }
     convertDocumentKey(t3, e2) {
       const n3 = tt.fromString(t3);
-      E2(tn2(n3));
-      const r3 = new X2(n3.get(1), n3.get(3)), s2 = new rt(n3.popFirst(5));
-      return r3.isEqual(e2) || _2(`Document ${s2} contains a document reference within a different database (${r3.projectId}/${r3.database}) which is not supported. It will be treated as a reference in the current database (${e2.projectId}/${e2.database}) instead.`), s2;
+      E(tn(n3));
+      const r3 = new X(n3.get(1), n3.get(3)), s2 = new rt(n3.popFirst(5));
+      return r3.isEqual(e2) || _(`Document ${s2} contains a document reference within a different database (${r3.projectId}/${r3.database}) which is not supported. It will be treated as a reference in the current database (${e2.projectId}/${e2.database}) instead.`), s2;
     }
   } {
     constructor(t3) {
@@ -23878,36 +22221,36 @@
     }
     convertReference(t3) {
       const e2 = this.convertDocumentKey(t3, this.firestore._databaseId);
-      return new vn2(this.firestore, null, e2);
+      return new vn(this.firestore, null, e2);
     }
   };
   function Dr(t3) {
-    const e2 = hn((t3 = ct(t3, vn2)).firestore), n3 = new $r(t3.firestore);
-    return on2(e2, [t3._key]).then((e3) => {
-      E2(1 === e3.length);
+    const e2 = hn((t3 = ct(t3, vn)).firestore), n3 = new $r(t3.firestore);
+    return on(e2, [t3._key]).then((e3) => {
+      E(1 === e3.length);
       const r3 = e3[0];
       return new ir(t3.firestore, n3, t3._key, r3.isFoundDocument() ? r3 : null, t3.converter);
     });
   }
   function Sr(t3, e2, n3, ...r3) {
-    const s2 = Ln((t3 = ct(t3, vn2)).firestore);
+    const s2 = Ln((t3 = ct(t3, vn)).firestore);
     let i3;
     i3 = "string" == typeof (e2 = getModularInstance(e2)) || e2 instanceof Nn ? Kn(s2, "updateDoc", t3._key, e2, n3, r3) : Wn(s2, "updateDoc", t3._key, e2);
-    return sn2(hn(t3.firestore), [i3.toMutation(t3._key, Ve.exists(true))]);
+    return sn(hn(t3.firestore), [i3.toMutation(t3._key, Ve.exists(true))]);
   }
   !function(t3) {
-    w2 = t3;
+    w = t3;
   }(`${SDK_VERSION}_lite`), _registerComponent(new Component("firestore/lite", (t3, { instanceIdentifier: e2, options: n3 }) => {
-    const r3 = t3.getProvider("app").getImmediate(), s2 = new fn2(new G2(t3.getProvider("auth-internal")), new H2(t3.getProvider("app-check-internal")), function(t4, e3) {
+    const r3 = t3.getProvider("app").getImmediate(), s2 = new fn(new G(t3.getProvider("auth-internal")), new H(t3.getProvider("app-check-internal")), function(t4, e3) {
       if (!Object.prototype.hasOwnProperty.apply(t4.options, ["projectId"]))
-        throw new U2(P2, '"projectId" not provided in firebase.initializeApp.');
-      return new X2(t4.options.projectId, e3);
+        throw new U(P, '"projectId" not provided in firebase.initializeApp.');
+      return new X(t4.options.projectId, e3);
     }(r3, e2), r3);
     return n3 && s2._setSettings(n3), s2;
   }, "PUBLIC").setMultipleInstances(true)), registerVersion("firestore-lite", "3.7.3", ""), registerVersion("firestore-lite", "3.7.3", "esm2017");
 
   // ../../node_modules/unique-names-generator/dist/index.m.js
-  var a2 = (a3) => {
+  var a = (a3) => {
     a3 = 1831565813 + (a3 |= 0) | 0;
     let e2 = Math.imul(a3 ^ a3 >>> 15, 1 | a3);
     return e2 = e2 + Math.imul(e2 ^ e2 >>> 7, 61 | e2) ^ e2, ((e2 ^ e2 >>> 14) >>> 0) / 4294967296;
@@ -23932,9 +22275,9 @@ Length provided: ${this.length}. Number of dictionaries provided: ${this.diction
         e2 ? (l2 = ((e3) => {
           if ("string" == typeof e3) {
             const i4 = e3.split("").map((a3) => a3.charCodeAt(0)).reduce((a3, e4) => a3 + e4, 1), n4 = Math.floor(Number(i4));
-            return a2(n4);
+            return a(n4);
           }
-          return a2(e3);
+          return a(e3);
         })(e2), e2 = 4294967296 * l2) : l2 = Math.random();
         let r3 = n3[Math.floor(l2 * n3.length)] || "";
         if ("lowerCase" === this.style)
@@ -23948,15 +22291,15 @@ Length provided: ${this.length}. Number of dictionaries provided: ${this.diction
       }, "");
     }
   };
-  var i2 = { separator: "_", dictionaries: [] };
-  var n2 = (a3) => {
-    const n3 = [...a3 && a3.dictionaries || i2.dictionaries], l2 = { ...i2, ...a3, length: a3 && a3.length || n3.length, dictionaries: n3 };
+  var i = { separator: "_", dictionaries: [] };
+  var n = (a3) => {
+    const n3 = [...a3 && a3.dictionaries || i.dictionaries], l2 = { ...i, ...a3, length: a3 && a3.length || n3.length, dictionaries: n3 };
     if (!a3 || !a3.dictionaries || !a3.dictionaries.length)
       throw new Error('A "dictionaries" array must be provided. This is a breaking change introduced starting from Unique Name Generator v4. Read more about the breaking change here: https://github.com/andreasonny83/unique-names-generator#migration-guide');
     return new e(l2).generate();
   };
-  var r2 = ["aardvark", "aardwolf", "albatross", "alligator", "alpaca", "amphibian", "anaconda", "angelfish", "anglerfish", "ant", "anteater", "antelope", "antlion", "ape", "aphid", "armadillo", "asp", "baboon", "badger", "bandicoot", "barnacle", "barracuda", "basilisk", "bass", "bat", "bear", "beaver", "bedbug", "bee", "beetle", "bird", "bison", "blackbird", "boa", "boar", "bobcat", "bobolink", "bonobo", "booby", "bovid", "bug", "butterfly", "buzzard", "camel", "canid", "canidae", "capybara", "cardinal", "caribou", "carp", "cat", "caterpillar", "catfish", "catshark", "cattle", "centipede", "cephalopod", "chameleon", "cheetah", "chickadee", "chicken", "chimpanzee", "chinchilla", "chipmunk", "cicada", "clam", "clownfish", "cobra", "cockroach", "cod", "condor", "constrictor", "coral", "cougar", "cow", "coyote", "crab", "crane", "crawdad", "crayfish", "cricket", "crocodile", "crow", "cuckoo", "damselfly", "deer", "dingo", "dinosaur", "dog", "dolphin", "donkey", "dormouse", "dove", "dragon", "dragonfly", "duck", "eagle", "earthworm", "earwig", "echidna", "eel", "egret", "elephant", "elk", "emu", "ermine", "falcon", "felidae", "ferret", "finch", "firefly", "fish", "flamingo", "flea", "fly", "flyingfish", "fowl", "fox", "frog", "galliform", "gamefowl", "gayal", "gazelle", "gecko", "gerbil", "gibbon", "giraffe", "goat", "goldfish", "goose", "gopher", "gorilla", "grasshopper", "grouse", "guan", "guanaco", "guineafowl", "gull", "guppy", "haddock", "halibut", "hamster", "hare", "harrier", "hawk", "hedgehog", "heron", "herring", "hippopotamus", "hookworm", "hornet", "horse", "hoverfly", "hummingbird", "hyena", "iguana", "impala", "jackal", "jaguar", "jay", "jellyfish", "junglefowl", "kangaroo", "kingfisher", "kite", "kiwi", "koala", "koi", "krill", "ladybug", "lamprey", "landfowl", "lark", "leech", "lemming", "lemur", "leopard", "leopon", "limpet", "lion", "lizard", "llama", "lobster", "locust", "loon", "louse", "lungfish", "lynx", "macaw", "mackerel", "magpie", "mammal", "manatee", "mandrill", "marlin", "marmoset", "marmot", "marsupial", "marten", "mastodon", "meadowlark", "meerkat", "mink", "minnow", "mite", "mockingbird", "mole", "mollusk", "mongoose", "monkey", "moose", "mosquito", "moth", "mouse", "mule", "muskox", "narwhal", "newt", "nightingale", "ocelot", "octopus", "opossum", "orangutan", "orca", "ostrich", "otter", "owl", "ox", "panda", "panther", "parakeet", "parrot", "parrotfish", "partridge", "peacock", "peafowl", "pelican", "penguin", "perch", "pheasant", "pig", "pigeon", "pike", "pinniped", "piranha", "planarian", "platypus", "pony", "porcupine", "porpoise", "possum", "prawn", "primate", "ptarmigan", "puffin", "puma", "python", "quail", "quelea", "quokka", "rabbit", "raccoon", "rat", "rattlesnake", "raven", "reindeer", "reptile", "rhinoceros", "roadrunner", "rodent", "rook", "rooster", "roundworm", "sailfish", "salamander", "salmon", "sawfish", "scallop", "scorpion", "seahorse", "shark", "sheep", "shrew", "shrimp", "silkworm", "silverfish", "skink", "skunk", "sloth", "slug", "smelt", "snail", "snake", "snipe", "sole", "sparrow", "spider", "spoonbill", "squid", "squirrel", "starfish", "stingray", "stoat", "stork", "sturgeon", "swallow", "swan", "swift", "swordfish", "swordtail", "tahr", "takin", "tapir", "tarantula", "tarsier", "termite", "tern", "thrush", "tick", "tiger", "tiglon", "toad", "tortoise", "toucan", "trout", "tuna", "turkey", "turtle", "tyrannosaurus", "unicorn", "urial", "vicuna", "viper", "vole", "vulture", "wallaby", "walrus", "warbler", "wasp", "weasel", "whale", "whippet", "whitefish", "wildcat", "wildebeest", "wildfowl", "wolf", "wolverine", "wombat", "woodpecker", "worm", "wren", "xerinae", "yak", "zebra"];
-  var t2 = ["amaranth", "amber", "amethyst", "apricot", "aqua", "aquamarine", "azure", "beige", "black", "blue", "blush", "bronze", "brown", "chocolate", "coffee", "copper", "coral", "crimson", "cyan", "emerald", "fuchsia", "gold", "gray", "green", "harlequin", "indigo", "ivory", "jade", "lavender", "lime", "magenta", "maroon", "moccasin", "olive", "orange", "peach", "pink", "plum", "purple", "red", "rose", "salmon", "sapphire", "scarlet", "silver", "tan", "teal", "tomato", "turquoise", "violet", "white", "yellow"];
+  var r = ["aardvark", "aardwolf", "albatross", "alligator", "alpaca", "amphibian", "anaconda", "angelfish", "anglerfish", "ant", "anteater", "antelope", "antlion", "ape", "aphid", "armadillo", "asp", "baboon", "badger", "bandicoot", "barnacle", "barracuda", "basilisk", "bass", "bat", "bear", "beaver", "bedbug", "bee", "beetle", "bird", "bison", "blackbird", "boa", "boar", "bobcat", "bobolink", "bonobo", "booby", "bovid", "bug", "butterfly", "buzzard", "camel", "canid", "canidae", "capybara", "cardinal", "caribou", "carp", "cat", "caterpillar", "catfish", "catshark", "cattle", "centipede", "cephalopod", "chameleon", "cheetah", "chickadee", "chicken", "chimpanzee", "chinchilla", "chipmunk", "cicada", "clam", "clownfish", "cobra", "cockroach", "cod", "condor", "constrictor", "coral", "cougar", "cow", "coyote", "crab", "crane", "crawdad", "crayfish", "cricket", "crocodile", "crow", "cuckoo", "damselfly", "deer", "dingo", "dinosaur", "dog", "dolphin", "donkey", "dormouse", "dove", "dragon", "dragonfly", "duck", "eagle", "earthworm", "earwig", "echidna", "eel", "egret", "elephant", "elk", "emu", "ermine", "falcon", "felidae", "ferret", "finch", "firefly", "fish", "flamingo", "flea", "fly", "flyingfish", "fowl", "fox", "frog", "galliform", "gamefowl", "gayal", "gazelle", "gecko", "gerbil", "gibbon", "giraffe", "goat", "goldfish", "goose", "gopher", "gorilla", "grasshopper", "grouse", "guan", "guanaco", "guineafowl", "gull", "guppy", "haddock", "halibut", "hamster", "hare", "harrier", "hawk", "hedgehog", "heron", "herring", "hippopotamus", "hookworm", "hornet", "horse", "hoverfly", "hummingbird", "hyena", "iguana", "impala", "jackal", "jaguar", "jay", "jellyfish", "junglefowl", "kangaroo", "kingfisher", "kite", "kiwi", "koala", "koi", "krill", "ladybug", "lamprey", "landfowl", "lark", "leech", "lemming", "lemur", "leopard", "leopon", "limpet", "lion", "lizard", "llama", "lobster", "locust", "loon", "louse", "lungfish", "lynx", "macaw", "mackerel", "magpie", "mammal", "manatee", "mandrill", "marlin", "marmoset", "marmot", "marsupial", "marten", "mastodon", "meadowlark", "meerkat", "mink", "minnow", "mite", "mockingbird", "mole", "mollusk", "mongoose", "monkey", "moose", "mosquito", "moth", "mouse", "mule", "muskox", "narwhal", "newt", "nightingale", "ocelot", "octopus", "opossum", "orangutan", "orca", "ostrich", "otter", "owl", "ox", "panda", "panther", "parakeet", "parrot", "parrotfish", "partridge", "peacock", "peafowl", "pelican", "penguin", "perch", "pheasant", "pig", "pigeon", "pike", "pinniped", "piranha", "planarian", "platypus", "pony", "porcupine", "porpoise", "possum", "prawn", "primate", "ptarmigan", "puffin", "puma", "python", "quail", "quelea", "quokka", "rabbit", "raccoon", "rat", "rattlesnake", "raven", "reindeer", "reptile", "rhinoceros", "roadrunner", "rodent", "rook", "rooster", "roundworm", "sailfish", "salamander", "salmon", "sawfish", "scallop", "scorpion", "seahorse", "shark", "sheep", "shrew", "shrimp", "silkworm", "silverfish", "skink", "skunk", "sloth", "slug", "smelt", "snail", "snake", "snipe", "sole", "sparrow", "spider", "spoonbill", "squid", "squirrel", "starfish", "stingray", "stoat", "stork", "sturgeon", "swallow", "swan", "swift", "swordfish", "swordtail", "tahr", "takin", "tapir", "tarantula", "tarsier", "termite", "tern", "thrush", "tick", "tiger", "tiglon", "toad", "tortoise", "toucan", "trout", "tuna", "turkey", "turtle", "tyrannosaurus", "unicorn", "urial", "vicuna", "viper", "vole", "vulture", "wallaby", "walrus", "warbler", "wasp", "weasel", "whale", "whippet", "whitefish", "wildcat", "wildebeest", "wildfowl", "wolf", "wolverine", "wombat", "woodpecker", "worm", "wren", "xerinae", "yak", "zebra"];
+  var t = ["amaranth", "amber", "amethyst", "apricot", "aqua", "aquamarine", "azure", "beige", "black", "blue", "blush", "bronze", "brown", "chocolate", "coffee", "copper", "coral", "crimson", "cyan", "emerald", "fuchsia", "gold", "gray", "green", "harlequin", "indigo", "ivory", "jade", "lavender", "lime", "magenta", "maroon", "moccasin", "olive", "orange", "peach", "pink", "plum", "purple", "red", "rose", "salmon", "sapphire", "scarlet", "silver", "tan", "teal", "tomato", "turquoise", "violet", "white", "yellow"];
 
   // ../../packages/data/firestore.ts
   var firestoreDate = mod.preprocess((arg) => {
@@ -23970,35 +22313,741 @@ Length provided: ${this.length}. Number of dictionaries provided: ${this.diction
     return arg;
   }, mod.date());
 
+  // ../../packages/ui/utils/app.ts
+  function isServer() {
+    return typeof window === "undefined" && !isServiceWorker();
+  }
+  function isClient(callback) {
+    const isClient2 = typeof window !== "undefined" || isServiceWorker();
+    return isClient2 && callback ? callback() : isClient2;
+  }
+  function isServiceWorker() {
+    return typeof self !== "undefined";
+  }
+
+  // ../../packages/ui/utils/auth.ts
+  var ONE_HOUR_MS = 60 * 60 * 1e3;
+
+  // ../../packages/ui/utils/url.ts
+  function addParams(uri, params) {
+    const url = new URL(uri);
+    const keys = Object.keys(params);
+    keys.forEach((key) => {
+      const value = params[key];
+      const isDefined = typeof value !== "undefined";
+      isDefined && url.searchParams.append(key, String(value));
+    });
+    return url.toString();
+  }
+
+  // ../../packages/data/sync.ts
+  var SyncStage = /* @__PURE__ */ ((SyncStage2) => {
+    SyncStage2["ready"] = "ready";
+    SyncStage2["downloading"] = "downloading";
+    return SyncStage2;
+  })(SyncStage || {});
+  var syncTaskSchema = mod.object({
+    ["accessToken" /* accessToken */]: mod.string(),
+    ["accessTokenCreated" /* accessTokenCreated */]: mod.number(),
+    ["refreshToken" /* refreshToken */]: mod.string(),
+    ["taskName" /* taskName */]: mod.string(),
+    ["directoryHandle" /* directoryHandle */]: mod.any().refine((obj) => obj instanceof FileSystemDirectoryHandle, { message: "Must be a FileSystemDirectoryHandle" }),
+    ["fileCount" /* fileCount */]: mod.number(),
+    ["importedCount" /* importedCount */]: mod.number(),
+    ["processedCount" /* processedCount */]: mod.number(),
+    ["exportedCount" /* exportedCount */]: mod.number(),
+    ["created" /* created */]: mod.date(),
+    ["stage" /* stage */]: mod.nativeEnum(SyncStage),
+    ["paused" /* paused */]: mod.boolean().optional().transform((val) => val ?? false),
+    ["previousPageToken" /* previousPageToken */]: mod.string().nullable().optional(),
+    ["nextPageToken" /* nextPageToken */]: mod.string().nullable().optional()
+  });
+  var syncTaskRecordSchema = mod.object({
+    ["accessToken" /* accessToken */]: mod.string(),
+    ["accessTokenCreated" /* accessTokenCreated */]: mod.number(),
+    ["refreshToken" /* refreshToken */]: mod.string(),
+    ["taskName" /* taskName */]: mod.string(),
+    ["fileCount" /* fileCount */]: mod.number(),
+    ["importedCount" /* importedCount */]: mod.number(),
+    ["processedCount" /* processedCount */]: mod.number(),
+    ["exportedCount" /* exportedCount */]: mod.number(),
+    ["directoryName" /* directoryName */]: mod.string(),
+    ["created" /* created */]: mod.string(),
+    ["stage" /* stage */]: mod.nativeEnum(SyncStage),
+    ["paused" /* paused */]: mod.boolean().optional().transform((val) => val ?? false),
+    ["previousPageToken" /* previousPageToken */]: mod.string().nullable().optional(),
+    ["nextPageToken" /* nextPageToken */]: mod.string().nullable().optional()
+  });
+
+  // ../../node_modules/immer/dist/immer.esm.mjs
+  function n2(n3) {
+    for (var r3 = arguments.length, t3 = Array(r3 > 1 ? r3 - 1 : 0), e2 = 1; e2 < r3; e2++)
+      t3[e2 - 1] = arguments[e2];
+    if (true) {
+      var i3 = Y2[n3], o2 = i3 ? "function" == typeof i3 ? i3.apply(null, t3) : i3 : "unknown error nr: " + n3;
+      throw Error("[Immer] " + o2);
+    }
+    throw Error("[Immer] minified error nr: " + n3 + (t3.length ? " " + t3.map(function(n4) {
+      return "'" + n4 + "'";
+    }).join(",") : "") + ". Find the full error at: https://bit.ly/3cXEKWf");
+  }
+  function r2(n3) {
+    return !!n3 && !!n3[Q2];
+  }
+  function t2(n3) {
+    var r3;
+    return !!n3 && (function(n4) {
+      if (!n4 || "object" != typeof n4)
+        return false;
+      var r4 = Object.getPrototypeOf(n4);
+      if (null === r4)
+        return true;
+      var t3 = Object.hasOwnProperty.call(r4, "constructor") && r4.constructor;
+      return t3 === Object || "function" == typeof t3 && Function.toString.call(t3) === Z2;
+    }(n3) || Array.isArray(n3) || !!n3[L2] || !!(null === (r3 = n3.constructor) || void 0 === r3 ? void 0 : r3[L2]) || s(n3) || v2(n3));
+  }
+  function i2(n3, r3, t3) {
+    void 0 === t3 && (t3 = false), 0 === o(n3) ? (t3 ? Object.keys : nn)(n3).forEach(function(e2) {
+      t3 && "symbol" == typeof e2 || r3(e2, n3[e2], n3);
+    }) : n3.forEach(function(t4, e2) {
+      return r3(e2, t4, n3);
+    });
+  }
+  function o(n3) {
+    var r3 = n3[Q2];
+    return r3 ? r3.i > 3 ? r3.i - 4 : r3.i : Array.isArray(n3) ? 1 : s(n3) ? 2 : v2(n3) ? 3 : 0;
+  }
+  function u(n3, r3) {
+    return 2 === o(n3) ? n3.has(r3) : Object.prototype.hasOwnProperty.call(n3, r3);
+  }
+  function a2(n3, r3) {
+    return 2 === o(n3) ? n3.get(r3) : n3[r3];
+  }
+  function f2(n3, r3, t3) {
+    var e2 = o(n3);
+    2 === e2 ? n3.set(r3, t3) : 3 === e2 ? (n3.delete(r3), n3.add(t3)) : n3[r3] = t3;
+  }
+  function c(n3, r3) {
+    return n3 === r3 ? 0 !== n3 || 1 / n3 == 1 / r3 : n3 != n3 && r3 != r3;
+  }
+  function s(n3) {
+    return X2 && n3 instanceof Map;
+  }
+  function v2(n3) {
+    return q2 && n3 instanceof Set;
+  }
+  function p(n3) {
+    return n3.o || n3.t;
+  }
+  function l(n3) {
+    if (Array.isArray(n3))
+      return Array.prototype.slice.call(n3);
+    var r3 = rn2(n3);
+    delete r3[Q2];
+    for (var t3 = nn(r3), e2 = 0; e2 < t3.length; e2++) {
+      var i3 = t3[e2], o2 = r3[i3];
+      false === o2.writable && (o2.writable = true, o2.configurable = true), (o2.get || o2.set) && (r3[i3] = { configurable: true, writable: true, enumerable: o2.enumerable, value: n3[i3] });
+    }
+    return Object.create(Object.getPrototypeOf(n3), r3);
+  }
+  function d2(n3, e2) {
+    return void 0 === e2 && (e2 = false), y2(n3) || r2(n3) || !t2(n3) ? n3 : (o(n3) > 1 && (n3.set = n3.add = n3.clear = n3.delete = h), Object.freeze(n3), e2 && i2(n3, function(n4, r3) {
+      return d2(r3, true);
+    }, true), n3);
+  }
+  function h() {
+    n2(2);
+  }
+  function y2(n3) {
+    return null == n3 || "object" != typeof n3 || Object.isFrozen(n3);
+  }
+  function b2(r3) {
+    var t3 = tn2[r3];
+    return t3 || n2(18, r3), t3;
+  }
+  function m2(n3, r3) {
+    tn2[n3] || (tn2[n3] = r3);
+  }
+  function _2() {
+    return U2 || n2(0), U2;
+  }
+  function j(n3, r3) {
+    r3 && (b2("Patches"), n3.u = [], n3.s = [], n3.v = r3);
+  }
+  function O2(n3) {
+    g2(n3), n3.p.forEach(S2), n3.p = null;
+  }
+  function g2(n3) {
+    n3 === U2 && (U2 = n3.l);
+  }
+  function w2(n3) {
+    return U2 = { p: [], l: U2, h: n3, m: true, _: 0 };
+  }
+  function S2(n3) {
+    var r3 = n3[Q2];
+    0 === r3.i || 1 === r3.i ? r3.j() : r3.O = true;
+  }
+  function P2(r3, e2) {
+    e2._ = e2.p.length;
+    var i3 = e2.p[0], o2 = void 0 !== r3 && r3 !== i3;
+    return e2.h.g || b2("ES5").S(e2, r3, o2), o2 ? (i3[Q2].P && (O2(e2), n2(4)), t2(r3) && (r3 = M(e2, r3), e2.l || x2(e2, r3)), e2.u && b2("Patches").M(i3[Q2].t, r3, e2.u, e2.s)) : r3 = M(e2, i3, []), O2(e2), e2.u && e2.v(e2.u, e2.s), r3 !== H2 ? r3 : void 0;
+  }
+  function M(n3, r3, t3) {
+    if (y2(r3))
+      return r3;
+    var e2 = r3[Q2];
+    if (!e2)
+      return i2(r3, function(i3, o3) {
+        return A2(n3, e2, r3, i3, o3, t3);
+      }, true), r3;
+    if (e2.A !== n3)
+      return r3;
+    if (!e2.P)
+      return x2(n3, e2.t, true), e2.t;
+    if (!e2.I) {
+      e2.I = true, e2.A._--;
+      var o2 = 4 === e2.i || 5 === e2.i ? e2.o = l(e2.k) : e2.o;
+      i2(3 === e2.i ? new Set(o2) : o2, function(r4, i3) {
+        return A2(n3, e2, o2, r4, i3, t3);
+      }), x2(n3, o2, false), t3 && n3.u && b2("Patches").R(e2, t3, n3.u, n3.s);
+    }
+    return e2.o;
+  }
+  function A2(e2, i3, o2, a3, c2, s2) {
+    if (c2 === o2 && n2(5), r2(c2)) {
+      var v6 = M(e2, c2, s2 && i3 && 3 !== i3.i && !u(i3.D, a3) ? s2.concat(a3) : void 0);
+      if (f2(o2, a3, v6), !r2(v6))
+        return;
+      e2.m = false;
+    }
+    if (t2(c2) && !y2(c2)) {
+      if (!e2.h.F && e2._ < 1)
+        return;
+      M(e2, c2), i3 && i3.A.l || x2(e2, c2);
+    }
+  }
+  function x2(n3, r3, t3) {
+    void 0 === t3 && (t3 = false), n3.h.F && n3.m && d2(r3, t3);
+  }
+  function z2(n3, r3) {
+    var t3 = n3[Q2];
+    return (t3 ? p(t3) : n3)[r3];
+  }
+  function I2(n3, r3) {
+    if (r3 in n3)
+      for (var t3 = Object.getPrototypeOf(n3); t3; ) {
+        var e2 = Object.getOwnPropertyDescriptor(t3, r3);
+        if (e2)
+          return e2;
+        t3 = Object.getPrototypeOf(t3);
+      }
+  }
+  function k2(n3) {
+    n3.P || (n3.P = true, n3.l && k2(n3.l));
+  }
+  function E2(n3) {
+    n3.o || (n3.o = l(n3.t));
+  }
+  function R2(n3, r3, t3) {
+    var e2 = s(r3) ? b2("MapSet").N(r3, t3) : v2(r3) ? b2("MapSet").T(r3, t3) : n3.g ? function(n4, r4) {
+      var t4 = Array.isArray(n4), e3 = { i: t4 ? 1 : 0, A: r4 ? r4.A : _2(), P: false, I: false, D: {}, l: r4, t: n4, k: null, o: null, j: null, C: false }, i3 = e3, o2 = en2;
+      t4 && (i3 = [e3], o2 = on2);
+      var u2 = Proxy.revocable(i3, o2), a3 = u2.revoke, f3 = u2.proxy;
+      return e3.k = f3, e3.j = a3, f3;
+    }(r3, t3) : b2("ES5").J(r3, t3);
+    return (t3 ? t3.A : _2()).p.push(e2), e2;
+  }
+  function D2(e2) {
+    return r2(e2) || n2(22, e2), function n3(r3) {
+      if (!t2(r3))
+        return r3;
+      var e3, u2 = r3[Q2], c2 = o(r3);
+      if (u2) {
+        if (!u2.P && (u2.i < 4 || !b2("ES5").K(u2)))
+          return u2.t;
+        u2.I = true, e3 = F2(r3, c2), u2.I = false;
+      } else
+        e3 = F2(r3, c2);
+      return i2(e3, function(r4, t3) {
+        u2 && a2(u2.t, r4) === t3 || f2(e3, r4, n3(t3));
+      }), 3 === c2 ? new Set(e3) : e3;
+    }(e2);
+  }
+  function F2(n3, r3) {
+    switch (r3) {
+      case 2:
+        return new Map(n3);
+      case 3:
+        return Array.from(n3);
+    }
+    return l(n3);
+  }
+  function C2() {
+    function r3(n3, r4) {
+      function t3() {
+        this.constructor = n3;
+      }
+      a3(n3, r4), n3.prototype = (t3.prototype = r4.prototype, new t3());
+    }
+    function e2(n3) {
+      n3.o || (n3.D = /* @__PURE__ */ new Map(), n3.o = new Map(n3.t));
+    }
+    function o2(n3) {
+      n3.o || (n3.o = /* @__PURE__ */ new Set(), n3.t.forEach(function(r4) {
+        if (t2(r4)) {
+          var e3 = R2(n3.A.h, r4, n3);
+          n3.p.set(r4, e3), n3.o.add(e3);
+        } else
+          n3.o.add(r4);
+      }));
+    }
+    function u2(r4) {
+      r4.O && n2(3, JSON.stringify(p(r4)));
+    }
+    var a3 = function(n3, r4) {
+      return (a3 = Object.setPrototypeOf || { __proto__: [] } instanceof Array && function(n4, r5) {
+        n4.__proto__ = r5;
+      } || function(n4, r5) {
+        for (var t3 in r5)
+          r5.hasOwnProperty(t3) && (n4[t3] = r5[t3]);
+      })(n3, r4);
+    }, f3 = function() {
+      function n3(n4, r4) {
+        return this[Q2] = { i: 2, l: r4, A: r4 ? r4.A : _2(), P: false, I: false, o: void 0, D: void 0, t: n4, k: this, C: false, O: false }, this;
+      }
+      r3(n3, Map);
+      var o3 = n3.prototype;
+      return Object.defineProperty(o3, "size", { get: function() {
+        return p(this[Q2]).size;
+      } }), o3.has = function(n4) {
+        return p(this[Q2]).has(n4);
+      }, o3.set = function(n4, r4) {
+        var t3 = this[Q2];
+        return u2(t3), p(t3).has(n4) && p(t3).get(n4) === r4 || (e2(t3), k2(t3), t3.D.set(n4, true), t3.o.set(n4, r4), t3.D.set(n4, true)), this;
+      }, o3.delete = function(n4) {
+        if (!this.has(n4))
+          return false;
+        var r4 = this[Q2];
+        return u2(r4), e2(r4), k2(r4), r4.t.has(n4) ? r4.D.set(n4, false) : r4.D.delete(n4), r4.o.delete(n4), true;
+      }, o3.clear = function() {
+        var n4 = this[Q2];
+        u2(n4), p(n4).size && (e2(n4), k2(n4), n4.D = /* @__PURE__ */ new Map(), i2(n4.t, function(r4) {
+          n4.D.set(r4, false);
+        }), n4.o.clear());
+      }, o3.forEach = function(n4, r4) {
+        var t3 = this;
+        p(this[Q2]).forEach(function(e3, i3) {
+          n4.call(r4, t3.get(i3), i3, t3);
+        });
+      }, o3.get = function(n4) {
+        var r4 = this[Q2];
+        u2(r4);
+        var i3 = p(r4).get(n4);
+        if (r4.I || !t2(i3))
+          return i3;
+        if (i3 !== r4.t.get(n4))
+          return i3;
+        var o4 = R2(r4.A.h, i3, r4);
+        return e2(r4), r4.o.set(n4, o4), o4;
+      }, o3.keys = function() {
+        return p(this[Q2]).keys();
+      }, o3.values = function() {
+        var n4, r4 = this, t3 = this.keys();
+        return (n4 = {})[V2] = function() {
+          return r4.values();
+        }, n4.next = function() {
+          var n5 = t3.next();
+          return n5.done ? n5 : { done: false, value: r4.get(n5.value) };
+        }, n4;
+      }, o3.entries = function() {
+        var n4, r4 = this, t3 = this.keys();
+        return (n4 = {})[V2] = function() {
+          return r4.entries();
+        }, n4.next = function() {
+          var n5 = t3.next();
+          if (n5.done)
+            return n5;
+          var e3 = r4.get(n5.value);
+          return { done: false, value: [n5.value, e3] };
+        }, n4;
+      }, o3[V2] = function() {
+        return this.entries();
+      }, n3;
+    }(), c2 = function() {
+      function n3(n4, r4) {
+        return this[Q2] = { i: 3, l: r4, A: r4 ? r4.A : _2(), P: false, I: false, o: void 0, t: n4, k: this, p: /* @__PURE__ */ new Map(), O: false, C: false }, this;
+      }
+      r3(n3, Set);
+      var t3 = n3.prototype;
+      return Object.defineProperty(t3, "size", { get: function() {
+        return p(this[Q2]).size;
+      } }), t3.has = function(n4) {
+        var r4 = this[Q2];
+        return u2(r4), r4.o ? !!r4.o.has(n4) || !(!r4.p.has(n4) || !r4.o.has(r4.p.get(n4))) : r4.t.has(n4);
+      }, t3.add = function(n4) {
+        var r4 = this[Q2];
+        return u2(r4), this.has(n4) || (o2(r4), k2(r4), r4.o.add(n4)), this;
+      }, t3.delete = function(n4) {
+        if (!this.has(n4))
+          return false;
+        var r4 = this[Q2];
+        return u2(r4), o2(r4), k2(r4), r4.o.delete(n4) || !!r4.p.has(n4) && r4.o.delete(r4.p.get(n4));
+      }, t3.clear = function() {
+        var n4 = this[Q2];
+        u2(n4), p(n4).size && (o2(n4), k2(n4), n4.o.clear());
+      }, t3.values = function() {
+        var n4 = this[Q2];
+        return u2(n4), o2(n4), n4.o.values();
+      }, t3.entries = function() {
+        var n4 = this[Q2];
+        return u2(n4), o2(n4), n4.o.entries();
+      }, t3.keys = function() {
+        return this.values();
+      }, t3[V2] = function() {
+        return this.values();
+      }, t3.forEach = function(n4, r4) {
+        for (var t4 = this.values(), e3 = t4.next(); !e3.done; )
+          n4.call(r4, e3.value, e3.value, this), e3 = t4.next();
+      }, n3;
+    }();
+    m2("MapSet", { N: function(n3, r4) {
+      return new f3(n3, r4);
+    }, T: function(n3, r4) {
+      return new c2(n3, r4);
+    } });
+  }
+  var G2;
+  var U2;
+  var W2 = "undefined" != typeof Symbol && "symbol" == typeof Symbol("x");
+  var X2 = "undefined" != typeof Map;
+  var q2 = "undefined" != typeof Set;
+  var B2 = "undefined" != typeof Proxy && void 0 !== Proxy.revocable && "undefined" != typeof Reflect;
+  var H2 = W2 ? Symbol.for("immer-nothing") : ((G2 = {})["immer-nothing"] = true, G2);
+  var L2 = W2 ? Symbol.for("immer-draftable") : "__$immer_draftable";
+  var Q2 = W2 ? Symbol.for("immer-state") : "__$immer_state";
+  var V2 = "undefined" != typeof Symbol && Symbol.iterator || "@@iterator";
+  var Y2 = { 0: "Illegal state", 1: "Immer drafts cannot have computed properties", 2: "This object has been frozen and should not be mutated", 3: function(n3) {
+    return "Cannot use a proxy that has been revoked. Did you pass an object from inside an immer function to an async process? " + n3;
+  }, 4: "An immer producer returned a new value *and* modified its draft. Either return a new value *or* modify the draft.", 5: "Immer forbids circular references", 6: "The first or second argument to `produce` must be a function", 7: "The third argument to `produce` must be a function or undefined", 8: "First argument to `createDraft` must be a plain object, an array, or an immerable object", 9: "First argument to `finishDraft` must be a draft returned by `createDraft`", 10: "The given draft is already finalized", 11: "Object.defineProperty() cannot be used on an Immer draft", 12: "Object.setPrototypeOf() cannot be used on an Immer draft", 13: "Immer only supports deleting array indices", 14: "Immer only supports setting array indices and the 'length' property", 15: function(n3) {
+    return "Cannot apply patch, path doesn't resolve: " + n3;
+  }, 16: 'Sets cannot have "replace" patches.', 17: function(n3) {
+    return "Unsupported patch operation: " + n3;
+  }, 18: function(n3) {
+    return "The plugin for '" + n3 + "' has not been loaded into Immer. To enable the plugin, import and call `enable" + n3 + "()` when initializing your application.";
+  }, 20: "Cannot use proxies if Proxy, Proxy.revocable or Reflect are not available", 21: function(n3) {
+    return "produce can only be called on things that are draftable: plain objects, arrays, Map, Set or classes that are marked with '[immerable]: true'. Got '" + n3 + "'";
+  }, 22: function(n3) {
+    return "'current' expects a draft, got: " + n3;
+  }, 23: function(n3) {
+    return "'original' expects a draft, got: " + n3;
+  }, 24: "Patching reserved attributes like __proto__, prototype and constructor is not allowed" };
+  var Z2 = "" + Object.prototype.constructor;
+  var nn = "undefined" != typeof Reflect && Reflect.ownKeys ? Reflect.ownKeys : void 0 !== Object.getOwnPropertySymbols ? function(n3) {
+    return Object.getOwnPropertyNames(n3).concat(Object.getOwnPropertySymbols(n3));
+  } : Object.getOwnPropertyNames;
+  var rn2 = Object.getOwnPropertyDescriptors || function(n3) {
+    var r3 = {};
+    return nn(n3).forEach(function(t3) {
+      r3[t3] = Object.getOwnPropertyDescriptor(n3, t3);
+    }), r3;
+  };
+  var tn2 = {};
+  var en2 = { get: function(n3, r3) {
+    if (r3 === Q2)
+      return n3;
+    var e2 = p(n3);
+    if (!u(e2, r3))
+      return function(n4, r4, t3) {
+        var e3, i4 = I2(r4, t3);
+        return i4 ? "value" in i4 ? i4.value : null === (e3 = i4.get) || void 0 === e3 ? void 0 : e3.call(n4.k) : void 0;
+      }(n3, e2, r3);
+    var i3 = e2[r3];
+    return n3.I || !t2(i3) ? i3 : i3 === z2(n3.t, r3) ? (E2(n3), n3.o[r3] = R2(n3.A.h, i3, n3)) : i3;
+  }, has: function(n3, r3) {
+    return r3 in p(n3);
+  }, ownKeys: function(n3) {
+    return Reflect.ownKeys(p(n3));
+  }, set: function(n3, r3, t3) {
+    var e2 = I2(p(n3), r3);
+    if (null == e2 ? void 0 : e2.set)
+      return e2.set.call(n3.k, t3), true;
+    if (!n3.P) {
+      var i3 = z2(p(n3), r3), o2 = null == i3 ? void 0 : i3[Q2];
+      if (o2 && o2.t === t3)
+        return n3.o[r3] = t3, n3.D[r3] = false, true;
+      if (c(t3, i3) && (void 0 !== t3 || u(n3.t, r3)))
+        return true;
+      E2(n3), k2(n3);
+    }
+    return n3.o[r3] === t3 && "number" != typeof t3 && (void 0 !== t3 || r3 in n3.o) || (n3.o[r3] = t3, n3.D[r3] = true, true);
+  }, deleteProperty: function(n3, r3) {
+    return void 0 !== z2(n3.t, r3) || r3 in n3.t ? (n3.D[r3] = false, E2(n3), k2(n3)) : delete n3.D[r3], n3.o && delete n3.o[r3], true;
+  }, getOwnPropertyDescriptor: function(n3, r3) {
+    var t3 = p(n3), e2 = Reflect.getOwnPropertyDescriptor(t3, r3);
+    return e2 ? { writable: true, configurable: 1 !== n3.i || "length" !== r3, enumerable: e2.enumerable, value: t3[r3] } : e2;
+  }, defineProperty: function() {
+    n2(11);
+  }, getPrototypeOf: function(n3) {
+    return Object.getPrototypeOf(n3.t);
+  }, setPrototypeOf: function() {
+    n2(12);
+  } };
+  var on2 = {};
+  i2(en2, function(n3, r3) {
+    on2[n3] = function() {
+      return arguments[0] = arguments[0][0], r3.apply(this, arguments);
+    };
+  }), on2.deleteProperty = function(r3, t3) {
+    return isNaN(parseInt(t3)) && n2(13), on2.set.call(this, r3, t3, void 0);
+  }, on2.set = function(r3, t3, e2) {
+    return "length" !== t3 && isNaN(parseInt(t3)) && n2(14), en2.set.call(this, r3[0], t3, e2, r3[0]);
+  };
+  var un = function() {
+    function e2(r3) {
+      var e3 = this;
+      this.g = B2, this.F = true, this.produce = function(r4, i4, o2) {
+        if ("function" == typeof r4 && "function" != typeof i4) {
+          var u2 = i4;
+          i4 = r4;
+          var a3 = e3;
+          return function(n3) {
+            var r5 = this;
+            void 0 === n3 && (n3 = u2);
+            for (var t3 = arguments.length, e4 = Array(t3 > 1 ? t3 - 1 : 0), o3 = 1; o3 < t3; o3++)
+              e4[o3 - 1] = arguments[o3];
+            return a3.produce(n3, function(n4) {
+              var t4;
+              return (t4 = i4).call.apply(t4, [r5, n4].concat(e4));
+            });
+          };
+        }
+        var f3;
+        if ("function" != typeof i4 && n2(6), void 0 !== o2 && "function" != typeof o2 && n2(7), t2(r4)) {
+          var c2 = w2(e3), s2 = R2(e3, r4, void 0), v6 = true;
+          try {
+            f3 = i4(s2), v6 = false;
+          } finally {
+            v6 ? O2(c2) : g2(c2);
+          }
+          return "undefined" != typeof Promise && f3 instanceof Promise ? f3.then(function(n3) {
+            return j(c2, o2), P2(n3, c2);
+          }, function(n3) {
+            throw O2(c2), n3;
+          }) : (j(c2, o2), P2(f3, c2));
+        }
+        if (!r4 || "object" != typeof r4) {
+          if (void 0 === (f3 = i4(r4)) && (f3 = r4), f3 === H2 && (f3 = void 0), e3.F && d2(f3, true), o2) {
+            var p2 = [], l2 = [];
+            b2("Patches").M(r4, f3, p2, l2), o2(p2, l2);
+          }
+          return f3;
+        }
+        n2(21, r4);
+      }, this.produceWithPatches = function(n3, r4) {
+        if ("function" == typeof n3)
+          return function(r5) {
+            for (var t4 = arguments.length, i5 = Array(t4 > 1 ? t4 - 1 : 0), o3 = 1; o3 < t4; o3++)
+              i5[o3 - 1] = arguments[o3];
+            return e3.produceWithPatches(r5, function(r6) {
+              return n3.apply(void 0, [r6].concat(i5));
+            });
+          };
+        var t3, i4, o2 = e3.produce(n3, r4, function(n4, r5) {
+          t3 = n4, i4 = r5;
+        });
+        return "undefined" != typeof Promise && o2 instanceof Promise ? o2.then(function(n4) {
+          return [n4, t3, i4];
+        }) : [o2, t3, i4];
+      }, "boolean" == typeof (null == r3 ? void 0 : r3.useProxies) && this.setUseProxies(r3.useProxies), "boolean" == typeof (null == r3 ? void 0 : r3.autoFreeze) && this.setAutoFreeze(r3.autoFreeze);
+    }
+    var i3 = e2.prototype;
+    return i3.createDraft = function(e3) {
+      t2(e3) || n2(8), r2(e3) && (e3 = D2(e3));
+      var i4 = w2(this), o2 = R2(this, e3, void 0);
+      return o2[Q2].C = true, g2(i4), o2;
+    }, i3.finishDraft = function(r3, t3) {
+      var e3 = r3 && r3[Q2];
+      e3 && e3.C || n2(9), e3.I && n2(10);
+      var i4 = e3.A;
+      return j(i4, t3), P2(void 0, i4);
+    }, i3.setAutoFreeze = function(n3) {
+      this.F = n3;
+    }, i3.setUseProxies = function(r3) {
+      r3 && !B2 && n2(20), this.g = r3;
+    }, i3.applyPatches = function(n3, t3) {
+      var e3;
+      for (e3 = t3.length - 1; e3 >= 0; e3--) {
+        var i4 = t3[e3];
+        if (0 === i4.path.length && "replace" === i4.op) {
+          n3 = i4.value;
+          break;
+        }
+      }
+      e3 > -1 && (t3 = t3.slice(e3 + 1));
+      var o2 = b2("Patches").$;
+      return r2(n3) ? o2(n3, t3) : this.produce(n3, function(n4) {
+        return o2(n4, t3);
+      });
+    }, e2;
+  }();
+  var an2 = new un();
+  var fn2 = an2.produce;
+  var cn = an2.produceWithPatches.bind(an2);
+  var sn2 = an2.setAutoFreeze.bind(an2);
+  var vn2 = an2.setUseProxies.bind(an2);
+  var pn = an2.applyPatches.bind(an2);
+  var ln2 = an2.createDraft.bind(an2);
+  var dn = an2.finishDraft.bind(an2);
+
+  // ../../packages/ui/utils/localforage.ts
+  var import_localforage = __toESM(require_localforage());
+  C2();
+  isClient && isClient(() => {
+    import_localforage.default.config({
+      driver: [import_localforage.default.INDEXEDDB, import_localforage.default.LOCALSTORAGE, import_localforage.default.WEBSQL],
+      name: "jupiter-storage"
+    });
+  });
+  var getSyncTasks = createGetter("sync-tasks" /* SyncTasks */, null);
+  var setSyncTasks = createSetter("sync-tasks" /* SyncTasks */);
+  function createGetter(key, defaultValue) {
+    return isServer && isServer() ? () => __async(this, null, function* () {
+    }) : () => __async(this, null, function* () {
+      const value = yield import_localforage.default.getItem(key);
+      return value === null ? defaultValue : deserialize(value);
+    });
+  }
+  function createSetter(key) {
+    return isServer && isServer() ? () => __async(this, null, function* () {
+    }) : (value) => __async(this, null, function* () {
+      return import_localforage.default.setItem(key, serialize(value));
+    });
+  }
+  function serialize(object) {
+    const isImmerable = getIsImmerable(object);
+    const isArray = Array.isArray(object);
+    const cannotSerialize = object instanceof FileSystemDirectoryHandle || object instanceof FileSystemFileHandle || object instanceof Date;
+    if (cannotSerialize) {
+      return object;
+    } else if (!isImmerable && isArray) {
+      return object.map(serialize);
+    } else {
+      return fn2(object, (draft) => {
+        for (const key in object) {
+          if (Object.prototype.hasOwnProperty.call(object, key)) {
+            const value = object[key];
+            if (value instanceof Set) {
+              const set2 = value;
+              draft[key] = { __isSet: true, value: [...set2] };
+            } else if (typeof value === "object") {
+              draft[key] = serialize(value);
+            } else if (typeof value === "function") {
+              delete draft[key];
+            }
+          }
+        }
+      });
+    }
+  }
+  function deserialize(object) {
+    const isImmerable = getIsImmerable(object);
+    return !isImmerable ? object : fn2(
+      object,
+      (draft) => {
+        for (const key in object) {
+          if (Object.prototype.hasOwnProperty.call(object, key)) {
+            const value = object[key];
+            if (value == null ? void 0 : value.__isSet) {
+              draft[key] = new Set(value.value);
+            } else if (typeof value === "object") {
+              draft[key] = deserialize(value);
+            }
+          }
+        }
+      }
+    );
+  }
+  function getIsImmerable(object) {
+    const isPlainObject = !!object && Object.getPrototypeOf(object) === Object.prototype;
+    const isMap = object instanceof Map;
+    const isSet = object instanceof Set;
+    const isImmerable = !!object && object[L2] === true;
+    return isPlainObject || isMap || isSet || isImmerable;
+  }
+
+  // ../../packages/data/media-items.ts
+  var mediaItemSchema = mod.object({
+    id: mod.string(),
+    description: mod.string().optional(),
+    productUrl: mod.string(),
+    baseUrl: mod.string(),
+    mimeType: mod.string(),
+    filename: mod.string(),
+    mediaMetadata: mod.object({
+      creationTime: mod.string(),
+      width: mod.string(),
+      height: mod.string(),
+      video: mod.object({
+        cameraMake: mod.string().optional(),
+        cameraModel: mod.string().optional(),
+        fps: mod.number().optional(),
+        status: mod.enum(["UNSPECIFIED", "PROCESSING", "FAILED", "READY"])
+      }).optional(),
+      photo: mod.object({
+        cameraMake: mod.string().optional(),
+        cameraModel: mod.string().optional(),
+        focalLength: mod.number().optional(),
+        apertureFNumber: mod.number().optional(),
+        isoEquivalent: mod.number().optional(),
+        exposureTime: mod.string().optional()
+      }).optional()
+    }),
+    contributorInfo: mod.object({ profilePictureBaseUrl: mod.string().optional(), displayName: mod.string().optional() }).optional()
+  });
+  var mediaItemsResponseSchema = mod.object({
+    accessToken: mod.string(),
+    refreshToken: mod.string(),
+    mediaItems: mod.preprocess(
+      (args) => Array.isArray(args) ? args : [],
+      mod.array(mediaItemSchema),
+      mod.array(mediaItemSchema)
+    ),
+    nextPageToken: mod.string().optional()
+  });
+
   // ../../packages/data/library.ts
   var librarySchema = mod.object({
     accessToken: mod.string(),
     refreshToken: mod.string(),
     name: mod.preprocess(
-      (name5) => name5 ? name5 : n2({ dictionaries: [t2, r2], length: 2 }).replace("_", " "),
+      (name5) => name5 ? name5 : n({ dictionaries: [t, r], length: 2 }).replace("_", " "),
       mod.string()
     ),
     mediaItems: mod.array(mediaItemSchema).optional(),
-    imported: firestoreDate.optional(),
     created: firestoreDate.default(() => new Date()),
     updated: firestoreDate.default(() => new Date())
   });
-  var LibraryImportStatus = /* @__PURE__ */ ((LibraryImportStatus2) => {
-    LibraryImportStatus2["idle"] = "idle";
-    LibraryImportStatus2["running"] = "running";
-    LibraryImportStatus2["paused"] = "paused";
-    LibraryImportStatus2["canceled"] = "canceled";
-    LibraryImportStatus2["complete"] = "complete";
-    return LibraryImportStatus2;
-  })(LibraryImportStatus || {});
-  var libraryImportSchema = mod.object({
-    status: mod.nativeEnum(LibraryImportStatus).default("idle" /* idle */),
+  var LibraryTaskStatus = /* @__PURE__ */ ((LibraryTaskStatus3) => {
+    LibraryTaskStatus3["idle"] = "idle";
+    LibraryTaskStatus3["running"] = "running";
+    LibraryTaskStatus3["paused"] = "paused";
+    LibraryTaskStatus3["canceled"] = "canceled";
+    LibraryTaskStatus3["complete"] = "complete";
+    return LibraryTaskStatus3;
+  })(LibraryTaskStatus || {});
+  var libraryTaskSchema = mod.object({
+    status: mod.nativeEnum(LibraryTaskStatus).default("idle" /* idle */),
     count: mod.number().default(0),
-    bytes: mod.number().default(0),
-    nextPageToken: mod.string().optional(),
-    pageSize: mod.number().default(100),
     created: firestoreDate.default(() => new Date()),
     updated: firestoreDate.default(() => new Date())
+  });
+  var libraryImportSchema = libraryTaskSchema.extend({
+    nextPageToken: mod.string().optional(),
+    pageSize: mod.number().default(100)
+  });
+  var libraryDownloadSchema = libraryTaskSchema.extend({
+    bytes: mod.number().default(0),
+    lastKey: mod.string().optional()
   });
   var libraryImportMediaItemSchema = mod.object({
     success: mod.boolean(),
@@ -24006,12 +23055,86 @@ Length provided: ${this.length}. Number of dictionaries provided: ${this.diction
     mediaItem: mediaItemSchema
   });
 
+  // src/library-download/init-library-download.ts
+  async function initLibraryDownload({ database: database2, db: db2, libraryId, userId }) {
+    const libraryDownloadRef = ref(database2, WEB.DATABASE.PATHS.LIBRARY_DOWNLOAD(userId, libraryId));
+    const libraryDownloadQueueRef = ref(database2, WEB.DATABASE.PATHS.LIBRARY_DOWNLOAD_QUEUE(userId, libraryId));
+    const setStatus = getSetStatus({ libraryId, libraryDownloadRef });
+    const getStatus = getGetStatus(libraryId);
+    const libraryDownload = await getLibraryDownload(libraryDownloadRef);
+    await setStatus(libraryDownload.status);
+    async function start() {
+      console.log("start");
+    }
+    async function pause() {
+      console.log("pause");
+    }
+    async function cancel() {
+      console.log("cancel");
+    }
+    async function destroy() {
+      console.log("destroy");
+    }
+    return { start, pause, cancel, destroy, getStatus, setStatus };
+  }
+  var statusMap = /* @__PURE__ */ new Map();
+  function getSetStatus({ libraryId, libraryDownloadRef }) {
+    return async (status) => {
+      const libraryDownload = await getLibraryDownload(libraryDownloadRef);
+      const updates = libraryDownloadSchema.parse({ ...libraryDownload, status, updated: new Date() });
+      await update(libraryDownloadRef, updates);
+      statusMap.set(libraryId, status);
+      return updates;
+    };
+  }
+  function getGetStatus(libraryId) {
+    return () => statusMap.get(libraryId);
+  }
+  async function getLibraryDownload(libraryDownloadRef) {
+    const snapshot = await get(libraryDownloadRef);
+    const value = snapshot.val();
+    const libraryDownload = libraryDownloadSchema.parse(value || {});
+    return libraryDownload;
+  }
+  var libraryDownloadsMap = /* @__PURE__ */ new Map();
+  async function getLibraryDownloadInstance({ database: database2, db: db2, libraryId, userId }) {
+    return libraryDownloadsMap.get(libraryId) || await initLibraryDownload({ database: database2, db: db2, libraryId, userId });
+  }
+
+  // src/library-download/handle-library-download-message.ts
+  async function handleLibraryDownloadMessage({
+    database: database2,
+    db: db2,
+    message,
+    user: user2
+  }) {
+    const userId = user2.uid;
+    const libraryDownload = await getLibraryDownloadInstance({ database: database2, db: db2, libraryId: message.data.libraryId, userId });
+    switch (message.action) {
+      case "libraryDownloadInit" /* libraryDownloadInit */:
+        console.info("forcing initialization of library download");
+        break;
+      case "libraryDownloadStart" /* libraryDownloadStart */:
+        libraryDownload.start();
+        break;
+      case "libraryDownloadPause" /* libraryDownloadPause */:
+        libraryDownload.pause();
+        break;
+      case "libraryDownloadCancel" /* libraryDownloadCancel */:
+        libraryDownload.cancel();
+        break;
+      case "libraryDownloadDestroy" /* libraryDownloadDestroy */:
+        libraryDownload.destroy();
+        break;
+    }
+  }
+
   // src/library-import/init-library-import.ts
   async function initLibraryImport({ database: database2, db: db2, libraryId, userId }) {
     const libraryImportRef = ref(database2, WEB.DATABASE.PATHS.LIBRARY_IMPORT(userId, libraryId));
     const libraryMediaItemsRef = ref(database2, WEB.DATABASE.PATHS.LIBRARY_MEDIA_ITEMS(userId, libraryId));
-    const setStatus = getSetStatus({ libraryId, libraryImportRef });
-    const getStatus = getGetStatus(libraryId);
+    const setStatus = getSetStatus2({ libraryId, libraryImportRef });
+    const getStatus = getGetStatus2(libraryId);
     const libraryImport = await getLibraryImport(libraryImportRef);
     await setStatus(libraryImport.status);
     async function start() {
@@ -24064,18 +23187,18 @@ Length provided: ${this.length}. Number of dictionaries provided: ${this.diction
     }
     return { start, pause, cancel, destroy, getStatus, setStatus };
   }
-  var statusMap = /* @__PURE__ */ new Map();
-  function getSetStatus({ libraryId, libraryImportRef }) {
+  var statusMap2 = /* @__PURE__ */ new Map();
+  function getSetStatus2({ libraryId, libraryImportRef }) {
     return async (status) => {
       const libraryImport = await getLibraryImport(libraryImportRef);
       const updates = libraryImportSchema.parse({ ...libraryImport, status, updated: new Date() });
       await update(libraryImportRef, updates);
-      statusMap.set(libraryId, status);
+      statusMap2.set(libraryId, status);
       return updates;
     };
   }
-  function getGetStatus(libraryId) {
-    return () => statusMap.get(libraryId);
+  function getGetStatus2(libraryId) {
+    return () => statusMap2.get(libraryId);
   }
   async function getLibraryImport(libraryImportRef) {
     const snapshot = await get(libraryImportRef);
@@ -24119,14 +23242,12 @@ Length provided: ${this.length}. Number of dictionaries provided: ${this.diction
 
   // src/library-import/handle-library-import-message.ts
   async function handleLibraryImportMessage({
-    ack: ack2,
     database: database2,
     db: db2,
     message,
     user: user2
   }) {
     const userId = user2.uid;
-    const uuid = message.uuid;
     const libraryImport = await getLibraryImportInstance({ database: database2, db: db2, libraryId: message.data.libraryId, userId });
     switch (message.action) {
       case "libraryImportInit" /* libraryImportInit */:
@@ -24145,7 +23266,6 @@ Length provided: ${this.length}. Number of dictionaries provided: ${this.diction
         libraryImport.destroy();
         break;
     }
-    return ack2(uuid);
   }
 
   // ../../node_modules/firebase/app/dist/index.esm.js
@@ -24157,8 +23277,6 @@ Length provided: ${this.length}. Number of dictionaries provided: ${this.diction
   var app = initializeApp(WEB.FIREBASE, WEB.FIREBASE.APP_NAME);
   var database = getDatabase(app);
   var db = wn(app);
-  var unsubscribers = [];
-  var syncTasksMap = /* @__PURE__ */ new Map();
   var { sendMessageToClients } = initWorkerClient();
   var NATIVE_EVENT_TYPES2 = /* @__PURE__ */ new Set(["ping", "keyChanged"]);
   var user = null;
@@ -24172,9 +23290,7 @@ Length provided: ${this.length}. Number of dictionaries provided: ${this.diction
     if (NATIVE_EVENT_TYPES2.has(event.data.eventType)) {
       return;
     }
-    const userId = user?.uid;
     const message = decodePostMessage(event.data);
-    const uuid = message.uuid;
     switch (message.action) {
       case "libraryImportInit" /* libraryImportInit */:
       case "libraryImportStart" /* libraryImportStart */:
@@ -24183,71 +23299,22 @@ Length provided: ${this.length}. Number of dictionaries provided: ${this.diction
       case "libraryImportDestroy" /* libraryImportDestroy */:
         if (!user)
           throw new Error("User not found");
-        return handleLibraryImportMessage({ ack, database, db, message, user });
-      case "syncGetRefs" /* syncGetRefs */: {
-        const { syncTask } = getSyncTask2(message.data);
-        return sendMessageToClients(
-          encodePostMessage({
-            action: "syncGetRefs" /* syncGetRefs */,
-            data: {
-              metadataRefPath: getPath(syncTask.queue.metadataRef),
-              tasksRefPath: getPath(syncTask.queue.tasksRef)
-            },
-            uuid
-          })
-        );
-      }
-      case "syncStatus" /* syncStatus */: {
-        const { taskId } = message.data;
-        const syncTaskResult = syncTasksMap.get(taskId);
-        return sendMessageToClients(
-          encodePostMessage({
-            action: "syncStatus" /* syncStatus */,
-            data: { taskId, isActive: !!syncTaskResult },
-            uuid
-          })
-        );
-      }
-      case "syncStart" /* syncStart */: {
-        const { syncTask, taskId } = getSyncTask2(message.data);
-        if (syncTask) {
-          syncTask.queue.start();
-        } else if (userId) {
-          const result = await startSyncTask({ database, taskId, userId });
-          unsubscribers.push(result.unsubscribe);
-          syncTasksMap.set(taskId, result);
-        }
-        return ack(uuid);
-      }
-      case "syncStop" /* syncStop */: {
-        const { syncTask } = getSyncTask2(message.data);
-        await syncTask.queue.stop();
-        return ack(uuid);
-      }
-      case "syncEmpty" /* syncEmpty */: {
-        const { syncTask } = getSyncTask2(message.data);
-        await syncTask.queue.empty();
-        return ack(uuid);
-      }
-      case "syncRequeue" /* syncRequeue */: {
-        const { syncTask } = getSyncTask2(message.data);
-        await syncTask.queue.requeueByState("error" /* error */);
-        return ack(uuid);
-      }
+        await handleLibraryImportMessage({ database, db, message, user });
+        return ack(message.uuid);
+      case "libraryDownloadInit" /* libraryDownloadInit */:
+      case "libraryDownloadStart" /* libraryDownloadStart */:
+      case "libraryDownloadPause" /* libraryDownloadPause */:
+      case "libraryDownloadCancel" /* libraryDownloadCancel */:
+      case "libraryDownloadDestroy" /* libraryDownloadDestroy */:
+        if (!user)
+          throw new Error("User not found");
+        await handleLibraryDownloadMessage({ database, db, message, user });
+        return ack(message.uuid);
       default:
         console.warn("Unhandled message", message);
         return;
     }
   });
-  function getSyncTask2(syncTaskMessage) {
-    const { taskId } = syncTaskMessageSchema.parse(syncTaskMessage);
-    const syncTask = syncTasksMap.get(taskId);
-    if (syncTask) {
-      return { syncTask, taskId };
-    } else {
-      throw new Error("Sync task not started");
-    }
-  }
   function ack(uuid, data = true) {
     sendMessageToClients(encodePostMessage({ action: "ack" /* ack */, data, uuid }));
   }

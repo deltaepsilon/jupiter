@@ -12,7 +12,7 @@ import {
 
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
-import { LibraryImportStatus } from 'data/library';
+import { LibraryTaskStatus } from 'data/library';
 import { MenuTrigger } from 'ui/components';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import PauseCircleOutlineIcon from '@mui/icons-material/PauseCircleOutline';
@@ -26,8 +26,8 @@ interface Props {
 }
 
 export function ImportLibraryPanel({ actions, libraryImport }: Props) {
-  const isRunning = libraryImport?.status === LibraryImportStatus.running;
-  const isComplete = libraryImport?.status === LibraryImportStatus.complete;
+  const isRunning = libraryImport?.status === LibraryTaskStatus.running;
+  const isComplete = libraryImport?.status === LibraryTaskStatus.complete;
   const isEmpty = !libraryImport;
 
   return (
@@ -76,7 +76,7 @@ export function ImportLibraryPanel({ actions, libraryImport }: Props) {
 
 function ActionButton({ actions, libraryImport }: Props) {
   switch (libraryImport?.status) {
-    case LibraryImportStatus.complete:
+    case LibraryTaskStatus.complete:
       return (
         <CheckCircleOutlineIcon
           fontSize='large'
@@ -84,7 +84,7 @@ function ActionButton({ actions, libraryImport }: Props) {
         />
       );
 
-    case LibraryImportStatus.running:
+    case LibraryTaskStatus.running:
       return (
         <IconButton onClick={() => actions.pause()}>
           <PauseCircleOutlineIcon fontSize='large' sx={{ color: 'var(--color-gentian-blue-metallic)' }} />
