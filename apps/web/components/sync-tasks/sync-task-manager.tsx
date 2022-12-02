@@ -37,19 +37,7 @@ export function SyncTaskManager({ taskId }: Props) {
   return (
     <Box>
       <Box sx={{ display: 'flex', alignItems: 'center', gridGap: 8, padding: 2 }}>
-        <Button onClick={() => manageSyncTask({ action: MessageAction.syncStart, taskId })}>Start</Button>
-        <Button disabled={!isActive} onClick={() => manageSyncTask({ action: MessageAction.syncStop, taskId })}>
-          Stop
-        </Button>
-        <Button disabled={!isActive} onClick={() => manageSyncTask({ action: MessageAction.syncEmpty, taskId })}>
-          Empty queue
-        </Button>
-        <Button disabled={!isActive} onClick={() => manageSyncTask({ action: MessageAction.syncRequeue, taskId })}>
-          Restart errors
-        </Button>
-        <Button disabled={!isActive} onClick={() => manageSyncTask({ action: MessageAction.syncGetRefs, taskId })}>
-          Get refs
-        </Button>
+        
       </Box>
     </Box>
   );

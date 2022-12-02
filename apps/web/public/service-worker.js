@@ -6298,6 +6298,11 @@
   var libraryMessageSchema = mod.object({
     libraryId: mod.string()
   });
+  var libraryFileMessageSchema = libraryMessageSchema.extend({
+    directoryHandle: mod.any().refine((value) => value instanceof FileSystemDirectoryHandle, {
+      message: "directoryHandle must be an instance of FileSystemDirectoryHandle"
+    })
+  });
   var MessageAction = /* @__PURE__ */ ((MessageAction2) => {
     MessageAction2["ack"] = "ack";
     MessageAction2["libraryImportInit"] = "libraryImportInit";
@@ -6345,23 +6350,23 @@
     }),
     ["libraryDownloadInit" /* libraryDownloadInit */]: postMessageBaseSchema.extend({
       action: mod.literal("libraryDownloadInit" /* libraryDownloadInit */),
-      data: libraryMessageSchema
+      data: libraryFileMessageSchema
     }),
     ["libraryDownloadStart" /* libraryDownloadStart */]: postMessageBaseSchema.extend({
       action: mod.literal("libraryDownloadStart" /* libraryDownloadStart */),
-      data: libraryMessageSchema
+      data: libraryFileMessageSchema
     }),
     ["libraryDownloadPause" /* libraryDownloadPause */]: postMessageBaseSchema.extend({
       action: mod.literal("libraryDownloadPause" /* libraryDownloadPause */),
-      data: libraryMessageSchema
+      data: libraryFileMessageSchema
     }),
     ["libraryDownloadCancel" /* libraryDownloadCancel */]: postMessageBaseSchema.extend({
       action: mod.literal("libraryDownloadCancel" /* libraryDownloadCancel */),
-      data: libraryMessageSchema
+      data: libraryFileMessageSchema
     }),
     ["libraryDownloadDestroy" /* libraryDownloadDestroy */]: postMessageBaseSchema.extend({
       action: mod.literal("libraryDownloadDestroy" /* libraryDownloadDestroy */),
-      data: libraryMessageSchema
+      data: libraryFileMessageSchema
     })
   };
   var discriminatedMessageSchema = mod.discriminatedUnion("action", [
@@ -8532,13 +8537,13 @@
           };
         }
       }
-      const query = querystring(Object.assign({ key: auth.config.apiKey }, params)).slice(1);
+      const query2 = querystring(Object.assign({ key: auth.config.apiKey }, params)).slice(1);
       const headers = await auth._getAdditionalHeaders();
       headers["Content-Type"] = "application/json";
       if (auth.languageCode) {
         headers["X-Firebase-Locale"] = auth.languageCode;
       }
-      return FetchProvider.fetch()(_getFinalTarget(auth, auth.config.apiHost, path, query), Object.assign({
+      return FetchProvider.fetch()(_getFinalTarget(auth, auth.config.apiHost, path, query2), Object.assign({
         method,
         headers,
         referrerPolicy: "no-referrer"
@@ -8594,8 +8599,8 @@
     }
     return serverResponse;
   }
-  function _getFinalTarget(auth, host, path, query) {
-    const base = `${host}${path}?${query}`;
+  function _getFinalTarget(auth, host, path, query2) {
+    const base = `${host}${path}?${query2}`;
     if (!auth.config.emulator) {
       return `${auth.config.apiScheme}://${base}`;
     }
@@ -12431,7 +12436,7 @@
   var isWindowsStoreApp = function() {
     return typeof Windows === "object" && typeof Windows.UI === "object";
   };
-  function errorForServerCode(code, query) {
+  function errorForServerCode(code, query2) {
     let reason = "Unknown Error";
     if (code === "too_big") {
       reason = "The data requested exceeds the maximum size that can be accessed with a single request.";
@@ -12440,7 +12445,7 @@
     } else if (code === "unavailable") {
       reason = "The service is unavailable";
     }
-    const error2 = new Error(code + " at " + query._path.toString() + ": " + reason);
+    const error2 = new Error(code + " at " + query2._path.toString() + ": " + reason);
     error2.code = code.toUpperCase();
     return error2;
   }
@@ -12632,8 +12637,8 @@
     }
     toURLString() {
       const protocol = this.secure ? "https://" : "http://";
-      const query = this.includeNamespaceInQueryParams ? `?ns=${this.namespace}` : "";
-      return `${protocol}${this.host}/${query}`;
+      const query2 = this.includeNamespaceInQueryParams ? `?ns=${this.namespace}` : "";
+      return `${protocol}${this.host}/${query2}`;
     }
   };
   function repoInfoNeedsQueryParam(repoInfo) {
@@ -14079,12 +14084,12 @@
         this.requestCBHash_[curReqNum] = onResponse;
       }
     }
-    get(query) {
+    get(query2) {
       this.initConnection_();
       const deferred = new Deferred();
       const request = {
-        p: query._path.toString(),
-        q: query._queryObject
+        p: query2._path.toString(),
+        q: query2._queryObject
       };
       const outstandingGet = {
         action: "g",
@@ -14106,20 +14111,20 @@
       }
       return deferred.promise;
     }
-    listen(query, currentHashFn, tag, onComplete) {
+    listen(query2, currentHashFn, tag, onComplete) {
       this.initConnection_();
-      const queryId = query._queryIdentifier;
-      const pathString = query._path.toString();
+      const queryId = query2._queryIdentifier;
+      const pathString = query2._path.toString();
       this.log_("Listen called for " + pathString + " " + queryId);
       if (!this.listens.has(pathString)) {
         this.listens.set(pathString, /* @__PURE__ */ new Map());
       }
-      assert(query._queryParams.isDefault() || !query._queryParams.loadsAllData(), "listen() called for non-default but complete query");
+      assert(query2._queryParams.isDefault() || !query2._queryParams.loadsAllData(), "listen() called for non-default but complete query");
       assert(!this.listens.get(pathString).has(queryId), `listen() called twice for same path/queryId.`);
       const listenSpec = {
         onComplete,
         hashFn: currentHashFn,
-        query,
+        query: query2,
         tag
       };
       this.listens.get(pathString).set(queryId, listenSpec);
@@ -14141,21 +14146,21 @@
       });
     }
     sendListen_(listenSpec) {
-      const query = listenSpec.query;
-      const pathString = query._path.toString();
-      const queryId = query._queryIdentifier;
+      const query2 = listenSpec.query;
+      const pathString = query2._path.toString();
+      const queryId = query2._queryIdentifier;
       this.log_("Listen on " + pathString + " for " + queryId);
       const req = { p: pathString };
       const action = "q";
       if (listenSpec.tag) {
-        req["q"] = query._queryObject;
+        req["q"] = query2._queryObject;
         req["t"] = listenSpec.tag;
       }
       req["h"] = listenSpec.hashFn();
       this.sendRequest(action, req, (message) => {
         const payload = message["d"];
         const status = message["s"];
-        PersistentConnection.warnOnListenWarnings_(payload, query);
+        PersistentConnection.warnOnListenWarnings_(payload, query2);
         const currentListenSpec = this.listens.get(pathString) && this.listens.get(pathString).get(queryId);
         if (currentListenSpec === listenSpec) {
           this.log_("listen response", message);
@@ -14168,12 +14173,12 @@
         }
       });
     }
-    static warnOnListenWarnings_(payload, query) {
+    static warnOnListenWarnings_(payload, query2) {
       if (payload && typeof payload === "object" && contains(payload, "w")) {
         const warnings = safeGet(payload, "w");
         if (Array.isArray(warnings) && ~warnings.indexOf("no_index")) {
-          const indexSpec = '".indexOn": "' + query._queryParams.getIndex().toString() + '"';
-          const indexPath = query._path.toString();
+          const indexSpec = '".indexOn": "' + query2._queryParams.getIndex().toString() + '"';
+          const indexPath = query2._path.toString();
           warn(`Using an unspecified index. Your data will be downloaded and filtered on the client. Consider adding ${indexSpec} at ${indexPath} to your security rules for better performance.`);
         }
       }
@@ -14246,14 +14251,14 @@
         });
       }
     }
-    unlisten(query, tag) {
-      const pathString = query._path.toString();
-      const queryId = query._queryIdentifier;
+    unlisten(query2, tag) {
+      const pathString = query2._path.toString();
+      const queryId = query2._queryIdentifier;
       this.log_("Unlisten called for " + pathString + " " + queryId);
-      assert(query._queryParams.isDefault() || !query._queryParams.loadsAllData(), "unlisten() called for non-default but complete query");
+      assert(query2._queryParams.isDefault() || !query2._queryParams.loadsAllData(), "unlisten() called for non-default but complete query");
       const listen = this.removeListen_(pathString, queryId);
       if (listen && this.connected_) {
-        this.sendUnlisten_(pathString, queryId, query._queryObject, tag);
+        this.sendUnlisten_(pathString, queryId, query2._queryObject, tag);
       }
     }
     sendUnlisten_(pathString, queryId, queryObj, tag) {
@@ -14608,12 +14613,12 @@
         this.outstandingPuts_ = [];
       }
     }
-    onListenRevoked_(pathString, query) {
+    onListenRevoked_(pathString, query2) {
       let queryId;
-      if (!query) {
+      if (!query2) {
         queryId = "default";
       } else {
-        queryId = query.map((q3) => ObjectToUniqueKey(q3)).join("$");
+        queryId = query2.map((q3) => ObjectToUniqueKey(q3)).join("$");
       }
       const listen = this.removeListen_(pathString, queryId);
       if (listen && listen.onComplete) {
@@ -15946,6 +15951,9 @@
   };
   var VALUE_INDEX = new ValueIndex();
   var PUSH_CHARS = "-0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz";
+  var MIN_PUSH_CHAR = "-";
+  var MAX_PUSH_CHAR = "z";
+  var MAX_KEY_LEN = 786;
   var nextPushId = function() {
     let lastPushTime = 0;
     const lastRandChars = [];
@@ -15977,6 +15985,34 @@
       return id;
     };
   }();
+  var successor = function(key) {
+    if (key === "" + INTEGER_32_MAX) {
+      return MIN_PUSH_CHAR;
+    }
+    const keyAsInt = tryParseInt(key);
+    if (keyAsInt != null) {
+      return "" + (keyAsInt + 1);
+    }
+    const next = new Array(key.length);
+    for (let i4 = 0; i4 < next.length; i4++) {
+      next[i4] = key.charAt(i4);
+    }
+    if (next.length < MAX_KEY_LEN) {
+      next.push(MIN_PUSH_CHAR);
+      return next.join("");
+    }
+    let i3 = next.length - 1;
+    while (i3 >= 0 && next[i3] === MAX_PUSH_CHAR) {
+      i3--;
+    }
+    if (i3 === -1) {
+      return MAX_NAME;
+    }
+    const source = next[i3];
+    const sourcePlusOne = PUSH_CHARS.charAt(PUSH_CHARS.indexOf(source) + 1);
+    next[i3] = sourcePlusOne;
+    return next.slice(0, i3 + 1).join("");
+  };
   function changeValue(snapshotNode) {
     return { type: "value", snapshotNode };
   }
@@ -16394,6 +16430,69 @@
       return new RangedFilter(queryParams);
     }
   }
+  function queryParamsLimitToFirst(queryParams, newLimit) {
+    const newParams = queryParams.copy();
+    newParams.limitSet_ = true;
+    newParams.limit_ = newLimit;
+    newParams.viewFrom_ = "l";
+    return newParams;
+  }
+  function queryParamsStartAt(queryParams, indexValue, key) {
+    const newParams = queryParams.copy();
+    newParams.startSet_ = true;
+    if (indexValue === void 0) {
+      indexValue = null;
+    }
+    newParams.indexStartValue_ = indexValue;
+    if (key != null) {
+      newParams.startNameSet_ = true;
+      newParams.indexStartName_ = key;
+    } else {
+      newParams.startNameSet_ = false;
+      newParams.indexStartName_ = "";
+    }
+    return newParams;
+  }
+  function queryParamsStartAfter(queryParams, indexValue, key) {
+    let params;
+    if (queryParams.index_ === KEY_INDEX) {
+      if (typeof indexValue === "string") {
+        indexValue = successor(indexValue);
+      }
+      params = queryParamsStartAt(queryParams, indexValue, key);
+    } else {
+      let childKey;
+      if (key == null) {
+        childKey = MAX_NAME;
+      } else {
+        childKey = successor(key);
+      }
+      params = queryParamsStartAt(queryParams, indexValue, childKey);
+    }
+    params.startAfterSet_ = true;
+    return params;
+  }
+  function queryParamsEndAt(queryParams, indexValue, key) {
+    const newParams = queryParams.copy();
+    newParams.endSet_ = true;
+    if (indexValue === void 0) {
+      indexValue = null;
+    }
+    newParams.indexEndValue_ = indexValue;
+    if (key !== void 0) {
+      newParams.endNameSet_ = true;
+      newParams.indexEndName_ = key;
+    } else {
+      newParams.endNameSet_ = false;
+      newParams.indexEndName_ = "";
+    }
+    return newParams;
+  }
+  function queryParamsOrderBy(queryParams, index) {
+    const newParams = queryParams.copy();
+    newParams.index_ = index;
+    return newParams;
+  }
   function queryParamsToRestQueryStringParameters(queryParams) {
     const qs = {};
     if (queryParams.isDefault()) {
@@ -16476,21 +16575,21 @@
     reportStats(stats) {
       throw new Error("Method not implemented.");
     }
-    static getListenId_(query, tag) {
+    static getListenId_(query2, tag) {
       if (tag !== void 0) {
         return "tag$" + tag;
       } else {
-        assert(query._queryParams.isDefault(), "should have a tag if it's not a default query.");
-        return query._path.toString();
+        assert(query2._queryParams.isDefault(), "should have a tag if it's not a default query.");
+        return query2._path.toString();
       }
     }
-    listen(query, currentHashFn, tag, onComplete) {
-      const pathString = query._path.toString();
-      this.log_("Listen called for " + pathString + " " + query._queryIdentifier);
-      const listenId = ReadonlyRestClient.getListenId_(query, tag);
+    listen(query2, currentHashFn, tag, onComplete) {
+      const pathString = query2._path.toString();
+      this.log_("Listen called for " + pathString + " " + query2._queryIdentifier);
+      const listenId = ReadonlyRestClient.getListenId_(query2, tag);
       const thisListen = {};
       this.listens_[listenId] = thisListen;
-      const queryStringParameters = queryParamsToRestQueryStringParameters(query._queryParams);
+      const queryStringParameters = queryParamsToRestQueryStringParameters(query2._queryParams);
       this.restRequest_(pathString + ".json", queryStringParameters, (error2, result) => {
         let data = result;
         if (error2 === 404) {
@@ -16513,13 +16612,13 @@
         }
       });
     }
-    unlisten(query, tag) {
-      const listenId = ReadonlyRestClient.getListenId_(query, tag);
+    unlisten(query2, tag) {
+      const listenId = ReadonlyRestClient.getListenId_(query2, tag);
       delete this.listens_[listenId];
     }
-    get(query) {
-      const queryStringParameters = queryParamsToRestQueryStringParameters(query._queryParams);
-      const pathString = query._path.toString();
+    get(query2) {
+      const queryStringParameters = queryParamsToRestQueryStringParameters(query2._queryParams);
+      const pathString = query2._path.toString();
       const deferred = new Deferred();
       this.restRequest_(pathString + ".json", queryStringParameters, (error2, result) => {
         let data = result;
@@ -17976,8 +18075,8 @@
       return events;
     }
   }
-  function syncPointGetView(syncPoint, query, writesCache, serverCache, serverCacheComplete) {
-    const queryId = query._queryIdentifier;
+  function syncPointGetView(syncPoint, query2, writesCache, serverCache, serverCacheComplete) {
+    const queryId = query2._queryIdentifier;
     const view = syncPoint.views.get(queryId);
     if (!view) {
       let eventCache = writeTreeRefCalcCompleteEventCache(writesCache, serverCacheComplete ? serverCache : null);
@@ -17992,20 +18091,20 @@
         eventCacheComplete = false;
       }
       const viewCache = newViewCache(new CacheNode(eventCache, eventCacheComplete, false), new CacheNode(serverCache, serverCacheComplete, false));
-      return new View(query, viewCache);
+      return new View(query2, viewCache);
     }
     return view;
   }
-  function syncPointAddEventRegistration(syncPoint, query, eventRegistration, writesCache, serverCache, serverCacheComplete) {
-    const view = syncPointGetView(syncPoint, query, writesCache, serverCache, serverCacheComplete);
-    if (!syncPoint.views.has(query._queryIdentifier)) {
-      syncPoint.views.set(query._queryIdentifier, view);
+  function syncPointAddEventRegistration(syncPoint, query2, eventRegistration, writesCache, serverCache, serverCacheComplete) {
+    const view = syncPointGetView(syncPoint, query2, writesCache, serverCache, serverCacheComplete);
+    if (!syncPoint.views.has(query2._queryIdentifier)) {
+      syncPoint.views.set(query2._queryIdentifier, view);
     }
     viewAddEventRegistration(view, eventRegistration);
     return viewGetInitialEvents(view, eventRegistration);
   }
-  function syncPointRemoveEventRegistration(syncPoint, query, eventRegistration, cancelError) {
-    const queryId = query._queryIdentifier;
+  function syncPointRemoveEventRegistration(syncPoint, query2, eventRegistration, cancelError) {
+    const queryId = query2._queryIdentifier;
     const removed = [];
     let cancelEvents = [];
     const hadCompleteView = syncPointHasCompleteView(syncPoint);
@@ -18032,7 +18131,7 @@
       }
     }
     if (hadCompleteView && !syncPointHasCompleteView(syncPoint)) {
-      removed.push(new (syncPointGetReferenceConstructor())(query._repo, query._path));
+      removed.push(new (syncPointGetReferenceConstructor())(query2._repo, query2._path));
     }
     return { removed, events: cancelEvents };
   }
@@ -18052,17 +18151,17 @@
     }
     return serverCache;
   }
-  function syncPointViewForQuery(syncPoint, query) {
-    const params = query._queryParams;
+  function syncPointViewForQuery(syncPoint, query2) {
+    const params = query2._queryParams;
     if (params.loadsAllData()) {
       return syncPointGetCompleteView(syncPoint);
     } else {
-      const queryId = query._queryIdentifier;
+      const queryId = query2._queryIdentifier;
       return syncPoint.views.get(queryId);
     }
   }
-  function syncPointViewExistsForQuery(syncPoint, query) {
-    return syncPointViewForQuery(syncPoint, query) != null;
+  function syncPointViewExistsForQuery(syncPoint, query2) {
+    return syncPointViewForQuery(syncPoint, query2) != null;
   }
   function syncPointHasCompleteView(syncPoint) {
     return syncPointGetCompleteView(syncPoint) != null;
@@ -18146,20 +18245,20 @@
       return [];
     }
   }
-  function syncTreeRemoveEventRegistration(syncTree, query, eventRegistration, cancelError, skipListenerDedup = false) {
-    const path = query._path;
+  function syncTreeRemoveEventRegistration(syncTree, query2, eventRegistration, cancelError, skipListenerDedup = false) {
+    const path = query2._path;
     const maybeSyncPoint = syncTree.syncPointTree_.get(path);
     let cancelEvents = [];
-    if (maybeSyncPoint && (query._queryIdentifier === "default" || syncPointViewExistsForQuery(maybeSyncPoint, query))) {
-      const removedAndEvents = syncPointRemoveEventRegistration(maybeSyncPoint, query, eventRegistration, cancelError);
+    if (maybeSyncPoint && (query2._queryIdentifier === "default" || syncPointViewExistsForQuery(maybeSyncPoint, query2))) {
+      const removedAndEvents = syncPointRemoveEventRegistration(maybeSyncPoint, query2, eventRegistration, cancelError);
       if (syncPointIsEmpty(maybeSyncPoint)) {
         syncTree.syncPointTree_ = syncTree.syncPointTree_.remove(path);
       }
       const removed = removedAndEvents.removed;
       cancelEvents = removedAndEvents.events;
       if (!skipListenerDedup) {
-        const removingDefault = -1 !== removed.findIndex((query2) => {
-          return query2._queryParams.loadsAllData();
+        const removingDefault = -1 !== removed.findIndex((query3) => {
+          return query3._queryParams.loadsAllData();
         });
         const covered = syncTree.syncPointTree_.findOnPath(path, (relativePath, parentSyncPoint) => syncPointHasCompleteView(parentSyncPoint));
         if (removingDefault && !covered) {
@@ -18176,7 +18275,7 @@
         if (!covered && removed.length > 0 && !cancelError) {
           if (removingDefault) {
             const defaultTag = null;
-            syncTree.listenProvider_.stopListening(syncTreeQueryForListening_(query), defaultTag);
+            syncTree.listenProvider_.stopListening(syncTreeQueryForListening_(query2), defaultTag);
           } else {
             removed.forEach((queryToRemove) => {
               const tagToRemove = syncTree.queryToTagMap.get(syncTreeMakeQueryKey_(queryToRemove));
@@ -18214,8 +18313,8 @@
       return [];
     }
   }
-  function syncTreeAddEventRegistration(syncTree, query, eventRegistration, skipSetupListener = false) {
-    const path = query._path;
+  function syncTreeAddEventRegistration(syncTree, query2, eventRegistration, skipSetupListener = false) {
+    const path = query2._path;
     let serverCache = null;
     let foundAncestorDefaultView = false;
     syncTree.syncPointTree_.foreachOnPath(path, (pathToSyncPoint, sp) => {
@@ -18245,19 +18344,19 @@
         }
       });
     }
-    const viewAlreadyExists = syncPointViewExistsForQuery(syncPoint, query);
-    if (!viewAlreadyExists && !query._queryParams.loadsAllData()) {
-      const queryKey = syncTreeMakeQueryKey_(query);
+    const viewAlreadyExists = syncPointViewExistsForQuery(syncPoint, query2);
+    if (!viewAlreadyExists && !query2._queryParams.loadsAllData()) {
+      const queryKey = syncTreeMakeQueryKey_(query2);
       assert(!syncTree.queryToTagMap.has(queryKey), "View does not exist, but we have a tag");
       const tag = syncTreeGetNextQueryTag_();
       syncTree.queryToTagMap.set(queryKey, tag);
       syncTree.tagToQueryMap.set(tag, queryKey);
     }
     const writesCache = writeTreeChildWrites(syncTree.pendingWriteTree_, path);
-    let events = syncPointAddEventRegistration(syncPoint, query, eventRegistration, writesCache, serverCache, serverCacheComplete);
+    let events = syncPointAddEventRegistration(syncPoint, query2, eventRegistration, writesCache, serverCache, serverCacheComplete);
     if (!viewAlreadyExists && !foundAncestorDefaultView && !skipSetupListener) {
-      const view = syncPointViewForQuery(syncPoint, query);
-      events = events.concat(syncTreeSetupListener_(syncTree, query, view));
+      const view = syncPointViewForQuery(syncPoint, query2);
+      events = events.concat(syncTreeSetupListener_(syncTree, query2, view));
     }
     return events;
   }
@@ -18273,8 +18372,8 @@
     });
     return writeTreeCalcCompleteEventCache(writeTree, path, serverCache, writeIdsToExclude, includeHiddenSets);
   }
-  function syncTreeGetServerValue(syncTree, query) {
-    const path = query._path;
+  function syncTreeGetServerValue(syncTree, query2) {
+    const path = query2._path;
     let serverCache = null;
     syncTree.syncPointTree_.foreachOnPath(path, (pathToSyncPoint, sp) => {
       const relativePath = newRelativePath(pathToSyncPoint, path);
@@ -18289,8 +18388,8 @@
     }
     const serverCacheComplete = serverCache != null;
     const serverCacheNode = serverCacheComplete ? new CacheNode(serverCache, true, false) : null;
-    const writesCache = writeTreeChildWrites(syncTree.pendingWriteTree_, query._path);
-    const view = syncPointGetView(syncPoint, query, writesCache, serverCacheComplete ? serverCacheNode.getNode() : ChildrenNode.EMPTY_NODE, serverCacheComplete);
+    const writesCache = writeTreeChildWrites(syncTree.pendingWriteTree_, query2._path);
+    const view = syncPointGetView(syncPoint, query2, writesCache, serverCacheComplete ? serverCacheNode.getNode() : ChildrenNode.EMPTY_NODE, serverCacheComplete);
     return viewGetCompleteNode(view);
   }
   function syncTreeApplyOperationToSyncPoints_(syncTree, operation) {
@@ -18344,8 +18443,8 @@
     return events;
   }
   function syncTreeCreateListenerForView_(syncTree, view) {
-    const query = view.query;
-    const tag = syncTreeTagForQuery(syncTree, query);
+    const query2 = view.query;
+    const tag = syncTreeTagForQuery(syncTree, query2);
     return {
       hashFn: () => {
         const cache = viewGetServerCache(view) || ChildrenNode.EMPTY_NODE;
@@ -18354,15 +18453,15 @@
       onComplete: (status) => {
         if (status === "ok") {
           if (tag) {
-            return syncTreeApplyTaggedListenComplete(syncTree, query._path, tag);
+            return syncTreeApplyTaggedListenComplete(syncTree, query2._path, tag);
           } else {
-            return syncTreeApplyListenComplete(syncTree, query._path);
+            return syncTreeApplyListenComplete(syncTree, query2._path);
           }
         } else {
-          const error2 = errorForServerCode(status, query);
+          const error2 = errorForServerCode(status, query2);
           return syncTreeRemoveEventRegistration(
             syncTree,
-            query,
+            query2,
             null,
             error2
           );
@@ -18370,12 +18469,12 @@
       }
     };
   }
-  function syncTreeTagForQuery(syncTree, query) {
-    const queryKey = syncTreeMakeQueryKey_(query);
+  function syncTreeTagForQuery(syncTree, query2) {
+    const queryKey = syncTreeMakeQueryKey_(query2);
     return syncTree.queryToTagMap.get(queryKey);
   }
-  function syncTreeMakeQueryKey_(query) {
-    return query._path.toString() + "$" + query._queryIdentifier;
+  function syncTreeMakeQueryKey_(query2) {
+    return query2._path.toString() + "$" + query2._queryIdentifier;
   }
   function syncTreeQueryKeyForTag_(syncTree, tag) {
     return syncTree.tagToQueryMap.get(tag);
@@ -18411,11 +18510,11 @@
       }
     });
   }
-  function syncTreeQueryForListening_(query) {
-    if (query._queryParams.loadsAllData() && !query._queryParams.isDefault()) {
-      return new (syncTreeGetReferenceConstructor())(query._repo, query._path);
+  function syncTreeQueryForListening_(query2) {
+    if (query2._queryParams.loadsAllData() && !query2._queryParams.isDefault()) {
+      return new (syncTreeGetReferenceConstructor())(query2._repo, query2._path);
     } else {
-      return query;
+      return query2;
     }
   }
   function syncTreeRemoveTags_(syncTree, queries) {
@@ -18432,11 +18531,11 @@
   function syncTreeGetNextQueryTag_() {
     return syncTreeNextQueryTag_++;
   }
-  function syncTreeSetupListener_(syncTree, query, view) {
-    const path = query._path;
-    const tag = syncTreeTagForQuery(syncTree, query);
+  function syncTreeSetupListener_(syncTree, query2, view) {
+    const path = query2._path;
+    const tag = syncTreeTagForQuery(syncTree, query2);
     const listener = syncTreeCreateListenerForView_(syncTree, view);
-    const events = syncTree.listenProvider_.startListening(syncTreeQueryForListening_(query), tag, listener.hashFn, listener.onComplete);
+    const events = syncTree.listenProvider_.startListening(syncTreeQueryForListening_(query2), tag, listener.hashFn, listener.onComplete);
     const subtree = syncTree.syncPointTree_.subtree(path);
     if (tag) {
       assert(!syncPointHasCompleteView(subtree.value), "If we're adding a query, it shouldn't be shadowed");
@@ -18750,6 +18849,14 @@
     });
     validateFirebaseMergePaths(errorPrefix$1, mergePaths);
   };
+  var validateKey = function(fnName, argumentName, key, optional) {
+    if (optional && key === void 0) {
+      return;
+    }
+    if (!isValidKey2(key)) {
+      throw new Error(errorPrefix(fnName, argumentName) + 'was an invalid key = "' + key + `".  Firebase keys must be non-empty strings and can't contain ".", "#", "$", "/", "[", or "]").`);
+    }
+  };
   var validatePathString = function(fnName, argumentName, pathString, optional) {
     if (optional && pathString === void 0) {
       return;
@@ -18798,6 +18905,10 @@
     if (currList) {
       eventQueue.eventLists_.push(currList);
     }
+  }
+  function eventQueueRaiseEventsAtPath(eventQueue, path, eventDataList) {
+    eventQueueQueueEvents(eventQueue, eventDataList);
+    eventQueueRaiseQueuedEventsMatchingPredicate(eventQueue, (eventPath) => pathEquals(eventPath, path));
   }
   function eventQueueRaiseEventsForChangedPath(eventQueue, changedPath, eventDataList) {
     eventQueueQueueEvents(eventQueue, eventDataList);
@@ -18894,11 +19005,11 @@
     repo.statsReporter_ = statsManagerGetOrCreateReporter(repo.repoInfo_, () => new StatsReporter(repo.stats_, repo.server_));
     repo.infoData_ = new SnapshotHolder();
     repo.infoSyncTree_ = new SyncTree({
-      startListening: (query, tag, currentHashFn, onComplete) => {
+      startListening: (query2, tag, currentHashFn, onComplete) => {
         let infoEvents = [];
-        const node = repo.infoData_.getNode(query._path);
+        const node = repo.infoData_.getNode(query2._path);
         if (!node.isEmpty()) {
-          infoEvents = syncTreeApplyServerOverwrite(repo.infoSyncTree_, query._path, node);
+          infoEvents = syncTreeApplyServerOverwrite(repo.infoSyncTree_, query2._path, node);
           setTimeout(() => {
             onComplete("ok");
           }, 0);
@@ -18910,15 +19021,15 @@
     });
     repoUpdateInfo(repo, "connected", false);
     repo.serverSyncTree_ = new SyncTree({
-      startListening: (query, tag, currentHashFn, onComplete) => {
-        repo.server_.listen(query, currentHashFn, tag, (status, data) => {
+      startListening: (query2, tag, currentHashFn, onComplete) => {
+        repo.server_.listen(query2, currentHashFn, tag, (status, data) => {
           const events = onComplete(status, data);
-          eventQueueRaiseEventsForChangedPath(repo.eventQueue_, query._path, events);
+          eventQueueRaiseEventsForChangedPath(repo.eventQueue_, query2._path, events);
         });
         return [];
       },
-      stopListening: (query, tag) => {
-        repo.server_.unlisten(query, tag);
+      stopListening: (query2, tag) => {
+        repo.server_.unlisten(query2, tag);
       }
     });
   }
@@ -18979,26 +19090,26 @@
   function repoGetNextWriteId(repo) {
     return repo.nextWriteId_++;
   }
-  function repoGetValue(repo, query, eventRegistration) {
-    const cached = syncTreeGetServerValue(repo.serverSyncTree_, query);
+  function repoGetValue(repo, query2, eventRegistration) {
+    const cached = syncTreeGetServerValue(repo.serverSyncTree_, query2);
     if (cached != null) {
       return Promise.resolve(cached);
     }
-    return repo.server_.get(query).then((payload) => {
-      const node = nodeFromJSON(payload).withIndex(query._queryParams.getIndex());
-      syncTreeAddEventRegistration(repo.serverSyncTree_, query, eventRegistration, true);
+    return repo.server_.get(query2).then((payload) => {
+      const node = nodeFromJSON(payload).withIndex(query2._queryParams.getIndex());
+      syncTreeAddEventRegistration(repo.serverSyncTree_, query2, eventRegistration, true);
       let events;
-      if (query._queryParams.loadsAllData()) {
-        events = syncTreeApplyServerOverwrite(repo.serverSyncTree_, query._path, node);
+      if (query2._queryParams.loadsAllData()) {
+        events = syncTreeApplyServerOverwrite(repo.serverSyncTree_, query2._path, node);
       } else {
-        const tag = syncTreeTagForQuery(repo.serverSyncTree_, query);
-        events = syncTreeApplyTaggedQueryOverwrite(repo.serverSyncTree_, query._path, node, tag);
+        const tag = syncTreeTagForQuery(repo.serverSyncTree_, query2);
+        events = syncTreeApplyTaggedQueryOverwrite(repo.serverSyncTree_, query2._path, node, tag);
       }
-      eventQueueRaiseEventsForChangedPath(repo.eventQueue_, query._path, events);
-      syncTreeRemoveEventRegistration(repo.serverSyncTree_, query, eventRegistration, null, true);
+      eventQueueRaiseEventsForChangedPath(repo.eventQueue_, query2._path, events);
+      syncTreeRemoveEventRegistration(repo.serverSyncTree_, query2, eventRegistration, null, true);
       return node;
     }, (err) => {
-      repoLog(repo, "get for query " + stringify2(query) + " failed: " + err);
+      repoLog(repo, "get for query " + stringify2(query2) + " failed: " + err);
       return Promise.reject(new Error(err));
     });
   }
@@ -19077,6 +19188,24 @@
     });
     repo.onDisconnect_ = newSparseSnapshotTree();
     eventQueueRaiseEventsForChangedPath(repo.eventQueue_, newEmptyPath(), events);
+  }
+  function repoAddEventCallbackForQuery(repo, query2, eventRegistration) {
+    let events;
+    if (pathGetFront(query2._path) === ".info") {
+      events = syncTreeAddEventRegistration(repo.infoSyncTree_, query2, eventRegistration);
+    } else {
+      events = syncTreeAddEventRegistration(repo.serverSyncTree_, query2, eventRegistration);
+    }
+    eventQueueRaiseEventsAtPath(repo.eventQueue_, query2._path, events);
+  }
+  function repoRemoveEventCallbackForQuery(repo, query2, eventRegistration) {
+    let events;
+    if (pathGetFront(query2._path) === ".info") {
+      events = syncTreeRemoveEventRegistration(repo.infoSyncTree_, query2, eventRegistration);
+    } else {
+      events = syncTreeRemoveEventRegistration(repo.serverSyncTree_, query2, eventRegistration);
+    }
+    eventQueueRaiseEventsAtPath(repo.eventQueue_, query2._path, events);
   }
   function repoInterrupt(repo) {
     if (repo.persistentConnection_) {
@@ -19578,6 +19707,55 @@
       return this._repo.toString() + pathToUrlEncodedString(this._path);
     }
   };
+  function validateNoPreviousOrderByCall(query2, fnName) {
+    if (query2._orderByCalled === true) {
+      throw new Error(fnName + ": You can't combine multiple orderBy calls.");
+    }
+  }
+  function validateQueryEndpoints(params) {
+    let startNode = null;
+    let endNode = null;
+    if (params.hasStart()) {
+      startNode = params.getIndexStartValue();
+    }
+    if (params.hasEnd()) {
+      endNode = params.getIndexEndValue();
+    }
+    if (params.getIndex() === KEY_INDEX) {
+      const tooManyArgsError = "Query: When ordering by key, you may only pass one argument to startAt(), endAt(), or equalTo().";
+      const wrongArgTypeError = "Query: When ordering by key, the argument passed to startAt(), startAfter(), endAt(), endBefore(), or equalTo() must be a string.";
+      if (params.hasStart()) {
+        const startName = params.getIndexStartName();
+        if (startName !== MIN_NAME) {
+          throw new Error(tooManyArgsError);
+        } else if (typeof startNode !== "string") {
+          throw new Error(wrongArgTypeError);
+        }
+      }
+      if (params.hasEnd()) {
+        const endName = params.getIndexEndName();
+        if (endName !== MAX_NAME) {
+          throw new Error(tooManyArgsError);
+        } else if (typeof endNode !== "string") {
+          throw new Error(wrongArgTypeError);
+        }
+      }
+    } else if (params.getIndex() === PRIORITY_INDEX) {
+      if (startNode != null && !isValidPriority(startNode) || endNode != null && !isValidPriority(endNode)) {
+        throw new Error("Query: When ordering by priority, the first argument passed to startAt(), startAfter() endAt(), endBefore(), or equalTo() must be a valid priority value (null, a number, or a string).");
+      }
+    } else {
+      assert(params.getIndex() instanceof PathIndex || params.getIndex() === VALUE_INDEX, "unknown index type.");
+      if (startNode != null && typeof startNode === "object" || endNode != null && typeof endNode === "object") {
+        throw new Error("Query: First argument passed to startAt(), startAfter(), endAt(), endBefore(), or equalTo() cannot be an object.");
+      }
+    }
+  }
+  function validateLimit(params) {
+    if (params.hasStart() && params.hasEnd() && params.hasLimit() && !params.hasAnchoredLimit()) {
+      throw new Error("Query: Can't combine startAt(), startAfter(), endAt(), endBefore(), and limit(). Use limitToFirst() or limitToLast() instead.");
+    }
+  }
   var ReferenceImpl = class extends QueryImpl {
     constructor(repo, path) {
       super(repo, path, new QueryParams(), false);
@@ -19661,6 +19839,24 @@
     }
     return new ReferenceImpl(parent._repo, pathChild(parent._path, path));
   }
+  function push(parent, value) {
+    parent = getModularInstance(parent);
+    validateWritablePath("push", parent._path);
+    validateFirebaseDataArg("push", value, parent._path, true);
+    const now = repoServerTime(parent._repo);
+    const name5 = nextPushId(now);
+    const thennablePushRef = child(parent, name5);
+    const pushRef = child(parent, name5);
+    let promise;
+    if (value != null) {
+      promise = set(pushRef, value).then(() => pushRef);
+    } else {
+      promise = Promise.resolve(pushRef);
+    }
+    thennablePushRef.then = promise.then.bind(promise);
+    thennablePushRef.catch = promise.then.bind(promise, void 0);
+    return thennablePushRef;
+  }
   function remove(ref2) {
     validateWritablePath("remove", ref2._path);
     return set(ref2, null);
@@ -19687,13 +19883,13 @@
     }));
     return deferred.promise;
   }
-  function get(query) {
-    query = getModularInstance(query);
+  function get(query2) {
+    query2 = getModularInstance(query2);
     const callbackContext = new CallbackContext(() => {
     });
     const container = new ValueEventRegistration(callbackContext);
-    return repoGetValue(query._repo, query, container).then((node) => {
-      return new DataSnapshot(node, new ReferenceImpl(query._repo, query._path), query._queryParams.getIndex());
+    return repoGetValue(query2._repo, query2, container).then((node) => {
+      return new DataSnapshot(node, new ReferenceImpl(query2._repo, query2._path), query2._queryParams.getIndex());
     });
   }
   var ValueEventRegistration = class {
@@ -19703,9 +19899,9 @@
     respondsTo(eventType) {
       return eventType === "value";
     }
-    createEvent(change, query) {
-      const index = query._queryParams.getIndex();
-      return new DataEvent("value", this, new DataSnapshot(change.snapshotNode, new ReferenceImpl(query._repo, query._path), index));
+    createEvent(change, query2) {
+      const index = query2._queryParams.getIndex();
+      return new DataEvent("value", this, new DataSnapshot(change.snapshotNode, new ReferenceImpl(query2._repo, query2._path), index));
     }
     getEventRunner(eventData) {
       if (eventData.getEventType() === "cancel") {
@@ -19734,6 +19930,228 @@
       return this.callbackContext !== null;
     }
   };
+  var ChildEventRegistration = class {
+    constructor(eventType, callbackContext) {
+      this.eventType = eventType;
+      this.callbackContext = callbackContext;
+    }
+    respondsTo(eventType) {
+      let eventToCheck = eventType === "children_added" ? "child_added" : eventType;
+      eventToCheck = eventToCheck === "children_removed" ? "child_removed" : eventToCheck;
+      return this.eventType === eventToCheck;
+    }
+    createCancelEvent(error2, path) {
+      if (this.callbackContext.hasCancelCallback) {
+        return new CancelEvent(this, error2, path);
+      } else {
+        return null;
+      }
+    }
+    createEvent(change, query2) {
+      assert(change.childName != null, "Child events should have a childName.");
+      const childRef = child(new ReferenceImpl(query2._repo, query2._path), change.childName);
+      const index = query2._queryParams.getIndex();
+      return new DataEvent(change.type, this, new DataSnapshot(change.snapshotNode, childRef, index), change.prevName);
+    }
+    getEventRunner(eventData) {
+      if (eventData.getEventType() === "cancel") {
+        return () => this.callbackContext.onCancel(eventData.error);
+      } else {
+        return () => this.callbackContext.onValue(eventData.snapshot, eventData.prevName);
+      }
+    }
+    matches(other) {
+      if (other instanceof ChildEventRegistration) {
+        return this.eventType === other.eventType && (!this.callbackContext || !other.callbackContext || this.callbackContext.matches(other.callbackContext));
+      }
+      return false;
+    }
+    hasAnyCallback() {
+      return !!this.callbackContext;
+    }
+  };
+  function addEventListener(query2, eventType, callback, cancelCallbackOrListenOptions, options) {
+    let cancelCallback;
+    if (typeof cancelCallbackOrListenOptions === "object") {
+      cancelCallback = void 0;
+      options = cancelCallbackOrListenOptions;
+    }
+    if (typeof cancelCallbackOrListenOptions === "function") {
+      cancelCallback = cancelCallbackOrListenOptions;
+    }
+    if (options && options.onlyOnce) {
+      const userCallback = callback;
+      const onceCallback = (dataSnapshot, previousChildName) => {
+        repoRemoveEventCallbackForQuery(query2._repo, query2, container);
+        userCallback(dataSnapshot, previousChildName);
+      };
+      onceCallback.userCallback = callback.userCallback;
+      onceCallback.context = callback.context;
+      callback = onceCallback;
+    }
+    const callbackContext = new CallbackContext(callback, cancelCallback || void 0);
+    const container = eventType === "value" ? new ValueEventRegistration(callbackContext) : new ChildEventRegistration(eventType, callbackContext);
+    repoAddEventCallbackForQuery(query2._repo, query2, container);
+    return () => repoRemoveEventCallbackForQuery(query2._repo, query2, container);
+  }
+  function onValue(query2, callback, cancelCallbackOrListenOptions, options) {
+    return addEventListener(query2, "value", callback, cancelCallbackOrListenOptions, options);
+  }
+  function onChildAdded(query2, callback, cancelCallbackOrListenOptions, options) {
+    return addEventListener(query2, "child_added", callback, cancelCallbackOrListenOptions, options);
+  }
+  var QueryConstraint = class {
+  };
+  var QueryEndAtConstraint = class extends QueryConstraint {
+    constructor(_value, _key) {
+      super();
+      this._value = _value;
+      this._key = _key;
+    }
+    _apply(query2) {
+      validateFirebaseDataArg("endAt", this._value, query2._path, true);
+      const newParams = queryParamsEndAt(query2._queryParams, this._value, this._key);
+      validateLimit(newParams);
+      validateQueryEndpoints(newParams);
+      if (query2._queryParams.hasEnd()) {
+        throw new Error("endAt: Starting point was already set (by another call to endAt, endBefore or equalTo).");
+      }
+      return new QueryImpl(query2._repo, query2._path, newParams, query2._orderByCalled);
+    }
+  };
+  var QueryStartAtConstraint = class extends QueryConstraint {
+    constructor(_value, _key) {
+      super();
+      this._value = _value;
+      this._key = _key;
+    }
+    _apply(query2) {
+      validateFirebaseDataArg("startAt", this._value, query2._path, true);
+      const newParams = queryParamsStartAt(query2._queryParams, this._value, this._key);
+      validateLimit(newParams);
+      validateQueryEndpoints(newParams);
+      if (query2._queryParams.hasStart()) {
+        throw new Error("startAt: Starting point was already set (by another call to startAt, startBefore or equalTo).");
+      }
+      return new QueryImpl(query2._repo, query2._path, newParams, query2._orderByCalled);
+    }
+  };
+  var QueryStartAfterConstraint = class extends QueryConstraint {
+    constructor(_value, _key) {
+      super();
+      this._value = _value;
+      this._key = _key;
+    }
+    _apply(query2) {
+      validateFirebaseDataArg("startAfter", this._value, query2._path, false);
+      const newParams = queryParamsStartAfter(query2._queryParams, this._value, this._key);
+      validateLimit(newParams);
+      validateQueryEndpoints(newParams);
+      if (query2._queryParams.hasStart()) {
+        throw new Error("startAfter: Starting point was already set (by another call to startAt, startAfter, or equalTo).");
+      }
+      return new QueryImpl(query2._repo, query2._path, newParams, query2._orderByCalled);
+    }
+  };
+  function startAfter(value, key) {
+    validateKey("startAfter", "key", key, true);
+    return new QueryStartAfterConstraint(value, key);
+  }
+  var QueryLimitToFirstConstraint = class extends QueryConstraint {
+    constructor(_limit) {
+      super();
+      this._limit = _limit;
+    }
+    _apply(query2) {
+      if (query2._queryParams.hasLimit()) {
+        throw new Error("limitToFirst: Limit was already set (by another call to limitToFirst or limitToLast).");
+      }
+      return new QueryImpl(query2._repo, query2._path, queryParamsLimitToFirst(query2._queryParams, this._limit), query2._orderByCalled);
+    }
+  };
+  function limitToFirst(limit) {
+    if (typeof limit !== "number" || Math.floor(limit) !== limit || limit <= 0) {
+      throw new Error("limitToFirst: First argument must be a positive integer.");
+    }
+    return new QueryLimitToFirstConstraint(limit);
+  }
+  var QueryOrderByChildConstraint = class extends QueryConstraint {
+    constructor(_path) {
+      super();
+      this._path = _path;
+    }
+    _apply(query2) {
+      validateNoPreviousOrderByCall(query2, "orderByChild");
+      const parsedPath = new Path(this._path);
+      if (pathIsEmpty(parsedPath)) {
+        throw new Error("orderByChild: cannot pass in empty path. Use orderByValue() instead.");
+      }
+      const index = new PathIndex(parsedPath);
+      const newParams = queryParamsOrderBy(query2._queryParams, index);
+      validateQueryEndpoints(newParams);
+      return new QueryImpl(
+        query2._repo,
+        query2._path,
+        newParams,
+        true
+      );
+    }
+  };
+  function orderByChild(path) {
+    if (path === "$key") {
+      throw new Error('orderByChild: "$key" is invalid.  Use orderByKey() instead.');
+    } else if (path === "$priority") {
+      throw new Error('orderByChild: "$priority" is invalid.  Use orderByPriority() instead.');
+    } else if (path === "$value") {
+      throw new Error('orderByChild: "$value" is invalid.  Use orderByValue() instead.');
+    }
+    validatePathString("orderByChild", "path", path, false);
+    return new QueryOrderByChildConstraint(path);
+  }
+  var QueryOrderByKeyConstraint = class extends QueryConstraint {
+    _apply(query2) {
+      validateNoPreviousOrderByCall(query2, "orderByKey");
+      const newParams = queryParamsOrderBy(query2._queryParams, KEY_INDEX);
+      validateQueryEndpoints(newParams);
+      return new QueryImpl(
+        query2._repo,
+        query2._path,
+        newParams,
+        true
+      );
+    }
+  };
+  function orderByKey() {
+    return new QueryOrderByKeyConstraint();
+  }
+  var QueryEqualToValueConstraint = class extends QueryConstraint {
+    constructor(_value, _key) {
+      super();
+      this._value = _value;
+      this._key = _key;
+    }
+    _apply(query2) {
+      validateFirebaseDataArg("equalTo", this._value, query2._path, false);
+      if (query2._queryParams.hasStart()) {
+        throw new Error("equalTo: Starting point was already set (by another call to startAt/startAfter or equalTo).");
+      }
+      if (query2._queryParams.hasEnd()) {
+        throw new Error("equalTo: Ending point was already set (by another call to endAt/endBefore or equalTo).");
+      }
+      return new QueryEndAtConstraint(this._value, this._key)._apply(new QueryStartAtConstraint(this._value, this._key)._apply(query2));
+    }
+  };
+  function equalTo(value, key) {
+    validateKey("equalTo", "key", key, true);
+    return new QueryEqualToValueConstraint(value, key);
+  }
+  function query(query2, ...queryConstraints) {
+    let queryImpl = getModularInstance(query2);
+    for (const constraint of queryConstraints) {
+      queryImpl = constraint._apply(queryImpl);
+    }
+    return queryImpl;
+  }
   syncPointSetReferenceConstructor(ReferenceImpl);
   syncTreeSetReferenceConstructor(ReferenceImpl);
   var FIREBASE_DATABASE_EMULATOR_HOST_VAR = "FIREBASE_DATABASE_EMULATOR_HOST";
@@ -22249,6 +22667,337 @@
     return n3 && s2._setSettings(n3), s2;
   }, "PUBLIC").setMultipleInstances(true)), registerVersion("firestore-lite", "3.7.3", ""), registerVersion("firestore-lite", "3.7.3", "esm2017");
 
+  // ../../packages/queue/src/schema.ts
+  var metadataSchema = mod.object({
+    ["isPaused" /* isPaused */]: mod.boolean().optional(),
+    ["count" /* count */]: mod.number().int().optional(),
+    ["errorCount" /* errorCount */]: mod.number().int().optional(),
+    ["waitingCount" /* waitingCount */]: mod.number().int().optional(),
+    ["activeCount" /* activeCount */]: mod.number().int().optional(),
+    ["completeCount" /* completeCount */]: mod.number().int().optional()
+  });
+  var TaskState = /* @__PURE__ */ ((TaskState4) => {
+    TaskState4["error"] = "error";
+    TaskState4["waiting"] = "waiting";
+    TaskState4["active"] = "active";
+    TaskState4["complete"] = "complete";
+    return TaskState4;
+  })(TaskState || {});
+  var taskSchema = mod.object({
+    ["state" /* state */]: mod.nativeEnum(TaskState),
+    ["message" /* message */]: mod.string().optional(),
+    ["data" /* data */]: mod.any(),
+    ["created" /* created */]: mod.number(),
+    ["started" /* started */]: mod.number().optional().nullable(),
+    ["errored" /* errored */]: mod.number().optional().nullable(),
+    ["completed" /* completed */]: mod.number().optional().nullable()
+  });
+  var errorSchema = mod.object({ created: mod.date(), message: mod.string() });
+  var logSchema = mod.object({ task: taskSchema, errors: mod.record(mod.string(), errorSchema) });
+
+  // ../../packages/queue/src/utils/debounce.ts
+  function debounce(func, { millis = 300, leading = false } = {}) {
+    return leading ? leadingDebounce(func, { millis }) : trailingDebounce(func, { millis });
+  }
+  function leadingDebounce(func, { millis }) {
+    let blocked = false;
+    return (...args) => {
+      if (!blocked) {
+        blocked = true;
+        func(...args);
+        setTimeout(() => {
+          blocked = false;
+        }, millis);
+      }
+    };
+  }
+  function trailingDebounce(func, { millis }) {
+    let timer;
+    return (...args) => {
+      timer && clearTimeout(timer);
+      timer = setTimeout(() => func(...args), millis);
+    };
+  }
+
+  // ../../packages/queue/src/utils/map-tasks.ts
+  function mapTasks(dataSnapshot) {
+    const data = dataSnapshot.val();
+    switch (true) {
+      case !data:
+        return {};
+      case !!data.state: {
+        const key = dataSnapshot.key || "";
+        const task = taskSchema.parse(data);
+        return { [key]: task };
+      }
+      default:
+        return Object.entries(dataSnapshot.val() || {}).reduce((acc, [key, value]) => {
+          const task = taskSchema.parse(value);
+          acc[key] = task;
+          return acc;
+        }, {});
+    }
+  }
+
+  // ../../packages/queue/src/utils/page-through-tasks.ts
+  async function pageThroughTasks({
+    batchSize,
+    callback,
+    startAfterKey,
+    taskState,
+    tasksRef
+  }) {
+    const tasksQuery = startAfterKey ? query(tasksRef, orderByKey(), limitToFirst(batchSize), startAfter(startAfterKey)) : query(tasksRef, orderByChild("state" /* state */), limitToFirst(batchSize), equalTo(taskState));
+    const snapshot = await get(tasksQuery);
+    const queueTasks = mapTasks(snapshot);
+    const matchingTasks = Object.entries(queueTasks).reduce((acc, [key, task]) => {
+      if (task.state === taskState) {
+        acc[key] = task;
+      }
+      return acc;
+    }, {});
+    const existMatchingTasks = Object.keys(matchingTasks).length > 0;
+    const lastKey = Object.keys(queueTasks).pop();
+    const isLastPage = !lastKey;
+    if (existMatchingTasks) {
+      await callback(matchingTasks);
+    }
+    if (!isLastPage && lastKey) {
+      await pageThroughTasks({ batchSize, callback, startAfterKey: lastKey, taskState, tasksRef });
+    }
+  }
+
+  // ../../packages/queue/src/queue/handle-active.ts
+  async function handleActive({
+    callback,
+    dataSnapshot,
+    queueRef
+  }) {
+    const started = Date.now();
+    const data = mapTasks(dataSnapshot);
+    const task = Object.values(data)[0] ?? null;
+    try {
+      const { success, message } = await callback(data);
+      if (!success) {
+        throw new Error(message);
+      } else {
+        await update(dataSnapshot.ref, {
+          ["message" /* message */]: message,
+          ["state" /* state */]: "complete" /* complete */,
+          ["started" /* started */]: started,
+          ["completed" /* completed */]: Date.now()
+        });
+        return { success, message };
+      }
+    } catch (error2) {
+      let message = "";
+      if (error2 instanceof Error) {
+        message = error2.message;
+      } else {
+        message = String(message);
+      }
+      update(dataSnapshot.ref, {
+        ["message" /* message */]: message,
+        ["state" /* state */]: "error" /* error */,
+        ["started" /* started */]: started,
+        ["errored" /* errored */]: Date.now()
+      });
+      await update(queueRef, {
+        [`${"logs" /* logs */}/${dataSnapshot.key}/${"task" /* task */}`]: task,
+        [`${"logs" /* logs */}/${dataSnapshot.key}/${"errors" /* errors */}/${push(queueRef).key}`]: errorSchema.parse({
+          created: new Date(),
+          message
+        })
+      });
+      return { success: false, message };
+    }
+  }
+
+  // ../../packages/queue/src/queue/handle-waiting.ts
+  var ONE_SECOND = 1e3;
+  function handleWaiting({
+    batchSize,
+    callback,
+    metadataRef,
+    queueRef,
+    tasksRef
+  }) {
+    const activeQuery = query(tasksRef, orderByChild("state" /* state */), limitToFirst(batchSize), equalTo("active" /* active */));
+    const unlistenMetadata = onValue(
+      metadataRef,
+      debounce(
+        async (metadataSnapshot) => {
+          const metadata = metadataSchema.parse(metadataSnapshot.val());
+          const { activeCount: activeCount2 = 0, waitingCount = 0 } = metadata;
+          const countToActivate = Math.min(Math.max(0, batchSize - Math.max(0, activeCount2)), waitingCount);
+          if (countToActivate > 0) {
+            const waitingDataSnapshot = await get(
+              query(tasksRef, orderByChild("state" /* state */), limitToFirst(countToActivate), equalTo("waiting" /* waiting */))
+            );
+            const newWaitingTasks = mapTasks(waitingDataSnapshot);
+            const newWaitingTaskCount = Object.keys(newWaitingTasks).length;
+            const updates = Object.entries(newWaitingTasks).reduce(
+              (acc, [key, task]) => {
+                acc[`${"task" /* task */}/${key}/${"state" /* state */}`] = "active" /* active */;
+                acc[`${"task" /* task */}/${key}/${"started" /* started */}`] = Date.now();
+                return acc;
+              },
+              {
+                [`${"metadata" /* metadata */}/${"activeCount" /* activeCount */}`]: increment(+newWaitingTaskCount),
+                [`${"metadata" /* metadata */}/${"waitingCount" /* waitingCount */}`]: increment(-newWaitingTaskCount)
+              }
+            );
+            await update(queueRef, updates);
+          }
+        },
+        { millis: ONE_SECOND }
+      )
+    );
+    let activeCount = 0;
+    let errorCount = 0;
+    let completeCount = 0;
+    const unlistenActiveAdded = onChildAdded(activeQuery, async (dataSnapshot) => {
+      const { success } = await handleActive({ callback, dataSnapshot, queueRef });
+      if (success) {
+        completeCount++;
+      } else {
+        errorCount++;
+      }
+      activeCount--;
+    });
+    const timer = setInterval(async () => {
+      const updates = {
+        ["activeCount" /* activeCount */]: increment(activeCount),
+        ["completeCount" /* completeCount */]: increment(completeCount),
+        ["errorCount" /* errorCount */]: increment(errorCount)
+      };
+      const i3 = activeCount;
+      activeCount = 0;
+      completeCount = 0;
+      errorCount = 0;
+      await update(metadataRef, updates);
+    }, ONE_SECOND);
+    return () => {
+      unlistenActiveAdded();
+      unlistenMetadata();
+      setTimeout(() => {
+        clearInterval(timer);
+      }, ONE_SECOND);
+    };
+  }
+
+  // ../../packages/queue/src/queue/queue.ts
+  function Queue({ batchSize = 1, callback, ref: queueRef }) {
+    const metadataRef = child(queueRef, "metadata" /* metadata */);
+    const tasksRef = child(queueRef, "task" /* task */);
+    let unlisten;
+    function mount() {
+      let unlistenWaiting = null;
+      let unlistenWaitingTimer;
+      const unlistenMetadata = onValue(metadataRef, (dataSnapshot) => {
+        const value = dataSnapshot.val();
+        const parsed = metadataSchema.safeParse(value);
+        if (parsed.success) {
+          const { isPaused, activeCount, waitingCount } = parsed.data;
+          if (!isPaused && !unlistenWaiting) {
+            unlistenWaiting = handleWaiting({ batchSize, callback, metadataRef, queueRef, tasksRef });
+          } else if (!activeCount && !waitingCount) {
+            clearTimeout(unlistenWaitingTimer);
+            unlistenWaitingTimer = setTimeout(() => {
+              unlistenWaiting?.();
+              unlistenWaiting = null;
+            }, 1e3 * 5);
+          }
+        }
+      });
+      return () => {
+        unlistenWaiting?.();
+        unlistenMetadata();
+      };
+    }
+    async function add(tasks) {
+      const newTasks = tasks.map(
+        (data) => taskSchema.parse({ ["created" /* created */]: Date.now(), ["state" /* state */]: "waiting" /* waiting */, ["data" /* data */]: data })
+      );
+      const updates = newTasks.reduce(
+        (acc, task) => {
+          const newRef = push(tasksRef);
+          acc[`${"task" /* task */}/${newRef.key}`] = task;
+          return acc;
+        },
+        {
+          [`${metadataRef.key}/${"activeCount" /* activeCount */}`]: increment(0),
+          [`${metadataRef.key}/${"errorCount" /* errorCount */}`]: increment(0),
+          [`${metadataRef.key}/${"waitingCount" /* waitingCount */}`]: increment(newTasks.length),
+          [`${metadataRef.key}/${"completeCount" /* completeCount */}`]: increment(0),
+          [`${metadataRef.key}/${"count" /* count */}`]: increment(newTasks.length)
+        }
+      );
+      await update(queueRef, updates);
+    }
+    async function empty() {
+      unmount();
+      await remove(queueRef);
+    }
+    async function stop() {
+      unmount();
+      await update(metadataRef, { isPaused: true });
+    }
+    async function start() {
+      await update(metadataRef, { isPaused: false });
+      unlisten = mount();
+    }
+    function unmount() {
+      unlisten?.();
+      unlisten = null;
+    }
+    async function requeueByKey(keys, metadataKey) {
+      const updates = getRequeueUpdates(keys, metadataKey);
+      await stop();
+      await update(queueRef, updates);
+      return { success: true, message: `${updates.length} errored tasks reqeueued` };
+    }
+    async function requeueByState(taskState) {
+      const metadataKey = taskState === "complete" /* complete */ ? "completeCount" /* completeCount */ : "errorCount" /* errorCount */;
+      await stop();
+      await pageThroughTasks({
+        batchSize: 3,
+        callback: async (queueTasks) => {
+          const keys = Object.keys(queueTasks);
+          const updates = getRequeueUpdates(keys, metadataKey);
+          await update(queueRef, updates);
+          return { success: true, message: `${updates.length} errored tasks reqeueued` };
+        },
+        taskState,
+        tasksRef
+      });
+    }
+    function getRequeueUpdates(keys, metadataKey) {
+      return keys.reduce(
+        (acc, key) => {
+          acc[`${"task" /* task */}/${key}/${"state" /* state */}`] = "waiting" /* waiting */;
+          acc[`${"task" /* task */}/${key}/${"started" /* started */}`] = null;
+          acc[`${"task" /* task */}/${key}/${"completed" /* completed */}`] = null;
+          return acc;
+        },
+        {
+          [`${"metadata" /* metadata */}/${metadataKey}`]: increment(-keys.length),
+          [`${"metadata" /* metadata */}/${"waitingCount" /* waitingCount */}`]: increment(keys.length)
+        }
+      );
+    }
+    return {
+      add,
+      empty,
+      stop,
+      start,
+      metadataRef,
+      tasksRef,
+      requeueByKey,
+      requeueByState
+    };
+  }
+
   // ../../node_modules/unique-names-generator/dist/index.m.js
   var a = (a3) => {
     a3 = 1831565813 + (a3 |= 0) | 0;
@@ -22938,7 +23687,7 @@ Length provided: ${this.length}. Number of dictionaries provided: ${this.diction
             const value = object[key];
             if (value instanceof Set) {
               const set2 = value;
-              draft[key] = { __isSet: true, value: [...set2] };
+              draft[key] = { __isSet: true, value: Array.from(set2) };
             } else if (typeof value === "object") {
               draft[key] = serialize(value);
             } else if (typeof value === "function") {
@@ -23027,13 +23776,13 @@ Length provided: ${this.length}. Number of dictionaries provided: ${this.diction
     created: firestoreDate.default(() => new Date()),
     updated: firestoreDate.default(() => new Date())
   });
-  var LibraryTaskStatus = /* @__PURE__ */ ((LibraryTaskStatus3) => {
-    LibraryTaskStatus3["idle"] = "idle";
-    LibraryTaskStatus3["running"] = "running";
-    LibraryTaskStatus3["paused"] = "paused";
-    LibraryTaskStatus3["canceled"] = "canceled";
-    LibraryTaskStatus3["complete"] = "complete";
-    return LibraryTaskStatus3;
+  var LibraryTaskStatus = /* @__PURE__ */ ((LibraryTaskStatus2) => {
+    LibraryTaskStatus2["idle"] = "idle";
+    LibraryTaskStatus2["running"] = "running";
+    LibraryTaskStatus2["paused"] = "paused";
+    LibraryTaskStatus2["canceled"] = "canceled";
+    LibraryTaskStatus2["complete"] = "complete";
+    return LibraryTaskStatus2;
   })(LibraryTaskStatus || {});
   var libraryTaskSchema = mod.object({
     status: mod.nativeEnum(LibraryTaskStatus).default("idle" /* idle */),
@@ -23042,12 +23791,15 @@ Length provided: ${this.length}. Number of dictionaries provided: ${this.diction
     updated: firestoreDate.default(() => new Date())
   });
   var libraryImportSchema = libraryTaskSchema.extend({
-    nextPageToken: mod.string().optional(),
+    nextPageToken: mod.string().optional().nullable(),
     pageSize: mod.number().default(100)
   });
   var libraryDownloadSchema = libraryTaskSchema.extend({
     bytes: mod.number().default(0),
-    lastKey: mod.string().optional()
+    lastKey: mod.string().optional().nullable()
+  });
+  var libraryDownloadTaskSchema = taskSchema.extend({
+    ["data" /* data */]: mod.object({ mediaItem: mediaItemSchema })
   });
   var libraryImportMediaItemSchema = mod.object({
     success: mod.boolean(),
@@ -23056,39 +23808,96 @@ Length provided: ${this.length}. Number of dictionaries provided: ${this.diction
   });
 
   // src/library-download/init-library-download.ts
-  async function initLibraryDownload({ database: database2, db: db2, libraryId, userId }) {
+  async function initLibraryDownload({
+    database: database2,
+    db: db2,
+    directoryHandle,
+    libraryId,
+    userId
+  }) {
     const libraryDownloadRef = ref(database2, WEB.DATABASE.PATHS.LIBRARY_DOWNLOAD(userId, libraryId));
     const libraryDownloadQueueRef = ref(database2, WEB.DATABASE.PATHS.LIBRARY_DOWNLOAD_QUEUE(userId, libraryId));
-    const setStatus = getSetStatus({ libraryId, libraryDownloadRef });
-    const getStatus = getGetStatus(libraryId);
+    const mediaItemsRef = ref(database2, WEB.DATABASE.PATHS.LIBRARY_MEDIA_ITEMS(userId, libraryId));
+    const mediaItemsQuery = query(mediaItemsRef, orderByKey(), limitToFirst(10));
+    const queue = Queue({
+      batchSize: 1,
+      callback: handleLibraryDownloadTask,
+      ref: libraryDownloadQueueRef
+    });
+    async function handleLibraryDownloadTask(tasks) {
+      console.log("handleLibraryDownloadTask", tasks);
+      return { success: true, message: "processed" };
+    }
+    const setState = getSetState({ libraryId, libraryDownloadRef });
+    const getState = getGetState(libraryId);
     const libraryDownload = await getLibraryDownload(libraryDownloadRef);
-    await setStatus(libraryDownload.status);
+    await setState({ status: libraryDownload.status });
     async function start() {
-      console.log("start");
+      const contents = await getDirectoryContents(directoryHandle);
+      console.log("start", contents);
+      await queue.start();
+      const q3 = query(mediaItemsRef, orderByKey(), limitToFirst(10));
+      const unsubscribe = onChildAdded(q3, (snapshot) => {
+        const key = snapshot.key;
+        const value = snapshot.val();
+        console.log("onChildAdded", [key, value]);
+      });
+      await setState({ status: "running" /* running */, unsubscribe });
     }
     async function pause() {
       console.log("pause");
+      await queue.stop();
+      await setState({ status: "paused" /* paused */ });
     }
     async function cancel() {
       console.log("cancel");
+      await queue.stop();
+      await setState({ status: "canceled" /* canceled */ });
     }
     async function destroy() {
       console.log("destroy");
+      await queue.empty();
+      await setState({ status: "idle" /* idle */ });
+      await update(libraryDownloadRef, {
+        lastKey: null,
+        count: 0,
+        bytes: 0,
+        updated: new Date()
+      });
     }
-    return { start, pause, cancel, destroy, getStatus, setStatus };
+    return { start, pause, cancel, destroy, getStatus: getState, setStatus: setState };
   }
-  var statusMap = /* @__PURE__ */ new Map();
-  function getSetStatus({ libraryId, libraryDownloadRef }) {
-    return async (status) => {
+  var DEFAULT_DOWNLOAD_STATE = { lastKey: null, status: "idle" /* idle */, unsubscribe: null };
+  var stateMap = /* @__PURE__ */ new Map();
+  function getSetState({ libraryId, libraryDownloadRef }) {
+    return async (stateUpdates) => {
+      const { status } = updateState({ libraryId, stateUpdates });
       const libraryDownload = await getLibraryDownload(libraryDownloadRef);
-      const updates = libraryDownloadSchema.parse({ ...libraryDownload, status, updated: new Date() });
+      const updates = libraryDownloadSchema.parse({
+        ...libraryDownload,
+        status,
+        updated: new Date()
+      });
       await update(libraryDownloadRef, updates);
-      statusMap.set(libraryId, status);
       return updates;
     };
   }
-  function getGetStatus(libraryId) {
-    return () => statusMap.get(libraryId);
+  function updateState({ libraryId, stateUpdates }) {
+    const getState = getGetState(libraryId);
+    const existingState = unsubscribeExistingState(getState());
+    const updatedState = { ...DEFAULT_DOWNLOAD_STATE, ...existingState, ...stateUpdates };
+    stateMap.set(libraryId, updatedState);
+    return updatedState;
+  }
+  function unsubscribeExistingState(existingState) {
+    if (existingState?.unsubscribe) {
+      existingState.unsubscribe?.();
+      existingState.unsubscribe = null;
+    }
+    return existingState;
+  }
+  function getGetState(libraryId) {
+    return () => stateMap.get(libraryId) || DEFAULT_DOWNLOAD_STATE;
   }
   async function getLibraryDownload(libraryDownloadRef) {
     const snapshot = await get(libraryDownloadRef);
@@ -23097,8 +23906,21 @@ Length provided: ${this.length}. Number of dictionaries provided: ${this.diction
     return libraryDownload;
   }
   var libraryDownloadsMap = /* @__PURE__ */ new Map();
-  async function getLibraryDownloadInstance({ database: database2, db: db2, libraryId, userId }) {
-    return libraryDownloadsMap.get(libraryId) || await initLibraryDownload({ database: database2, db: db2, libraryId, userId });
+  async function getLibraryDownloadInstance({
+    database: database2,
+    db: db2,
+    directoryHandle,
+    libraryId,
+    userId
+  }) {
+    return libraryDownloadsMap.get(libraryId) || await initLibraryDownload({ database: database2, db: db2, directoryHandle, libraryId, userId });
+  }
+  async function getDirectoryContents(directoryHandle) {
+    const handleTuples = [];
+    for await (const tuple of directoryHandle.entries()) {
+      handleTuples.push(tuple);
+    }
+    return handleTuples;
   }
 
   // src/library-download/handle-library-download-message.ts
@@ -23109,7 +23931,13 @@ Length provided: ${this.length}. Number of dictionaries provided: ${this.diction
     user: user2
   }) {
     const userId = user2.uid;
-    const libraryDownload = await getLibraryDownloadInstance({ database: database2, db: db2, libraryId: message.data.libraryId, userId });
+    const libraryDownload = await getLibraryDownloadInstance({
+      database: database2,
+      db: db2,
+      directoryHandle: message.data.directoryHandle,
+      libraryId: message.data.libraryId,
+      userId
+    });
     switch (message.action) {
       case "libraryDownloadInit" /* libraryDownloadInit */:
         console.info("forcing initialization of library download");
@@ -23133,8 +23961,8 @@ Length provided: ${this.length}. Number of dictionaries provided: ${this.diction
   async function initLibraryImport({ database: database2, db: db2, libraryId, userId }) {
     const libraryImportRef = ref(database2, WEB.DATABASE.PATHS.LIBRARY_IMPORT(userId, libraryId));
     const libraryMediaItemsRef = ref(database2, WEB.DATABASE.PATHS.LIBRARY_MEDIA_ITEMS(userId, libraryId));
-    const setStatus = getSetStatus2({ libraryId, libraryImportRef });
-    const getStatus = getGetStatus2(libraryId);
+    const setStatus = getSetStatus({ libraryId, libraryImportRef });
+    const getStatus = getGetStatus(libraryId);
     const libraryImport = await getLibraryImport(libraryImportRef);
     await setStatus(libraryImport.status);
     async function start() {
@@ -23180,25 +24008,24 @@ Length provided: ${this.length}. Number of dictionaries provided: ${this.diction
       await update(libraryImportRef, {
         nextPageToken: null,
         count: 0,
-        status: "idle" /* idle */,
         updated: new Date()
       });
       await remove(libraryMediaItemsRef);
     }
     return { start, pause, cancel, destroy, getStatus, setStatus };
   }
-  var statusMap2 = /* @__PURE__ */ new Map();
-  function getSetStatus2({ libraryId, libraryImportRef }) {
+  var statusMap = /* @__PURE__ */ new Map();
+  function getSetStatus({ libraryId, libraryImportRef }) {
     return async (status) => {
       const libraryImport = await getLibraryImport(libraryImportRef);
       const updates = libraryImportSchema.parse({ ...libraryImport, status, updated: new Date() });
       await update(libraryImportRef, updates);
-      statusMap2.set(libraryId, status);
+      statusMap.set(libraryId, status);
       return updates;
     };
   }
-  function getGetStatus2(libraryId) {
-    return () => statusMap2.get(libraryId);
+  function getGetStatus(libraryId) {
+    return () => statusMap.get(libraryId);
   }
   async function getLibraryImport(libraryImportRef) {
     const snapshot = await get(libraryImportRef);

@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "next dev --port 3001",
-    "build": "next build",
+    "build": "echo not building docs",
+    "buildDEPRECATED": "next build",
     "start": "next start",
     "lint": "next lint"
   },

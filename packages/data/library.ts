@@ -1,3 +1,4 @@
+import { TaskKey, taskSchema } from '@quiver/firebase-queue';
 import { animals, colors, uniqueNamesGenerator } from 'unique-names-generator';
 
 import { firestoreDate } from './firestore';
@@ -37,7 +38,7 @@ const libraryTaskSchema = z.object({
 
 // Library import
 export const libraryImportSchema = libraryTaskSchema.extend({
-  nextPageToken: z.string().optional(),
+  nextPageToken: z.string().optional().nullable(),
   pageSize: z.number().default(100),
 });
 export type LibraryImport = z.infer<typeof libraryImportSchema>;
@@ -45,9 +46,13 @@ export type LibraryImport = z.infer<typeof libraryImportSchema>;
 // Library download
 export const libraryDownloadSchema = libraryTaskSchema.extend({
   bytes: z.number().default(0),
-  lastKey: z.string().optional(),
+  lastKey: z.string().optional().nullable(),
+});
+export const libraryDownloadTaskSchema = taskSchema.extend({
+  [TaskKey.data]: z.object({ mediaItem: mediaItemSchema }),
 });
 export type LibraryDownload = z.infer<typeof libraryDownloadSchema>;
+export type LibraryDownloadTask = z.infer<typeof libraryDownloadTaskSchema>;
 
 // Media items
 export const libraryImportMediaItemSchema = z.object({

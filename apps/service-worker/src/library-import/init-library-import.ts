@@ -1,6 +1,6 @@
 import { Database, DatabaseReference, get, increment, ref, remove, update } from 'firebase/database';
 import { DocumentSnapshot, Firestore, doc, getDoc, updateDoc } from 'firebase/firestore/lite';
-import { Library, LibraryTaskStatus, libraryImportSchema, librarySchema } from 'data/library';
+import { Library, LibraryImport, LibraryTaskStatus, libraryImportSchema, librarySchema } from 'data/library';
 import { MediaItem, mediaItemsResponseSchema } from 'data/media-items';
 
 import { WEB } from 'data/web';
@@ -74,9 +74,8 @@ export async function initLibraryImport({ database, db, libraryId, userId }: Ini
     await update(libraryImportRef, {
       nextPageToken: null,
       count: 0,
-      status: LibraryTaskStatus.idle,
       updated: new Date(),
-    });
+    } as Partial<LibraryImport>);
     await remove(libraryMediaItemsRef);
   }
 
@@ -128,7 +127,7 @@ const MEDIA_ITEMS_TTL_MS = 1000 * 60 * 60; // 1 Hour
 interface GetPageArgs {
   library: Library;
   librarySnapshot: DocumentSnapshot;
-  nextPageToken?: string;
+  nextPageToken?: string | null;
   pageSize: number;
 }
 async function getPage({ library, librarySnapshot, pageSize, nextPageToken }: GetPageArgs) {

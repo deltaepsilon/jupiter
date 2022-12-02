@@ -79,8 +79,8 @@ export const theme = responsiveFontSizes(
       h2: FONT_BOLD,
       h3: FONT_BLACK,
       h4: FONT_BLACK,
-      h5: FONT_SEMIBOLD,
-      h6: FONT_SEMIBOLD,
+      h5: FONT_BLACK,
+      h6: FONT_BLACK,
     },
   })
 );

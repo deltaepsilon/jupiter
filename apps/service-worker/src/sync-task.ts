@@ -1,13 +1,11 @@
 import { Database, DatabaseReference, increment, onValue, ref, update } from 'firebase/database';
 import { Download, DownloadKey, downloadSchema, getDownloadQueueRefPath } from 'data/download';
 import { Queue, QueueValue, metadataSchema, taskSchema } from '@quiver/firebase-queue';
-import { SwMessageType, queueRefsMessageSchema } from 'data/service-worker';
 import { SyncStage, SyncTask, SyncTaskKey, getSyncTaskRefPath } from 'data/sync';
 import { addParams, localforage } from 'ui/utils';
 
 import { WEB } from 'data/web';
 import { mediaItemsResponseSchema } from 'data/media-items';
-import { sendMessageToClients } from './utils/send-message-to-client';
 
 const BATCH_SIZE = 10;
 const ONE_HOUR_IN_MS = 3600000;

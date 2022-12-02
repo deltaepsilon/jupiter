@@ -1,5 +1,6 @@
 import {
   Box,
+  Button,
   IconButton,
   LinearProgress,
   ListItemIcon,
@@ -7,8 +8,10 @@ import {
   MenuItem,
   MenuList,
   Paper,
+  SxProps,
   Typography,
 } from '@mui/material';
+import { DirectoryHandle, useLocalFilesystem } from 'ui/hooks';
 
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
@@ -20,61 +23,84 @@ import PlayCircleOutlineIcon from '@mui/icons-material/PlayCircleOutline';
 import { UseLibraryDownloadResult } from 'web/hooks/use-library-download';
 import { formatDate } from 'ui/utils';
 
-interface Props {
-  actions: UseLibraryDownloadResult['actions'];
-  libraryDownload: UseLibraryDownloadResult['libraryDownload'];
-}
+const GRID: SxProps = {
+  display: 'grid',
+  gridGap: 4,
+  gridTemplateColumns: '1fr 3.5rem 51px 51px',
+  alignItems: 'center',
+};
 
-export function DownloadLibraryPanel({ actions, libraryDownload }: Props) {
+type Props = Pick<UseLibraryDownloadResult, 'actions' | 'directoryHandle' | 'getDirectoryHandle' | 'libraryDownload'>;
+
+export function DownloadLibraryPanel({ actions, directoryHandle, getDirectoryHandle, libraryDownload }: Props) {
   const isRunning = libraryDownload?.status === LibraryTaskStatus.running;
   const isComplete = libraryDownload?.status === LibraryTaskStatus.complete;
   const isEmpty = !libraryDownload;
 
   return (
-    <Paper
-      elevation={1}
-      sx={{ display: 'grid', gridGap: 4, gridTemplateColumns: '1fr 3.5rem 51px 51px', alignItems: 'center' }}
-    >
-      <Box sx={{ position: 'relative' }}>
-        <LinearProgress
-          value={isComplete ? 100 : Math.max(5, Math.min(50, (libraryDownload?.count ?? 0) / 10000))}
-          variant={isRunning ? 'indeterminate' : 'determinate'}
-        />
-        <Typography sx={{ position: 'absolute', inset: '0 0 -5 0' }} variant='caption'>
-          {formatDate(libraryDownload?.updated, 'MMM d, yyyy •  HH:mm:ss')}
+    <Paper elevation={1} sx={{}}>
+      <Box sx={{ ...GRID, paddingBottom: 2 }}>
+        <Typography sx={{ flex: 1 }} variant='h6'>
+          {directoryHandle?.name ?? 'No folder selected'}
         </Typography>
-      </Box>
-      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: -0.5 }}>
-        <Typography variant='body1'>{libraryDownload?.count}</Typography>
-      </Box>
-      <Box>
-        <ActionButton actions={actions} libraryDownload={libraryDownload} />
-      </Box>
 
-      <Box sx={{ position: 'relative', pointerEvents: isEmpty ? 'none' : 'all', opacity: isEmpty ? 0.5 : 1 }}>
-        <MenuTrigger
-          anchorOrigin={{ horizontal: 'left', vertical: 'bottom' }}
-          trigger={
-            <IconButton sx={{ color: 'primary.main' }}>
-              <MoreVertIcon fontSize='large' />
-            </IconButton>
-          }
+        <Button
+          disabled={isRunning}
+          onClick={getDirectoryHandle}
+          sx={{ gridColumn: '2/5' }}
+          variant={directoryHandle ? 'outlined' : 'contained'}
         >
-          <MenuList>
-            <MenuItem onClick={() => actions.destroy()}>
-              <ListItemIcon>
-                <DeleteForeverIcon />
-              </ListItemIcon>
-              <ListItemText>Destroy records</ListItemText>
-            </MenuItem>
-          </MenuList>
-        </MenuTrigger>
+          {directoryHandle ? 'Change folder' : 'Select a folder'}
+        </Button>
+      </Box>
+      <Box
+        sx={{
+          ...GRID,
+          pointerEvents: directoryHandle ? 'all' : 'none',
+          opacity: directoryHandle ? 1 : 0.5,
+        }}
+      >
+        <Box sx={{ position: 'relative' }}>
+          <LinearProgress
+            value={isComplete ? 100 : Math.max(5, Math.min(50, (libraryDownload?.count ?? 0) / 10000))}
+            variant={isRunning ? 'indeterminate' : 'determinate'}
+          />
+          <Typography sx={{ position: 'absolute', inset: '0 0 -5 0' }} variant='caption'>
+            {formatDate(libraryDownload?.updated, 'MMM d, yyyy •  HH:mm:ss')}
+          </Typography>
+        </Box>
+        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: -0.5 }}>
+          <Typography variant='body1'>{libraryDownload?.count}</Typography>
+        </Box>
+        <Box>
+          <ActionButton actions={actions} libraryDownload={libraryDownload} />
+        </Box>
+
+        <Box sx={{ position: 'relative', pointerEvents: isEmpty ? 'none' : 'all', opacity: isEmpty ? 0.5 : 1 }}>
+          <MenuTrigger
+            anchorOrigin={{ horizontal: 'left', vertical: 'bottom' }}
+            trigger={
+              <IconButton sx={{ color: 'primary.main' }}>
+                <MoreVertIcon fontSize='large' />
+              </IconButton>
+            }
+          >
+            <MenuList>
+              <MenuItem onClick={() => actions.destroy()}>
+                <ListItemIcon>
+                  <DeleteForeverIcon />
+                </ListItemIcon>
+                <ListItemText>Destroy records</ListItemText>
+              </MenuItem>
+            </MenuList>
+          </MenuTrigger>
+        </Box>
       </Box>
     </Paper>
   );
 }
 
-function ActionButton({ actions, libraryDownload }: Props) {
+function ActionButton({ actions, libraryDownload }: Pick<Props, 'actions' | 'libraryDownload'>) {
   switch (libraryDownload?.status) {
     case LibraryTaskStatus.complete:
       return (

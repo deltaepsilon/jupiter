@@ -102,7 +102,7 @@ function serialize<Type>(object: Type): Type {
           if (value instanceof Set) {
             const set = value as unknown as Set<any>;
 
-            draft[key] = { __isSet: true, value: [...set] } as unknown as Type[Extract<keyof Type, string>];
+            draft[key] = { __isSet: true, value: Array.from(set) } as unknown as Type[Extract<keyof Type, string>];
           } else if (typeof value === 'object') {
             draft[key] = serialize(value);
           } else if (typeof value === 'function') {

@@ -2,8 +2,10 @@ import { LibraryDownload, libraryDownloadSchema } from 'data/library';
 import { MessageAction, encodePostMessage } from 'data/service-worker';
 import { useEffect, useMemo, useState } from 'react';
 
+import { DirectoryHandle } from 'ui/hooks';
 import { WEB } from 'data/web';
 import { useAuth } from 'ui/contexts';
+import { useLocalFilesystem } from 'ui/hooks';
 import { useRtdb } from 'ui/hooks';
 import { useServiceWorker } from 'web/contexts/service-worker-context';
 
@@ -12,11 +14,12 @@ export type UseLibraryDownloadResult = ReturnType<typeof useLibraryDownload>;
 export function useLibraryDownload(libraryId: string) {
   const { user } = useAuth();
   const { listen } = useRtdb();
+  const { directoryHandle, getDirectoryHandle } = useLocalFilesystem();
   const [libraryDownload, setLibraryDownload] = useState<LibraryDownload | null | undefined>();
   const { sendMessage } = useServiceWorker();
   const { init, start, pause, cancel, destroy } = useMemo(() => {
     function createSender(action: MessageAction) {
-      return () => sendMessage(encodePostMessage({ action, data: { libraryId } }));
+      return () => sendMessage(encodePostMessage({ action, data: { libraryId, directoryHandle } }));
     }
 
     return {
@@ -26,7 +29,7 @@ export function useLibraryDownload(libraryId: string) {
       cancel: createSender(MessageAction.libraryDownloadCancel),
       destroy: createSender(MessageAction.libraryDownloadDestroy),
     };
-  }, [libraryId, sendMessage]);
+  }, [directoryHandle, libraryId, sendMessage]);
   const isLoading = typeof libraryDownload === 'undefined';
 
   useEffect(() => {
@@ -49,5 +52,11 @@ export function useLibraryDownload(libraryId: string) {
     user && init();
   }, [init, user]);
 
-  return { isLoading, libraryDownload, actions: { start, pause, cancel, destroy } };
+  return {
+    isLoading,
+    directoryHandle,
+    getDirectoryHandle,
+    libraryDownload,
+    actions: { start, pause, cancel, destroy },
+  };
 }

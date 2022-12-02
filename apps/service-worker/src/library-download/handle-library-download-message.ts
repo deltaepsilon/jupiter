@@ -25,7 +25,13 @@ export async function handleLibraryDownloadMessage({
   user: User;
 }) {
   const userId = user.uid;
-  const libraryDownload = await getLibraryDownloadInstance({ database, db, libraryId: message.data.libraryId, userId });
+  const libraryDownload = await getLibraryDownloadInstance({
+    database,
+    db,
+    directoryHandle: message.data.directoryHandle,
+    libraryId: message.data.libraryId,
+    userId,
+  });
 
   switch (message.action) {
     case MessageAction.libraryDownloadInit:

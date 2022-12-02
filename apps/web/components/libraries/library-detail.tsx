@@ -12,7 +12,12 @@ export function LibraryDetail() {
   const { libraries } = useLibraries();
   const [libraryId, library] = libraries[0];
   const { actions: importActions, libraryImport } = useLibraryImport(libraryId);
-  const { actions: downloadActions, libraryDownload } = useLibraryDownload(libraryId);
+  const {
+    actions: downloadActions,
+    directoryHandle,
+    getDirectoryHandle,
+    libraryDownload,
+  } = useLibraryDownload(libraryId);
   const isComplete = libraryImport?.status === LibraryTaskStatus.complete;
   const isRunning = libraryImport?.status === LibraryTaskStatus.running;
   const hasLibraryRecords = !!libraryImport?.count;
@@ -86,7 +91,12 @@ export function LibraryDetail() {
             </Typography>
           </Step>
 
-          <DownloadLibraryPanel actions={downloadActions} libraryDownload={libraryDownload} />
+          <DownloadLibraryPanel
+            actions={downloadActions}
+            directoryHandle={directoryHandle}
+            getDirectoryHandle={getDirectoryHandle}
+            libraryDownload={libraryDownload}
+          />
         </Box>
       </Box>
     </Container>

@@ -1,4 +1,4 @@
-import { MessageAction, SyncStatusMessage, encodePostMessage } from 'data/service-worker';
+import { MessageAction, encodePostMessage } from 'data/service-worker';
 import { SendMessage, useServiceWorker } from 'web/contexts/service-worker-context';
 import {
   SyncTask,
@@ -87,20 +87,20 @@ export function SyncTasksProvider({ children, userId }: Props) {
   );
   const manageSyncTask = useCallback(
     async ({ action, taskId }: { taskId: string; action: MessageAction }) => {
-      const sendSyncStatusMessage = sendMessage as SendMessage<SyncStatusMessage>;
-      const statusResult = await sendSyncStatusMessage(
-        encodePostMessage<SyncStatusMessage>({ action: MessageAction.syncStatus, data: { taskId } })
-      );
-      const isActive = !!statusResult.data.isActive;
-      const isStart = action === MessageAction.syncStart;
+      // const sendSyncStatusMessage = sendMessage as SendMessage<SyncStatusMessage>;
+      // const statusResult = await sendSyncStatusMessage(
+      //   encodePostMessage<SyncStatusMessage>({ action: MessageAction.syncStatus, data: { taskId } })
+      // );
+      // const isActive = !!statusResult.data.isActive;
+      // const isStart = action === MessageAction.syncStart;
 
-      setIsActive(isActive);
+      // setIsActive(isActive);
 
-      if (isActive || isStart) {
-        return sendMessage(encodePostMessage({ action, data: { taskId } }));
-      } else {
-        return { success: false, data: false };
-      }
+      // if (isActive || isStart) {
+      //   return sendMessage(encodePostMessage({ action, data: { taskId } }));
+      // } else {
+      return { success: false, data: false };
+      // }
     },
     [sendMessage]
   );

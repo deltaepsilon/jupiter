@@ -8,6 +8,12 @@ export const libraryMessageSchema = z.object({
   libraryId: z.string(),
 });
 
+export const libraryFileMessageSchema = libraryMessageSchema.extend({
+  directoryHandle: z.any().refine((value) => value instanceof FileSystemDirectoryHandle, {
+    message: 'directoryHandle must be an instance of FileSystemDirectoryHandle',
+  }),
+});
+
 export type AckMessage = z.infer<typeof ackMessageSchema>;
 export type LibraryMessage = z.infer<typeof libraryMessageSchema>;
 
@@ -69,23 +75,23 @@ export const messageSchemasByAction = {
 
   [MessageAction.libraryDownloadInit]: postMessageBaseSchema.extend({
     action: z.literal(MessageAction.libraryDownloadInit),
-    data: libraryMessageSchema,
+    data: libraryFileMessageSchema,
   }),
   [MessageAction.libraryDownloadStart]: postMessageBaseSchema.extend({
     action: z.literal(MessageAction.libraryDownloadStart),
-    data: libraryMessageSchema,
+    data: libraryFileMessageSchema,
   }),
   [MessageAction.libraryDownloadPause]: postMessageBaseSchema.extend({
     action: z.literal(MessageAction.libraryDownloadPause),
-    data: libraryMessageSchema,
+    data: libraryFileMessageSchema,
   }),
   [MessageAction.libraryDownloadCancel]: postMessageBaseSchema.extend({
     action: z.literal(MessageAction.libraryDownloadCancel),
-    data: libraryMessageSchema,
+    data: libraryFileMessageSchema,
   }),
   [MessageAction.libraryDownloadDestroy]: postMessageBaseSchema.extend({
     action: z.literal(MessageAction.libraryDownloadDestroy),
-    data: libraryMessageSchema,
+    data: libraryFileMessageSchema,
   }),
 };
 const discriminatedMessageSchema = z.discriminatedUnion('action', [
