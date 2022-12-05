@@ -1,5 +1,5 @@
 import { Box, Button, Divider, TextField, Typography } from '@mui/material';
-import { MediaItems, mediaItemsResponseSchema } from 'data/media-items';
+import { MediaItems, listMediaItemsResponseSchema } from 'data/media-items';
 import { SyncTask, getDefaultSyncTask, syncTaskSchema } from 'data/sync';
 import nookies, { parseCookies } from 'nookies';
 import { useCallback, useEffect, useState } from 'react';
@@ -125,7 +125,7 @@ function useGooglePhotos() {
   const onLibraryPickerClick = useCallback(async () => {
     const { accessToken, refreshToken } = parseCookies();
     const response = await fetch(
-      addParams(`${location.origin}${WEB.API.MEDIA_ITEMS}`, { accessToken, refreshToken, pageSize: 9 })
+      addParams(`${location.origin}${WEB.API.MEDIA_ITEMS_LIST}`, { accessToken, refreshToken, pageSize: 9 })
     );
 
     if (response.status === 401) {
@@ -137,7 +137,7 @@ function useGooglePhotos() {
       router.replace(authUrl);
     } else {
       const data = await response.json();
-      const { accessToken, refreshToken, mediaItems } = mediaItemsResponseSchema.parse(data);
+      const { accessToken, refreshToken, mediaItems } = listMediaItemsResponseSchema.parse(data);
 
       nookies.set(null, Cookie.accessToken, accessToken, { path: '/' });
       nookies.set(null, Cookie.refreshToken, refreshToken, { path: '/' });

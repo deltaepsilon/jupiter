@@ -1,4 +1,4 @@
-import { MediaItems, mediaItemsResponseSchema } from 'data/media-items';
+import { MediaItems, listMediaItemsResponseSchema } from 'data/media-items';
 import nookies, { parseCookies } from 'nookies';
 import { useCallback, useState } from 'react';
 
@@ -57,13 +57,13 @@ export function useGooglePhotos() {
 
 async function getFirstPage({ accessToken, refreshToken }: { accessToken?: string; refreshToken: string }) {
   const response = await fetch(
-    addParams(`${location.origin}${WEB.API.MEDIA_ITEMS}`, { accessToken, refreshToken, pageSize: 9 })
+    addParams(`${location.origin}${WEB.API.MEDIA_ITEMS_LIST}`, { accessToken, refreshToken, pageSize: 9 })
   );
 
   if (response.ok) {
     const data = await response.json();
 
-    return mediaItemsResponseSchema.parse(data);
+    return listMediaItemsResponseSchema.parse(data);
   } else {
     throw response;
   }

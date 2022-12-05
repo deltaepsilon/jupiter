@@ -1,20 +1,21 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 
 import { ZodError } from 'zod';
-import axios from 'axios';
-import { getMediaItems } from 'api/photos/media-items';
+import { batchGetMediaItems } from 'api/photos/batch-get-media-items';
 
-export default async function MediaItems(req: NextApiRequest, res: NextApiResponse) {
+export default async function handleBatchGet(req: NextApiRequest, res: NextApiResponse) {
   try {
-    if (!req.query.accessToken && !req.query.refreshToken) {
-      throw new Error('No access token found');
+    const { accessToken, refreshToken } = JSON.parse(req.body);
+
+    if (!accessToken && !refreshToken) {
+      throw new Error('No access token or refresh token found');
     }
 
-    const media = await getMediaItems({ req });
+    const media = await batchGetMediaItems({ req });
 
     res.json(media);
   } catch (error) {
-    console.error('api/media-items error: ', error?.toString());
+    console.error('api/media-items/batch-get error: ', error?.toString());
 
     if (error instanceof Error) {
       if (error.toString().includes('No access token found')) {

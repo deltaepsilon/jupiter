@@ -5,7 +5,7 @@ import { SyncStage, SyncTask, SyncTaskKey, getSyncTaskRefPath } from 'data/sync'
 import { addParams, localforage } from 'ui/utils';
 
 import { WEB } from 'data/web';
-import { mediaItemsResponseSchema } from 'data/media-items';
+import { listMediaItemsResponseSchema } from 'data/media-items';
 
 const BATCH_SIZE = 10;
 const ONE_HOUR_IN_MS = 3600000;
@@ -52,10 +52,8 @@ export async function startSyncTask({
       const { activeCount, waitingCount } = parsed.data;
       shouldAddNextPage = !activeCount && !waitingCount;
 
-      console.log({ activeCount, waitingCount, shouldAddNextPage });
     }
 
-    console.log({ shouldAddNextPage, value });
     shouldAddNextPage && task && addNextPage({ queue, syncTaskRef, task, taskId });
   });
 
@@ -81,7 +79,7 @@ async function addNextPage({
 }) {
   const isExpiredAccessToken = Date.now() - task.accessTokenCreated > ONE_HOUR_IN_MS;
   const accessTokenCreated = isExpiredAccessToken ? Date.now() : task.accessTokenCreated;
-  const url = addParams(`${location.origin}${WEB.API.MEDIA_ITEMS}`, {
+  const url = addParams(`${location.origin}${WEB.API.MEDIA_ITEMS_LIST}`, {
     pageSize: 100,
     pageToken: task.nextPageToken,
     accessToken: isExpiredAccessToken ? undefined : task.accessToken,
@@ -91,9 +89,7 @@ async function addNextPage({
   const response = await fetch(url);
   const data = await response.json();
 
-  console.log({ data });
-  debugger;
-  const { mediaItems, accessToken, nextPageToken } = mediaItemsResponseSchema.parse(data);
+  const { mediaItems, accessToken, nextPageToken } = listMediaItemsResponseSchema.parse(data);
   const count = mediaItems.length;
   const downloadTasks = mediaItems.map((mediaItem) => downloadSchema.parse({ [DownloadKey.mediaItem]: mediaItem }));
 

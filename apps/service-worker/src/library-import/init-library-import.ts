@@ -1,10 +1,12 @@
 import { Database, DatabaseReference, get, increment, ref, remove, update } from 'firebase/database';
 import { DocumentSnapshot, Firestore, doc, getDoc, updateDoc } from 'firebase/firestore/lite';
 import { Library, LibraryImport, LibraryTaskStatus, libraryImportSchema, librarySchema } from 'data/library';
-import { MediaItem, mediaItemsResponseSchema } from 'data/media-items';
+import { MediaItem, listMediaItemsResponseSchema } from 'data/media-items';
 
+import { MEDIA_ITEMS_TTL_MS } from '../data';
 import { WEB } from 'data/web';
 import { addParams } from 'ui/utils';
+import { getLibrary } from '../utils/get-library';
 
 export interface InitLibraryImportArgs {
   database: Database;
@@ -123,7 +125,6 @@ export async function getLibraryImportInstance({ database, db, libraryId, userId
   return libraryImportsMap.get(libraryId) || (await initLibraryImport({ database, db, libraryId, userId }));
 }
 
-const MEDIA_ITEMS_TTL_MS = 1000 * 60 * 60; // 1 Hour
 interface GetPageArgs {
   library: Library;
   librarySnapshot: DocumentSnapshot;
@@ -134,7 +135,7 @@ async function getPage({ library, librarySnapshot, pageSize, nextPageToken }: Ge
   const { accessToken, refreshToken, updated } = library;
   const isStale = !updated || updated.getTime() < Date.now() - MEDIA_ITEMS_TTL_MS;
   const response = await fetch(
-    addParams(`${location.origin}${WEB.API.MEDIA_ITEMS}`, {
+    addParams(`${location.origin}${WEB.API.MEDIA_ITEMS_LIST}`, {
       accessToken: isStale ? undefined : accessToken,
       refreshToken,
       pageSize,
@@ -144,7 +145,7 @@ async function getPage({ library, librarySnapshot, pageSize, nextPageToken }: Ge
 
   if (response.ok) {
     const data = await response.json();
-    const { accessToken, mediaItems, nextPageToken } = mediaItemsResponseSchema.parse(data);
+    const { accessToken, mediaItems, nextPageToken } = listMediaItemsResponseSchema.parse(data);
 
     if (isStale) {
       await updateDoc(librarySnapshot.ref, { accessToken, updated: new Date() });
@@ -154,12 +155,4 @@ async function getPage({ library, librarySnapshot, pageSize, nextPageToken }: Ge
   } else {
     throw response;
   }
-}
-
-async function getLibrary({ db, libraryId, userId }: { db: Firestore; libraryId: string; userId: string }) {
-  const path = WEB.FIRESTORE.COLLECTIONS.LIBRARY(userId, libraryId);
-  const librarySnapshot = await getDoc(doc(db, path));
-  const library = librarySchema.parse(librarySnapshot.data());
-
-  return { library, librarySnapshot };
 }

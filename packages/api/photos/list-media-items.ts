@@ -2,7 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 
 import { addParams } from 'ui/utils';
 import axios from 'axios';
-import { mediaItemsResponseSchema } from 'data/media-items';
+import { listMediaItemsResponseSchema } from 'data/media-items';
 import { refreshAccessToken } from 'api/utils/jwt';
 import { z } from 'zod';
 
@@ -17,7 +17,7 @@ const PARAMS_SCHEMA = z.object({
   nextPageToken: z.string().optional(),
 });
 
-export async function getMediaItems({ req }: Args) {
+export async function listMediaItems({ req }: Args) {
   const { accessToken: maybeAccessToken, refreshToken, nextPageToken } = PARAMS_SCHEMA.parse(req.query);
   const accessToken = maybeAccessToken || (await refreshAccessToken(refreshToken)).access_token;
   const pageSize = typeof req.query.pageSize === 'string' ? parseInt(req.query.pageSize, 10) : 25;
@@ -47,5 +47,5 @@ async function queryMediaItems({
     }
   );
 
-  return mediaItemsResponseSchema.parse({ accessToken, refreshToken, ...data });
+  return listMediaItemsResponseSchema.parse({ accessToken, refreshToken, ...data });
 }

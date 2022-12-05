@@ -1,7 +1,8 @@
 /* eslint-disable import/no-anonymous-default-export */
 export const WEB = {
   API: {
-    MEDIA_ITEMS: '/api/media-items',
+    MEDIA_ITEMS_LIST: '/api/media-items/list',
+    MEDIA_ITEMS_BATCH_GET: '/api/media-items/batch-get',
     OAUTH2: '/api/oauth2',
   },
   DATABASE: {

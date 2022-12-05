@@ -22,11 +22,14 @@ import {
   libraryDownloadSchema,
   librarySchema,
 } from 'data/library';
-import { MediaItem, mediaItemSchema, mediaItemsResponseSchema } from 'data/media-items';
+import { MediaItem, listMediaItemsResponseSchema, mediaItemSchema } from 'data/media-items';
 import { Queue, QueueTasks, TaskState, taskSchema } from '@quiver/firebase-queue';
 
+import { MEDIA_ITEMS_TTL_MS } from '../data';
 import { WEB } from 'data/web';
 import { addParams } from 'ui/utils';
+import { batchGetMediaItemsResponseSchema } from 'data/media-items';
+import { getLibrary } from '../utils/get-library';
 import throttle from 'lodash/throttle';
 
 export interface InitLibraryDownloadArgs {
@@ -51,19 +54,13 @@ export async function initLibraryDownload({
   const libraryDownloadRef = ref(database, WEB.DATABASE.PATHS.LIBRARY_DOWNLOAD(userId, libraryId));
   const libraryDownloadQueueRef = ref(database, WEB.DATABASE.PATHS.LIBRARY_DOWNLOAD_QUEUE(userId, libraryId));
   const mediaItemsRef = ref(database, WEB.DATABASE.PATHS.LIBRARY_MEDIA_ITEMS(userId, libraryId));
-  const mediaItemsQuery = query(mediaItemsRef, orderByKey(), limitToFirst(10));
+  const { library } = await getLibrary({ db, libraryId, userId });
 
   const queue = Queue<LibraryDownloadData>({
-    batchSize: 1,
-    callback: handleLibraryDownloadTask,
+    batchSize: 1, // 50 max
+    callback: getHandleLibraryDownloadTask({ directoryHandle, library }),
     ref: libraryDownloadQueueRef,
   });
-
-  async function handleLibraryDownloadTask(tasks: QueueTasks) {
-    console.log('handleLibraryDownloadTask', tasks);
-
-    return { success: true, message: 'processed' };
-  }
 
   const setState = getSetState({ libraryId, libraryDownloadRef });
   const getState = getGetState(libraryId);
@@ -74,16 +71,13 @@ export async function initLibraryDownload({
 
   async function start() {
     const contents = await getDirectoryContents(directoryHandle);
+
     const { lastKey } = getState();
     let tasks: LibraryDownloadData[] = [];
     const handleTasks = throttle(async () => {
       if (tasks.length) {
         const tasksToAdd = tasks.splice(0);
         const lastKey = tasksToAdd[tasksToAdd.length - 1].key;
-
-        console.log('tasksToAdd');
-
-        console.table(tasksToAdd);
 
         await queue.add(tasksToAdd);
         await setState({ lastKey });
@@ -92,16 +86,9 @@ export async function initLibraryDownload({
 
     await queue.start();
 
-    /**
-     * TODO:
-     * 1. Page through child media items
-     * 2. Add media items to queue
-     * 3. Update lastKey using setState({ lastKey })
-     */
-    console.log({ lastKey });
     const q = lastKey
-      ? query(mediaItemsRef, orderByKey(), limitToFirst(10), startAfter(lastKey))
-      : query(mediaItemsRef, orderByKey(), limitToFirst(10));
+      ? query(mediaItemsRef, orderByKey(), limitToFirst(3), startAfter(lastKey))
+      : query(mediaItemsRef, orderByKey(), limitToFirst(3));
     const unsubscribe = onChildAdded(q, (snapshot) => {
       const value = snapshot.val();
       const mediaItem = mediaItemSchema.parse(value || {});
@@ -109,8 +96,6 @@ export async function initLibraryDownload({
       tasks.push({ key: snapshot.key ?? '', mediaItem });
 
       handleTasks();
-
-      console.log('onChildAdded', tasks);
     });
 
     await setState({ status: LibraryTaskStatus.running, unsubscribe });
@@ -170,7 +155,6 @@ function getSetState({ libraryId, libraryDownloadRef }: SetStatusArgs) {
 function updateState({ libraryId, stateUpdates }: { libraryId: string; stateUpdates: Partial<DownloadState> }) {
   const getState = getGetState(libraryId);
   const existingState = unsubscribeExistingState(getState());
-  console.log({ existingState, stateUpdates });
   const updatedState = { ...DEFAULT_DOWNLOAD_STATE, ...existingState, ...stateUpdates };
 
   if (!updatedState.lastKey) {
@@ -233,4 +217,77 @@ async function getDirectoryContents(directoryHandle: FileSystemDirectoryHandle) 
   }
 
   return handleTuples;
+}
+
+function getHandleLibraryDownloadTask({
+  directoryHandle,
+  library,
+}: {
+  directoryHandle: FileSystemDirectoryHandle;
+  library: Library;
+}) {
+  return async function handleLibraryDownloadTask(tasks: QueueTasks) {
+    try {
+      const mediaItemIds = Object.values(tasks).map((task) => task.data.mediaItem.id);
+      console.log({ mediaItemIds, tasks });
+      const mediaItems = await batchGetMediaItems({ library, mediaItemIds });
+
+      console.log('mediaItems', mediaItems);
+
+      /**
+       * TODO
+       * - Write a function get check if the media item is stale and batch-update all stale media items.
+       * - Download each media item's blob
+       * - Analyze with Rembrant.js to get a true md5 hash
+       * - Check existing metadata from the image/video
+       * - Write blob to disk with the new metadata
+       * - Metadata should include googlePhotosId and libraryItemKey
+       *
+       */
+
+      // await Promise.all(
+      //   Object.entries(tasks).map(async ([, task]) => {
+      //     const { key, mediaItem } = task.data;
+      //     const { id, url } = mediaItem;
+
+      //     const response = await fetch(url);
+      //     const blob = await response.blob();
+      //     const fileHandle = await directoryHandle.getFileHandle(mediaItem.name, { create: true });
+      //     const writable = await fileHandle.createWritable();
+      //     await writable.write(blob);
+      //     await writable.close();
+      //   })
+      // );
+
+      return { success: true, message: 'processed' };
+    } catch (error) {
+      let message = 'handleLibraryDownloadTask error';
+
+      if (error instanceof Error) {
+        message = error.message;
+      }
+
+      return { success: false, message };
+    }
+  };
+}
+
+async function batchGetMediaItems({ library, mediaItemIds }: { library: Library; mediaItemIds: string[] }) {
+  if (mediaItemIds.length > 50) {
+    throw new Error('batchGetMediaItems: mediaItemIds length must be less than 50');
+  }
+
+  const { accessToken, refreshToken, updated } = library;
+  const isStale = !updated || updated.getTime() < Date.now() - MEDIA_ITEMS_TTL_MS;
+  const response = await fetch(`${location.origin}${WEB.API.MEDIA_ITEMS_BATCH_GET}`, {
+    method: 'POST',
+    body: JSON.stringify({
+      accessToken: isStale ? undefined : accessToken,
+      refreshToken,
+      mediaItemIds: mediaItemIds.join(','),
+    }),
+  });
+  const data = await response.json();
+
+  return batchGetMediaItemsResponseSchema.parse(data);
 }

@@ -107,7 +107,11 @@ export function LibrariesProvider({ children, libraryId, userId }: Props) {
         await updateLibrary(libraryId, { ...library, accessToken, mediaItems, updated: new Date() });
 
         shouldRefreshRecords && refreshRecords();
+
+        return true;
       }
+
+      return false;
     },
     [getFirstPage, libraries, refreshRecords, updateLibrary]
   );
@@ -119,8 +123,13 @@ export function LibrariesProvider({ children, libraryId, userId }: Props) {
         (!library.mediaItems || library.updated.getTime() < Date.now() - MEDIA_ITEMS_TTL_MS)
     );
 
-    Promise.all(staleLibraries.map(async ([key]) => refreshLibrary(key, false))).then(() => {
-      refreshRecords();
+    Promise.all(staleLibraries.map(async ([key]) => refreshLibrary(key, false))).then((refreshed: boolean[]) => {
+      const hasRefreshed = refreshed.some((value) => value);
+
+      if (hasRefreshed) {
+        console.info('refreshing stale libraries', { staleLibraries });
+        refreshRecords();
+      }
     });
   }, [libraries, refreshLibrary, refreshRecords]);
 

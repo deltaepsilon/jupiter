@@ -1,4 +1,5 @@
 import { addParams } from 'ui/utils';
+import { firestoreDate } from './firestore';
 import { z } from 'zod';
 
 export const mediaItemSchema = z.object({
@@ -34,16 +35,18 @@ export const mediaItemSchema = z.object({
   contributorInfo: z
     .object({ profilePictureBaseUrl: z.string().optional(), displayName: z.string().optional() })
     .optional(),
+  updated: firestoreDate.default(new Date()),
 });
 
-export const mediaItemsResponseSchema = z.object({
+export const batchGetMediaItemsResponseSchema = z.object({
   accessToken: z.string(),
   refreshToken: z.string(),
-  mediaItems: z.preprocess(
-    (args) => (Array.isArray(args) ? args : []),
-    z.array(mediaItemSchema),
-    z.array(mediaItemSchema)
-  ),
+  mediaItemResults: z.array(z.object({ mediaItem: mediaItemSchema })),
+});
+export const listMediaItemsResponseSchema = z.object({
+  accessToken: z.string(),
+  refreshToken: z.string(),
+  mediaItems: z.preprocess((args) => (Array.isArray(args) ? args : []), z.array(mediaItemSchema)),
   nextPageToken: z.string().optional(),
 });
 
