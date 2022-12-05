@@ -14,7 +14,7 @@ export type UseLibraryDownloadResult = ReturnType<typeof useLibraryDownload>;
 export function useLibraryDownload(libraryId: string) {
   const { user } = useAuth();
   const { listen } = useRtdb();
-  const { directoryHandle, getDirectoryHandle } = useLocalFilesystem();
+  const { directoryHandle, getDirectoryHandle } = useLocalFilesystem(libraryId);
   const [libraryDownload, setLibraryDownload] = useState<LibraryDownload | null | undefined>();
   const { sendMessage } = useServiceWorker();
   const { init, start, pause, cancel, destroy } = useMemo(() => {
@@ -49,8 +49,8 @@ export function useLibraryDownload(libraryId: string) {
   }, [init, libraryId, listen, user]);
 
   useEffect(() => {
-    user && init();
-  }, [init, user]);
+    user && directoryHandle && init();
+  }, [directoryHandle, init, user]);
 
   return {
     isLoading,

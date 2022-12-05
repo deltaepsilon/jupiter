@@ -4,8 +4,10 @@
   "main": "service-worker.ts",
   "private": true,
   "dependencies": {
+    "@types/lodash": "^4.14.191",
     "esbuild": "^0.15.14",
-    "firebase": "^9.14.0"
+    "firebase": "^9.14.0",
+    "lodash": "^4.17.21"
   },
   "scripts": {
     "dev": "chokidar \"./src/**/*.ts\" -c \"yarn build\"",

@@ -1730,6 +1730,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/lodash@npm:^4.14.191":
+  version: 4.14.191
+  resolution: "@types/lodash@npm:4.14.191"
+  checksum: ba0d5434e10690869f32d5ea49095250157cae502f10d57de0a723fd72229ce6c6a4979576f0f13e0aa9fbe3ce2457bfb9fa7d4ec3d6daba56730a51906d1491
+  languageName: node
+  linkType: hard
+
 "@types/long@npm:^4.0.0, @types/long@npm:^4.0.1":
   version: 4.0.2
   resolution: "@types/long@npm:4.0.2"
@@ -8902,9 +8909,11 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "service-worker@workspace:apps/service-worker"
   dependencies:
+    "@types/lodash": ^4.14.191
     chokidar-cli: 3.0.0
     esbuild: ^0.15.14
     firebase: ^9.14.0
+    lodash: ^4.17.21
   languageName: unknown
   linkType: soft
 

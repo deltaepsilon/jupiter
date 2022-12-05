@@ -3302,6 +3302,316 @@
     }
   });
 
+  // ../../node_modules/lodash/isObject.js
+  var require_isObject = __commonJS({
+    "../../node_modules/lodash/isObject.js"(exports, module) {
+      function isObject2(value) {
+        var type = typeof value;
+        return value != null && (type == "object" || type == "function");
+      }
+      module.exports = isObject2;
+    }
+  });
+
+  // ../../node_modules/lodash/_freeGlobal.js
+  var require_freeGlobal = __commonJS({
+    "../../node_modules/lodash/_freeGlobal.js"(exports, module) {
+      var freeGlobal = typeof global == "object" && global && global.Object === Object && global;
+      module.exports = freeGlobal;
+    }
+  });
+
+  // ../../node_modules/lodash/_root.js
+  var require_root = __commonJS({
+    "../../node_modules/lodash/_root.js"(exports, module) {
+      var freeGlobal = require_freeGlobal();
+      var freeSelf = typeof self == "object" && self && self.Object === Object && self;
+      var root = freeGlobal || freeSelf || Function("return this")();
+      module.exports = root;
+    }
+  });
+
+  // ../../node_modules/lodash/now.js
+  var require_now = __commonJS({
+    "../../node_modules/lodash/now.js"(exports, module) {
+      var root = require_root();
+      var now = function() {
+        return root.Date.now();
+      };
+      module.exports = now;
+    }
+  });
+
+  // ../../node_modules/lodash/_trimmedEndIndex.js
+  var require_trimmedEndIndex = __commonJS({
+    "../../node_modules/lodash/_trimmedEndIndex.js"(exports, module) {
+      var reWhitespace = /\s/;
+      function trimmedEndIndex(string) {
+        var index = string.length;
+        while (index-- && reWhitespace.test(string.charAt(index))) {
+        }
+        return index;
+      }
+      module.exports = trimmedEndIndex;
+    }
+  });
+
+  // ../../node_modules/lodash/_baseTrim.js
+  var require_baseTrim = __commonJS({
+    "../../node_modules/lodash/_baseTrim.js"(exports, module) {
+      var trimmedEndIndex = require_trimmedEndIndex();
+      var reTrimStart = /^\s+/;
+      function baseTrim(string) {
+        return string ? string.slice(0, trimmedEndIndex(string) + 1).replace(reTrimStart, "") : string;
+      }
+      module.exports = baseTrim;
+    }
+  });
+
+  // ../../node_modules/lodash/_Symbol.js
+  var require_Symbol = __commonJS({
+    "../../node_modules/lodash/_Symbol.js"(exports, module) {
+      var root = require_root();
+      var Symbol2 = root.Symbol;
+      module.exports = Symbol2;
+    }
+  });
+
+  // ../../node_modules/lodash/_getRawTag.js
+  var require_getRawTag = __commonJS({
+    "../../node_modules/lodash/_getRawTag.js"(exports, module) {
+      var Symbol2 = require_Symbol();
+      var objectProto = Object.prototype;
+      var hasOwnProperty = objectProto.hasOwnProperty;
+      var nativeObjectToString = objectProto.toString;
+      var symToStringTag = Symbol2 ? Symbol2.toStringTag : void 0;
+      function getRawTag(value) {
+        var isOwn = hasOwnProperty.call(value, symToStringTag), tag = value[symToStringTag];
+        try {
+          value[symToStringTag] = void 0;
+          var unmasked = true;
+        } catch (e2) {
+        }
+        var result = nativeObjectToString.call(value);
+        if (unmasked) {
+          if (isOwn) {
+            value[symToStringTag] = tag;
+          } else {
+            delete value[symToStringTag];
+          }
+        }
+        return result;
+      }
+      module.exports = getRawTag;
+    }
+  });
+
+  // ../../node_modules/lodash/_objectToString.js
+  var require_objectToString = __commonJS({
+    "../../node_modules/lodash/_objectToString.js"(exports, module) {
+      var objectProto = Object.prototype;
+      var nativeObjectToString = objectProto.toString;
+      function objectToString(value) {
+        return nativeObjectToString.call(value);
+      }
+      module.exports = objectToString;
+    }
+  });
+
+  // ../../node_modules/lodash/_baseGetTag.js
+  var require_baseGetTag = __commonJS({
+    "../../node_modules/lodash/_baseGetTag.js"(exports, module) {
+      var Symbol2 = require_Symbol();
+      var getRawTag = require_getRawTag();
+      var objectToString = require_objectToString();
+      var nullTag = "[object Null]";
+      var undefinedTag = "[object Undefined]";
+      var symToStringTag = Symbol2 ? Symbol2.toStringTag : void 0;
+      function baseGetTag(value) {
+        if (value == null) {
+          return value === void 0 ? undefinedTag : nullTag;
+        }
+        return symToStringTag && symToStringTag in Object(value) ? getRawTag(value) : objectToString(value);
+      }
+      module.exports = baseGetTag;
+    }
+  });
+
+  // ../../node_modules/lodash/isObjectLike.js
+  var require_isObjectLike = __commonJS({
+    "../../node_modules/lodash/isObjectLike.js"(exports, module) {
+      function isObjectLike(value) {
+        return value != null && typeof value == "object";
+      }
+      module.exports = isObjectLike;
+    }
+  });
+
+  // ../../node_modules/lodash/isSymbol.js
+  var require_isSymbol = __commonJS({
+    "../../node_modules/lodash/isSymbol.js"(exports, module) {
+      var baseGetTag = require_baseGetTag();
+      var isObjectLike = require_isObjectLike();
+      var symbolTag = "[object Symbol]";
+      function isSymbol(value) {
+        return typeof value == "symbol" || isObjectLike(value) && baseGetTag(value) == symbolTag;
+      }
+      module.exports = isSymbol;
+    }
+  });
+
+  // ../../node_modules/lodash/toNumber.js
+  var require_toNumber = __commonJS({
+    "../../node_modules/lodash/toNumber.js"(exports, module) {
+      var baseTrim = require_baseTrim();
+      var isObject2 = require_isObject();
+      var isSymbol = require_isSymbol();
+      var NAN = 0 / 0;
+      var reIsBadHex = /^[-+]0x[0-9a-f]+$/i;
+      var reIsBinary = /^0b[01]+$/i;
+      var reIsOctal = /^0o[0-7]+$/i;
+      var freeParseInt = parseInt;
+      function toNumber(value) {
+        if (typeof value == "number") {
+          return value;
+        }
+        if (isSymbol(value)) {
+          return NAN;
+        }
+        if (isObject2(value)) {
+          var other = typeof value.valueOf == "function" ? value.valueOf() : value;
+          value = isObject2(other) ? other + "" : other;
+        }
+        if (typeof value != "string") {
+          return value === 0 ? value : +value;
+        }
+        value = baseTrim(value);
+        var isBinary = reIsBinary.test(value);
+        return isBinary || reIsOctal.test(value) ? freeParseInt(value.slice(2), isBinary ? 2 : 8) : reIsBadHex.test(value) ? NAN : +value;
+      }
+      module.exports = toNumber;
+    }
+  });
+
+  // ../../node_modules/lodash/debounce.js
+  var require_debounce = __commonJS({
+    "../../node_modules/lodash/debounce.js"(exports, module) {
+      var isObject2 = require_isObject();
+      var now = require_now();
+      var toNumber = require_toNumber();
+      var FUNC_ERROR_TEXT = "Expected a function";
+      var nativeMax = Math.max;
+      var nativeMin = Math.min;
+      function debounce2(func, wait2, options) {
+        var lastArgs, lastThis, maxWait, result, timerId, lastCallTime, lastInvokeTime = 0, leading = false, maxing = false, trailing = true;
+        if (typeof func != "function") {
+          throw new TypeError(FUNC_ERROR_TEXT);
+        }
+        wait2 = toNumber(wait2) || 0;
+        if (isObject2(options)) {
+          leading = !!options.leading;
+          maxing = "maxWait" in options;
+          maxWait = maxing ? nativeMax(toNumber(options.maxWait) || 0, wait2) : maxWait;
+          trailing = "trailing" in options ? !!options.trailing : trailing;
+        }
+        function invokeFunc(time) {
+          var args = lastArgs, thisArg = lastThis;
+          lastArgs = lastThis = void 0;
+          lastInvokeTime = time;
+          result = func.apply(thisArg, args);
+          return result;
+        }
+        function leadingEdge(time) {
+          lastInvokeTime = time;
+          timerId = setTimeout(timerExpired, wait2);
+          return leading ? invokeFunc(time) : result;
+        }
+        function remainingWait(time) {
+          var timeSinceLastCall = time - lastCallTime, timeSinceLastInvoke = time - lastInvokeTime, timeWaiting = wait2 - timeSinceLastCall;
+          return maxing ? nativeMin(timeWaiting, maxWait - timeSinceLastInvoke) : timeWaiting;
+        }
+        function shouldInvoke(time) {
+          var timeSinceLastCall = time - lastCallTime, timeSinceLastInvoke = time - lastInvokeTime;
+          return lastCallTime === void 0 || timeSinceLastCall >= wait2 || timeSinceLastCall < 0 || maxing && timeSinceLastInvoke >= maxWait;
+        }
+        function timerExpired() {
+          var time = now();
+          if (shouldInvoke(time)) {
+            return trailingEdge(time);
+          }
+          timerId = setTimeout(timerExpired, remainingWait(time));
+        }
+        function trailingEdge(time) {
+          timerId = void 0;
+          if (trailing && lastArgs) {
+            return invokeFunc(time);
+          }
+          lastArgs = lastThis = void 0;
+          return result;
+        }
+        function cancel() {
+          if (timerId !== void 0) {
+            clearTimeout(timerId);
+          }
+          lastInvokeTime = 0;
+          lastArgs = lastCallTime = lastThis = timerId = void 0;
+        }
+        function flush() {
+          return timerId === void 0 ? result : trailingEdge(now());
+        }
+        function debounced() {
+          var time = now(), isInvoking = shouldInvoke(time);
+          lastArgs = arguments;
+          lastThis = this;
+          lastCallTime = time;
+          if (isInvoking) {
+            if (timerId === void 0) {
+              return leadingEdge(lastCallTime);
+            }
+            if (maxing) {
+              clearTimeout(timerId);
+              timerId = setTimeout(timerExpired, wait2);
+              return invokeFunc(lastCallTime);
+            }
+          }
+          if (timerId === void 0) {
+            timerId = setTimeout(timerExpired, wait2);
+          }
+          return result;
+        }
+        debounced.cancel = cancel;
+        debounced.flush = flush;
+        return debounced;
+      }
+      module.exports = debounce2;
+    }
+  });
+
+  // ../../node_modules/lodash/throttle.js
+  var require_throttle = __commonJS({
+    "../../node_modules/lodash/throttle.js"(exports, module) {
+      var debounce2 = require_debounce();
+      var isObject2 = require_isObject();
+      var FUNC_ERROR_TEXT = "Expected a function";
+      function throttle2(func, wait2, options) {
+        var leading = true, trailing = true;
+        if (typeof func != "function") {
+          throw new TypeError(FUNC_ERROR_TEXT);
+        }
+        if (isObject2(options)) {
+          leading = "leading" in options ? !!options.leading : leading;
+          trailing = "trailing" in options ? !!options.trailing : trailing;
+        }
+        return debounce2(func, wait2, {
+          "leading": leading,
+          "maxWait": wait2,
+          "trailing": trailing
+        });
+      }
+      module.exports = throttle2;
+    }
+  });
+
   // ../../packages/post-message/src/schema.ts
   var import_short_uuid = __toESM(require_short_uuid());
 
@@ -22684,10 +22994,10 @@
     return TaskState4;
   })(TaskState || {});
   var taskSchema = mod.object({
-    ["state" /* state */]: mod.nativeEnum(TaskState),
+    ["state" /* state */]: mod.nativeEnum(TaskState).default("waiting" /* waiting */),
     ["message" /* message */]: mod.string().optional(),
     ["data" /* data */]: mod.any(),
-    ["created" /* created */]: mod.number(),
+    ["created" /* created */]: mod.number().default(Date.now()),
     ["started" /* started */]: mod.number().optional().nullable(),
     ["errored" /* errored */]: mod.number().optional().nullable(),
     ["completed" /* completed */]: mod.number().optional().nullable()
@@ -22837,7 +23147,7 @@
             const newWaitingTasks = mapTasks(waitingDataSnapshot);
             const newWaitingTaskCount = Object.keys(newWaitingTasks).length;
             const updates = Object.entries(newWaitingTasks).reduce(
-              (acc, [key, task]) => {
+              (acc, [key]) => {
                 acc[`${"task" /* task */}/${key}/${"state" /* state */}`] = "active" /* active */;
                 acc[`${"task" /* task */}/${key}/${"started" /* started */}`] = Date.now();
                 return acc;
@@ -22850,7 +23160,7 @@
             await update(queueRef, updates);
           }
         },
-        { millis: ONE_SECOND }
+        { millis: ONE_SECOND * 1.5 }
       )
     );
     let activeCount = 0;
@@ -22871,7 +23181,6 @@
         ["completeCount" /* completeCount */]: increment(completeCount),
         ["errorCount" /* errorCount */]: increment(errorCount)
       };
-      const i3 = activeCount;
       activeCount = 0;
       completeCount = 0;
       errorCount = 0;
@@ -23088,45 +23397,6 @@ Length provided: ${this.length}. Number of dictionaries provided: ${this.diction
     });
     return url.toString();
   }
-
-  // ../../packages/data/sync.ts
-  var SyncStage = /* @__PURE__ */ ((SyncStage2) => {
-    SyncStage2["ready"] = "ready";
-    SyncStage2["downloading"] = "downloading";
-    return SyncStage2;
-  })(SyncStage || {});
-  var syncTaskSchema = mod.object({
-    ["accessToken" /* accessToken */]: mod.string(),
-    ["accessTokenCreated" /* accessTokenCreated */]: mod.number(),
-    ["refreshToken" /* refreshToken */]: mod.string(),
-    ["taskName" /* taskName */]: mod.string(),
-    ["directoryHandle" /* directoryHandle */]: mod.any().refine((obj) => obj instanceof FileSystemDirectoryHandle, { message: "Must be a FileSystemDirectoryHandle" }),
-    ["fileCount" /* fileCount */]: mod.number(),
-    ["importedCount" /* importedCount */]: mod.number(),
-    ["processedCount" /* processedCount */]: mod.number(),
-    ["exportedCount" /* exportedCount */]: mod.number(),
-    ["created" /* created */]: mod.date(),
-    ["stage" /* stage */]: mod.nativeEnum(SyncStage),
-    ["paused" /* paused */]: mod.boolean().optional().transform((val) => val ?? false),
-    ["previousPageToken" /* previousPageToken */]: mod.string().nullable().optional(),
-    ["nextPageToken" /* nextPageToken */]: mod.string().nullable().optional()
-  });
-  var syncTaskRecordSchema = mod.object({
-    ["accessToken" /* accessToken */]: mod.string(),
-    ["accessTokenCreated" /* accessTokenCreated */]: mod.number(),
-    ["refreshToken" /* refreshToken */]: mod.string(),
-    ["taskName" /* taskName */]: mod.string(),
-    ["fileCount" /* fileCount */]: mod.number(),
-    ["importedCount" /* importedCount */]: mod.number(),
-    ["processedCount" /* processedCount */]: mod.number(),
-    ["exportedCount" /* exportedCount */]: mod.number(),
-    ["directoryName" /* directoryName */]: mod.string(),
-    ["created" /* created */]: mod.string(),
-    ["stage" /* stage */]: mod.nativeEnum(SyncStage),
-    ["paused" /* paused */]: mod.boolean().optional().transform((val) => val ?? false),
-    ["previousPageToken" /* previousPageToken */]: mod.string().nullable().optional(),
-    ["nextPageToken" /* nextPageToken */]: mod.string().nullable().optional()
-  });
 
   // ../../node_modules/immer/dist/immer.esm.mjs
   function n2(n3) {
@@ -23657,8 +23927,8 @@ Length provided: ${this.length}. Number of dictionaries provided: ${this.diction
       name: "jupiter-storage"
     });
   });
-  var getSyncTasks = createGetter("sync-tasks" /* SyncTasks */, null);
-  var setSyncTasks = createSetter("sync-tasks" /* SyncTasks */);
+  var getDirectoryHandles = createGetter("directory-handles" /* DirectoryHandles */, /* @__PURE__ */ new Map());
+  var setDirectoryHandles = createSetter("directory-handles" /* DirectoryHandles */);
   function createGetter(key, defaultValue) {
     return isServer && isServer() ? () => __async(this, null, function* () {
     }) : () => __async(this, null, function* () {
@@ -23799,7 +24069,7 @@ Length provided: ${this.length}. Number of dictionaries provided: ${this.diction
     lastKey: mod.string().optional().nullable()
   });
   var libraryDownloadTaskSchema = taskSchema.extend({
-    ["data" /* data */]: mod.object({ mediaItem: mediaItemSchema })
+    ["data" /* data */]: mod.object({ key: mod.string(), mediaItem: mediaItemSchema })
   });
   var libraryImportMediaItemSchema = mod.object({
     success: mod.boolean(),
@@ -23808,6 +24078,7 @@ Length provided: ${this.length}. Number of dictionaries provided: ${this.diction
   });
 
   // src/library-download/init-library-download.ts
+  var import_throttle = __toESM(require_throttle());
   async function initLibraryDownload({
     database: database2,
     db: db2,
@@ -23831,16 +24102,30 @@ Length provided: ${this.length}. Number of dictionaries provided: ${this.diction
     const setState = getSetState({ libraryId, libraryDownloadRef });
     const getState = getGetState(libraryId);
     const libraryDownload = await getLibraryDownload(libraryDownloadRef);
-    await setState({ status: libraryDownload.status });
+    await setState({ lastKey: libraryDownload.lastKey, status: libraryDownload.status });
     async function start() {
       const contents = await getDirectoryContents(directoryHandle);
-      console.log("start", contents);
+      const { lastKey } = getState();
+      let tasks = [];
+      const handleTasks = (0, import_throttle.default)(async () => {
+        if (tasks.length) {
+          const tasksToAdd = tasks.splice(0);
+          const lastKey2 = tasksToAdd[tasksToAdd.length - 1].key;
+          console.log("tasksToAdd");
+          console.table(tasksToAdd);
+          await queue.add(tasksToAdd);
+          await setState({ lastKey: lastKey2 });
+        }
+      }, 1e3);
       await queue.start();
-      const q3 = query(mediaItemsRef, orderByKey(), limitToFirst(10));
+      console.log({ lastKey });
+      const q3 = lastKey ? query(mediaItemsRef, orderByKey(), limitToFirst(10), startAfter(lastKey)) : query(mediaItemsRef, orderByKey(), limitToFirst(10));
       const unsubscribe = onChildAdded(q3, (snapshot) => {
-        const key = snapshot.key;
         const value = snapshot.val();
-        console.log("onChildAdded", [key, value]);
+        const mediaItem = mediaItemSchema.parse(value || {});
+        tasks.push({ key: snapshot.key ?? "", mediaItem });
+        handleTasks();
+        console.log("onChildAdded", tasks);
       });
       await setState({ status: "running" /* running */, unsubscribe });
     }
@@ -23871,10 +24156,11 @@ Length provided: ${this.length}. Number of dictionaries provided: ${this.diction
   var stateMap = /* @__PURE__ */ new Map();
   function getSetState({ libraryId, libraryDownloadRef }) {
     return async (stateUpdates) => {
-      const { status } = updateState({ libraryId, stateUpdates });
+      const { lastKey, status } = updateState({ libraryId, stateUpdates });
       const libraryDownload = await getLibraryDownload(libraryDownloadRef);
       const updates = libraryDownloadSchema.parse({
         ...libraryDownload,
+        lastKey,
         status,
         updated: new Date()
       });
@@ -23885,7 +24171,11 @@ Length provided: ${this.length}. Number of dictionaries provided: ${this.diction
   function updateState({ libraryId, stateUpdates }) {
     const getState = getGetState(libraryId);
     const existingState = unsubscribeExistingState(getState());
+    console.log({ existingState, stateUpdates });
     const updatedState = { ...DEFAULT_DOWNLOAD_STATE, ...existingState, ...stateUpdates };
+    if (!updatedState.lastKey) {
+      updatedState.lastKey = null;
+    }
     stateMap.set(libraryId, updatedState);
     return updatedState;
   }

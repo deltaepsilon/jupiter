@@ -48,7 +48,7 @@ export function handleWaiting({
           const newWaitingTasks = mapTasks(waitingDataSnapshot);
           const newWaitingTaskCount = Object.keys(newWaitingTasks).length;
           const updates = Object.entries(newWaitingTasks).reduce(
-            (acc, [key, task]) => {
+            (acc, [key]) => {
               acc[`${QueueKey.task}/${key}/${TaskKey.state}`] = TaskState.active;
               acc[`${QueueKey.task}/${key}/${TaskKey.started}`] = Date.now();
 
@@ -63,7 +63,7 @@ export function handleWaiting({
           await update(queueRef, updates);
         }
       },
-      { millis: ONE_SECOND }
+      { millis: ONE_SECOND * 1.5 } // Needs to be a bit longer than the setInterval below
     )
   );
 
@@ -87,7 +87,6 @@ export function handleWaiting({
       [MetadataKey.completeCount]: increment(completeCount),
       [MetadataKey.errorCount]: increment(errorCount),
     };
-    const i = activeCount;
 
     activeCount = 0;
     completeCount = 0;

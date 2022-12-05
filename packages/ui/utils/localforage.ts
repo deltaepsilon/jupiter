@@ -1,4 +1,4 @@
-import { SyncTask, SyncTasks, syncTaskSchema } from 'data/sync';
+import { DirectoryHandle, DirectoryHandleMap } from 'ui/hooks';
 import { enableMapSet, immerable, produce } from 'immer';
 import { isClient, isServer } from 'ui/utils';
 
@@ -15,53 +15,32 @@ isClient &&
   });
 
 export enum LocalforageDataType {
-  SyncTasks = 'sync-tasks',
+  DirectoryHandles = 'directory-handles',
 }
 
 export interface LocalforageDataTypeMapping {
-  [LocalforageDataType.SyncTasks]: SyncTasks;
+  [LocalforageDataType.DirectoryHandles]: DirectoryHandleMap;
 }
 
 // Sync Tasks
-export async function getSyncTask(id: string) {
-  const syncTasks = await getSyncTasks();
+export async function getDirectoryHandle(id: string) {
+  const directoryHandlesMap = await getDirectoryHandles();
 
-  return syncTasks ? syncTasks[id] : null;
+  return directoryHandlesMap.get(id) ?? null;
 }
-export async function addSyncTask(id: string, task: SyncTask) {
-  const syncTasks = await getSyncTasks();
+export async function setDirectoryHandle(id: string, handle: DirectoryHandle) {
+  const directoryHandles = await getDirectoryHandles();
+  const updated = new Map(directoryHandles);
 
-  return setSyncTasks({ ...syncTasks, [id]: task });
+  updated.set(id, handle);
+
+  return setDirectoryHandles(updated);
 }
-export async function updateSyncTask(id: string, updates: Partial<SyncTask>) {
-  const syncTasks = await getSyncTasks();
-  const syncTask = syncTasks ? syncTasks[id] : null;
-  const updatedSyncTask = syncTaskSchema.parse({ ...syncTask, ...updates });
-
-  await setSyncTasks({ ...syncTasks, [id]: updatedSyncTask });
-
-  return updatedSyncTask;
+export async function clearDirectoryHandles() {
+  return localforage.removeItem(LocalforageDataType.DirectoryHandles);
 }
-export async function removeSyncTask(id: string) {
-  const syncTasks = await getSyncTasks();
-
-  if (syncTasks && syncTasks[id]) {
-    const { [id]: _, ...newSyncTasks } = syncTasks;
-
-    setSyncTasks(newSyncTasks);
-
-    return true;
-  } else {
-    console.warn(`Could not find sync task with id ${id}`);
-
-    return false;
-  }
-}
-export async function clearSyncTasks() {
-  return localforage.removeItem(LocalforageDataType.SyncTasks);
-}
-const getSyncTasks = createGetter<SyncTasks | null>(LocalforageDataType.SyncTasks, null);
-const setSyncTasks = createSetter<SyncTasks>(LocalforageDataType.SyncTasks);
+const getDirectoryHandles = createGetter<DirectoryHandleMap>(LocalforageDataType.DirectoryHandles, new Map());
+const setDirectoryHandles = createSetter<DirectoryHandleMap>(LocalforageDataType.DirectoryHandles);
 
 // Create getters and setters
 function createGetter<Type>(key: string, defaultValue: Type): () => Promise<Type> {

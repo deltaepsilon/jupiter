@@ -44,15 +44,16 @@ export enum TaskState {
 }
 
 export const taskSchema = z.object({
-  [TaskKey.state]: z.nativeEnum(TaskState),
+  [TaskKey.state]: z.nativeEnum(TaskState).default(TaskState.waiting),
   [TaskKey.message]: z.string().optional(),
   [TaskKey.data]: z.any(),
-  [TaskKey.created]: z.number(),
+  [TaskKey.created]: z.number().default(Date.now()),
   [TaskKey.started]: z.number().optional().nullable(),
   [TaskKey.errored]: z.number().optional().nullable(),
   [TaskKey.completed]: z.number().optional().nullable(),
 });
 
+export type QueueTaskInput = z.input<typeof taskSchema>;
 export type QueueTask = z.infer<typeof taskSchema>;
 export type QueueTasks = Record<string, QueueTask>;
 

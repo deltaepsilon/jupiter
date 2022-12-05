@@ -3,17 +3,15 @@
     "user-owned": {
       "$userId": {
         ".read": "$userId === auth.uid",
-        ".write": "$userId === auth.uid"
-      }
-    },
-    "download-queue": {
-      "$userId": {
-        ".read": "$userId === auth.uid",
         ".write": "$userId === auth.uid",
 
-        "$taskId": {
-          "task": {
-            ".indexOn": ["state"]
+        "library": {
+          "$libraryId": {
+            "download-queue": {
+              "task": {
+                ".indexOn": ["state"]
+              }
+            }
           }
         }
       }

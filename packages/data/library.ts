@@ -49,7 +49,7 @@ export const libraryDownloadSchema = libraryTaskSchema.extend({
   lastKey: z.string().optional().nullable(),
 });
 export const libraryDownloadTaskSchema = taskSchema.extend({
-  [TaskKey.data]: z.object({ mediaItem: mediaItemSchema }),
+  [TaskKey.data]: z.object({ key: z.string(), mediaItem: mediaItemSchema }),
 });
 export type LibraryDownload = z.infer<typeof libraryDownloadSchema>;
 export type LibraryDownloadTask = z.infer<typeof libraryDownloadTaskSchema>;

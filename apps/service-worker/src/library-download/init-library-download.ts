@@ -22,11 +22,12 @@ import {
   libraryDownloadSchema,
   librarySchema,
 } from 'data/library';
-import { MediaItem, mediaItemsResponseSchema } from 'data/media-items';
+import { MediaItem, mediaItemSchema, mediaItemsResponseSchema } from 'data/media-items';
 import { Queue, QueueTasks, TaskState, taskSchema } from '@quiver/firebase-queue';
 
 import { WEB } from 'data/web';
 import { addParams } from 'ui/utils';
+import throttle from 'lodash/throttle';
 
 export interface InitLibraryDownloadArgs {
   database: Database;
@@ -35,6 +36,8 @@ export interface InitLibraryDownloadArgs {
   libraryId: string;
   userId: string;
 }
+
+type LibraryDownloadData = LibraryDownloadTask['data'];
 
 export type InitLibraryDownloadResult = ReturnType<typeof initLibraryDownload>;
 
@@ -50,7 +53,7 @@ export async function initLibraryDownload({
   const mediaItemsRef = ref(database, WEB.DATABASE.PATHS.LIBRARY_MEDIA_ITEMS(userId, libraryId));
   const mediaItemsQuery = query(mediaItemsRef, orderByKey(), limitToFirst(10));
 
-  const queue = Queue<LibraryDownloadTask>({
+  const queue = Queue<LibraryDownloadData>({
     batchSize: 1,
     callback: handleLibraryDownloadTask,
     ref: libraryDownloadQueueRef,
@@ -66,25 +69,48 @@ export async function initLibraryDownload({
   const getState = getGetState(libraryId);
   const libraryDownload = await getLibraryDownload(libraryDownloadRef);
 
-  await setState({ status: libraryDownload.status }); // Set initial status. The worker tends to sleep itself.
+  // Set initial status. The worker tends to sleep itself.
+  await setState({ lastKey: libraryDownload.lastKey, status: libraryDownload.status });
 
   async function start() {
     const contents = await getDirectoryContents(directoryHandle);
-    console.log('start', contents);
+    const { lastKey } = getState();
+    let tasks: LibraryDownloadData[] = [];
+    const handleTasks = throttle(async () => {
+      if (tasks.length) {
+        const tasksToAdd = tasks.splice(0);
+        const lastKey = tasksToAdd[tasksToAdd.length - 1].key;
+
+        console.log('tasksToAdd');
+
+        console.table(tasksToAdd);
+
+        await queue.add(tasksToAdd);
+        await setState({ lastKey });
+      }
+    }, 1000);
+
     await queue.start();
 
-
     /**
-     * TODO: 
+     * TODO:
      * 1. Page through child media items
      * 2. Add media items to queue
      * 3. Update lastKey using setState({ lastKey })
      */
-    const q = query(mediaItemsRef, orderByKey(), limitToFirst(10));
+    console.log({ lastKey });
+    const q = lastKey
+      ? query(mediaItemsRef, orderByKey(), limitToFirst(10), startAfter(lastKey))
+      : query(mediaItemsRef, orderByKey(), limitToFirst(10));
     const unsubscribe = onChildAdded(q, (snapshot) => {
-      const key = snapshot.key;
       const value = snapshot.val();
-      console.log('onChildAdded', [key, value]);
+      const mediaItem = mediaItemSchema.parse(value || {});
+
+      tasks.push({ key: snapshot.key ?? '', mediaItem });
+
+      handleTasks();
+
+      console.log('onChildAdded', tasks);
     });
 
     await setState({ status: LibraryTaskStatus.running, unsubscribe });
@@ -126,10 +152,11 @@ interface SetStatusArgs {
 }
 function getSetState({ libraryId, libraryDownloadRef }: SetStatusArgs) {
   return async (stateUpdates: Partial<DownloadState>) => {
-    const { status } = updateState({ libraryId, stateUpdates });
+    const { lastKey, status } = updateState({ libraryId, stateUpdates });
     const libraryDownload = await getLibraryDownload(libraryDownloadRef);
     const updates = libraryDownloadSchema.parse({
       ...libraryDownload,
+      lastKey,
       status,
       updated: new Date(),
     });
@@ -143,7 +170,12 @@ function getSetState({ libraryId, libraryDownloadRef }: SetStatusArgs) {
 function updateState({ libraryId, stateUpdates }: { libraryId: string; stateUpdates: Partial<DownloadState> }) {
   const getState = getGetState(libraryId);
   const existingState = unsubscribeExistingState(getState());
+  console.log({ existingState, stateUpdates });
   const updatedState = { ...DEFAULT_DOWNLOAD_STATE, ...existingState, ...stateUpdates };
+
+  if (!updatedState.lastKey) {
+    updatedState.lastKey = null;
+  }
 
   stateMap.set(libraryId, updatedState);
 
