@@ -12395,6 +12395,7 @@
     API: {
       MEDIA_ITEMS_LIST: "/api/media-items/list",
       MEDIA_ITEMS_BATCH_GET: "/api/media-items/batch-get",
+      MEDIA_ITEMS_PROXY_URL: "/api/media-items/proxy-url",
       OAUTH2: "/api/oauth2"
     },
     DATABASE: {
@@ -22987,12 +22988,12 @@
     ["activeCount" /* activeCount */]: mod.number().int().optional(),
     ["completeCount" /* completeCount */]: mod.number().int().optional()
   });
-  var TaskState = /* @__PURE__ */ ((TaskState4) => {
-    TaskState4["error"] = "error";
-    TaskState4["waiting"] = "waiting";
-    TaskState4["active"] = "active";
-    TaskState4["complete"] = "complete";
-    return TaskState4;
+  var TaskState = /* @__PURE__ */ ((TaskState3) => {
+    TaskState3["error"] = "error";
+    TaskState3["waiting"] = "waiting";
+    TaskState3["active"] = "active";
+    TaskState3["complete"] = "complete";
+    return TaskState3;
   })(TaskState || {});
   var taskSchema = mod.object({
     ["state" /* state */]: mod.nativeEnum(TaskState).default("waiting" /* waiting */),
@@ -23085,7 +23086,8 @@
     queueRef
   }) {
     const started = Date.now();
-    const data = mapTasks(dataSnapshot);
+    const updatedSnapshot = await get(dataSnapshot.ref);
+    const data = mapTasks(updatedSnapshot);
     const task = Object.values(data)[0] ?? null;
     try {
       const { success, message } = await callback(data);
@@ -23243,6 +23245,7 @@
           [`${metadataRef.key}/${"count" /* count */}`]: increment(newTasks.length)
         }
       );
+      console.log({ tasks, newTasks, updates });
       await update(queueRef, updates);
     }
     async function empty() {
@@ -24036,6 +24039,13 @@ Length provided: ${this.length}. Number of dictionaries provided: ${this.diction
     mediaItems: mod.preprocess((args) => Array.isArray(args) ? args : [], mod.array(mediaItemSchema)),
     nextPageToken: mod.string().optional()
   });
+  function extractTuplesFromQueueTasks(queueTasks) {
+    return Object.values(queueTasks).map((queueTask) => {
+      const key = mod.string().parse(queueTask.data.key);
+      const mediaItem = mediaItemSchema.parse(queueTask.data.mediaItem);
+      return [key, mediaItem];
+    });
+  }
 
   // ../../packages/data/library.ts
   var librarySchema = mod.object({
@@ -24083,6 +24093,137 @@ Length provided: ${this.length}. Number of dictionaries provided: ${this.diction
   // src/data.ts
   var MEDIA_ITEMS_TTL_MS = 1e3 * 60 * 60;
 
+  // src/utils/refresh-media-items.ts
+  async function refreshMediaItems({ library, librarySnapshot, mediaItemsRef, mediaItemTuples }) {
+    const updatedMediaItemTuples = await updateStale({ library, librarySnapshot, mediaItemTuples });
+    const updates = updatedMediaItemTuples.reduce((acc, [key, mediaItem]) => {
+      acc[key] = mediaItem;
+      return acc;
+    }, {});
+    const updatedTuples = mediaItemTuples.map(([key, mediaItem]) => {
+      const updatedMediaItem = updates[key];
+      return updatedMediaItem ? [key, updatedMediaItem] : [key, mediaItem];
+    });
+    await update(mediaItemsRef, updates);
+    return updatedTuples;
+  }
+  async function updateStale({
+    library,
+    librarySnapshot,
+    mediaItemTuples
+  }) {
+    const staleMediaItemTuples = mediaItemTuples.filter(
+      ([, { updated }]) => !updated || updated.getTime() < Date.now() - MEDIA_ITEMS_TTL_MS
+    );
+    if (!!staleMediaItemTuples.length) {
+      const staleMediaItemIds = staleMediaItemTuples.map(([, mediaItem]) => mediaItem.id);
+      const { accessToken, refreshToken, mediaItemResults } = await batchGetMediaItems({
+        library,
+        mediaItemIds: staleMediaItemIds
+      });
+      const updatedMediaItemTuples = mediaItemResults.map((r3) => {
+        const [key] = staleMediaItemTuples.find(([, mediaItem]) => mediaItem.id === r3.mediaItem.id) || [];
+        if (!key) {
+          throw new Error(`No key found for mediaItem: ${r3.mediaItem.id}`);
+        } else {
+          return [key, r3.mediaItem];
+        }
+      });
+      await Sr(librarySnapshot.ref, { accessToken, refreshToken, updated: new Date() });
+      return updatedMediaItemTuples;
+    } else {
+      return [];
+    }
+  }
+  async function batchGetMediaItems({ library, mediaItemIds }) {
+    if (mediaItemIds.length > 50) {
+      throw new Error("batchGetMediaItems: mediaItemIds length must be less than 50");
+    }
+    const { accessToken, refreshToken, updated } = library;
+    const isStale = !updated || updated.getTime() < Date.now() - MEDIA_ITEMS_TTL_MS;
+    console.log({ accessToken, refreshToken, mediaItemIds });
+    const response = await fetch(`${location.origin}${WEB.API.MEDIA_ITEMS_BATCH_GET}`, {
+      method: "POST",
+      body: JSON.stringify({
+        accessToken: isStale ? void 0 : accessToken,
+        refreshToken,
+        mediaItemIds: mediaItemIds.join(",")
+      })
+    });
+    const data = await response.json();
+    return batchGetMediaItemsResponseSchema.parse(data);
+  }
+
+  // src/library-download/handle-library-download-task.ts
+  function getHandleLibraryDownloadTask({
+    directoryHandle,
+    library,
+    librarySnapshot,
+    mediaItemsRef
+  }) {
+    return async function handleLibraryDownloadTask(tasks) {
+      console.log("tasks", tasks);
+      try {
+        const mediaItemTuples = extractTuplesFromQueueTasks(tasks);
+        const mediaItems = await refreshMediaItems({ library, librarySnapshot, mediaItemsRef, mediaItemTuples });
+        console.log("mediaItems", mediaItems);
+        await Promise.all(mediaItems.map((mediaItemTuple) => processMediaItem({ directoryHandle, mediaItemTuple })));
+        return { success: true, message: "processed" };
+      } catch (error2) {
+        let message = "handleLibraryDownloadTask error";
+        if (error2 instanceof Error) {
+          message = error2.message;
+        }
+        console.error(error2);
+        return { success: false, message };
+      }
+    };
+  }
+  async function processMediaItem({
+    directoryHandle,
+    mediaItemTuple
+  }) {
+    const [, mediaItem] = mediaItemTuple;
+    const { baseUrl, filename, mediaMetadata } = mediaItem;
+    const { creationTime } = mediaMetadata;
+    const creationDate = new Date(creationTime);
+    const month = creationDate.getMonth().toString();
+    const year = creationDate.getFullYear().toString();
+    const fileHandle = await getFileHandleByPath({ directoryHandle, path: [year, month, filename] });
+    const response = await fetch(addParams(`${location.origin}${WEB.API.MEDIA_ITEMS_PROXY_URL}`, { url: baseUrl }));
+    if (!response.body) {
+      throw new Error(`No response body: ${baseUrl}`);
+    }
+    const reader = response.body.getReader();
+    const writeable = await fileHandle.createWritable();
+    while (true) {
+      const { done, value } = await reader.read();
+      console.log({ done, value });
+      if (done) {
+        writeable.close();
+        break;
+      }
+      if (value) {
+        await writeable.write(value);
+      }
+    }
+    if (!response.ok) {
+      console.log("success!");
+    }
+  }
+  async function getFileHandleByPath({
+    directoryHandle,
+    path
+  }) {
+    const parts = [...path];
+    let handle = directoryHandle;
+    while (parts.length > 1) {
+      const name5 = parts.shift();
+      handle = await handle.getDirectoryHandle(name5, { create: true });
+    }
+    return handle.getFileHandle(parts.shift(), { create: true });
+  }
+
   // src/utils/get-library.ts
   async function getLibrary({ db: db2, libraryId, userId }) {
     const path = WEB.FIRESTORE.COLLECTIONS.LIBRARY(userId, libraryId);
@@ -24103,10 +24244,10 @@ Length provided: ${this.length}. Number of dictionaries provided: ${this.diction
     const libraryDownloadRef = ref(database2, WEB.DATABASE.PATHS.LIBRARY_DOWNLOAD(userId, libraryId));
     const libraryDownloadQueueRef = ref(database2, WEB.DATABASE.PATHS.LIBRARY_DOWNLOAD_QUEUE(userId, libraryId));
     const mediaItemsRef = ref(database2, WEB.DATABASE.PATHS.LIBRARY_MEDIA_ITEMS(userId, libraryId));
-    const { library } = await getLibrary({ db: db2, libraryId, userId });
+    const { library, librarySnapshot } = await getLibrary({ db: db2, libraryId, userId });
     const queue = Queue({
       batchSize: 1,
-      callback: getHandleLibraryDownloadTask({ directoryHandle, library }),
+      callback: getHandleLibraryDownloadTask({ directoryHandle, library, librarySnapshot, mediaItemsRef }),
       ref: libraryDownloadQueueRef
     });
     const setState = getSetState({ libraryId, libraryDownloadRef });
@@ -24216,43 +24357,6 @@ Length provided: ${this.length}. Number of dictionaries provided: ${this.diction
       handleTuples.push(tuple);
     }
     return handleTuples;
-  }
-  function getHandleLibraryDownloadTask({
-    directoryHandle,
-    library
-  }) {
-    return async function handleLibraryDownloadTask(tasks) {
-      try {
-        const mediaItemIds = Object.values(tasks).map((task) => task.data.mediaItem.id);
-        console.log({ mediaItemIds, tasks });
-        const mediaItems = await batchGetMediaItems({ library, mediaItemIds });
-        console.log("mediaItems", mediaItems);
-        return { success: true, message: "processed" };
-      } catch (error2) {
-        let message = "handleLibraryDownloadTask error";
-        if (error2 instanceof Error) {
-          message = error2.message;
-        }
-        return { success: false, message };
-      }
-    };
-  }
-  async function batchGetMediaItems({ library, mediaItemIds }) {
-    if (mediaItemIds.length > 50) {
-      throw new Error("batchGetMediaItems: mediaItemIds length must be less than 50");
-    }
-    const { accessToken, refreshToken, updated } = library;
-    const isStale = !updated || updated.getTime() < Date.now() - MEDIA_ITEMS_TTL_MS;
-    const response = await fetch(`${location.origin}${WEB.API.MEDIA_ITEMS_BATCH_GET}`, {
-      method: "POST",
-      body: JSON.stringify({
-        accessToken: isStale ? void 0 : accessToken,
-        refreshToken,
-        mediaItemIds: mediaItemIds.join(",")
-      })
-    });
-    const data = await response.json();
-    return batchGetMediaItemsResponseSchema.parse(data);
   }
 
   // src/library-download/handle-library-download-message.ts
@@ -24436,7 +24540,7 @@ Length provided: ${this.length}. Number of dictionaries provided: ${this.diction
     user = u2;
   });
   self.addEventListener("install", function(event) {
-    console.info("Service worker installing..", event);
+    console.info("Service worker installing... ", event);
   });
   self.addEventListener("message", async function(event) {
     if (NATIVE_EVENT_TYPES2.has(event.data.eventType)) {

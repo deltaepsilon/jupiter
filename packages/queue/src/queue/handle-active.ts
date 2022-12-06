@@ -1,5 +1,5 @@
 import { Callback, LogKey, QueueKey, TaskKey, TaskState, errorSchema } from '../schema';
-import { DataSnapshot, DatabaseReference, push, update } from 'firebase/database';
+import { DataSnapshot, DatabaseReference, get, push, update } from 'firebase/database';
 
 import { mapTasks } from '../utils';
 
@@ -13,7 +13,8 @@ export async function handleActive({
   queueRef: DatabaseReference;
 }) {
   const started = Date.now();
-  const data = mapTasks(dataSnapshot);
+  const updatedSnapshot = await get(dataSnapshot.ref);
+  const data = mapTasks(updatedSnapshot);
   const task = Object.values(data)[0] ?? null;
 
   try {

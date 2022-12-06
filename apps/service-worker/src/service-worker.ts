@@ -28,7 +28,7 @@ onAuthStateChanged(getAuth(app), async (u) => {
 });
 
 self.addEventListener('install', function (event) {
-  console.info('Service worker installing..', event);
+  console.info('Service worker installing... ', event);
 });
 
 self.addEventListener('message', async function (event: ExtendableMessageEvent) {

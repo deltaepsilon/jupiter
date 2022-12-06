@@ -3,6 +3,7 @@ export const WEB = {
   API: {
     MEDIA_ITEMS_LIST: '/api/media-items/list',
     MEDIA_ITEMS_BATCH_GET: '/api/media-items/batch-get',
+    MEDIA_ITEMS_PROXY_URL: '/api/media-items/proxy-url',
     OAUTH2: '/api/oauth2',
   },
   DATABASE: {

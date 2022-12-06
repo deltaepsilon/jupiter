@@ -1,3 +1,5 @@
+import { QueueTask, QueueTasks } from '@quiver/firebase-queue';
+
 import { addParams } from 'ui/utils';
 import { firestoreDate } from './firestore';
 import { z } from 'zod';
@@ -52,6 +54,17 @@ export const listMediaItemsResponseSchema = z.object({
 
 export type MediaItem = z.infer<typeof mediaItemSchema>;
 export type MediaItems = MediaItem[];
+export type MediaItemTuple = [string, MediaItem];
+export type MediaItemTuples = MediaItemTuple[];
+
+export function extractTuplesFromQueueTasks(queueTasks: QueueTasks): MediaItemTuples {
+  return Object.values(queueTasks).map((queueTask) => {
+    const key = z.string().parse(queueTask.data.key);
+    const mediaItem = mediaItemSchema.parse(queueTask.data.mediaItem);
+
+    return [key, mediaItem];
+  });
+}
 
 export function decorateImageBaseUrl(
   baseUrl: string,
