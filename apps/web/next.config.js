@@ -1,8 +1,5 @@
 module.exports = {
   reactStrictMode: true,
-  api: {
-    responseLimit: false,
-  },
   experimental: {
     transpilePackages: ['ui'],
   },

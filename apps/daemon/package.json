@@ -1,0 +1,22 @@
+{
+  "name": "daemon",
+  "packageManager": "yarn@3.2.4",
+  "main": "index.js",
+  "scripts": {
+    "dev": "chokidar \"./src/**/*.ts\" -c \"yarn build:bundle\" & yarn dev:run",
+    "dev:run": "nodemon index.js",
+    "build": "yarn build:bundle && yarn build:pkg",
+    "build:bundle": "esbuild src/index.ts --bundle --platform=node --sourcemap --outfile=./index.js",
+    "build:pkg": "pkg index.js --targets node16-linux-x64,node16-macos-x64,node16-win-x64 --out-path dist"
+  },
+  "devDependencies": {
+    "@types/ws": "^8.5.3",
+    "chokidar-cli": "^3.0.0",
+    "esbuild": "^0.16.4",
+    "nodemon": "^2.0.20",
+    "pkg": "^5.8.0"
+  },
+  "dependencies": {
+    "ws": "^8.11.0"
+  }
+}
