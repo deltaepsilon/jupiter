@@ -16,7 +16,7 @@ import {
   TaskState,
   metadataSchema,
   taskSchema,
-} from '@quiver/firebase-queue';
+} from '@jupiter/firebase-queue';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import DoneIcon from '@mui/icons-material/Done';

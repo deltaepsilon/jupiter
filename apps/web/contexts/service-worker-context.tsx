@@ -1,4 +1,4 @@
-import { Payload, SendMessageToSwArgs, sendMessageToSw } from '@quiver/post-message';
+import { Payload, SendMessageToSwArgs, sendMessageToSw } from '@jupiter/post-message';
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 
 type SendMessageArgs = Omit<SendMessageToSwArgs, 'registration'>;

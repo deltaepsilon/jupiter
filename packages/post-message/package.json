@@ -1,5 +1,5 @@
 {
-  "name": "@quiver/post-message",
+  "name": "@jupiter/post-message",
   "packageManager": "yarn@3.2.4",
   "main": "index.ts",
   "dependencies": {

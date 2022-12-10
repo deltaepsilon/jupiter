@@ -1,4 +1,4 @@
-import { GetMessageArgs, postMessageSchema } from '@quiver/post-message';
+import { GetMessageArgs, postMessageSchema } from '@jupiter/post-message';
 
 import { z } from 'zod';
 

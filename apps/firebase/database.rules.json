@@ -1,0 +1,30 @@
+{
+  "rules": {
+    "user-owned": {
+      "$userId": {
+        ".read": "$userId === auth.uid",
+        ".write": "$userId === auth.uid",
+
+        "library": {
+          "$libraryId": {
+            "download-queue": {
+              "task": {
+                ".indexOn": ["state"]
+              }
+            }
+          }
+        }
+      }
+    },
+    "queue-test": {
+      "$userId": {
+        ".read": "$userId === auth.uid",
+        ".write": "$userId === auth.uid",
+
+        "task": {
+          ".indexOn": ["state"]
+        }
+      }
+    }
+  }
+}

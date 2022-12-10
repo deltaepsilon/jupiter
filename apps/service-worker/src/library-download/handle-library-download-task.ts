@@ -3,7 +3,7 @@ import { DocumentData, DocumentSnapshot } from 'firebase/firestore/lite';
 import { MediaItemTuple, extractTuplesFromQueueTasks, fileSystemSchema } from 'data/media-items';
 
 import { Library } from 'data/library';
-import { QueueTasks } from '@quiver/firebase-queue';
+import { QueueTasks } from '@jupiter/firebase-queue';
 import { WEB } from 'data/web';
 import { addParams } from 'ui/utils';
 import md5 from 'md5';

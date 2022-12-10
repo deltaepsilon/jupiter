@@ -13,7 +13,7 @@ import {
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { push, ref, remove, update } from 'firebase/database';
 
-import { Payload } from '@quiver/post-message';
+import { Payload } from '@jupiter/post-message';
 import { WEB } from 'data/web';
 import { getDownloadQueueRefPath } from 'data/download';
 import { localforage } from 'ui/utils';

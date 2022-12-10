@@ -1,4 +1,4 @@
-import { QueueTask, QueueTasks } from '@quiver/firebase-queue';
+import { QueueTask, QueueTasks } from '@jupiter/firebase-queue';
 
 import { addParams } from 'ui/utils';
 import { firestoreDate } from './firestore';

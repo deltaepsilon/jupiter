@@ -9,7 +9,7 @@ import { getDatabase } from 'firebase/database';
 import { getFirestore } from 'firebase/firestore/lite';
 import { handleLibraryDownloadMessage } from './library-download';
 import { handleLibraryImportMessage } from './library-import';
-import { initWorkerClient } from '@quiver/post-message';
+import { initWorkerClient } from '@jupiter/post-message';
 import { initializeApp } from 'firebase/app';
 
 declare let self: ServiceWorkerGlobalScope;

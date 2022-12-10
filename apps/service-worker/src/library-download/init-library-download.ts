@@ -14,7 +14,7 @@ import {
 import { LibraryDownload, LibraryDownloadTask, LibraryTaskStatus, libraryDownloadSchema } from 'data/library';
 
 import { Firestore } from 'firebase/firestore/lite';
-import { Queue } from '@quiver/firebase-queue';
+import { Queue } from '@jupiter/firebase-queue';
 import { WEB } from 'data/web';
 import { getHandleLibraryDownloadTask } from './handle-library-download-task';
 import { getLibrary } from '../utils/get-library';

@@ -1,0 +1,10 @@
+{
+  "name": "@jupiter/firebase",
+  "packageManager": "yarn@3.2.4",
+  "scripts": {
+    "dev": "firebase emulators:start"
+  },
+  "devDependencies": {
+    "firebase-tools": "^11.17.0"
+  }
+}

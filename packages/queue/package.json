@@ -1,5 +1,5 @@
 {
-  "name": "@quiver/firebase-queue",
+  "name": "@jupiter/firebase-queue",
   "packageManager": "yarn@3.2.4",
   "main": "index.ts",
   "dependencies": {
