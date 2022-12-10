@@ -4,6 +4,13 @@ import { addParams } from 'ui/utils';
 import { firestoreDate } from './firestore';
 import { z } from 'zod';
 
+export const fileSystemSchema = z.object({
+  lastModified: z.number(),
+  name: z.string(),
+  size: z.number(),
+  path: z.string(),
+});
+
 export const mediaItemSchema = z.object({
   id: z.string(),
   description: z.string().optional(),
@@ -37,6 +44,7 @@ export const mediaItemSchema = z.object({
   contributorInfo: z
     .object({ profilePictureBaseUrl: z.string().optional(), displayName: z.string().optional() })
     .optional(),
+  fileSystem: fileSystemSchema.optional(),
   updated: firestoreDate.default(new Date()),
 });
 
@@ -52,6 +60,7 @@ export const listMediaItemsResponseSchema = z.object({
   nextPageToken: z.string().optional(),
 });
 
+export type BatchGetMediaItemsResponse = z.infer<typeof batchGetMediaItemsResponseSchema>;
 export type MediaItem = z.infer<typeof mediaItemSchema>;
 export type MediaItems = MediaItem[];
 export type MediaItemTuple = [string, MediaItem];

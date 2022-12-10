@@ -1,6 +1,6 @@
+import { BatchGetMediaItemsResponse, MediaItem, MediaItemTuple, MediaItemTuples } from 'data/media-items';
 import { DatabaseReference, update } from 'firebase/database';
 import { DocumentData, DocumentSnapshot, updateDoc } from 'firebase/firestore/lite';
-import { MediaItem, MediaItemTuple, MediaItemTuples } from 'data/media-items';
 
 import { Library } from 'data/library';
 import { MEDIA_ITEMS_TTL_MS } from '../data';
@@ -70,15 +70,22 @@ async function updateStale({
   }
 }
 
-async function batchGetMediaItems({ library, mediaItemIds }: { library: Library; mediaItemIds: string[] }) {
+async function batchGetMediaItems({
+  forceTokenRefresh = false,
+  library,
+  mediaItemIds,
+}: {
+  forceTokenRefresh?: boolean;
+  library: Library;
+  mediaItemIds: string[];
+}): Promise<BatchGetMediaItemsResponse> {
   if (mediaItemIds.length > 50) {
     throw new Error('batchGetMediaItems: mediaItemIds length must be less than 50');
   }
 
   const { accessToken, refreshToken, updated } = library;
-  const isStale = !updated || updated.getTime() < Date.now() - MEDIA_ITEMS_TTL_MS;
+  const isStale = forceTokenRefresh || !updated || updated.getTime() < Date.now() - MEDIA_ITEMS_TTL_MS;
 
-  console.log({ accessToken, refreshToken, mediaItemIds });
   const response = await fetch(`${location.origin}${WEB.API.MEDIA_ITEMS_BATCH_GET}`, {
     method: 'POST',
     body: JSON.stringify({
@@ -89,7 +96,13 @@ async function batchGetMediaItems({ library, mediaItemIds }: { library: Library;
   });
   const data = await response.json();
 
-  console.log('data', response, data);
+  if (response.status === 401 && !forceTokenRefresh) {
+    return batchGetMediaItems({ forceTokenRefresh: true, library, mediaItemIds });
+  } else if (!response.ok) {
+    throw new Error(data.error.toString() || response.statusText);
+  }
+
+  console.log('batchGetMediaItems', data);
 
   return batchGetMediaItemsResponseSchema.parse(data);
 }

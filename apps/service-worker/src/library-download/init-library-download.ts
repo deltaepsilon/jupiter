@@ -76,8 +76,8 @@ export async function initLibraryDownload({
     await queue.start();
 
     const q = lastKey
-      ? query(mediaItemsRef, orderByKey(), limitToFirst(3), startAfter(lastKey))
-      : query(mediaItemsRef, orderByKey(), limitToFirst(3));
+      ? query(mediaItemsRef, orderByKey(), limitToFirst(1), startAfter(lastKey))
+      : query(mediaItemsRef, orderByKey(), limitToFirst(1));
     const unsubscribe = onChildAdded(q, (snapshot) => {
       const value = snapshot.val();
       const mediaItem = mediaItemSchema.parse(value || {});

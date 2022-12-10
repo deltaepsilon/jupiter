@@ -12393,6 +12393,7 @@
   // ../../packages/data/web.ts
   var WEB = {
     API: {
+      MEDIA_ITEMS_EXIF: "/api/media-items/exif",
       MEDIA_ITEMS_LIST: "/api/media-items/list",
       MEDIA_ITEMS_BATCH_GET: "/api/media-items/batch-get",
       MEDIA_ITEMS_PROXY_URL: "/api/media-items/proxy-url",
@@ -23999,6 +24000,12 @@ Length provided: ${this.length}. Number of dictionaries provided: ${this.diction
   }
 
   // ../../packages/data/media-items.ts
+  var fileSystemSchema = mod.object({
+    lastModified: mod.number(),
+    name: mod.string(),
+    size: mod.number(),
+    path: mod.string()
+  });
   var mediaItemSchema = mod.object({
     id: mod.string(),
     description: mod.string().optional(),
@@ -24026,6 +24033,7 @@ Length provided: ${this.length}. Number of dictionaries provided: ${this.diction
       }).optional()
     }),
     contributorInfo: mod.object({ profilePictureBaseUrl: mod.string().optional(), displayName: mod.string().optional() }).optional(),
+    fileSystem: fileSystemSchema.optional(),
     updated: firestoreDate.default(new Date())
   });
   var batchGetMediaItemsResponseSchema = mod.object({
@@ -24135,13 +24143,16 @@ Length provided: ${this.length}. Number of dictionaries provided: ${this.diction
       return [];
     }
   }
-  async function batchGetMediaItems({ library, mediaItemIds }) {
+  async function batchGetMediaItems({
+    forceTokenRefresh = false,
+    library,
+    mediaItemIds
+  }) {
     if (mediaItemIds.length > 50) {
       throw new Error("batchGetMediaItems: mediaItemIds length must be less than 50");
     }
     const { accessToken, refreshToken, updated } = library;
-    const isStale = !updated || updated.getTime() < Date.now() - MEDIA_ITEMS_TTL_MS;
-    console.log({ accessToken, refreshToken, mediaItemIds });
+    const isStale = forceTokenRefresh || !updated || updated.getTime() < Date.now() - MEDIA_ITEMS_TTL_MS;
     const response = await fetch(`${location.origin}${WEB.API.MEDIA_ITEMS_BATCH_GET}`, {
       method: "POST",
       body: JSON.stringify({
@@ -24151,6 +24162,12 @@ Length provided: ${this.length}. Number of dictionaries provided: ${this.diction
       })
     });
     const data = await response.json();
+    if (response.status === 401 && !forceTokenRefresh) {
+      return batchGetMediaItems({ forceTokenRefresh: true, library, mediaItemIds });
+    } else if (!response.ok) {
+      throw new Error(data.error.toString() || response.statusText);
+    }
+    console.log("batchGetMediaItems", data);
     return batchGetMediaItemsResponseSchema.parse(data);
   }
 
@@ -24162,12 +24179,12 @@ Length provided: ${this.length}. Number of dictionaries provided: ${this.diction
     mediaItemsRef
   }) {
     return async function handleLibraryDownloadTask(tasks) {
-      console.log("tasks", tasks);
       try {
         const mediaItemTuples = extractTuplesFromQueueTasks(tasks);
         const mediaItems = await refreshMediaItems({ library, librarySnapshot, mediaItemsRef, mediaItemTuples });
-        console.log("mediaItems", mediaItems);
-        await Promise.all(mediaItems.map((mediaItemTuple) => processMediaItem({ directoryHandle, mediaItemTuple })));
+        await Promise.all(
+          mediaItems.map((mediaItemTuple) => processMediaItem({ directoryHandle, mediaItemTuple, mediaItemsRef }))
+        );
         return { success: true, message: "processed" };
       } catch (error2) {
         let message = "handleLibraryDownloadTask error";
@@ -24181,35 +24198,32 @@ Length provided: ${this.length}. Number of dictionaries provided: ${this.diction
   }
   async function processMediaItem({
     directoryHandle,
+    mediaItemTuple,
+    mediaItemsRef
+  }) {
+    const [, mediaItem] = mediaItemTuple;
+    const { filename } = mediaItem;
+    console.log("fetching", filename);
+    const fileHandle = await getFileHandle({ directoryHandle, mediaItemTuple });
+    const fileExists = await updateMetadata({ fileHandle, mediaItemTuple });
+    if (fileExists) {
+      console.log("file exists", filename);
+    } else {
+      console.log("file does not exist", filename);
+      await downloadFile({ directoryHandle, mediaItemTuple });
+    }
+  }
+  function getFileHandle({
+    directoryHandle,
     mediaItemTuple
   }) {
     const [, mediaItem] = mediaItemTuple;
-    const { baseUrl, filename, mediaMetadata } = mediaItem;
+    const { filename, mediaMetadata } = mediaItem;
     const { creationTime } = mediaMetadata;
     const creationDate = new Date(creationTime);
     const month = creationDate.getMonth().toString();
     const year = creationDate.getFullYear().toString();
-    const fileHandle = await getFileHandleByPath({ directoryHandle, path: [year, month, filename] });
-    const response = await fetch(addParams(`${location.origin}${WEB.API.MEDIA_ITEMS_PROXY_URL}`, { url: baseUrl }));
-    if (!response.body) {
-      throw new Error(`No response body: ${baseUrl}`);
-    }
-    const reader = response.body.getReader();
-    const writeable = await fileHandle.createWritable();
-    while (true) {
-      const { done, value } = await reader.read();
-      console.log({ done, value });
-      if (done) {
-        writeable.close();
-        break;
-      }
-      if (value) {
-        await writeable.write(value);
-      }
-    }
-    if (!response.ok) {
-      console.log("success!");
-    }
+    return getFileHandleByPath({ directoryHandle, path: [year, month, filename] });
   }
   async function getFileHandleByPath({
     directoryHandle,
@@ -24222,6 +24236,68 @@ Length provided: ${this.length}. Number of dictionaries provided: ${this.diction
       handle = await handle.getDirectoryHandle(name5, { create: true });
     }
     return handle.getFileHandle(parts.shift(), { create: true });
+  }
+  async function updateMetadata({
+    fileHandle,
+    mediaItemTuple
+  }) {
+    const [, mediaItem] = mediaItemTuple;
+    const { mediaMetadata } = mediaItem;
+    const file = await fileHandle.getFile();
+    const filePart = await file.slice(0, 1024 * 64);
+    const buffer = await filePart.arrayBuffer();
+    const size = file.size;
+    console.log("size, mediaMetadata", size, mediaMetadata);
+    if (buffer.byteLength) {
+      const exifResponse = await fetch(WEB.API.MEDIA_ITEMS_EXIF, { body: buffer, method: "POST" });
+      const exif = await exifResponse.json();
+      console.log("exif", exif);
+      console.log("file", file);
+      return true;
+    } else {
+      return false;
+    }
+  }
+  async function downloadFile({
+    directoryHandle,
+    mediaItemTuple
+  }) {
+    const [, mediaItem] = mediaItemTuple;
+    const { baseUrl, filename, mediaMetadata } = mediaItem;
+    const { creationTime } = mediaMetadata;
+    const creationDate = new Date(creationTime);
+    const month = creationDate.getMonth().toString();
+    const year = creationDate.getFullYear().toString();
+    const fileHandle = await getFileHandleByPath({ directoryHandle, path: [year, month, filename] });
+    const response = await fetch(
+      addParams(`${location.origin}${WEB.API.MEDIA_ITEMS_PROXY_URL}`, {
+        payload: btoa(JSON.stringify({ mediaItem }))
+      })
+    );
+    let length = 0;
+    if (!response.body) {
+      throw new Error(`No response body: ${baseUrl}`);
+    }
+    const reader = response.body.getReader();
+    const writeable = await fileHandle.createWritable();
+    try {
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) {
+          writeable.close();
+          break;
+        }
+        if (value) {
+          length += value.length;
+          console.log(filename, length);
+          await writeable.write(value);
+        }
+      }
+    } catch (error2) {
+      console.info("aborted", filename);
+      console.error(error2);
+      await writeable.abort();
+    }
   }
 
   // src/utils/get-library.ts
@@ -24267,7 +24343,7 @@ Length provided: ${this.length}. Number of dictionaries provided: ${this.diction
         }
       }, 1e3);
       await queue.start();
-      const q3 = lastKey ? query(mediaItemsRef, orderByKey(), limitToFirst(3), startAfter(lastKey)) : query(mediaItemsRef, orderByKey(), limitToFirst(3));
+      const q3 = lastKey ? query(mediaItemsRef, orderByKey(), limitToFirst(1), startAfter(lastKey)) : query(mediaItemsRef, orderByKey(), limitToFirst(1));
       const unsubscribe = onChildAdded(q3, (snapshot) => {
         const value = snapshot.val();
         const mediaItem = mediaItemSchema.parse(value || {});
