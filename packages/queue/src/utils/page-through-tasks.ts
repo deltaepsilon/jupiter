@@ -1,7 +1,6 @@
 import { Callback, QueueTasks, TaskKey, TaskState } from '../schema';
 import {
   DatabaseReference,
-  QueryConstraint,
   equalTo,
   get,
   limitToFirst,

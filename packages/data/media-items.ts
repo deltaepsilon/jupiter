@@ -1,6 +1,5 @@
-import { QueueTask, QueueTasks } from '@jupiter/firebase-queue';
-
-import { addParams } from 'ui/utils';
+import { QueueTasks } from '@jupiter/firebase-queue';
+import { addParams } from './utils';
 import { firestoreDate } from './firestore';
 import { z } from 'zod';
 
@@ -45,7 +44,7 @@ export const mediaItemSchema = z.object({
     .object({ profilePictureBaseUrl: z.string().optional(), displayName: z.string().optional() })
     .optional(),
   fileSystem: fileSystemSchema.optional(),
-  updated: firestoreDate.default(new Date()),
+  updated: firestoreDate.default(() => new Date()),
 });
 
 export const batchGetMediaItemsResponseSchema = z.object({

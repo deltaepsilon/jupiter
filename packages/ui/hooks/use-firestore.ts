@@ -6,16 +6,14 @@ import {
   doc,
   getDoc,
   getDocs,
-  getFirestore,
   setDoc,
 } from 'firebase/firestore/lite';
-import { useCallback, useMemo } from 'react';
 
+import { useCallback } from 'react';
 import { useFirebase } from 'ui/contexts';
 
 export function useFirestore() {
-  const { app } = useFirebase();
-  const db = useMemo(() => app && getFirestore(app), [app]);
+  const { db } = useFirebase();
   const getDocTuples = useCallback(
     async (path: string) => {
       if (db) {

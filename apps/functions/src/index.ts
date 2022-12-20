@@ -1,9 +1,14 @@
-import * as functions from "firebase-functions";
+import * as dotenv from 'dotenv';
+import * as functions from 'firebase-functions';
+import * as libraryImport from './library-import';
+import * as mediaItems from './media-items';
+import * as oauth from './oauth';
 
-// // Start writing functions
-// // https://firebase.google.com/docs/functions/typescript
-//
-// export const helloWorld = functions.https.onRequest((request, response) => {
-//   functions.logger.info("Hello logs!", {structuredData: true});
-//   response.send("Hello from Firebase!");
-// });
+dotenv.config();
+
+export const batchGetMediaItems = functions.https.onCall(mediaItems.batchGet);
+export const listMediaItems = functions.https.onCall(mediaItems.list);
+
+export const getAuthUrl = functions.https.onCall(oauth.getAuthUrl);
+
+export const setLibraryImportStatus = functions.https.onCall(libraryImport.setLibraryImportStatus);

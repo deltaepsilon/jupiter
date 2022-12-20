@@ -3,6 +3,7 @@ import { DocumentSnapshot, Firestore, doc, getDoc, updateDoc } from 'firebase/fi
 import { Library, LibraryImport, LibraryTaskStatus, libraryImportSchema, librarySchema } from 'data/library';
 import { MediaItem, listMediaItemsResponseSchema } from 'data/media-items';
 
+import { FIREBASE } from 'data/firebase';
 import { MEDIA_ITEMS_TTL_MS } from '../data';
 import { WEB } from 'data/web';
 import { addParams } from 'ui/utils';
@@ -18,8 +19,8 @@ export interface InitLibraryImportArgs {
 export type InitLibraryImportResult = ReturnType<typeof initLibraryImport>;
 
 export async function initLibraryImport({ database, db, libraryId, userId }: InitLibraryImportArgs) {
-  const libraryImportRef = ref(database, WEB.DATABASE.PATHS.LIBRARY_IMPORT(userId, libraryId));
-  const libraryMediaItemsRef = ref(database, WEB.DATABASE.PATHS.LIBRARY_MEDIA_ITEMS(userId, libraryId));
+  const libraryImportRef = ref(database, FIREBASE.DATABASE.PATHS.LIBRARY_IMPORT(userId, libraryId));
+  const libraryMediaItemsRef = ref(database, FIREBASE.DATABASE.PATHS.LIBRARY_MEDIA_ITEMS(userId, libraryId));
   const setStatus = getSetStatus({ libraryId, libraryImportRef });
   const getStatus = getGetStatus(libraryId);
   const libraryImport = await getLibraryImport(libraryImportRef);

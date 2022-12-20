@@ -39,8 +39,8 @@ export function LibraryPickerTrigger({ children }: Props) {
   }, [accessToken, addLibrary, clearLibrary, getLibraries, onClose, refreshToken]);
 
   useEffect(() => {
-    selectLibrary();
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+    selectLibrary?.();
+  }, [selectLibrary]);
 
   return (
     <>

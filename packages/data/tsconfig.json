@@ -7,7 +7,9 @@
     "preserveWatchOutput": true,
     "skipLibCheck": true,
     "noEmit": true,
-    "strict": true
+    "strict": true,
+    "resolveJsonModule": true,
+    "target": "ES6"
   },
   "exclude": [
     "node_modules"

@@ -1,23 +1,21 @@
-import { NextApiRequest, NextApiResponse } from 'next';
-
-import { addParams } from 'ui/utils';
 import axios from 'axios';
 import { batchGetMediaItemsResponseSchema } from 'data/media-items';
-import { refreshAccessToken } from 'api/utils/jwt';
+import { refreshAccessToken } from '../utils/jwt';
 import { z } from 'zod';
 
-interface Args {
-  req: NextApiRequest;
-}
-
-const PARAMS_SCHEMA = z.object({
+const BATCH_GET_MEDIA_ITEMS_PARAMS_SCHEMA = z.object({
   accessToken: z.string().optional(),
   refreshToken: z.string(),
   mediaItemIds: z.string(),
 });
+export type BatchGetMediaItemsParams = z.infer<typeof BATCH_GET_MEDIA_ITEMS_PARAMS_SCHEMA>;
 
-export async function batchGetMediaItems({ req }: Args) {
-  const { accessToken: maybeAccessToken, refreshToken, mediaItemIds } = PARAMS_SCHEMA.parse(JSON.parse(req.body));
+export async function batchGetMediaItems(params: BatchGetMediaItemsParams) {
+  const {
+    accessToken: maybeAccessToken,
+    refreshToken,
+    mediaItemIds,
+  } = BATCH_GET_MEDIA_ITEMS_PARAMS_SCHEMA.parse(params);
   const accessToken = maybeAccessToken || (await refreshAccessToken(refreshToken)).access_token;
 
   if (!accessToken) {

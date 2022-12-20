@@ -1,38 +1,35 @@
-import { LibraryImport, libraryImportSchema } from 'data/library';
-import { MessageAction, encodePostMessage } from 'data/service-worker';
+import { LibraryImport, LibraryTaskStatus, libraryImportSchema } from 'data/library';
 import { useEffect, useMemo, useState } from 'react';
+import { useFunctions, useRtdb } from 'ui/hooks';
 
-import { WEB } from 'data/web';
+import { FIREBASE } from 'data/firebase';
 import { useAuth } from 'ui/contexts';
-import { useRtdb } from 'ui/hooks';
-import { useServiceWorker } from 'web/contexts/service-worker-context';
 
 export type UseLibraryImportResult = ReturnType<typeof useLibraryImport>;
 
 export function useLibraryImport(libraryId: string) {
   const { user } = useAuth();
   const { listen } = useRtdb();
+  const { setLibraryImportStatus } = useFunctions();
   const [libraryImport, setLibraryImport] = useState<LibraryImport | null | undefined>();
-  const { sendMessage } = useServiceWorker();
-  const { init, start, pause, cancel, destroy } = useMemo(() => {
-    function createSender(action: MessageAction) {
-      return () => sendMessage(encodePostMessage({ action, data: { libraryId } }));
+  const { start, pause, cancel, destroy } = useMemo(() => {
+    function createSender(status: LibraryTaskStatus) {
+      return async () => setLibraryImportStatus({ libraryId, status });
     }
 
     return {
-      init: createSender(MessageAction.libraryImportInit),
-      start: createSender(MessageAction.libraryImportStart),
-      pause: createSender(MessageAction.libraryImportPause),
-      cancel: createSender(MessageAction.libraryImportCancel),
-      destroy: createSender(MessageAction.libraryImportDestroy),
+      start: createSender(LibraryTaskStatus.running),
+      pause: createSender(LibraryTaskStatus.paused),
+      cancel: createSender(LibraryTaskStatus.canceled),
+      destroy: createSender(LibraryTaskStatus.destroyed),
     };
-  }, [libraryId, sendMessage]);
+  }, [libraryId, setLibraryImportStatus]);
   const isLoading = typeof libraryImport === 'undefined';
 
   useEffect(() => {
     if (!user) return;
 
-    const path = WEB.DATABASE.PATHS.LIBRARY_IMPORT(user.uid, libraryId);
+    const path = FIREBASE.DATABASE.PATHS.LIBRARY_IMPORT(user.uid, libraryId);
 
     return listen(path, (snapshot) => {
       const parsed = libraryImportSchema.safeParse(snapshot.val());
@@ -43,11 +40,7 @@ export function useLibraryImport(libraryId: string) {
         setLibraryImport(null);
       }
     });
-  }, [init, libraryId, listen, user]);
-
-  useEffect(() => {
-    user && init();
-  }, [init, user]);
+  }, [libraryId, listen, user]);
 
   return { isLoading, libraryImport, actions: { start, pause, cancel, destroy } };
 }

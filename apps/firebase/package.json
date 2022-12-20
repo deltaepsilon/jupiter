@@ -1,10 +1,11 @@
 {
   "name": "@jupiter/firebase",
-  "packageManager": "yarn@3.2.4",
   "scripts": {
-    "dev": "firebase emulators:start"
+    "emulators": "firebase emulators:start --import ./.emulator-data --export-on-exit",
+    "clean": "rm /tmp/hub-photos-tools-2022.json && lsof -t -i:9099 -i:5001 -i:8081 -i:9000 -i:5000 -i:9199 -i:4000 | xargs kill -9"
   },
   "devDependencies": {
-    "firebase-tools": "^11.17.0"
+    "dotenv-cli": "^6.0.0",
+    "firebase-tools": "^11.18.0"
   }
 }

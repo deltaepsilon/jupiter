@@ -8,7 +8,11 @@ export const firestoreDate = z.preprocess((arg) => {
     return arg;
   } else if (typeof arg === 'string') {
     return new Date(arg);
+    //@ts-ignore
+  } else if (typeof arg.toDate === 'function') {
+    //@ts-ignore
+    return arg.toDate();
   }
 
-  return arg;
-}, z.date());
+  return undefined;
+}, z.date().optional());

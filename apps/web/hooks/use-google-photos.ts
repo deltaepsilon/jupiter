@@ -1,10 +1,9 @@
-import { MediaItems, listMediaItemsResponseSchema } from 'data/media-items';
-import nookies, { parseCookies } from 'nookies';
+import { parseCookies, setCookie } from 'nookies';
 import { useCallback, useState } from 'react';
 
-import { Cookie } from 'data/sync';
-import { WEB } from 'data/web';
-import { addParams } from 'ui/utils';
+import { Cookie } from 'data/auth';
+import { MediaItems } from 'data/media-items';
+import { useFunctions } from 'ui/hooks/use-functions';
 import { useRouter } from 'next/router';
 
 export function useGooglePhotos() {
@@ -12,59 +11,55 @@ export function useGooglePhotos() {
   const [accessToken, setAccessToken] = useState<string>('');
   const [refreshToken, setRefreshToken] = useState<string>('');
   const router = useRouter();
+  const { getAuthUrl, listMediaItems } = useFunctions();
+  const authenticate = useCallback(async () => {
+    const { authUrl, redirect } = await getAuthUrl({
+      host: window.location.host,
+      protocol: window.location.protocol,
+      redirect: window.location.href,
+    });
+
+    setCookie(null, Cookie.redirect, redirect, { path: '/' });
+
+    authUrl && router.replace(authUrl);
+  }, [getAuthUrl, router]);
+  const getFirstPage = useCallback(
+    async ({ accessToken, refreshToken }: { accessToken?: string; refreshToken: string }) =>
+      listMediaItems({
+        accessToken,
+        refreshToken,
+        pageSize: '9',
+      }),
+    [listMediaItems]
+  );
   const selectLibrary = useCallback(async () => {
     const cookies = parseCookies();
-    try {
-      const { accessToken, refreshToken, mediaItems } = await getFirstPage({
-        accessToken: cookies.accessToken,
-        refreshToken: cookies.refreshToken,
-      });
+    const needsCookies = !cookies.refreshToken;
+
+    if (needsCookies) return authenticate();
+
+    const result = await getFirstPage({ accessToken: cookies.accessToken, refreshToken: cookies.refreshToken });
+
+    if (result.data) {
+      const { accessToken, refreshToken, mediaItems } = result.data;
 
       setAccessToken(accessToken);
       setRefreshToken(refreshToken);
-
-      nookies.set(null, Cookie.accessToken, accessToken, { path: '/' });
-      nookies.set(null, Cookie.refreshToken, refreshToken, { path: '/' });
-
       setFirstPage(mediaItems);
-    } catch (res) {
-      if (res instanceof Response && res.status === 401) {
-        const response = await fetch(
-          addParams(`${location.origin}${WEB.API.OAUTH2}`, { redirect: window.location.href })
-        );
-        const { authUrl } = await response.json();
-
-        router.replace(authUrl);
-      } else {
-        throw res;
-      }
+    } else if (result.error?.httpErrorCode.status === 401) {
+      return authenticate();
     }
-  }, [router]);
+  }, [authenticate, getFirstPage]);
   const clearLibrary = useCallback(async () => {
-    nookies.set(null, Cookie.accessToken, '', { path: '/' });
-    nookies.set(null, Cookie.refreshToken, '', { path: '/' });
+    setCookie(null, Cookie.accessToken, '', { path: '/' });
+    setCookie(null, Cookie.refreshToken, '', { path: '/' });
 
     setFirstPage(undefined);
   }, []);
   const changeLibrary = useCallback(async () => {
     clearLibrary();
-
     selectLibrary();
   }, [clearLibrary, selectLibrary]);
 
   return { accessToken, refreshToken, firstPage, changeLibrary, clearLibrary, getFirstPage, selectLibrary };
-}
-
-async function getFirstPage({ accessToken, refreshToken }: { accessToken?: string; refreshToken: string }) {
-  const response = await fetch(
-    addParams(`${location.origin}${WEB.API.MEDIA_ITEMS_LIST}`, { accessToken, refreshToken, pageSize: 9 })
-  );
-
-  if (response.ok) {
-    const data = await response.json();
-
-    return listMediaItemsResponseSchema.parse(data);
-  } else {
-    throw response;
-  }
 }

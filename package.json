@@ -2,24 +2,20 @@
   "name": "jupiter",
   "version": "0.0.0",
   "private": true,
-  "workspaces": [
-    "apps/*",
-    "packages/*"
-  ],
   "scripts": {
     "build": "turbo run build",
-    "dev": "turbo run dev --parallel",
+    "dev": "cd apps/firebase && pnpm emulators & turbo run dev --parallel",
+    "clean": "turbo run clean",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\""
   },
   "devDependencies": {
     "eslint-config-custom": "*",
-    "firebase-tools": "^11.16.0",
+    "firebase-tools": "^11.18.0",
     "prettier": "latest",
     "turbo": "latest"
   },
   "engines": {
     "node": ">=16.0.0"
-  },
-  "packageManager": "yarn@3.2.4"
+  }
 }

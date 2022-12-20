@@ -1,12 +1,11 @@
-import { DataSnapshot, Database, getDatabase, onValue, ref } from 'firebase/database';
-import { useCallback, useMemo } from 'react';
+import { DataSnapshot, onValue, ref } from 'firebase/database';
 
 import { NOOP } from 'ui/utils';
+import { useCallback } from 'react';
 import { useFirebase } from 'ui/contexts';
 
 export function useRtdb() {
-  const { app } = useFirebase();
-  const database: Database | null = useMemo(() => app && getDatabase(app), [app]);
+  const { database } = useFirebase();
   const listen = useCallback(
     (path: string, callback: (snapshot: DataSnapshot) => void) =>
       database ? onValue(ref(database, path), callback) : NOOP,

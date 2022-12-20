@@ -26,6 +26,7 @@ export enum LibraryTaskStatus {
   running = 'running',
   paused = 'paused',
   canceled = 'canceled',
+  destroyed = 'destroyed',
   complete = 'complete',
 }
 
@@ -35,6 +36,16 @@ const libraryTaskSchema = z.object({
   created: firestoreDate.default(() => new Date()),
   updated: firestoreDate.default(() => new Date()),
 });
+
+export const libraryTaskStatusRequest = z.object({
+  libraryId: z.string(),
+  status: z.nativeEnum(LibraryTaskStatus),
+});
+export const libraryTaskStatusResponse = z.object({
+  success: z.boolean(),
+});
+export type LibraryTaskStatusRequest = z.infer<typeof libraryTaskStatusRequest>;
+export type LibraryTaskStatusResponse = z.infer<typeof libraryTaskStatusResponse>;
 
 // Library import
 export const libraryImportSchema = libraryTaskSchema.extend({

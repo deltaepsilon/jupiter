@@ -2,7 +2,7 @@
   "name": "data",
   "packageManager": "yarn@3.2.4",
   "dependencies": {
-    "typescript": "latest",
+    "typescript": "^4.9.4",
     "unique-names-generator": "^4.7.1"
   }
 }

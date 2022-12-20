@@ -2,7 +2,7 @@ import { LibraryDownload, libraryDownloadSchema } from 'data/library';
 import { MessageAction, encodePostMessage } from 'data/service-worker';
 import { useEffect, useMemo, useState } from 'react';
 
-import { DirectoryHandle } from 'ui/hooks';
+import { FIREBASE } from 'data/firebase';
 import { WEB } from 'data/web';
 import { useAuth } from 'ui/contexts';
 import { useLocalFilesystem } from 'ui/hooks';
@@ -35,7 +35,7 @@ export function useLibraryDownload(libraryId: string) {
   useEffect(() => {
     if (!user) return;
 
-    const path = WEB.DATABASE.PATHS.LIBRARY_DOWNLOAD(user.uid, libraryId);
+    const path = FIREBASE.DATABASE.PATHS.LIBRARY_DOWNLOAD(user.uid, libraryId);
 
     return listen(path, (snapshot) => {
       const parsed = libraryDownloadSchema.safeParse(snapshot.val());

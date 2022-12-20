@@ -1,7 +1,7 @@
 import { Libraries, Library, librarySchema } from 'data/library';
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 
-import { WEB } from 'data/web';
+import { FIREBASE } from 'data/firebase';
 import { getIsStaleAccessToken } from 'ui/utils';
 import { useFirestore } from 'ui/hooks';
 import { useGooglePhotos } from 'web/hooks';
@@ -13,7 +13,7 @@ interface LibrariesValue {
   getLibraries: () => Promise<void>;
   isLoading: boolean;
   libraries: Libraries;
-  refreshLibrary: (libraryId: string) => Promise<void>;
+  refreshLibrary: (libraryId: string, shouldRefreshRecords: boolean) => Promise<boolean>;
 }
 
 const LibrariesContext = createContext<LibrariesValue>({
@@ -21,7 +21,7 @@ const LibrariesContext = createContext<LibrariesValue>({
   getLibraries: async () => {},
   isLoading: true,
   libraries: [],
-  refreshLibrary: async () => {},
+  refreshLibrary: async () => false,
 });
 
 const MEDIA_ITEMS_TTL_MS = 1000 * 60 * 60; // 1 Hour
@@ -44,7 +44,7 @@ export function LibrariesProvider({ children, libraryId, userId }: Props) {
   const [libraries, setLibraries] = useState<LibrariesValue['libraries']>([]);
   const getLibraries = useCallback(async () => {
     if (userId) {
-      getDocTuples(WEB.FIRESTORE.COLLECTIONS.LIBRARIES(userId))
+      getDocTuples(FIREBASE.FIRESTORE.COLLECTIONS.LIBRARIES(userId))
         .then((docTuples) => {
           const libraries = docTuples?.map(([key, data]) => [key, librarySchema.parse(data)] as [string, Library]);
 
@@ -56,7 +56,7 @@ export function LibrariesProvider({ children, libraryId, userId }: Props) {
   const getLibrary = useCallback(
     async (libraryId: string) => {
       if (userId) {
-        getDocTuple(WEB.FIRESTORE.COLLECTIONS.LIBRARY(userId, libraryId))
+        getDocTuple(FIREBASE.FIRESTORE.COLLECTIONS.LIBRARY(userId, libraryId))
           .then((docTuple) => {
             if (docTuple) {
               const [key, data] = docTuple;
@@ -74,13 +74,13 @@ export function LibrariesProvider({ children, libraryId, userId }: Props) {
     async (tokens: Tokens) => {
       const library = librarySchema.parse(tokens);
 
-      await addDocs(WEB.FIRESTORE.COLLECTIONS.LIBRARIES(userId), [library]);
+      await addDocs(FIREBASE.FIRESTORE.COLLECTIONS.LIBRARIES(userId), [library]);
     },
     [addDocs, userId]
   );
   const updateLibrary = useCallback(
     async (libraryId: string, updates: Partial<Library>) => {
-      const libraryPath = WEB.FIRESTORE.COLLECTIONS.LIBRARY(userId, libraryId);
+      const libraryPath = FIREBASE.FIRESTORE.COLLECTIONS.LIBRARY(userId, libraryId);
 
       await updateDocs([[libraryPath, updates]]);
     },
@@ -97,18 +97,26 @@ export function LibrariesProvider({ children, libraryId, userId }: Props) {
 
       if (library && !hasBeenRefreshedAlready) {
         const isStaleAccessToken = getIsStaleAccessToken(library.updated);
-        const { accessToken, mediaItems } = await getFirstPage({
+        const result = await getFirstPage({
           accessToken: isStaleAccessToken ? undefined : library.accessToken,
           refreshToken: library.refreshToken,
         });
 
-        updateKeysRef.current.add(libraryId);
+        if (result.error) {
+          console.error('error', result.error);
+          return false;
+        } else {
+          const { accessToken, mediaItems } = result.data;
+          const updates = librarySchema.parse({ ...library, accessToken, mediaItems, updated: new Date() });
 
-        await updateLibrary(libraryId, { ...library, accessToken, mediaItems, updated: new Date() });
+          updateKeysRef.current.add(libraryId);
 
-        shouldRefreshRecords && refreshRecords();
+          await updateLibrary(libraryId, updates);
 
-        return true;
+          shouldRefreshRecords && refreshRecords();
+
+          return true;
+        }
       }
 
       return false;
@@ -120,7 +128,7 @@ export function LibrariesProvider({ children, libraryId, userId }: Props) {
     const staleLibraries = libraries.filter(
       ([key, library]) =>
         !updateKeysRef.current.has(key) &&
-        (!library.mediaItems || library.updated.getTime() < Date.now() - MEDIA_ITEMS_TTL_MS)
+        (!library.mediaItems || !library.updated || library.updated.getTime() < Date.now() - MEDIA_ITEMS_TTL_MS)
     );
 
     Promise.all(staleLibraries.map(async ([key]) => refreshLibrary(key, false))).then((refreshed: boolean[]) => {

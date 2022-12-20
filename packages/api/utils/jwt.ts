@@ -1,21 +1,7 @@
-import { NextApiRequest, NextApiResponse } from 'next';
-import { parseCookies, setCookie } from 'nookies';
-
-import { Auth } from 'firebase/auth';
-import { Cookie } from 'data/sync';
-import { addParams } from 'ui/utils';
+import { Cookie } from 'data/auth';
 import axios from 'axios';
-import { google } from 'googleapis';
 import { z } from 'zod';
 
-const { GOOGLE_AUTH_CLIENT_ID, GOOGLE_AUTH_CLIENT_SECRET } = z
-  .object({
-    GOOGLE_AUTH_CLIENT_ID: z.string(),
-    GOOGLE_AUTH_CLIENT_SECRET: z.string(),
-  })
-  .parse(process.env);
-
-const COOKIES_SCHEMA = z.object({ [Cookie.accessToken]: z.string().optional(), [Cookie.refreshToken]: z.string() });
 // const CREDENTIAL_SCHEMA = z.object({
 //   idToken: z.string(),
 //   accessToken: z.string(),
@@ -40,25 +26,36 @@ const COOKIES_SCHEMA = z.object({ [Cookie.accessToken]: z.string().optional(), [
 //   }),
 // });
 
-export async function getAccessToken(req: NextApiRequest, res: NextApiResponse) {
+export async function getAccessToken() {
   try {
-    const cookies = getCookies(req);
+    const cookies = getCookies();
 
     if (cookies.accessToken) {
       return cookies.accessToken;
     } else if (!cookies.accessToken && cookies.refreshToken) {
       const { access_token, expires_in } = await refreshAccessToken(cookies.refreshToken);
 
-      setCookie({ res }, 'accessToken', access_token, { maxAge: expires_in * 1000, path: '/' });
+      console.log(expires_in);
+
+      // setCookie({ res }, 'accessToken', access_token, { maxAge: expires_in * 1000, path: '/' });
 
       return access_token;
     }
   } catch (error) {
     return false;
   }
+
+  return false;
 }
 
 export async function refreshAccessToken(refreshToken: string) {
+  const { GOOGLE_AUTH_CLIENT_ID, GOOGLE_AUTH_CLIENT_SECRET } = z
+    .object({
+      GOOGLE_AUTH_CLIENT_ID: z.string(),
+      GOOGLE_AUTH_CLIENT_SECRET: z.string(),
+    })
+    .parse(process.env);
+
   const response = await axios.post(
     'https://oauth2.googleapis.com/token',
     {
@@ -77,8 +74,8 @@ export async function refreshAccessToken(refreshToken: string) {
     .parse(response.data);
 }
 
-function getCookies(req: NextApiRequest) {
-  const cookies = parseCookies({ req });
+function getCookies() {
+  throw 'getCookies not implemented.';
 
-  return COOKIES_SCHEMA.parse(cookies);
+  return COOKIES_SCHEMA.parse({ accessToken: '', refreshToken: '' });
 }

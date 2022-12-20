@@ -1,0 +1,1 @@
+export const MEDIA_ITEMS_TTL_MS = 1000 * 60 * 60; // 1 Hour

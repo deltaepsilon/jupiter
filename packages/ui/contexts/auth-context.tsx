@@ -1,6 +1,14 @@
-import { GoogleAuthProvider, OAuthCredential, User, getAuth, signInWithPopup } from 'firebase/auth';
-import { createContext, useCallback, useContext, useEffect, useState } from 'react';
+import {
+  GoogleAuthProvider,
+  OAuthCredential,
+  User,
+  connectAuthEmulator,
+  getAuth,
+  signInWithPopup,
+} from 'firebase/auth';
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 
+import { FIREBASE } from 'data/firebase';
 import { NOOP } from 'ui/utils';
 import { WEB } from 'data/web';
 import { useFirebase } from 'ui/contexts';
@@ -32,13 +40,12 @@ export function useAuth({ forceRedirect }: { forceRedirect: boolean } = { forceR
 }
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const { app } = useFirebase();
+  const { auth } = useFirebase();
   const [user, setUser] = useState<User | null | undefined>();
   const [credential, setCredential] = useState<Credential>(null);
 
   const signInWithGoogle = useCallback(async (): Promise<Credential> => {
-    if (app) {
-      const auth = getAuth(app);
+    if (auth) {
       const provider = new GoogleAuthProvider();
 
       provider.setCustomParameters({ access_type: 'offline' });
@@ -53,24 +60,22 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
 
     return null;
-  }, [app]);
+  }, [auth]);
   const signOut = useCallback(() => {
-    if (app) {
-      const auth = getAuth(app);
-
+    if (auth) {
       auth.signOut();
     }
-  }, [app]);
+  }, [auth]);
 
   useEffect(() => {
-    if (app) {
-      const unsubscribe = getAuth(app).onAuthStateChanged(async (user) => {
+    if (auth) {
+      const unsubscribe = auth.onAuthStateChanged(async (user) => {
         setUser(user);
       });
 
       return () => unsubscribe();
     }
-  }, [app]);
+  }, [auth]);
 
   return (
     <AuthContext.Provider value={{ credential, signInWithGoogle, signOut, user }}>{children}</AuthContext.Provider>

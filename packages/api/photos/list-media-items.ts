@@ -1,26 +1,43 @@
-import { NextApiRequest, NextApiResponse } from 'next';
+import { listMediaItemsResponseSchema, mediaItemSchema } from 'data/media-items';
 
-import { addParams } from 'ui/utils';
 import axios from 'axios';
-import { listMediaItemsResponseSchema } from 'data/media-items';
-import { refreshAccessToken } from 'api/utils/jwt';
+import { refreshAccessToken } from '../utils/jwt';
 import { z } from 'zod';
 
-interface Args {
-  req: NextApiRequest;
-}
-
-const PARAMS_SCHEMA = z.object({
-  accessToken: z.string().optional(),
+const httpError = z.object({
+  httpErrorCode: z.object({
+    canonicalName: z.string(),
+    status: z.number(),
+  }),
+});
+const listMediaItemsSuccess = z.object({
+  accessToken: z.string(),
   refreshToken: z.string(),
-  pageSize: z.string().transform((s) => parseInt(s, 10)),
-  nextPageToken: z.string().optional(),
+  mediaItems: z.array(mediaItemSchema),
 });
 
-export async function listMediaItems({ req }: Args) {
-  const { accessToken: maybeAccessToken, refreshToken, nextPageToken } = PARAMS_SCHEMA.parse(req.query);
+const listMediaItemsRequest = z.object({
+  accessToken: z.string().optional(),
+  refreshToken: z.string(),
+  pageSize: z
+    .string()
+    .default('10')
+    .transform((s) => parseInt(s, 10)),
+  nextPageToken: z.string().optional(),
+});
+export type ListMediaItemsRequest = z.input<typeof listMediaItemsRequest>;
+
+export const listMediaItemsResponse = z.union([httpError, listMediaItemsSuccess]);
+export type ListMediaItemsResponse = z.output<typeof listMediaItemsResponse>;
+
+export async function listMediaItems({
+  accessToken: maybeAccessToken,
+  refreshToken,
+  nextPageToken,
+  pageSize: incomingPageSize,
+}: ListMediaItemsRequest) {
   const accessToken = maybeAccessToken || (await refreshAccessToken(refreshToken)).access_token;
-  const pageSize = typeof req.query.pageSize === 'string' ? parseInt(req.query.pageSize, 10) : 25;
+  const pageSize = typeof incomingPageSize === 'string' ? parseInt(incomingPageSize, 10) : 25;
 
   if (!accessToken) {
     throw new Error('No access token found');
@@ -40,12 +57,10 @@ async function queryMediaItems({
   pageToken?: string;
   refreshToken: string;
 }) {
-  const { data } = await axios.get(
-    addParams('https://photoslibrary.googleapis.com/v1/mediaItems', { pageSize, pageToken }),
-    {
-      headers: { Authorization: `Bearer ${accessToken}`, ContentType: 'application/json' },
-    }
-  );
+  const { data } = await axios.get('https://photoslibrary.googleapis.com/v1/mediaItems', {
+    params: { pageSize, pageToken },
+    headers: { Authorization: `Bearer ${accessToken}`, ContentType: 'application/json' },
+  });
 
   return listMediaItemsResponseSchema.parse({ accessToken, refreshToken, ...data });
 }

@@ -1,4 +1,4 @@
-import { Callback, MetadataKey, QueueKey, QueueTasks, TaskKey, TaskState, metadataSchema, taskSchema } from '../schema';
+import { Callback, MetadataKey, QueueKey, TaskKey, TaskState, metadataSchema } from '../schema';
 import {
   DataSnapshot,
   DatabaseReference,
@@ -12,7 +12,7 @@ import {
   query,
   update,
 } from 'firebase/database';
-import { debounce, mapTasks, pageThroughTasks, wait } from '../utils';
+import { debounce, mapTasks } from '../utils';
 
 import { handleActive } from './handle-active';
 
