@@ -12,3 +12,6 @@ export const listMediaItems = functions.https.onCall(mediaItems.list);
 export const getAuthUrl = functions.https.onCall(oauth.getAuthUrl);
 
 export const setLibraryImportStatus = functions.https.onCall(libraryImport.setLibraryImportStatus);
+export const handleLibraryImport = functions.database
+  .ref(libraryImport.LIBRARY_IMPORT_PATH)
+  .onWrite(libraryImport.libraryImportOnWrite);
