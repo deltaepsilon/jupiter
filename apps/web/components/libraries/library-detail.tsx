@@ -2,6 +2,7 @@ import { Box, Typography } from '@mui/material';
 import { DownloadLibraryPanel, ImportLibraryPanel } from './panels';
 
 import { Container } from 'ui/components';
+import { DaemonProvider } from 'web/contexts/daemon-context';
 import { LibraryTaskStatus } from 'data/library';
 import { formatDate } from 'ui/utils';
 import { useLibraries } from 'web/contexts/libraries-context';
@@ -9,6 +10,14 @@ import { useLibraryDownload } from 'web/hooks/use-library-download';
 import { useLibraryImport } from 'web/hooks/use-library-import';
 
 export function LibraryDetail() {
+  return (
+    <DaemonProvider>
+      <LibraryDetailConnected />
+    </DaemonProvider>
+  );
+}
+
+function LibraryDetailConnected() {
   const { libraries } = useLibraries();
   const [libraryId, library] = libraries[0];
   const { actions: importActions, libraryImport } = useLibraryImport(libraryId);

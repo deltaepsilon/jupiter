@@ -19,7 +19,9 @@ export function useLibraryDownload(libraryId: string) {
   const { sendMessage } = useServiceWorker();
   const { init, start, pause, cancel, destroy } = useMemo(() => {
     function createSender(action: MessageAction) {
-      return () => sendMessage(encodePostMessage({ action, data: { libraryId, directoryHandle } }));
+      return () => {
+        console.log({ action, data: { libraryId, directoryHandle } });
+      };
     }
 
     return {
@@ -29,7 +31,7 @@ export function useLibraryDownload(libraryId: string) {
       cancel: createSender(MessageAction.libraryDownloadCancel),
       destroy: createSender(MessageAction.libraryDownloadDestroy),
     };
-  }, [directoryHandle, libraryId, sendMessage]);
+  }, [directoryHandle, libraryId]);
   const isLoading = typeof libraryDownload === 'undefined';
 
   useEffect(() => {

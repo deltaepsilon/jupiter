@@ -13,9 +13,10 @@ export default function MyApp({ Component, pageProps }: AppProps): JSX.Element {
       <FirebaseProvider appName={FIREBASE.CONFIG.APP_NAME}>
         <AuthProvider>
           <ServiceWorkerProvider>
-            <AppLayout>
-              <Component {...pageProps} />
-            </AppLayout>
+              <AppLayout>
+                <Component {...pageProps} />
+              </AppLayout>
+            
           </ServiceWorkerProvider>
         </AuthProvider>
       </FirebaseProvider>
