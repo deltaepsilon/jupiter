@@ -1,6 +1,8 @@
 import Box, { BoxProps } from '@mui/material/Box';
 import { SxProps, Theme } from '@mui/system';
 
+import { forwardRef } from 'react';
+
 export const hiddenScrollSx: BoxProps['sx'] = {
   overflow: 'auto',
   msOverflowStyle: 'none',
@@ -10,9 +12,10 @@ export const hiddenScrollSx: BoxProps['sx'] = {
   },
 };
 
-export function HiddenScroll({ children, sx = {}, ...props }: BoxProps) {
+export const HiddenScroll = forwardRef(({ children, sx = {}, ...props }: BoxProps, ref) => {
   return (
     <Box
+      ref={ref}
       sx={
         {
           ...hiddenScrollSx,
@@ -24,4 +27,6 @@ export function HiddenScroll({ children, sx = {}, ...props }: BoxProps) {
       {children}
     </Box>
   );
-}
+});
+
+HiddenScroll.displayName = 'HiddenScroll';

@@ -1,8 +1,8 @@
 {
   "name": "@jupiter/firebase",
   "scripts": {
-    "emulators": "firebase emulators:start --import ./.emulator-data --export-on-exit",
-    "clean": "rm /tmp/hub-photos-tools-2022.json && lsof -t -i:9099 -i:5001 -i:8081 -i:9000 -i:5000 -i:9199 -i:4000 | xargs kill -9"
+    "emulators": "pnpm clean && firebase emulators:start --import ./.emulator-data --export-on-exit",
+    "clean": "rm /tmp/hub-photos-tools-2022.json || exit 0 && lsof -t -i:9099 -i:5001 -i:8081 -i:9000 -i:5000 -i:9199 -i:4000 | xargs kill -9"
   },
   "devDependencies": {
     "dotenv-cli": "^6.0.0",

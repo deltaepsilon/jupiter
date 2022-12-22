@@ -1,11 +1,10 @@
 ## In Progress
 
-- [ ] Restore library import
+- [ ] Start processing images
 - [ ] Debug `context.auth` problem: https://github.com/firebase/firebase-tools/issues/5210
 
 ## Next actions
 
-- [ ] Start processing images
 - [ ] Build a drawer to track progress
 - [ ] Create logo
 - [ ] Clean up `manifest.json`
@@ -29,6 +28,7 @@
 
 ## Archive
 
+- [x] Restore library import
 - [x] Debug failure of `--import` and `--export-on-exit`: https://github.com/firebase/firebase-tools/issues/2228
 - [x] The redirect on `oAuth2` isn't working quite right. I'm ending up back at `/` after adding a Library
 - [x] Move `/apps/web/pages/api` to `/apps/functions/api`

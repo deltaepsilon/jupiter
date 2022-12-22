@@ -185,9 +185,11 @@ importers:
 
   packages/data:
     specifiers:
+      short-uuid: ^4.2.2
       typescript: ^4.9.4
       unique-names-generator: ^4.7.1
     dependencies:
+      short-uuid: 4.2.2
       typescript: 4.9.4
       unique-names-generator: 4.7.1
 

@@ -2,6 +2,7 @@ import { DirectoryHandle, DirectoryHandleMap } from 'ui/hooks';
 import { enableMapSet, immerable, produce } from 'immer';
 import { isClient, isServer } from 'ui/utils';
 
+import { DaemonMessages } from 'data/daemon';
 import localforage from 'localforage';
 
 enableMapSet();
@@ -16,6 +17,7 @@ isClient &&
 
 export enum LocalforageDataType {
   DirectoryHandles = 'directory-handles',
+  DaemonMessages = 'daemon-messages',
 }
 
 export interface LocalforageDataTypeMapping {
@@ -41,6 +43,9 @@ export async function clearDirectoryHandles() {
 }
 const getDirectoryHandles = createGetter<DirectoryHandleMap>(LocalforageDataType.DirectoryHandles, new Map());
 const setDirectoryHandles = createSetter<DirectoryHandleMap>(LocalforageDataType.DirectoryHandles);
+
+export const getDaemonMessages = createGetter<DaemonMessages>(LocalforageDataType.DaemonMessages, []);
+export const setDaemonMessages = createSetter<DaemonMessages>(LocalforageDataType.DaemonMessages);
 
 // Create getters and setters
 function createGetter<Type>(key: string, defaultValue: Type): () => Promise<Type> {

@@ -2,9 +2,11 @@ import { Box, Typography } from '@mui/material';
 import { DownloadLibraryPanel, ImportLibraryPanel } from './panels';
 
 import { Container } from 'ui/components';
+import { DaemonPanel } from '../daemon/daemon-panel';
 import { DaemonProvider } from 'web/contexts/daemon-context';
 import { LibraryTaskStatus } from 'data/library';
 import { formatDate } from 'ui/utils';
+import { useDaemon } from 'web/contexts/daemon-context';
 import { useLibraries } from 'web/contexts/libraries-context';
 import { useLibraryDownload } from 'web/hooks/use-library-download';
 import { useLibraryImport } from 'web/hooks/use-library-import';
@@ -27,6 +29,7 @@ function LibraryDetailConnected() {
     getDirectoryHandle,
     libraryDownload,
   } = useLibraryDownload(libraryId);
+  const { isConnected: isDaemonConnected } = useDaemon();
   const isComplete = libraryImport?.status === LibraryTaskStatus.complete;
   const isRunning = libraryImport?.status === LibraryTaskStatus.running;
   const hasLibraryRecords = !!libraryImport?.count;
@@ -84,6 +87,18 @@ function LibraryDetailConnected() {
         </Box>
 
         <Box sx={{ pointerEvents: hasLibraryRecords ? 'all' : 'none', opacity: hasLibraryRecords ? 1 : 0.5 }}>
+          <Step>
+            <Typography variant='h4'>Connect local app</Typography>
+            <Typography sx={{ a: { textDecoration: 'underline' } }} variant='body1'>
+              The local app is a lightweight, open-source application that runs on your computer. We&apos;ll use it
+              manage local files.
+            </Typography>
+          </Step>
+
+          <DaemonPanel />
+        </Box>
+
+        <Box sx={{ pointerEvents: isDaemonConnected ? 'all' : 'none', opacity: isDaemonConnected ? 1 : 0.5 }}>
           <Step>
             <Typography variant='h4'>Download to your hard drive</Typography>
             <Typography sx={{ a: { textDecoration: 'underline' } }} variant='body1'>
