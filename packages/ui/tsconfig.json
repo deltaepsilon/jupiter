@@ -1,5 +1,5 @@
 {
   "extends": "tsconfig/react-library.json",
-  "include": ["."],
+  "include": [".", "../../apps/web/hooks/use-directory.ts"],
   "exclude": ["dist", "build", "node_modules"]
 }

@@ -1,34 +1,36 @@
 import { Box, Typography } from '@mui/material';
+import { DaemonProvider, useDaemon, useLibraries } from 'web/contexts';
 import { DownloadLibraryPanel, ImportLibraryPanel } from './panels';
+import { Library, LibraryTaskStatus } from 'data/library';
+import { useDaemonRecord, useDirectory, useLibraryDownload, useLibraryImport } from 'web/hooks';
 
 import { Container } from 'ui/components';
-import { DaemonPanel } from '../daemon/daemon-panel';
-import { DaemonProvider } from 'web/contexts/daemon-context';
-import { LibraryTaskStatus } from 'data/library';
+import { DaemonPanel } from 'web/components/daemon';
+import { MessageType } from 'data/daemon';
 import { formatDate } from 'ui/utils';
-import { useDaemon } from 'web/contexts/daemon-context';
-import { useLibraries } from 'web/contexts/libraries-context';
-import { useLibraryDownload } from 'web/hooks/use-library-download';
-import { useLibraryImport } from 'web/hooks/use-library-import';
+import { getDirectoryHandler } from 'web/components/daemon/handlers/directory-handler';
+import { useMemo } from 'react';
 
 export function LibraryDetail() {
-  return (
-    <DaemonProvider>
-      <LibraryDetailConnected />
+  const { libraries } = useLibraries();
+  const [libraryId, library] = libraries[0];
+  const { daemonRecord, isLoading } = useDaemonRecord(libraryId);
+  const handlers = useMemo(
+    () => (daemonRecord ? new Map([[MessageType.directory, getDirectoryHandler(libraryId, daemonRecord)]]) : new Map()),
+    [daemonRecord, libraryId]
+  );
+
+  return isLoading ? null : (
+    <DaemonProvider handlers={handlers}>
+      <LibraryDetailConnected library={library} libraryId={libraryId} />
     </DaemonProvider>
   );
 }
 
-function LibraryDetailConnected() {
-  const { libraries } = useLibraries();
-  const [libraryId, library] = libraries[0];
+function LibraryDetailConnected({ library, libraryId }: { library: Library; libraryId: string }) {
   const { actions: importActions, libraryImport } = useLibraryImport(libraryId);
-  const {
-    actions: downloadActions,
-    directoryHandle,
-    getDirectoryHandle,
-    libraryDownload,
-  } = useLibraryDownload(libraryId);
+  const { actions: downloadActions, libraryDownload } = useLibraryDownload(libraryId);
+  const { directory } = useDirectory(libraryId);
   const { isConnected: isDaemonConnected } = useDaemon();
   const isComplete = libraryImport?.status === LibraryTaskStatus.complete;
   const isRunning = libraryImport?.status === LibraryTaskStatus.running;
@@ -117,9 +119,9 @@ function LibraryDetailConnected() {
 
           <DownloadLibraryPanel
             actions={downloadActions}
-            directoryHandle={directoryHandle}
-            getDirectoryHandle={getDirectoryHandle}
+            directory={directory}
             libraryDownload={libraryDownload}
+            libraryId={libraryId}
           />
         </Box>
       </Box>

@@ -1,5 +1,5 @@
 import { Box, Button, ImageList, ImageListItem, Typography } from '@mui/material';
-import { ModalDrawer, ModalDrawerFooter, useModalDrawer } from 'ui/components';
+import { ModalDrawer, ModalDrawerFooter } from 'ui/components';
 import { useCallback, useEffect, useState } from 'react';
 
 import { Image } from 'ui/components';

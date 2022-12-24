@@ -1,10 +1,15 @@
 ## In Progress
 
-- [ ] Start processing images
-- [ ] Debug `context.auth` problem: https://github.com/firebase/firebase-tools/issues/5210
+- [ ] Wire up Download actions
+  - `init-library-download.ts` and `apps/daemon/src/download/index.ts`
+- [ ] Kick off download
 
 ## Next actions
 
+- [ ] Tag downloaded files with Google's image id.
+- [ ] Sync up metadata
+- [ ] Start processing images
+- [ ] Debug `context.auth` problem: https://github.com/firebase/firebase-tools/issues/5210
 - [ ] Build a drawer to track progress
 - [ ] Create logo
 - [ ] Clean up `manifest.json`

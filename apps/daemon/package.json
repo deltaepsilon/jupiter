@@ -3,6 +3,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "chokidar \"./src/**/*.ts\" -c \"yarn build:bundle\" & yarn dev:run",
+    "dev:donotrun": "echo not running",
     "dev:run": "nodemon index.js",
     "build": "yarn build:bundle && yarn build:pkg && yarn build:distribute",
     "build:bundle": "esbuild src/index.ts --bundle --platform=node --sourcemap --outfile=./index.js",
@@ -17,6 +18,8 @@
     "pkg": "^5.8.0"
   },
   "dependencies": {
+    "file-system-db": "^1.1.0",
+    "windows-network-drive": "^4.0.1",
     "ws": "^8.11.0"
   }
 }

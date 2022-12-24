@@ -1,0 +1,1 @@
+mount -t drvfs '\\Stego\home' /mnt/stego

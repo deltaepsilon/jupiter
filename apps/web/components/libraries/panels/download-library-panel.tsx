@@ -11,15 +11,16 @@ import {
   SxProps,
   Typography,
 } from '@mui/material';
-import { DirectoryHandle, useLocalFilesystem } from 'ui/hooks';
 
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import { DirectoryPicker } from 'web/components/daemon';
 import { LibraryTaskStatus } from 'data/library';
 import { MenuTrigger } from 'ui/components';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import PauseCircleOutlineIcon from '@mui/icons-material/PauseCircleOutline';
 import PlayCircleOutlineIcon from '@mui/icons-material/PlayCircleOutline';
+import { UseDirectoryResult } from 'web/hooks';
 import { UseLibraryDownloadResult } from 'web/hooks/use-library-download';
 import { formatDate } from 'ui/utils';
 
@@ -30,9 +31,14 @@ const GRID: SxProps = {
   alignItems: 'center',
 };
 
-type Props = Pick<UseLibraryDownloadResult, 'actions' | 'directoryHandle' | 'getDirectoryHandle' | 'libraryDownload'>;
+type Props = {
+  actions: UseLibraryDownloadResult['actions'];
+  directory: UseDirectoryResult['directory'];
+  libraryDownload: UseLibraryDownloadResult['libraryDownload'];
+  libraryId: string;
+};
 
-export function DownloadLibraryPanel({ actions, directoryHandle, getDirectoryHandle, libraryDownload }: Props) {
+export function DownloadLibraryPanel({ actions, directory, libraryDownload, libraryId }: Props) {
   const isRunning = libraryDownload?.status === LibraryTaskStatus.running;
   const isComplete = libraryDownload?.status === LibraryTaskStatus.complete;
   const isEmpty = !libraryDownload;
@@ -40,24 +46,21 @@ export function DownloadLibraryPanel({ actions, directoryHandle, getDirectoryHan
   return (
     <Paper elevation={1} sx={{}}>
       <Box sx={{ ...GRID, paddingBottom: 2 }}>
-        <Typography sx={{ flex: 1 }} variant='h6'>
-          {directoryHandle?.name ?? 'No folder selected'}
+        <Typography sx={{ flex: 1 }} variant='body2'>
+          {directory ?? 'No folder selected'}
         </Typography>
 
-        <Button
-          disabled={isRunning}
-          onClick={getDirectoryHandle}
-          sx={{ gridColumn: '2/5' }}
-          variant={directoryHandle ? 'outlined' : 'contained'}
-        >
-          {directoryHandle ? 'Change folder' : 'Select a folder'}
-        </Button>
+        <DirectoryPicker directory={directory} libraryId={libraryId} sx={{ gridColumn: '3/5' }}>
+          <Button disabled={isRunning} variant={directory ? 'outlined' : 'contained'}>
+            Pick Folder
+          </Button>
+        </DirectoryPicker>
       </Box>
       <Box
         sx={{
           ...GRID,
-          pointerEvents: directoryHandle ? 'all' : 'none',
-          opacity: directoryHandle ? 1 : 0.5,
+          pointerEvents: directory ? 'all' : 'none',
+          opacity: directory ? 1 : 0.5,
         }}
       >
         <Box sx={{ position: 'relative' }}>

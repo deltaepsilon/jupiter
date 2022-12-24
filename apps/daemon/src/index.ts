@@ -1,15 +1,44 @@
-import { MessageType, PORT, decodeMessage, encodeMessage } from 'data/daemon';
+import {
+  DaemonMessage,
+  GetMessageArgs,
+  MessageType,
+  PORT,
+  SendMessage,
+  decodeMessage,
+  encodeMessage,
+} from 'data/daemon';
 import { WebSocket, WebSocketServer } from 'ws';
+import { directory, requestDirectory } from './directory';
+
+import { FilesystemDatabase } from 'daemon/src/db';
+import { download } from './download';
 
 const wss = new WebSocketServer({ port: PORT });
 
-wss.on('connection', (ws) => {
-  ws.on('message', (m) => {
+wss.on('connection', async (ws) => {
+  const sendMessage = getSendMessage(ws);
+  let db: FilesystemDatabase | null = null;
+
+  ws.on('message', async (m) => {
     const message = decodeMessage(m);
 
     switch (message.type) {
       case MessageType.ping:
-        return sendPing(ws, 'pong');
+        return sendPing(sendMessage, message);
+
+      case MessageType.directory: {
+        const result = await directory({ message, sendMessage });
+
+        if (result?.isDb) {
+          db = result;
+        }
+        break;
+      }
+
+      case MessageType.download:
+        if (!db) throw 'FilesystemDatabase not initialized';
+
+        return download({ db, message, sendMessage });
 
       default:
         console.error('unhandled message', message);
@@ -17,9 +46,22 @@ wss.on('connection', (ws) => {
     }
   });
 
-  sendPing(ws);
+  sendPing(sendMessage);
+  requestDirectory(sendMessage);
 });
 
-function sendPing(ws: WebSocket, data = 'ping') {
-  ws.send(encodeMessage({ payload: { data }, type: MessageType.ping }).stringified);
+function getSendMessage(ws: WebSocket) {
+  return (message: GetMessageArgs) => {
+    ws.send(encodeMessage(message).stringified);
+  };
+}
+
+function sendPing(sendMessage: SendMessage, message?: DaemonMessage) {
+  if (message) {
+    const { isHeartbeat, uuid } = message;
+
+    sendMessage({ isHeartbeat, payload: { text: 'pong' }, type: MessageType.ping, uuid });
+  } else {
+    sendMessage({ payload: { text: 'ping' }, type: MessageType.ping });
+  }
 }

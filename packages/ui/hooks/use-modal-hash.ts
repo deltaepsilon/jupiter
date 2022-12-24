@@ -23,7 +23,7 @@ export function useModalHash({ autoOpenHash }: { autoOpenHash: string }): {
 
   const openModalHash = useCallback(() => {
     if (autoOpenHash) {
-      router.push(`${router.pathname}#${autoOpenHash}`);
+      router.push(`${router.asPath}#${autoOpenHash}`);
 
       setTimeout(() => window.dispatchEvent(new HashChangeEvent('hashchange')));
     }

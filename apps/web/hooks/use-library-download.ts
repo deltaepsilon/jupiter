@@ -1,37 +1,31 @@
 import { LibraryDownload, libraryDownloadSchema } from 'data/library';
-import { MessageAction, encodePostMessage } from 'data/service-worker';
 import { useEffect, useMemo, useState } from 'react';
 
 import { FIREBASE } from 'data/firebase';
-import { WEB } from 'data/web';
 import { useAuth } from 'ui/contexts';
-import { useLocalFilesystem } from 'ui/hooks';
 import { useRtdb } from 'ui/hooks';
-import { useServiceWorker } from 'web/contexts/service-worker-context';
 
 export type UseLibraryDownloadResult = ReturnType<typeof useLibraryDownload>;
 
 export function useLibraryDownload(libraryId: string) {
   const { user } = useAuth();
   const { listen } = useRtdb();
-  const { directoryHandle, getDirectoryHandle } = useLocalFilesystem(libraryId);
   const [libraryDownload, setLibraryDownload] = useState<LibraryDownload | null | undefined>();
-  const { sendMessage } = useServiceWorker();
   const { init, start, pause, cancel, destroy } = useMemo(() => {
-    function createSender(action: MessageAction) {
+    function createSender() {
       return () => {
-        console.log({ action, data: { libraryId, directoryHandle } });
+        console.log({ data: { libraryId } });
       };
     }
 
     return {
-      init: createSender(MessageAction.libraryDownloadInit),
-      start: createSender(MessageAction.libraryDownloadStart),
-      pause: createSender(MessageAction.libraryDownloadPause),
-      cancel: createSender(MessageAction.libraryDownloadCancel),
-      destroy: createSender(MessageAction.libraryDownloadDestroy),
+      init: createSender(),
+      start: createSender(),
+      pause: createSender(),
+      cancel: createSender(),
+      destroy: createSender(),
     };
-  }, [directoryHandle, libraryId]);
+  }, [libraryId]);
   const isLoading = typeof libraryDownload === 'undefined';
 
   useEffect(() => {
@@ -51,13 +45,11 @@ export function useLibraryDownload(libraryId: string) {
   }, [init, libraryId, listen, user]);
 
   useEffect(() => {
-    user && directoryHandle && init();
-  }, [directoryHandle, init, user]);
+    user && init();
+  }, [init, user]);
 
   return {
     isLoading,
-    directoryHandle,
-    getDirectoryHandle,
     libraryDownload,
     actions: { start, pause, cancel, destroy },
   };
