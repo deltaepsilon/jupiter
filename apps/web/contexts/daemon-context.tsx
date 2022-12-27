@@ -180,8 +180,8 @@ function usePingPong(ws: WebSocket | null, onClose: () => void) {
       const intervalTimer = setInterval(() => {
         ws.send(pingMessage);
 
-        timer = setTimeout(() => onClose(), 1000);
-      }, 2000);
+        timer = setTimeout(() => onClose(), 2500);
+      }, 5000);
 
       function onMessage(messageEvent: MessageEvent) {
         if (typeof messageEvent.data === 'string') {

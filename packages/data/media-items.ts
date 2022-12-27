@@ -50,6 +50,7 @@ export const mediaItemSchema = z.object({
 export const batchGetMediaItemsResponseSchema = z.object({
   accessToken: z.string(),
   refreshToken: z.string(),
+  expiresAt: z.string(),
   mediaItemResults: z.array(z.object({ mediaItem: mediaItemSchema })),
 });
 export const listMediaItemsResponseSchema = z.object({

@@ -1,6 +1,6 @@
 ## In Progress
 
-- [ ] Stream in media items
+- [ ] Download media items
 - [ ] Create FilesystemDb queue to handle media items
 
 ## Next actions
@@ -33,6 +33,7 @@
 
 ## Archive
 
+- [x] Stream in media items
 - [x] Wire up Download actions
 - [x] Restore library import
 - [x] Debug failure of `--import` and `--export-on-exit`: https://github.com/firebase/firebase-tools/issues/2228

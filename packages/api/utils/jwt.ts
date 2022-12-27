@@ -10,10 +10,6 @@ export async function getAccessToken() {
     } else if (!cookies.accessToken && cookies.refreshToken) {
       const { access_token, expires_in } = await refreshAccessToken(cookies.refreshToken);
 
-      console.log(expires_in);
-
-      // setCookie({ res }, 'accessToken', access_token, { maxAge: expires_in * 1000, path: '/' });
-
       return access_token;
     }
   } catch (error) {
@@ -52,10 +48,4 @@ export async function refreshAccessToken(refreshToken: string) {
   );
 
   return refreshAccessTokenResponse.parse(response.data);
-}
-
-function getCookies() {
-  throw 'getCookies not implemented.';
-
-  return COOKIES_SCHEMA.parse({ accessToken: '', refreshToken: '' });
 }

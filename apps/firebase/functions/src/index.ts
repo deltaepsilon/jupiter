@@ -7,6 +7,7 @@ import * as oauth from './oauth';
 dotenv.config();
 
 export const batchGetMediaItems = functions.https.onCall(mediaItems.batchGet);
+export const batchGetMediaItemsOnRequest = functions.https.onRequest(mediaItems.batchGetOnRequest);
 export const listMediaItems = functions.https.onCall(mediaItems.list);
 
 export const getAuthUrl = functions.https.onCall(oauth.getAuthUrl);

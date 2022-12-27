@@ -2,9 +2,11 @@ import { mediaItemSchema } from '../media-items';
 import { z } from 'zod';
 
 export enum DownloadDbKeys {
+  ingestedIds = 'ingestedIds',
+  mediaItems = 'mediaItems',
   state = 'state',
   tokens = 'tokens',
-  mediaItems = 'mediaItems',
+  urls = 'urls',
 }
 
 const stringDate = z.preprocess((arg) => {
@@ -17,6 +19,15 @@ const stringDate = z.preprocess((arg) => {
   return undefined;
 }, z.date().optional());
 
+export const ingestedIdsSchema = z.preprocess((val) => {
+  if (Array.isArray(val)) {
+    return new Set(val);
+  }
+
+  return val;
+}, z.set(z.string()));
+export type IngestedIds = z.infer<typeof ingestedIdsSchema>;
+
 export enum DownloadAction {
   init = 'init',
   start = 'start',
@@ -27,11 +38,13 @@ export enum DownloadAction {
   addMediaItem = 'add-media-item',
 }
 
+export const urlsSchema = z.object({ refreshAccessToken: z.string(), batchGetMediaItems: z.string() });
+export type Urls = z.infer<typeof urlsSchema>;
+
 export const tokensSchema = z.object({
   accessToken: z.string().optional(),
   refreshToken: z.string(),
   expiresAt: stringDate.optional(),
-  url: z.string(),
   updated: stringDate.default(() => new Date()),
 });
 export type Tokens = z.infer<typeof tokensSchema>;
@@ -66,5 +79,6 @@ export const downloadDataSchema = z.object({
   tokens: tokensSchema.optional(),
   state: downloadStateSchema,
   mediaItem: mediaItemSchema.extend({ key: z.string() }).optional(),
+  urls: urlsSchema.optional(),
 });
 export type DownloadData = z.infer<typeof downloadDataSchema>;

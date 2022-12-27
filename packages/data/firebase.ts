@@ -44,5 +44,6 @@ export const FIREBASE = {
   },
   FUNCTIONS: {
     REFRESH_ACCESS_TOKEN: `${FUNCTIONS_BASE_URL}/refreshAccessToken`,
+    BATCH_GET_MEDIA_ITEMS: `${FUNCTIONS_BASE_URL}/batchGetMediaItemsOnRequest`,
   },
 };
