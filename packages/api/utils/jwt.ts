@@ -1,30 +1,5 @@
-import { Cookie } from 'data/auth';
 import axios from 'axios';
 import { z } from 'zod';
-
-// const CREDENTIAL_SCHEMA = z.object({
-//   idToken: z.string(),
-//   accessToken: z.string(),
-//   pendingToken: z.string().nullable(),
-//   providerId: z.string(),
-//   signInMethod: z.string(),
-// });
-// const JWT_SCHEMA = z.object({
-//   name: z.string(),
-//   picture: z.string(),
-//   iss: z.string().nullable(),
-//   aud: z.string(),
-//   auth_time: z.number(),
-//   sub: z.string(),
-//   iat: z.number(),
-//   exp: z.number(),
-//   email: z.string(),
-//   email_verified: z.boolean(),
-//   firebase: z.object({
-//     identities: z.object({ 'google.com': z.array(z.string()), email: z.array(z.string()) }),
-//     sign_in_provider: z.string(),
-//   }),
-// });
 
 export async function getAccessToken() {
   try {
@@ -48,6 +23,13 @@ export async function getAccessToken() {
   return false;
 }
 
+export const refreshAccessTokenResponse = z.object({
+  access_token: z.string(),
+  expires_in: z.number(),
+  scope: z.string(),
+  token_type: z.enum(['Bearer']),
+});
+
 export async function refreshAccessToken(refreshToken: string) {
   const { GOOGLE_AUTH_CLIENT_ID, GOOGLE_AUTH_CLIENT_SECRET } = z
     .object({
@@ -69,9 +51,7 @@ export async function refreshAccessToken(refreshToken: string) {
     }
   );
 
-  return z
-    .object({ access_token: z.string(), expires_in: z.number(), scope: z.string(), token_type: z.enum(['Bearer']) })
-    .parse(response.data);
+  return refreshAccessTokenResponse.parse(response.data);
 }
 
 function getCookies() {

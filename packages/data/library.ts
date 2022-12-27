@@ -1,4 +1,4 @@
-import { TaskKey, taskSchema } from '@jupiter/firebase-queue';
+// import { TaskKey, taskSchema } from '@jupiter/firebase-queue';
 import { animals, colors, uniqueNamesGenerator } from 'unique-names-generator';
 
 import { firestoreDate } from './firestore';
@@ -59,11 +59,11 @@ export const libraryDownloadSchema = libraryTaskSchema.extend({
   bytes: z.number().default(0),
   lastKey: z.string().optional().nullable(),
 });
-export const libraryDownloadTaskSchema = taskSchema.extend({
-  [TaskKey.data]: z.object({ key: z.string(), mediaItem: mediaItemSchema }),
-});
+// export const libraryDownloadTaskSchema = taskSchema.extend({
+//   [TaskKey.data]: z.object({ key: z.string(), mediaItem: mediaItemSchema }),
+// });
 export type LibraryDownload = z.infer<typeof libraryDownloadSchema>;
-export type LibraryDownloadTask = z.infer<typeof libraryDownloadTaskSchema>;
+// export type LibraryDownloadTask = z.infer<typeof libraryDownloadTaskSchema>;
 
 // Media items
 export const libraryImportMediaItemSchema = z.object({

@@ -1,4 +1,4 @@
-import { BatchGetMediaItemsParams, batchGetMediaItems } from '../../../../packages/api';
+import { BatchGetMediaItemsParams, batchGetMediaItems } from '../../../../../packages/api';
 
 import { error } from '../utils';
 import { https } from 'firebase-functions';

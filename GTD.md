@@ -1,11 +1,11 @@
 ## In Progress
 
-- [ ] Wire up Download actions
-  - `init-library-download.ts` and `apps/daemon/src/download/index.ts`
-- [ ] Kick off download
+- [ ] Stream in media items
+- [ ] Create FilesystemDb queue to handle media items
 
 ## Next actions
 
+- [ ] Kick off download
 - [ ] Tag downloaded files with Google's image id.
 - [ ] Sync up metadata
 - [ ] Start processing images
@@ -33,6 +33,7 @@
 
 ## Archive
 
+- [x] Wire up Download actions
 - [x] Restore library import
 - [x] Debug failure of `--import` and `--export-on-exit`: https://github.com/firebase/firebase-tools/issues/2228
 - [x] The redirect on `oAuth2` isn't working quite right. I'm ending up back at `/` after adding a Library

@@ -29,7 +29,7 @@ export function LibraryDetail() {
 
 function LibraryDetailConnected({ library, libraryId }: { library: Library; libraryId: string }) {
   const { actions: importActions, libraryImport } = useLibraryImport(libraryId);
-  const { actions: downloadActions, libraryDownload } = useLibraryDownload(libraryId);
+  const { actions: downloadActions, state } = useLibraryDownload(libraryId, library);
   const { directory } = useDirectory(libraryId);
   const { isConnected: isDaemonConnected } = useDaemon();
   const isComplete = libraryImport?.status === LibraryTaskStatus.complete;
@@ -117,12 +117,7 @@ function LibraryDetailConnected({ library, libraryId }: { library: Library; libr
             </Typography>
           </Step>
 
-          <DownloadLibraryPanel
-            actions={downloadActions}
-            directory={directory}
-            libraryDownload={libraryDownload}
-            libraryId={libraryId}
-          />
+          <DownloadLibraryPanel actions={downloadActions} directory={directory} libraryId={libraryId} state={state} />
         </Box>
       </Box>
     </Container>

@@ -34,14 +34,14 @@ const GRID: SxProps = {
 type Props = {
   actions: UseLibraryDownloadResult['actions'];
   directory: UseDirectoryResult['directory'];
-  libraryDownload: UseLibraryDownloadResult['libraryDownload'];
+  state: UseLibraryDownloadResult['state'];
   libraryId: string;
 };
 
-export function DownloadLibraryPanel({ actions, directory, libraryDownload, libraryId }: Props) {
-  const isRunning = libraryDownload?.status === LibraryTaskStatus.running;
-  const isComplete = libraryDownload?.status === LibraryTaskStatus.complete;
-  const isEmpty = !libraryDownload;
+export function DownloadLibraryPanel({ actions, directory, state, libraryId }: Props) {
+  const isRunning = state?.isRunning;
+  const isComplete = !!state?.isDownloadComplete;
+  const isEmpty = false && !state?.ingestedCount;
 
   return (
     <Paper elevation={1} sx={{}}>
@@ -64,19 +64,18 @@ export function DownloadLibraryPanel({ actions, directory, libraryDownload, libr
         }}
       >
         <Box sx={{ position: 'relative' }}>
-          <LinearProgress
-            value={isComplete ? 100 : Math.max(5, Math.min(50, (libraryDownload?.count ?? 0) / 10000))}
-            variant={isRunning ? 'indeterminate' : 'determinate'}
-          />
+          <LinearProgress value={isComplete ? 100 : state?.progress ?? 0} variant='determinate' />
           <Typography sx={{ position: 'absolute', inset: '0 0 -5 0' }} variant='caption'>
-            {formatDate(libraryDownload?.updated, 'MMM d, yyyy •  HH:mm:ss')}
+            {formatDate(state?.updated, 'MMM d, yyyy •  HH:mm:ss')}
           </Typography>
         </Box>
         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: -0.5 }}>
-          <Typography variant='body1'>{libraryDownload?.count}</Typography>
+          <Typography variant='body1'>
+            {state?.downloadedCount} / {state?.ingestedCount}
+          </Typography>
         </Box>
         <Box>
-          <ActionButton actions={actions} libraryDownload={libraryDownload} />
+          <ActionButton actions={actions} state={state} />
         </Box>
 
         <Box sx={{ position: 'relative', pointerEvents: isEmpty ? 'none' : 'all', opacity: isEmpty ? 0.5 : 1 }}>
@@ -103,21 +102,21 @@ export function DownloadLibraryPanel({ actions, directory, libraryDownload, libr
   );
 }
 
-function ActionButton({ actions, libraryDownload }: Pick<Props, 'actions' | 'libraryDownload'>) {
-  switch (libraryDownload?.status) {
-    case LibraryTaskStatus.complete:
+function ActionButton({ actions, state }: Pick<Props, 'actions' | 'state'>) {
+  switch (true) {
+    case state?.isRunning:
+      return (
+        <IconButton onClick={() => actions.pause()}>
+          <PauseCircleOutlineIcon fontSize='large' sx={{ color: 'var(--color-gentian-blue-metallic)' }} />
+        </IconButton>
+      );
+
+    case state?.isDownloadComplete:
       return (
         <CheckCircleOutlineIcon
           fontSize='large'
           sx={{ color: 'var(--color-jade-green)', marginTop: 0.5, marginLeft: 1 }}
         />
-      );
-
-    case LibraryTaskStatus.running:
-      return (
-        <IconButton onClick={() => actions.pause()}>
-          <PauseCircleOutlineIcon fontSize='large' sx={{ color: 'var(--color-gentian-blue-metallic)' }} />
-        </IconButton>
       );
 
     default:

@@ -1,16 +1,20 @@
 import firebaseJson from '../../apps/firebase/firebase.json';
 
+const CONFIG = {
+  APP_NAME: 'google-photos',
+  apiKey: 'AIzaSyCwCbnCcsSyqLdpMGygRFGp-xMfdZDVSEA',
+  authDomain: 'photos-tools-2022.firebaseapp.com',
+  projectId: 'photos-tools-2022',
+  storageBucket: 'photos-tools-2022.appspot.com',
+  messagingSenderId: '550579950350',
+  appId: '1:550579950350:web:d32a68a214c5c58a273d5f',
+  measurementId: 'G-5M5ME2ZH0R',
+};
+
+const FUNCTIONS_BASE_URL = `http://localhost:${firebaseJson.emulators.functions.port}/${CONFIG.projectId}/us-central1`;
+
 export const FIREBASE = {
-  CONFIG: {
-    APP_NAME: 'google-photos',
-    apiKey: 'AIzaSyCwCbnCcsSyqLdpMGygRFGp-xMfdZDVSEA',
-    authDomain: 'photos-tools-2022.firebaseapp.com',
-    projectId: 'photos-tools-2022',
-    storageBucket: 'photos-tools-2022.appspot.com',
-    messagingSenderId: '550579950350',
-    appId: '1:550579950350:web:d32a68a214c5c58a273d5f',
-    measurementId: 'G-5M5ME2ZH0R',
-  },
+  CONFIG,
   EMULATORS: {
     HOST: '127.0.0.1',
     AUTHENTICATION: firebaseJson.emulators.auth.port,
@@ -37,5 +41,8 @@ export const FIREBASE = {
       LIBRARIES: (userId: string) => `users/${userId}/libraries`,
       LIBRARY: (userId: string, libraryId: string) => `users/${userId}/libraries/${libraryId}`,
     },
+  },
+  FUNCTIONS: {
+    REFRESH_ACCESS_TOKEN: `${FUNCTIONS_BASE_URL}/refreshAccessToken`,
   },
 };

@@ -10,6 +10,7 @@ export const batchGetMediaItems = functions.https.onCall(mediaItems.batchGet);
 export const listMediaItems = functions.https.onCall(mediaItems.list);
 
 export const getAuthUrl = functions.https.onCall(oauth.getAuthUrl);
+export const refreshAccessToken = functions.https.onRequest(oauth.refreshAccessToken);
 
 export const setLibraryImportStatus = functions.https.onCall(libraryImport.setLibraryImportStatus);
 export const handleLibraryImport = functions.database

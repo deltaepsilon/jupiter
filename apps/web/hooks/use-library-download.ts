@@ -1,56 +1,87 @@
-import { LibraryDownload, libraryDownloadSchema } from 'data/library';
+import { DownloadAction, DownloadState, MessageType, downloadDataSchema } from 'data/daemon';
+import { Library, LibraryDownload, libraryDownloadSchema } from 'data/library';
+import { limitToFirst, onChildAdded, orderByKey, query, ref, startAfter, startAt } from 'firebase/database';
 import { useEffect, useMemo, useState } from 'react';
 
 import { FIREBASE } from 'data/firebase';
+import { MediaItem } from 'data/media-items';
 import { useAuth } from 'ui/contexts';
+import { useDaemon } from '../contexts';
 import { useRtdb } from 'ui/hooks';
 
 export type UseLibraryDownloadResult = ReturnType<typeof useLibraryDownload>;
 
-export function useLibraryDownload(libraryId: string) {
+export function useLibraryDownload(libraryId: string, library: Library) {
   const { user } = useAuth();
-  const { listen } = useRtdb();
-  const [libraryDownload, setLibraryDownload] = useState<LibraryDownload | null | undefined>();
-  const { init, start, pause, cancel, destroy } = useMemo(() => {
-    function createSender() {
-      return () => {
-        console.log({ data: { libraryId } });
+  const { isConnected, send } = useDaemon();
+  const [state, setState] = useState<DownloadState>();
+  const { database } = useRtdb();
+  const { init, start, pause, cancel, destroy, addMediaItem } = useMemo(() => {
+    function createSender(action: DownloadAction) {
+      return ({ mediaItem }: { mediaItem?: MediaItem } = {}) => {
+        if (action === DownloadAction.addMediaItem && !mediaItem) {
+          throw new Error('mediaItem is required for addMediaItem action');
+        }
+
+        return send({
+          type: MessageType.download,
+          payload: {
+            action,
+            data: downloadDataSchema.parse({
+              libraryId,
+              tokens: { refreshToken: library.refreshToken, url: FIREBASE.FUNCTIONS.REFRESH_ACCESS_TOKEN },
+              mediaItem,
+            }),
+          },
+        }).then((result) => {
+          const { state } = downloadDataSchema.parse(result.payload.data);
+
+          setState(state);
+        });
       };
     }
 
     return {
-      init: createSender(),
-      start: createSender(),
-      pause: createSender(),
-      cancel: createSender(),
-      destroy: createSender(),
+      init: createSender(DownloadAction.init),
+      start: createSender(DownloadAction.start),
+      pause: createSender(DownloadAction.pause),
+      cancel: createSender(DownloadAction.cancel),
+      destroy: createSender(DownloadAction.destroy),
+      addMediaItem: createSender(DownloadAction.addMediaItem),
     };
-  }, [libraryId]);
-  const isLoading = typeof libraryDownload === 'undefined';
+  }, [library.refreshToken, libraryId, send]);
+  const isLoading = typeof state === 'undefined';
+  const userId = user?.uid;
+  const shouldIngest =
+    isConnected && state && !state?.isIngestComplete && state.isRunning && !!database && !!userId && !!libraryId;
 
   useEffect(() => {
-    if (!user) return;
-
-    const path = FIREBASE.DATABASE.PATHS.LIBRARY_DOWNLOAD(user.uid, libraryId);
-
-    return listen(path, (snapshot) => {
-      const parsed = libraryDownloadSchema.safeParse(snapshot.val());
-
-      if (parsed.success) {
-        setLibraryDownload(parsed.data);
-      } else {
-        setLibraryDownload(null);
-      }
-    });
-  }, [init, libraryId, listen, user]);
+    user && isConnected && init();
+  }, [init, isConnected, user]);
 
   useEffect(() => {
-    user && init();
-  }, [init, user]);
+    console.log({ shouldIngest });
+
+    if (shouldIngest) {
+      const lastKey = state?.lastKey;
+      console.log({ lastKey });
+      const mediaItemsRef = ref(database, FIREBASE.DATABASE.PATHS.LIBRARY_MEDIA_ITEMS(userId, libraryId));
+      const mediaItemsQuery = lastKey
+        ? query(mediaItemsRef, orderByKey(), startAfter(lastKey))
+        : query(mediaItemsRef, orderByKey());
+
+      const unsubscribe = onChildAdded(mediaItemsQuery, (snapshot) => {
+        addMediaItem({ mediaItem: { key: snapshot.key, ...snapshot.val() } });
+      });
+
+      return () => unsubscribe();
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [shouldIngest]);
 
   return {
     isLoading,
-    libraryDownload,
     actions: { start, pause, cancel, destroy },
+    state,
   };
 }

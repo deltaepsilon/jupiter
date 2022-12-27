@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "build": "turbo run build",
-    "dev": "cd apps/firebase && pnpm emulators & turbo run dev --parallel",
+    "dev": "turbo run dev --parallel",
     "clean": "turbo run clean",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\""
@@ -15,7 +15,12 @@
     "prettier": "^2.8.1",
     "turbo": "^1.6.3"
   },
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
   "engines": {
     "node": ">=16.0.0"
-  }
+  },
+  "packageManager": "yarn@3.3.1"
 }

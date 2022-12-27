@@ -17,8 +17,12 @@ export const payloadSchema = z.object({
       DirectoryAction.list,
       DirectoryAction.request,
       DirectoryAction.set,
+      DownloadAction.init,
       DownloadAction.start,
       DownloadAction.pause,
+      DownloadAction.cancel,
+      DownloadAction.destroy,
+      DownloadAction.addMediaItem,
     ])
     .optional(),
   error: z.string().optional(),

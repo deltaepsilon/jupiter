@@ -7,13 +7,19 @@ export function createFilesystemDatabase({ directory, libraryId }: { libraryId: 
   const dbPath = path.join(directory, '__f_stop_admin_data', `library-${libraryId}.json`);
   const fsdb = new FSDB(dbPath, false);
 
-  function set(key: string, value: any) {
+  function set<T>(key: string, value: T) {
     fsdb.set(key, value);
+
+    return value;
   }
 
   function get(key: string) {
     return fsdb.get(key);
   }
 
-  return { isDb: true, set, get };
+  function remove(key: string) {
+    return fsdb.delete(key);
+  }
+
+  return { isDb: true, set, get, remove };
 }

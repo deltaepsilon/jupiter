@@ -1,4 +1,4 @@
-import { QueueTasks } from '@jupiter/firebase-queue';
+// import { QueueTasks } from '@jupiter/firebase-queue';
 import { addParams } from './utils';
 import { firestoreDate } from './firestore';
 import { z } from 'zod';
@@ -65,14 +65,14 @@ export type MediaItems = MediaItem[];
 export type MediaItemTuple = [string, MediaItem];
 export type MediaItemTuples = MediaItemTuple[];
 
-export function extractTuplesFromQueueTasks(queueTasks: QueueTasks): MediaItemTuples {
-  return Object.values(queueTasks).map((queueTask) => {
-    const key = z.string().parse(queueTask.data.key);
-    const mediaItem = mediaItemSchema.parse(queueTask.data.mediaItem);
+// export function extractTuplesFromQueueTasks(queueTasks: QueueTasks): MediaItemTuples {
+//   return Object.values(queueTasks).map((queueTask) => {
+//     const key = z.string().parse(queueTask.data.key);
+//     const mediaItem = mediaItemSchema.parse(queueTask.data.mediaItem);
 
-    return [key, mediaItem];
-  });
-}
+//     return [key, mediaItem];
+//   });
+// }
 
 export function decorateImageBaseUrl(
   baseUrl: string,
