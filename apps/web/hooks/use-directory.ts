@@ -63,6 +63,9 @@ export function useDirectory(libraryId: string) {
     },
     [libraryId, send, updateRecord]
   );
+  const directory = daemonRecord?.directory;
 
-  return { directory: daemonRecord?.directory, isConnected, listDirectories, setDirectory };
+  console.log('useDirectory', directory);
+
+  return { directory, isConnected, listDirectories, setDirectory };
 }

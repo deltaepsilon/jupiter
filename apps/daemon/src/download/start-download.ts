@@ -4,6 +4,11 @@ import { createGettersAndSetters, refreshTokens } from '../utils';
 import { FilesystemDatabase } from '../db';
 import { SendMessage } from 'data/daemon';
 import axios from 'axios';
+import fsPromise from 'fs/promises';
+import { getMd5 } from '../exif';
+import path from 'path';
+
+const BATCH_SIZE = 50;
 
 export async function startDownload({ db, sendMessage }: { db: FilesystemDatabase; sendMessage: SendMessage }) {
   const { getIngestedIds, getState, getTokens, getUrls, setTokens } = createGettersAndSetters(db);
@@ -15,6 +20,22 @@ export async function startDownload({ db, sendMessage }: { db: FilesystemDatabas
 
   if (state.isRunning) {
     try {
+      /**
+       * - Index the filesystem
+       * - Find the next undownloaded media item
+       *  -- Can we use the filesystem as the source of truth???
+       *
+       * - Attempt to download it
+       * - If the url has expired, add it to a batchGetMediaItems request and update the local copy of the mediaItem
+       * - Add mediaItem to filesystem index
+       * - Recur
+       */
+
+      await indexFilesystem(db);
+
+      throw 'TODO: Implement';
+
+      // TODO: Don't refresh if unecessary
       const result = await axios.post(urls.batchGetMediaItems, {
         accessToken: tokens.accessToken,
         refreshToken: tokens.refreshToken,
@@ -33,16 +54,37 @@ export async function startDownload({ db, sendMessage }: { db: FilesystemDatabas
       console.log('error', error);
     }
   }
-
-  /**
-   * - Check if state.isRunning is true
-   * - Find the next undownloaded media item
-   * - Attempt to download it
-   * - Refresh the tokens if necessary
-   * - Recur
-   */
 }
 
 async function writeMediaItem(mediaItem: MediaItem) {
   return { id: mediaItem.id };
+}
+
+async function indexFilesystem(db: FilesystemDatabase, incomingPath = '') {
+  const { getDirectory, getState, getFileIndex, setFileIndex } = createGettersAndSetters(db);
+  const directory = getDirectory();
+  const directoryPath = incomingPath || directory.path;
+
+  if (!directory) {
+    throw new Error('Directory not set');
+  }
+
+  const files = await fsPromise.readdir(directoryPath, { withFileTypes: true });
+
+  await Promise.all(
+    files.map(async (file) => {
+      const fileOrFolderPath = path.resolve(directoryPath, file.name);
+
+      if (file.isDirectory()) {
+        console.log('found a directory', fileOrFolderPath);
+        // indexFilesystem(db, fileOrFolderPath);
+      } else {
+        const file = await getMd5(fileOrFolderPath);
+
+        console.log('file', file);
+      }
+    })
+  );
+
+  console.log(files);
 }

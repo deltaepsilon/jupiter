@@ -1,10 +1,15 @@
 import {
+  Directory,
+  DirectoryDbKeys,
   DownloadDbKeys,
   DownloadState,
+  FileIndex,
   IngestedIds,
   Tokens,
   Urls,
+  directorySchema,
   downloadStateSchema,
+  fileIndexSchema,
   ingestedIdsSchema,
   tokensSchema,
   urlsSchema,
@@ -17,6 +22,10 @@ export type GettersAndSetters = ReturnType<typeof createGettersAndSetters>;
 
 export function createGettersAndSetters(db: FilesystemDatabase) {
   return {
+    getDirectory: () => directorySchema.parse(db.get(DirectoryDbKeys.directory) || undefined),
+    setDirectory: (directory: Directory) =>
+      db.set<Directory>(DirectoryDbKeys.directory, directorySchema.parse(directory)),
+
     getState: () => downloadStateSchema.parse(db.get(DownloadDbKeys.state) || undefined),
     setState: (state: Omit<DownloadState, 'updated'>) =>
       db.set<DownloadState>(DownloadDbKeys.state, downloadStateSchema.parse(state)),
@@ -38,5 +47,12 @@ export function createGettersAndSetters(db: FilesystemDatabase) {
 
     getUrls: () => urlsSchema.parse(db.get(DownloadDbKeys.urls) || []),
     setUrls: (urls: Urls) => db.set<Urls>(DownloadDbKeys.urls, urlsSchema.parse(urls)),
+
+    getFileIndex: (md5: string) => urlsSchema.parse(db.get(`${DownloadDbKeys.files}.${md5}`) || null),
+    setFileIndex: (file: FileIndex) => {
+      const fileIndex = fileIndexSchema.parse(file);
+
+      return db.set<FileIndex>(`${DownloadDbKeys.files}.${fileIndex.md5}`, fileIndex);
+    },
   };
 }

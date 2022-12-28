@@ -26,8 +26,11 @@ export function DirectoryPicker({ children, directory = '', libraryId, sx = {} }
   const { isConnected, listDirectories, setDirectory } = useDirectory(libraryId);
   const updateDirectories = useCallback(
     async (navigate?: string) => {
-      const { payload } = await listDirectories({ currentDirectory, navigate });
-
+      const { payload } = await listDirectories({
+        currentDirectory,
+        navigate,
+      });
+      
       if (payload.data) {
         setCurrentDirectory(payload.data.currentDirectory);
         setDirectoryInput(payload.data.currentDirectory);

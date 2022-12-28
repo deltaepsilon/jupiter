@@ -1,5 +1,9 @@
 import { z } from 'zod';
 
+export enum DirectoryDbKeys {
+  directory = 'directory',
+}
+
 export enum DirectoryAction {
   set = 'set',
   request = 'request',

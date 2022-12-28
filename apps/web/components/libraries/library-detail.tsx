@@ -36,6 +36,8 @@ function LibraryDetailConnected({ library, libraryId }: { library: Library; libr
   const isRunning = libraryImport?.status === LibraryTaskStatus.running;
   const hasLibraryRecords = !!libraryImport?.count;
 
+  console.log('library detail', directory);
+
   return (
     <Container
       sx={{

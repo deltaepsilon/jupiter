@@ -1,6 +1,8 @@
 ## In Progress
 
-- [ ] Download media items
+- [ ] Move `useDirectory` to a shared context to prevent out-of-sync errors
+- [ ] Complete indexing of directory
+- [ ] Download media items while updating filesystem index
 - [ ] Create FilesystemDb queue to handle media items
 
 ## Next actions

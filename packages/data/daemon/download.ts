@@ -7,6 +7,7 @@ export enum DownloadDbKeys {
   state = 'state',
   tokens = 'tokens',
   urls = 'urls',
+  files = 'files',
 }
 
 const stringDate = z.preprocess((arg) => {
@@ -36,6 +37,7 @@ export enum DownloadAction {
   destroy = 'destroy',
 
   addMediaItem = 'add-media-item',
+  indexFilesystem = 'index-filesystem',
 }
 
 export const urlsSchema = z.object({ refreshAccessToken: z.string(), batchGetMediaItems: z.string() });
@@ -82,3 +84,10 @@ export const downloadDataSchema = z.object({
   urls: urlsSchema.optional(),
 });
 export type DownloadData = z.infer<typeof downloadDataSchema>;
+
+export const fileIndexSchema = z.object({
+  md5: z.string(),
+  relativePaths: z.array(z.string()),
+  mediaItemId: z.string().optional(),
+});
+export type FileIndex = z.infer<typeof fileIndexSchema>;

@@ -23,6 +23,7 @@ export const payloadSchema = z.object({
       DownloadAction.cancel,
       DownloadAction.destroy,
       DownloadAction.addMediaItem,
+      DownloadAction.indexFilesystem,
     ])
     .optional(),
   error: z.string().optional(),

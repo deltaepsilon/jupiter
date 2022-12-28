@@ -1,14 +1,28 @@
 {
   "name": "daemon",
   "main": "index.js",
+  "bin": "index.js",
   "scripts": {
-    "dev": "chokidar \"./src/**/*.ts\" -c \"yarn build:bundle\" & yarn dev:run",
+    "dev": "chokidar \"./src/**/*.ts\" -c \"yarn build:bundle\" & yarn dev:donotrun",
     "dev:donotrun": "echo not running",
     "dev:run": "nodemon index.js",
     "build": "yarn build:bundle && yarn build:pkg && yarn build:distribute",
     "build:bundle": "esbuild src/index.ts --bundle --platform=node --sourcemap --outfile=./index.js",
     "build:pkg": "pkg index.js --targets node16-linux-x64,node16-macos-x64,node16-win-x64 --out-path dist",
+    "build:pkg:json": "pkg --no-bytecode --public-packages '*' .",
     "build:distribute": "cp -r dist ../web/pages/daemon"
+  },
+  "pkg": {
+    "scripts": "index.js",
+    "assets": [
+      "vendor/**/*"
+    ],
+    "targets": [
+      "node16-linux-x64",
+      "node16-macos-x64",
+      "node16-win-x64"
+    ],
+    "outputPath": "dist"
   },
   "devDependencies": {
     "@types/ws": "^8.5.3",
@@ -19,7 +33,9 @@
   },
   "dependencies": {
     "axios": "^1.2.1",
+    "exiftool.pl": "^10.53.0",
     "file-system-db": "^1.1.0",
+    "md5-file": "^5.0.0",
     "windows-network-drive": "^4.0.1",
     "ws": "^8.11.0"
   }

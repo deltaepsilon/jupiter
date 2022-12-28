@@ -3729,7 +3729,10 @@ __metadata:
     axios: ^1.2.1
     chokidar-cli: ^3.0.0
     esbuild: ^0.16.9
+    exiftool.pl: ^10.53.0
     file-system-db: ^1.1.0
+    md5: ^2.3.0
+    md5-file: ^5.0.0
     nodemon: ^2.0.20
     pkg: ^5.8.0
     windows-network-drive: ^4.0.1
@@ -4777,10 +4780,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"exiftool@npm:^0.0.3":
-  version: 0.0.3
-  resolution: "exiftool@npm:0.0.3"
-  checksum: 6c9abf565725d700973a0ad07e56c7cc4bca17e45093fb3446f26184f19677acd27ef1e32a8c8014109320a8927b80ee1e4ffd1f3465a85230f43827f9ff5de3
+"exiftool.pl@npm:^10.53.0":
+  version: 10.53.0
+  resolution: "exiftool.pl@npm:10.53.0"
+  checksum: e902f87c9de2c8fcf28eda76c6aee0bb00d9572028ff6f188337f20056f885bcae085e759926253e65da5efd2a57c36b9a66883d265670bd8cc99e603ad8cdd7
   languageName: node
   linkType: hard
 
@@ -7410,6 +7413,15 @@ __metadata:
   bin:
     marked: bin/marked.js
   checksum: dd7da20a3983c66b516463fad5dc8d15dc70e137d20b6dc491e134f671e84bd2ed5f859e2c35f21e56830a122e4356b9e574bcde49b72b7ad6bc121a215a1a98
+  languageName: node
+  linkType: hard
+
+"md5-file@npm:^5.0.0":
+  version: 5.0.0
+  resolution: "md5-file@npm:5.0.0"
+  bin:
+    md5-file: cli.js
+  checksum: c606a00ff58adf5428e8e2f36d86e5d3c7029f9688126faca302cd83b5e92cac183a62e1d1f05fae7c2614e80f993326fd0a8d6a3a913c41ec7ea0eefc25aa76
   languageName: node
   linkType: hard
 
@@ -10820,7 +10832,6 @@ __metadata:
     axios: ^1.2.1
     eslint: 8.30.0
     eslint-config-custom: "*"
-    exiftool: ^0.0.3
     follow-redirects: ^1.15.2
     googleapis: ^109.0.1
     next: 13.0.7
