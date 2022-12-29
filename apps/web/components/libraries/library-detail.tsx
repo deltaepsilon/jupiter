@@ -1,8 +1,8 @@
 import { Box, Typography } from '@mui/material';
-import { DaemonProvider, useDaemon, useLibraries } from 'web/contexts';
+import { DaemonProvider, DirectoryProvider, useDaemon, useDirectory, useLibraries } from 'web/contexts';
 import { DownloadLibraryPanel, ImportLibraryPanel } from './panels';
 import { Library, LibraryTaskStatus } from 'data/library';
-import { useDaemonRecord, useDirectory, useLibraryDownload, useLibraryImport } from 'web/hooks';
+import { useDaemonRecord, useLibraryDownload, useLibraryImport } from 'web/hooks';
 
 import { Container } from 'ui/components';
 import { DaemonPanel } from 'web/components/daemon';
@@ -22,7 +22,9 @@ export function LibraryDetail() {
 
   return isLoading ? null : (
     <DaemonProvider handlers={handlers}>
-      <LibraryDetailConnected library={library} libraryId={libraryId} />
+      <DirectoryProvider libraryId={libraryId}>
+        <LibraryDetailConnected library={library} libraryId={libraryId} />
+      </DirectoryProvider>
     </DaemonProvider>
   );
 }
@@ -30,13 +32,11 @@ export function LibraryDetail() {
 function LibraryDetailConnected({ library, libraryId }: { library: Library; libraryId: string }) {
   const { actions: importActions, libraryImport } = useLibraryImport(libraryId);
   const { actions: downloadActions, state } = useLibraryDownload(libraryId, library);
-  const { directory } = useDirectory(libraryId);
+  const { directory } = useDirectory();
   const { isConnected: isDaemonConnected } = useDaemon();
   const isComplete = libraryImport?.status === LibraryTaskStatus.complete;
   const isRunning = libraryImport?.status === LibraryTaskStatus.running;
   const hasLibraryRecords = !!libraryImport?.count;
-
-  console.log('library detail', directory);
 
   return (
     <Container

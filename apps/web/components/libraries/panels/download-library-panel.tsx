@@ -15,12 +15,11 @@ import {
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import { DirectoryPicker } from 'web/components/daemon';
-import { LibraryTaskStatus } from 'data/library';
 import { MenuTrigger } from 'ui/components';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import PauseCircleOutlineIcon from '@mui/icons-material/PauseCircleOutline';
 import PlayCircleOutlineIcon from '@mui/icons-material/PlayCircleOutline';
-import { UseDirectoryResult } from 'web/hooks';
+import { UseDirectoryResult } from 'web/contexts';
 import { UseLibraryDownloadResult } from 'web/hooks/use-library-download';
 import { formatDate } from 'ui/utils';
 
@@ -50,7 +49,7 @@ export function DownloadLibraryPanel({ actions, directory, state, libraryId }: P
           {directory ?? 'No folder selected'}
         </Typography>
 
-        <DirectoryPicker directory={directory} libraryId={libraryId} sx={{ gridColumn: '3/5' }}>
+        <DirectoryPicker directory={directory} disabled={isRunning} libraryId={libraryId} sx={{ gridColumn: '3/5' }}>
           <Button disabled={isRunning} variant={directory ? 'outlined' : 'contained'}>
             Pick Folder
           </Button>

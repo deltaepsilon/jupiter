@@ -12,18 +12,6 @@
     "build:pkg:json": "pkg --no-bytecode --public-packages '*' .",
     "build:distribute": "cp -r dist ../web/pages/daemon"
   },
-  "pkg": {
-    "scripts": "index.js",
-    "assets": [
-      "vendor/**/*"
-    ],
-    "targets": [
-      "node16-linux-x64",
-      "node16-macos-x64",
-      "node16-win-x64"
-    ],
-    "outputPath": "dist"
-  },
   "devDependencies": {
     "@types/ws": "^8.5.3",
     "chokidar-cli": "^3.0.0",

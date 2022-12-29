@@ -1,4 +1,12 @@
-import { DirectoryAction, MessageType, listDirectoriesData, setDirectoryData } from 'data/daemon';
+import {
+  DaemonMessage,
+  DirectoryAction,
+  MessageType,
+  daemonMessage,
+  listDirectoriesData,
+  setDirectoryData,
+} from 'data/daemon';
+import { createContext, useContext } from 'react';
 
 import { DaemonRecordKey } from 'data/daemon';
 import produce from 'immer';
@@ -6,9 +14,26 @@ import { useCallback } from 'react';
 import { useDaemon } from 'web/contexts';
 import { useDaemonRecord } from 'web/hooks';
 
-export type UseDirectoryResult = ReturnType<typeof useDirectory>;
+export interface UseDirectoryResult {
+  directory?: string;
+  isConnected: boolean;
+  listDirectories: (data: unknown) => Promise<DaemonMessage>;
+  setDirectory: (directory: string) => Promise<DaemonMessage>;
+}
 
-export function useDirectory(libraryId: string) {
+export const DirectoryContext = createContext<UseDirectoryResult>({
+  isConnected: false,
+  listDirectories: async () =>
+    daemonMessage.parse({ type: MessageType.directory, payload: { action: DirectoryAction.list } }),
+  setDirectory: async () =>
+    daemonMessage.parse({ type: MessageType.directory, payload: { action: DirectoryAction.set } }),
+});
+
+export function useDirectory() {
+  return useContext(DirectoryContext);
+}
+
+export function DirectoryProvider({ children, libraryId }: { children: React.ReactNode; libraryId: string }) {
   const { daemonRecord, updateRecord } = useDaemonRecord(libraryId);
   const { send, isConnected } = useDaemon();
   const listDirectories = useCallback(
@@ -63,9 +88,7 @@ export function useDirectory(libraryId: string) {
     },
     [libraryId, send, updateRecord]
   );
-  const directory = daemonRecord?.directory;
+  const value = { directory: daemonRecord?.directory, isConnected, listDirectories, setDirectory };
 
-  console.log('useDirectory', directory);
-
-  return { directory, isConnected, listDirectories, setDirectory };
+  return <DirectoryContext.Provider value={value}>{children}</DirectoryContext.Provider>;
 }

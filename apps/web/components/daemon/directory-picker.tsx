@@ -7,30 +7,31 @@ import FolderIcon from '@mui/icons-material/Folder';
 import { ListDirectoriesData } from 'data/daemon';
 import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
-import { useDirectory } from 'web/hooks';
+import { useDirectory } from 'web/contexts';
 import { useModalState } from 'ui/hooks';
 
 interface Props {
   children: React.ReactNode;
+  disabled?: boolean;
   directory?: string;
   libraryId: string;
   sx?: SxProps;
 }
 
-export function DirectoryPicker({ children, directory = '', libraryId, sx = {} }: Props) {
+export function DirectoryPicker({ children, disabled = false, directory = '', libraryId, sx = {} }: Props) {
   const [directoryInput, setDirectoryInput] = useState<string>(directory);
   const [currentDirectory, setCurrentDirectory] = useState<ListDirectoriesData['currentDirectory']>(directory);
   const [childDirectories, setChildDirectories] = useState<ListDirectoriesData['childDirectories']>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const { isOpen, onOpen, onClose } = useModalState({ autoOpenHash: 'directory-picker' });
-  const { isConnected, listDirectories, setDirectory } = useDirectory(libraryId);
+  const { isConnected, listDirectories, setDirectory } = useDirectory();
   const updateDirectories = useCallback(
     async (navigate?: string) => {
       const { payload } = await listDirectories({
         currentDirectory,
         navigate,
       });
-      
+
       if (payload.data) {
         setCurrentDirectory(payload.data.currentDirectory);
         setDirectoryInput(payload.data.currentDirectory);
@@ -44,11 +45,13 @@ export function DirectoryPicker({ children, directory = '', libraryId, sx = {} }
   );
   const getNavigate = useCallback((navigate: string) => () => updateDirectories(navigate), [updateDirectories]);
   const onChildClick = useCallback(async () => {
-    setIsLoading(true);
-    onOpen();
+    if (!disabled) {
+      setIsLoading(true);
+      onOpen();
 
-    setIsLoading(false);
-  }, [onOpen]);
+      setIsLoading(false);
+    }
+  }, [disabled, onOpen]);
   const onChoose = useCallback(async () => {
     await setDirectory(currentDirectory);
 

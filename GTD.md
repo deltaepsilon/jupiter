@@ -1,6 +1,5 @@
 ## In Progress
 
-- [ ] Move `useDirectory` to a shared context to prevent out-of-sync errors
 - [ ] Complete indexing of directory
 - [ ] Download media items while updating filesystem index
 - [ ] Create FilesystemDb queue to handle media items
@@ -35,6 +34,7 @@
 
 ## Archive
 
+- [x] Move `useDirectory` to a shared context to prevent out-of-sync errors
 - [x] Stream in media items
 - [x] Wire up Download actions
 - [x] Restore library import
