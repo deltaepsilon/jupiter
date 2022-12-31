@@ -1,0 +1,1 @@
+yarn build:pkg && (cd dist/linux && ./daemon)

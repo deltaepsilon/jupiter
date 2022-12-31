@@ -36,9 +36,11 @@ wss.on('connection', async (ws) => {
       }
 
       case MessageType.download:
-        if (!db) throw 'FilesystemDatabase not initialized';
-
-        return download({ db, message, sendMessage });
+        if (!db) {
+          return sendMessage({ type: MessageType.download, payload: { error: 'Filesystem database not initialized' } });
+        } else {
+          return download({ db, message, sendMessage });
+        }
 
       default:
         console.error('unhandled message', message);

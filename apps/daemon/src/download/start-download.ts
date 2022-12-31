@@ -1,90 +1,81 @@
+import { DaemonMessage, MessageType, SendMessage } from 'data/daemon';
 import { MediaItem, batchGetMediaItemsResponseSchema } from 'data/media-items';
-import { createGettersAndSetters, refreshTokens } from '../utils';
 
 import { FilesystemDatabase } from '../db';
-import { SendMessage } from 'data/daemon';
 import axios from 'axios';
-import fsPromise from 'fs/promises';
-import { getMd5 } from '../exif';
-import path from 'path';
+import { createGettersAndSetters } from '../utils';
+import { downloadMediaItems } from './download-media-items';
+import { indexFilesystem } from './index-filesystem';
 
 const BATCH_SIZE = 50;
 
-export async function startDownload({ db, sendMessage }: { db: FilesystemDatabase; sendMessage: SendMessage }) {
-  const { getIngestedIds, getState, getTokens, getUrls, setTokens } = createGettersAndSetters(db);
-  const tokens = getTokens();
+interface Args {
+  db: FilesystemDatabase;
+  message: DaemonMessage;
+  sendMessage: SendMessage;
+}
+
+export async function startDownload({ db, message, sendMessage }: Args) {
+  const { getDownloadedIds, getIngestedIds, getState, setState } = createGettersAndSetters(db);
   const state = getState();
-  const urls = getUrls();
-  const ingestedIds = getIngestedIds();
-  const mediaItemId = [...ingestedIds][0];
 
   if (state.isRunning) {
     try {
-      /**
-       * - Index the filesystem
-       * - Find the next undownloaded media item
-       *  -- Can we use the filesystem as the source of truth???
-       *
-       * - Attempt to download it
-       * - If the url has expired, add it to a batchGetMediaItems request and update the local copy of the mediaItem
-       * - Add mediaItem to filesystem index
-       * - Recur
-       */
+      const indexingComplete = await indexFilesystem({ db, sendMessage });
 
-      await indexFilesystem(db);
+      if (indexingComplete) {
+        const mediaItemIds = [...getIngestedIds()].filter((id) => !getDownloadedIds().has(id));
 
-      throw 'TODO: Implement';
+        setState({
+          ...state,
+          isIndexComplete: true,
+          text: `Local file index complete. Downloading ${mediaItemIds.length} new media items`,
+        });
 
-      // TODO: Don't refresh if unecessary
-      const result = await axios.post(urls.batchGetMediaItems, {
-        accessToken: tokens.accessToken,
-        refreshToken: tokens.refreshToken,
-        mediaItemIds: [mediaItemId].join(','),
-      });
-      const { accessToken, refreshToken, expiresAt, mediaItemResults } = batchGetMediaItemsResponseSchema.parse(
-        result.data
-      );
+        await Promise.all(
+          batchMediaItemIds(mediaItemIds)
+            .slice(0, 1)
+            .map((mediaItemIds) => downloadMediaItems({ mediaItemIds, db, sendMessage }))
+        );
 
-      const results = await Promise.all(mediaItemResults.map(async ({ mediaItem }) => writeMediaItem(mediaItem)));
+        throw new Error("Don't forget to set state to complete");
 
-      setTokens({ accessToken, refreshToken, expiresAt: new Date(expiresAt) });
-
-      console.log('results', results);
+        // setState({ ...state, isDownloadComplete: true, isRunning: false, text: 'Media item download complete' });
+      }
     } catch (error) {
       console.log('error', error);
+      console.log('instance', error instanceof Error);
+
+      const state = getState();
+
+      setState({ ...state, isRunning: false, text: 'Stopping due to error' });
+
+      if (typeof error === 'string') {
+        sendMessage({ type: MessageType.download, payload: { error }, uuid: message.uuid });
+      } else if (error instanceof Error) {
+        let errorText = error.toString();
+
+        if (errorText.includes('ENOENT')) {
+          const matches = errorText.match(/'.+'/);
+          errorText = `File not found: ${matches?.[0] || errorText}`;
+        }
+
+        sendMessage({ type: MessageType.download, payload: { error: errorText }, uuid: message.uuid });
+      }
     }
   }
 }
 
-async function writeMediaItem(mediaItem: MediaItem) {
-  return { id: mediaItem.id };
-}
+function batchMediaItemIds(mediaItemIds: string[]) {
+  return mediaItemIds.reduce((acc, id, index) => {
+    const batchIndex = Math.floor(index / BATCH_SIZE);
 
-async function indexFilesystem(db: FilesystemDatabase, incomingPath = '') {
-  const { getDirectory, getState, getFileIndex, setFileIndex } = createGettersAndSetters(db);
-  const directory = getDirectory();
-  const directoryPath = incomingPath || directory.path;
+    if (!acc[batchIndex]) {
+      acc[batchIndex] = [];
+    }
 
-  if (!directory) {
-    throw new Error('Directory not set');
-  }
+    acc[batchIndex].push(id);
 
-  const files = await fsPromise.readdir(directoryPath, { withFileTypes: true });
-
-  await Promise.all(
-    files.map(async (file) => {
-      const fileOrFolderPath = path.resolve(directoryPath, file.name);
-
-      if (file.isDirectory()) {
-        console.log('found a directory', fileOrFolderPath);
-        // indexFilesystem(db, fileOrFolderPath);
-      } else {
-        const file = await getMd5(fileOrFolderPath);
-
-        console.log('file', file);
-      }
-    })
-  );
-
-  console.log(files);
+    return acc;
+  }, [] as string[][]);
 }

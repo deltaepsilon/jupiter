@@ -1,9 +1,16 @@
-import { DownloadAction, DownloadData, DownloadState, MessageType, downloadDataSchema } from 'data/daemon';
-import { Library, LibraryDownload, libraryDownloadSchema } from 'data/library';
-import { limitToFirst, onChildAdded, orderByKey, query, ref, startAfter, startAt } from 'firebase/database';
+import {
+  DEFAULT_DOWNLOAD_STATE,
+  DownloadAction,
+  DownloadData,
+  DownloadState,
+  MessageType,
+  downloadDataSchema,
+} from 'data/daemon';
+import { onChildAdded, orderByKey, query, ref, startAfter, startAt } from 'firebase/database';
 import { useEffect, useMemo, useState } from 'react';
 
 import { FIREBASE } from 'data/firebase';
+import { Library } from 'data/library';
 import { MediaItem } from 'data/media-items';
 import { createQueue } from 'ui/utils';
 import { useAuth } from 'ui/contexts';
@@ -14,8 +21,8 @@ export type UseLibraryDownloadResult = ReturnType<typeof useLibraryDownload>;
 
 export function useLibraryDownload(libraryId: string, library: Library) {
   const { user } = useAuth();
-  const { isConnected, send } = useDaemon();
-  const [state, setState] = useState<DownloadState>();
+  const { isDbReady, registerHandler, send } = useDaemon();
+  const [state, setState] = useState<DownloadState>(DEFAULT_DOWNLOAD_STATE);
   const { database } = useRtdb();
   const { init, start, pause, cancel, destroy, addMediaItem } = useMemo(() => {
     function createSender(action: DownloadAction) {
@@ -64,11 +71,24 @@ export function useLibraryDownload(libraryId: string, library: Library) {
   const isLoading = typeof state === 'undefined';
   const userId = user?.uid;
   const shouldIngest =
-    isConnected && state && !state?.isIngestComplete && state.isRunning && !!database && !!userId && !!libraryId;
+    isDbReady && state && !state?.isIngestComplete && state.isRunning && !!database && !!userId && !!libraryId;
 
   useEffect(() => {
-    user && isConnected && init();
-  }, [init, isConnected, user]);
+    user && isDbReady && init();
+  }, [init, isDbReady, user]);
+
+  useEffect(() => {
+    return registerHandler({
+      type: MessageType.download,
+      handler: (message) => {
+        if (message.payload?.data) {
+          const { state } = downloadDataSchema.parse(message.payload.data);
+
+          setState(state);
+        }
+      },
+    });
+  }, [registerHandler]);
 
   useEffect(() => {
     if (shouldIngest) {

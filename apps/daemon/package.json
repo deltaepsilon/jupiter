@@ -3,27 +3,39 @@
   "main": "index.js",
   "bin": "index.js",
   "scripts": {
-    "dev": "chokidar \"./src/**/*.ts\" -c \"yarn build:bundle\" & yarn dev:donotrun",
-    "dev:donotrun": "echo not running",
+    "dev": "chokidar \"./src/**/*.ts\" -c \"yarn build:bundle\" & yarn dev:run",
+    "dev:pkg": "chokidar \"./src/**/*.ts\" -c \"yarn build:bundle\"",
     "dev:run": "nodemon index.js",
     "build": "yarn build:bundle && yarn build:pkg && yarn build:distribute",
     "build:bundle": "esbuild src/index.ts --bundle --platform=node --sourcemap --outfile=./index.js",
-    "build:pkg": "pkg index.js --targets node16-linux-x64,node16-macos-x64,node16-win-x64 --out-path dist",
-    "build:pkg:json": "pkg --no-bytecode --public-packages '*' .",
+    "build:pkg": "pkg . && yarn build:linux && yarn build:macos && yarn build:windows",
+    "build:linux": "rm -rf dist/linux && mkdir dist/linux && mv dist/daemon-linux dist/linux/daemon && cp -r vendor dist/linux/vendor && rm dist/linux/vendor/exiftool.exe",
+    "build:macos": "rm -rf dist/macos && mkdir dist/macos && mv dist/daemon-macos dist/macos/daemon && cp -r vendor dist/macos/vendor && rm dist/macos/vendor/exiftool.exe",
+    "build:windows": "rm -rf dist/windows && mkdir dist/windows && mv dist/daemon-win.exe dist/windows/daemon.exe && cp -r vendor dist/windows/vendor && rm dist/windows/vendor/exiftool && rm -r dist/windows/vendor/lib",
     "build:distribute": "cp -r dist ../web/pages/daemon"
+  },
+  "pkg": {
+    "scripts": "index.js",
+    "assets": [
+      "vendor/**/*"
+    ],
+    "targets": [
+      "node16-linux-x64",
+      "node16-macos-x64",
+      "node16-win-x64"
+    ],
+    "outputPath": "dist"
   },
   "devDependencies": {
     "@types/ws": "^8.5.3",
+    "axios": "^1.2.1",
     "chokidar-cli": "^3.0.0",
     "esbuild": "^0.16.9",
-    "nodemon": "^2.0.20",
-    "pkg": "^5.8.0"
-  },
-  "dependencies": {
-    "axios": "^1.2.1",
     "exiftool.pl": "^10.53.0",
     "file-system-db": "^1.1.0",
     "md5-file": "^5.0.0",
+    "nodemon": "^2.0.20",
+    "pkg": "^5.8.0",
     "windows-network-drive": "^4.0.1",
     "ws": "^8.11.0"
   }

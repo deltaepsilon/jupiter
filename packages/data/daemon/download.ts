@@ -2,12 +2,14 @@ import { mediaItemSchema } from '../media-items';
 import { z } from 'zod';
 
 export enum DownloadDbKeys {
+  downloadedIds = 'downloadedIds',
+  files = 'files',
+  filesIndexByFilename = 'filesIndexByFilename',
   ingestedIds = 'ingestedIds',
   mediaItems = 'mediaItems',
   state = 'state',
   tokens = 'tokens',
   urls = 'urls',
-  files = 'files',
 }
 
 const stringDate = z.preprocess((arg) => {
@@ -28,6 +30,15 @@ export const ingestedIdsSchema = z.preprocess((val) => {
   return val;
 }, z.set(z.string()));
 export type IngestedIds = z.infer<typeof ingestedIdsSchema>;
+
+export const downloadedIdsSchema = z.preprocess((val) => {
+  if (Array.isArray(val)) {
+    return new Set(val);
+  }
+
+  return val;
+}, z.set(z.string()));
+export type DownloadedIds = z.infer<typeof downloadedIdsSchema>;
 
 export enum DownloadAction {
   init = 'init',
@@ -56,10 +67,12 @@ export const downloadStateSchema = z
     isRunning: z.boolean().default(false),
     isDownloadComplete: z.boolean().default(false),
     isIngestComplete: z.boolean().default(false),
+    isIndexComplete: z.boolean().default(false),
     lastKey: z.string().optional(),
     ingestedCount: z.number().default(0),
     downloadedCount: z.number().default(0),
     progress: z.number(),
+    filesystemProgress: z.number(),
     text: z.string(),
     updated: stringDate.default(() => new Date()),
   })
@@ -67,12 +80,16 @@ export const downloadStateSchema = z
     isRunning: false,
     isDownloadComplete: false,
     isIngestComplete: false,
+    isIndexComplete: false,
     progress: 0,
+    filesystemProgress: 0,
     ingestedCount: 0,
     downloadedCount: 0,
     text: '',
     updated: new Date(),
   });
+
+export const DEFAULT_DOWNLOAD_STATE = downloadStateSchema.parse(undefined);
 
 export type DownloadState = z.infer<typeof downloadStateSchema>;
 
@@ -91,3 +108,8 @@ export const fileIndexSchema = z.object({
   mediaItemId: z.string().optional(),
 });
 export type FileIndex = z.infer<typeof fileIndexSchema>;
+
+export const fileIndexByFilepathSchema = z.object({
+  fileIndexKey: z.string(),
+});
+export type FileIndexByFilepath = z.infer<typeof fileIndexByFilepathSchema>;

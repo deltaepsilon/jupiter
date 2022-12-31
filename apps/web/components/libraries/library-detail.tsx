@@ -16,7 +16,8 @@ export function LibraryDetail() {
   const [libraryId, library] = libraries[0];
   const { daemonRecord, isLoading } = useDaemonRecord(libraryId);
   const handlers = useMemo(
-    () => (daemonRecord ? new Map([[MessageType.directory, getDirectoryHandler(libraryId, daemonRecord)]]) : new Map()),
+    () =>
+      daemonRecord ? [{ type: MessageType.directory, handler: getDirectoryHandler(libraryId, daemonRecord) }] : [],
     [daemonRecord, libraryId]
   );
 

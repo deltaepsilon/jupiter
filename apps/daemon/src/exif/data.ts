@@ -1,3 +1,7 @@
 import path from 'path';
 
-export const EXIFTOOL_PATH = path.join(__dirname, 'vendor', 'exiftool');
+const isWindows = process.platform === 'win32';
+
+export const EXIFTOOL_PATH = isWindows
+  ? path.join('vendor', 'exiftool.exe')
+  : path.join('vendor', 'exiftool');

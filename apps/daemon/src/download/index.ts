@@ -1,4 +1,5 @@
 import {
+  DEFAULT_DOWNLOAD_STATE,
   DaemonMessage,
   DownloadAction,
   DownloadState,
@@ -44,7 +45,7 @@ export async function download({
         setUrls(urls);
       }
 
-      isRunning && startDownload({ db, sendMessage });
+      isRunning && startDownload({ db, message, sendMessage });
 
       break;
 
@@ -57,7 +58,7 @@ export async function download({
         tokens,
       });
 
-      startDownload({ db, sendMessage });
+      startDownload({ db, message, sendMessage });
       break;
 
     case DownloadAction.pause:
@@ -139,16 +140,7 @@ function destroy({
 }: Pick<GettersAndSetters, 'removeMediaItems' | 'setIngestedIds' | 'setState'>) {
   removeMediaItems();
   setIngestedIds(new Set([]));
-  setState({
-    isRunning: false,
-    isDownloadComplete: false,
-    isIngestComplete: false,
-    ingestedCount: 0,
-    downloadedCount: 0,
-    lastKey: undefined,
-    progress: 0,
-    text: 'Idle',
-  });
+  setState(DEFAULT_DOWNLOAD_STATE);
 }
 
 function addMediaItem({

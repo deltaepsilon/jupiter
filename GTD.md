@@ -1,6 +1,5 @@
 ## In Progress
 
-- [ ] Complete indexing of directory
 - [ ] Download media items while updating filesystem index
 - [ ] Create FilesystemDb queue to handle media items
 
@@ -34,6 +33,7 @@
 
 ## Archive
 
+- [x] Complete indexing of directory
 - [x] Move `useDirectory` to a shared context to prevent out-of-sync errors
 - [x] Stream in media items
 - [x] Wire up Download actions

@@ -8,7 +8,7 @@ export function getDirectoryHandler(libraryId: string, daemonRecord: DaemonRecor
   return (message: DaemonMessage, respond: Respond) => {
     const isRequest = message.payload.action === DirectoryAction.request;
 
-    isRequest &&
+    if (isRequest) {
       respond({
         type: MessageType.directory,
         payload: {
@@ -17,5 +17,6 @@ export function getDirectoryHandler(libraryId: string, daemonRecord: DaemonRecor
           data,
         },
       });
+    }
   };
 }

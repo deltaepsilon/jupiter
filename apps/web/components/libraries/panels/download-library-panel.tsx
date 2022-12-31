@@ -63,7 +63,11 @@ export function DownloadLibraryPanel({ actions, directory, state, libraryId }: P
         }}
       >
         <Box sx={{ position: 'relative' }}>
-          <LinearProgress value={isComplete ? 100 : state?.progress ?? 0} variant='determinate' />
+          <LinearProgress
+            value={isComplete ? 100 : state.progress * 100 ?? 0}
+            valueBuffer={state.filesystemProgress * 100}
+            variant='buffer'
+          />
           <Typography sx={{ position: 'absolute', inset: '0 0 -5 0' }} variant='caption'>
             {formatDate(state?.updated, 'MMM d, yyyy •  HH:mm:ss')}
           </Typography>
@@ -120,7 +124,7 @@ function ActionButton({ actions, state }: Pick<Props, 'actions' | 'state'>) {
 
     default:
       return (
-        <IconButton onClick={() => actions.start()}>
+        <IconButton onClick={async () => actions.start()}>
           <PlayCircleOutlineIcon fontSize='large' sx={{ color: 'var(--color-gentian-blue-metallic)' }} />
         </IconButton>
       );

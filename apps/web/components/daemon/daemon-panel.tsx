@@ -13,12 +13,13 @@ const PING_PAYLOAD = { type: MessageType.ping, payload: { text: 'ping' } };
 export function DaemonPanel() {
   const scrollableRef = useRef<HTMLDivElement>(null);
   const { connect, emptyMessages, isConnected, messages, send } = useDaemon();
+  const lastMessage = messages[messages.length - 1];
 
   useEffect(() => {
     if (scrollableRef.current) {
       scrollableRef.current.scrollTop = scrollableRef.current.scrollHeight;
     }
-  }, [messages.length]);
+  }, [lastMessage?.created]);
 
   return (
     <Paper elevation={1}>
@@ -33,8 +34,11 @@ export function DaemonPanel() {
 
       <HiddenScroll ref={scrollableRef} sx={{ height: 200, scrollBehavior: 'smooth' }}>
         {messages
-          .filter((m) => m.payload.text)
+          .filter((m) => m.payload.text || m.payload.error)
           .map((message) => {
+            const text = message.payload.text || message.payload.error;
+            const isError = message.payload.error;
+
             return (
               <Box
                 key={message.uuid + message.created}
@@ -42,12 +46,14 @@ export function DaemonPanel() {
                   display: 'flex',
                   gridGap: 8,
                   paddingY: '1px',
-                  p: { color: message.isClient ? 'var(--color-miami-blue)' : null },
+                  p: {
+                    color: message.isClient ? 'var(--color-miami-blue)' : isError ? 'var(--color-lava-orange)' : null,
+                  },
                 }}
               >
                 <Typography variant='body2'>{format(new Date(message.created), 'K:mm:ss')}:</Typography>
                 <Typography key={message.uuid} variant='body2'>
-                  {message.payload.text}
+                  {text}
                 </Typography>
               </Box>
             );

@@ -1,5 +1,6 @@
 import { EXIFTOOL_PATH } from './data';
 import { execFile } from 'child_process';
+import { exifSchema } from 'data/daemon';
 
 export function getExif(filepath: string) {
   return new Promise((resolve, reject) => {
@@ -12,6 +13,8 @@ export function getExif(filepath: string) {
       resolve(stdout);
     });
   }).then((stdout) => {
-    return JSON.parse(stdout as string);
+    const [json] = JSON.parse(stdout as string);
+
+    return exifSchema.parse(json);
   });
 }

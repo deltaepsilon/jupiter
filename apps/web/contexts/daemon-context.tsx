@@ -15,7 +15,9 @@ export interface DaemonValue {
   connect: () => void;
   emptyMessages: () => Promise<void>;
   isConnected: boolean;
+  isDbReady: boolean;
   messages: DaemonMessages;
+  registerHandler: (messageTypeHandler: MessageTypeHandler) => () => void;
   send: (message: GetMessageArgs) => Promise<DaemonMessage>;
 }
 
@@ -28,12 +30,15 @@ const DaemonContext = createContext<DaemonValue>({
   connect: () => {},
   emptyMessages: async () => {},
   isConnected: false,
+  isDbReady: false,
   messages: [],
+  registerHandler: () => () => {},
   send: async () => daemonMessage.parse({ payload: { error: 'not sent' } }),
 });
 
 export type Respond = (message: GetMessageArgs) => void;
 type MessageHandler = (message: DaemonMessage, respond: Respond) => void;
+type MessageTypeHandler = { type: MessageType; handler: MessageHandler };
 
 export function useDaemon() {
   return useContext(DaemonContext);
@@ -41,35 +46,54 @@ export function useDaemon() {
 
 interface Props {
   children: React.ReactNode;
-  handlers: Map<MessageType, MessageHandler>;
+  handlers: MessageTypeHandler[];
 }
 
 export function DaemonProvider({ children, handlers }: Props) {
-  const resolversRef = useRef<ResolversMap>(new Map());
   const [messages, setMessages] = useState<DaemonMessages>([]);
+  const [isDbReady, setIsDbReady] = useState(false);
+  const resolversRef = useRef<ResolversMap>(new Map());
+  const localHandlersRef = useRef<MessageTypeHandler[]>([
+    {
+      type: MessageType.directory,
+      handler: (message) => {
+        if (message.payload?.data?.directory) {
+          setIsDbReady(true);
+        }
+      },
+    },
+  ]);
   const onMessage = useCallback(
     async (message: DaemonMessage, responseWs: WebSocket) => {
       const messages = await localforage.getDaemonMessages();
       const resolvers = resolversRef.current.get(message.uuid);
-      const updated = [...messages, message].slice(-100);
-      const handler = handlers.get(message.type);
 
-      if (handler) {
-        handler(message, function respond(message: GetMessageArgs) {
-          if (responseWs) {
-            const { stringified } = encodeMessage(message);
+      if (!message.isClient) {
+        const typeHandlers = [...handlers, ...localHandlersRef.current].filter(({ type }) => type === message.type);
 
-            responseWs.send(stringified);
-          }
-        });
+        await Promise.all(
+          typeHandlers.map(async ({ handler }) =>
+            handler(message, function respond(message: GetMessageArgs) {
+              if (responseWs) {
+                const { stringified } = encodeMessage(message);
+
+                responseWs.send(stringified);
+              }
+            })
+          )
+        );
       }
 
       if (resolvers && !message.isClient) {
         message.success ? resolvers.resolve(message) : resolvers.reject(message);
       }
 
-      await localforage.setDaemonMessages(updated);
-      setMessages(updated);
+      if (message.payload.text || message.payload.error) {
+        const updated = [...messages, message].slice(-100);
+
+        await localforage.setDaemonMessages(updated);
+        setMessages(updated);
+      }
     },
     [handlers]
   );
@@ -95,7 +119,16 @@ export function DaemonProvider({ children, handlers }: Props) {
       }),
     [onMessage, ws]
   );
-  const value = { connect, emptyMessages, isConnected, messages, send };
+  const registerHandler = useCallback((messageTypeHandler: MessageTypeHandler) => {
+    localHandlersRef.current.push(messageTypeHandler);
+
+    return () => {
+      localHandlersRef.current = localHandlersRef.current.filter(
+        ({ handler }) => handler !== messageTypeHandler.handler
+      );
+    };
+  }, []);
+  const value = { connect, emptyMessages, isConnected, isDbReady, messages, registerHandler, send };
 
   useEffect(() => {
     localforage.getDaemonMessages().then((messages) => {
