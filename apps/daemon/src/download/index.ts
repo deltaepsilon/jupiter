@@ -2,14 +2,14 @@ import {
   DEFAULT_DOWNLOAD_STATE,
   DaemonMessage,
   DownloadAction,
-  DownloadState,
   MessageType,
   SendMessage,
-  Tokens,
   daemonMessage,
   downloadDataSchema,
+  getIsRunning,
+  updateFolder,
 } from 'data/daemon';
-import { GettersAndSetters, createGettersAndSetters } from '../utils';
+import { createGettersAndSetters, getFolderFromDate } from '../utils';
 
 import { FilesystemDatabase } from 'daemon/src/db';
 import { startDownload } from './start-download';
@@ -24,24 +24,22 @@ export async function download({
   sendMessage: SendMessage;
 }) {
   const uuid = message.uuid;
-  const { libraryId, urls } = downloadDataSchema.parse(message.payload.data);
+  const { folder, libraryId, tokens, urls } = downloadDataSchema.parse(message.payload.data);
   const response = daemonMessage.parse({
     type: MessageType.download,
     payload: { action: message.payload.action },
     uuid,
   });
-  const { getIngestedIds, getState, removeMediaItems, setIngestedIds, setMediaItem, setState, setTokens, setUrls } =
-    createGettersAndSetters(db);
-  const state = getState();
-  const isRunning = state.isRunning;
-
-  const { tokens } = downloadDataSchema.parse(message.payload.data);
+  const { getDownloadState, setTokens, setUrls } = createGettersAndSetters(db);
+  const downloadState = getDownloadState();
+  const isRunning = getIsRunning(downloadState);
 
   switch (message.payload.action) {
     case DownloadAction.init:
       if (!urls) {
         throw new Error('No URLs provided');
       } else {
+        tokens && setTokens(tokens);
         setUrls(urls);
       }
 
@@ -51,18 +49,15 @@ export async function download({
 
     case DownloadAction.start:
       start({
+        db,
         response,
-        setState,
-        setTokens,
-        state,
-        tokens,
       });
 
       startDownload({ db, message, sendMessage });
       break;
 
     case DownloadAction.pause:
-      pause({ setState, state });
+      pause({ db });
 
       break;
 
@@ -70,23 +65,13 @@ export async function download({
       break;
 
     case DownloadAction.destroy:
-      destroy({
-        removeMediaItems,
-        setIngestedIds,
-        setState,
-      });
+      destroy({ db });
+      response.payload.text = 'Download destroyed.';
+
       break;
 
     case DownloadAction.addMediaItem: {
-      addMediaItem({
-        message,
-        response,
-        getIngestedIds,
-        setIngestedIds,
-        setMediaItem,
-        setState,
-        state,
-      });
+      addMediaItem({ db, message, response });
       break;
     }
 
@@ -94,82 +79,85 @@ export async function download({
       break;
   }
 
-  response.payload.data = downloadDataSchema.parse({ libraryId, state: getState() });
+  response.payload.data = downloadDataSchema.parse({ libraryId, state: getDownloadState() });
 
   return sendMessage(response);
 }
 
-function start({
-  response,
-  setState,
-  setTokens,
-  state,
-  tokens,
-}: {
-  response: DaemonMessage;
-  setState: GettersAndSetters['setState'];
-  setTokens: GettersAndSetters['setTokens'];
-  state: DownloadState;
-  tokens?: Tokens;
-}) {
+function start({ db, response }: { db: FilesystemDatabase; response: DaemonMessage }) {
+  const { updateDownloadState, setTokens, getDownloadState, getTokens } = createGettersAndSetters(db);
+  const downloadState = getDownloadState();
+  const tokens = getTokens();
+
   response.payload.text = 'Starting download...';
 
-  if (!state.isIngestComplete) {
-    setState({
-      ...state,
-      isRunning: true,
+  if (downloadState.state === 'idle') {
+    updateDownloadState({
+      isPaused: false,
+      state: 'ingesting',
       text: 'Transferring media items to daemon',
     });
+  } else {
+    updateDownloadState({ isPaused: false, text: 'Resuming download...' });
   }
 
   tokens && setTokens(tokens);
 }
 
-function pause({ setState, state }: { setState: GettersAndSetters['setState']; state: DownloadState }) {
-  setState({
-    ...state,
-    isRunning: false,
+function pause({ db }: { db: FilesystemDatabase }) {
+  const { updateDownloadState } = createGettersAndSetters(db);
+
+  updateDownloadState({
+    isPaused: false,
     text: 'Paused',
   });
 }
 
-function destroy({
-  removeMediaItems,
-  setIngestedIds,
-  setState,
-}: Pick<GettersAndSetters, 'removeMediaItems' | 'setIngestedIds' | 'setState'>) {
-  removeMediaItems();
-  setIngestedIds(new Set([]));
-  setState(DEFAULT_DOWNLOAD_STATE);
+function destroy({ db }: { db: FilesystemDatabase }) {
+  const { removeMediaItems, resetFileIndices, setIngestedIds, setDownloadState, setDownloadedIds, getDownloadState } =
+    createGettersAndSetters(db);
+  const downloadState = getDownloadState();
+
+  downloadState.folders.forEach(({ folder }) => {
+    removeMediaItems(folder);
+    resetFileIndices(folder);
+    setIngestedIds(folder, new Set([]));
+    setDownloadedIds(folder, new Set([]));
+  });
+
+  setDownloadState(DEFAULT_DOWNLOAD_STATE);
 }
 
 function addMediaItem({
+  db,
   message,
   response,
-  getIngestedIds,
-  setIngestedIds,
-  setMediaItem,
-  setState,
-  state,
 }: {
+  db: FilesystemDatabase;
   message: DaemonMessage;
   response: DaemonMessage;
-  getIngestedIds: GettersAndSetters['getIngestedIds'];
-  setIngestedIds: GettersAndSetters['setIngestedIds'];
-  setMediaItem: GettersAndSetters['setMediaItem'];
-  setState: GettersAndSetters['setState'];
-  state: DownloadState;
 }) {
+  const { getIngestedIds, getDownloadState, setIngestedIds, setMediaItem, setDownloadState } =
+    createGettersAndSetters(db);
+  const downloadState = getDownloadState();
   const mediaItem = message.payload.data.mediaItem;
+  const folder = getFolderFromDate(mediaItem.mediaMetadata.creationTime);
 
   if (!mediaItem) {
     response.payload.error = 'No media item provided';
   } else {
-    const ingestedIds = getIngestedIds();
+    const ingestedIds = getIngestedIds(folder);
+    const updatedDownloadState = updateFolder({ folder, downloadState }, (folder) => {
+      folder.mediaItemsCount++;
+      folder.updated = new Date();
+
+      return folder;
+    });
+
     ingestedIds.add(mediaItem.id);
 
-    setIngestedIds(ingestedIds);
-    setMediaItem(mediaItem);
-    setState({ ...state, ingestedCount: ingestedIds.size, lastKey: mediaItem.key });
+    setIngestedIds(folder, ingestedIds);
+    setMediaItem(folder, mediaItem);
+    setDownloadState({ ...updatedDownloadState, lastKey: mediaItem.key });
   }
 }

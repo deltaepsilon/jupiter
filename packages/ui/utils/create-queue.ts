@@ -1,8 +1,8 @@
 export function createQueue<T>(fn: (item: T) => Promise<void>, millis = 0) {
-  const queue = [] as T[];
+  let queue = [] as T[];
   let isRunning = false;
 
-  return async (item: T) => {
+  async function addToQueue(item: T) {
     queue.push(item);
 
     if (isRunning) {
@@ -20,7 +20,14 @@ export function createQueue<T>(fn: (item: T) => Promise<void>, millis = 0) {
     }
 
     isRunning = false;
+  }
+
+  addToQueue.empty = () => {
+    isRunning = true;
+    queue = [];
   };
+
+  return addToQueue;
 }
 
 function wait(millis: number) {

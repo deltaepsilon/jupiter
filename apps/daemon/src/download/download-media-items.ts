@@ -6,12 +6,13 @@ import axios from 'axios';
 import { createGettersAndSetters } from '../utils';
 
 interface Args {
+  folder: string;
   mediaItemIds: string[];
   db: FilesystemDatabase;
   sendMessage: SendMessage;
 }
 
-export async function downloadMediaItems({ mediaItemIds, db, sendMessage }: Args) {
+export async function downloadMediaItems({ folder, mediaItemIds, db, sendMessage }: Args) {
   const { getMediaItem } = createGettersAndSetters(db);
 
   /**
@@ -26,7 +27,7 @@ export async function downloadMediaItems({ mediaItemIds, db, sendMessage }: Args
 
   return Promise.all(
     mediaItemIds.map(async (mediaItemId) => {
-      const { baseUrl } = getMediaItem(mediaItemId);
+      const { baseUrl } = getMediaItem(folder, mediaItemId);
 
       console.log({ baseUrl });
     })

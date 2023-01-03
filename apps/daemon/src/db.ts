@@ -7,16 +7,6 @@ export type FilesystemDatabase = ReturnType<typeof createFilesystemDatabase>;
 
 export function createFilesystemDatabase({ directory, libraryId }: { libraryId: string; directory: string }) {
   const metadataDb = new FSDB(path.join(directory, DB_FOLDER_NAME, `library-${libraryId}-metadata.json`), false);
-  const downloadedItemsDb = new FSDB(
-    path.join(directory, DB_FOLDER_NAME, `library-${libraryId}-downloaded-items.json`),
-    false
-  );
-  const ingestedItemsDb = new FSDB(
-    path.join(directory, DB_FOLDER_NAME, `library-${libraryId}-ingested-items.json`),
-    false
-  );
-  const mediaItemsDb = new FSDB(path.join(directory, DB_FOLDER_NAME, `library-${libraryId}-media-items.json`), false);
-  const fileIndexDb = new FSDB(path.join(directory, DB_FOLDER_NAME, `library-${libraryId}-file-index.json`), false);
 
   function getSet(fsdb: FSDB) {
     return function set<T>(key: string, value: T) {
@@ -46,13 +36,17 @@ export function createFilesystemDatabase({ directory, libraryId }: { libraryId: 
     };
   }
 
+  function getFolderDb(folder: string) {
+    const folderSlug = folder.replace(/[\\|\/]/g, '-');
+    const dbPath = path.join(directory, DB_FOLDER_NAME, `library-${libraryId}-folder-${folderSlug}.json`);
+
+    return getDb(new FSDB(dbPath, false));
+  }
+
   return {
     isDb: true,
     libraryId,
     metadataDb: getDb(metadataDb),
-    downloadedItemsDb: getDb(downloadedItemsDb),
-    ingestedItemsDb: getDb(ingestedItemsDb),
-    mediaItemsDb: getDb(mediaItemsDb),
-    fileIndexDb: getDb(fileIndexDb),
+    getFolderDb,
   };
 }

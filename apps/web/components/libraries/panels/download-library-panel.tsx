@@ -11,6 +11,7 @@ import {
   SxProps,
   Typography,
 } from '@mui/material';
+import { getStateFlags, getTotals } from 'data/daemon';
 
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
@@ -33,14 +34,14 @@ const GRID: SxProps = {
 type Props = {
   actions: UseLibraryDownloadResult['actions'];
   directory: UseDirectoryResult['directory'];
-  state: UseLibraryDownloadResult['state'];
+  downloadState: UseLibraryDownloadResult['downloadState'];
   libraryId: string;
 };
 
-export function DownloadLibraryPanel({ actions, directory, state, libraryId }: Props) {
-  const isRunning = state?.isRunning;
-  const isComplete = !!state?.isDownloadComplete;
-  const isEmpty = false && !state?.ingestedCount;
+export function DownloadLibraryPanel({ actions, directory, downloadState, libraryId }: Props) {
+  const { isRunning } = getStateFlags(downloadState);
+  const { downloadedCount, mediaItemsCount } = getTotals(downloadState);
+  const isEmpty = mediaItemsCount === 0;
 
   return (
     <Paper elevation={1} sx={{}}>
@@ -63,22 +64,18 @@ export function DownloadLibraryPanel({ actions, directory, state, libraryId }: P
         }}
       >
         <Box sx={{ position: 'relative' }}>
-          <LinearProgress
-            value={isComplete ? 100 : state.progress * 100 ?? 0}
-            valueBuffer={state.filesystemProgress * 100}
-            variant='buffer'
-          />
+          <LinearProgress value={downloadState.filesystemProgress * 100} variant='determinate' />
           <Typography sx={{ position: 'absolute', inset: '0 0 -5 0' }} variant='caption'>
-            {formatDate(state?.updated, 'MMM d, yyyy •  HH:mm:ss')}
+            {formatDate(downloadState?.updated, 'MMM d, yyyy •  HH:mm:ss')}
           </Typography>
         </Box>
         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: -0.5 }}>
           <Typography variant='body1'>
-            {state?.downloadedCount} / {state?.ingestedCount}
+            {downloadState?.downloadedCount} / {mediaItemsCount}
           </Typography>
         </Box>
         <Box>
-          <ActionButton actions={actions} state={state} />
+          <ActionButton actions={actions} downloadState={downloadState} />
         </Box>
 
         <Box sx={{ position: 'relative', pointerEvents: isEmpty ? 'none' : 'all', opacity: isEmpty ? 0.5 : 1 }}>
@@ -105,16 +102,18 @@ export function DownloadLibraryPanel({ actions, directory, state, libraryId }: P
   );
 }
 
-function ActionButton({ actions, state }: Pick<Props, 'actions' | 'state'>) {
+function ActionButton({ actions, downloadState }: Pick<Props, 'actions' | 'downloadState'>) {
+  const { isComplete, isRunning } = getStateFlags(downloadState);
+
   switch (true) {
-    case state?.isRunning:
+    case isRunning:
       return (
         <IconButton onClick={() => actions.pause()}>
           <PauseCircleOutlineIcon fontSize='large' sx={{ color: 'var(--color-gentian-blue-metallic)' }} />
         </IconButton>
       );
 
-    case state?.isDownloadComplete:
+    case isComplete:
       return (
         <CheckCircleOutlineIcon
           fontSize='large'

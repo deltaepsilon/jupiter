@@ -5,8 +5,9 @@ import {
   DownloadState,
   MessageType,
   downloadDataSchema,
+  getShouldIngest,
 } from 'data/daemon';
-import { onChildAdded, orderByKey, query, ref, startAfter, startAt } from 'firebase/database';
+import { onChildAdded, orderByKey, query, ref, startAfter } from 'firebase/database';
 import { useEffect, useMemo, useState } from 'react';
 
 import { FIREBASE } from 'data/firebase';
@@ -22,7 +23,7 @@ export type UseLibraryDownloadResult = ReturnType<typeof useLibraryDownload>;
 export function useLibraryDownload(libraryId: string, library: Library) {
   const { user } = useAuth();
   const { isDbReady, registerHandler, send } = useDaemon();
-  const [state, setState] = useState<DownloadState>(DEFAULT_DOWNLOAD_STATE);
+  const [downloadState, setDownloadState] = useState<DownloadState>(DEFAULT_DOWNLOAD_STATE);
   const { database } = useRtdb();
   const { init, start, pause, cancel, destroy, addMediaItem } = useMemo(() => {
     function createSender(action: DownloadAction) {
@@ -54,7 +55,7 @@ export function useLibraryDownload(libraryId: string, library: Library) {
         }).then((result) => {
           const { state } = downloadDataSchema.parse(result.payload.data);
 
-          setState(state);
+          setDownloadState(state);
         });
       };
     }
@@ -68,10 +69,10 @@ export function useLibraryDownload(libraryId: string, library: Library) {
       addMediaItem: createSender(DownloadAction.addMediaItem),
     };
   }, [library.refreshToken, libraryId, send]);
-  const isLoading = typeof state === 'undefined';
+  const isLoading = typeof downloadState === 'undefined';
   const userId = user?.uid;
   const shouldIngest =
-    isDbReady && state && !state?.isIngestComplete && state.isRunning && !!database && !!userId && !!libraryId;
+    isDbReady && downloadState && getShouldIngest(downloadState) && !!database && !!userId && !!libraryId;
 
   useEffect(() => {
     user && isDbReady && init();
@@ -84,15 +85,16 @@ export function useLibraryDownload(libraryId: string, library: Library) {
         if (message.payload?.data) {
           const { state } = downloadDataSchema.parse(message.payload.data);
 
-          setState(state);
+          setDownloadState(state);
         }
       },
     });
   }, [registerHandler]);
 
   useEffect(() => {
+    console.log({ shouldIngest, downloadState });
     if (shouldIngest) {
-      const lastKey = state?.lastKey;
+      const lastKey = downloadState?.lastKey;
       const mediaItemsRef = ref(database, FIREBASE.DATABASE.PATHS.LIBRARY_MEDIA_ITEMS(userId, libraryId));
       const mediaItemsQuery = lastKey
         ? query(mediaItemsRef, orderByKey(), startAfter(lastKey))
@@ -103,7 +105,10 @@ export function useLibraryDownload(libraryId: string, library: Library) {
         queuedAddMediaItem({ mediaItem: { key: snapshot.key, ...snapshot.val() } })
       );
 
-      return () => unsubscribe();
+      return () => {
+        queuedAddMediaItem.empty();
+        unsubscribe();
+      };
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [shouldIngest]);
@@ -111,6 +116,6 @@ export function useLibraryDownload(libraryId: string, library: Library) {
   return {
     isLoading,
     actions: { start, pause, cancel, destroy },
-    state,
+    downloadState,
   };
 }

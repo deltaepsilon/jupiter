@@ -1,8 +1,6 @@
-import { DaemonMessage, MessageType, SendMessage } from 'data/daemon';
-import { MediaItem, batchGetMediaItemsResponseSchema } from 'data/media-items';
+import { DaemonMessage, MessageType, SendMessage, getStateFlags } from 'data/daemon';
 
 import { FilesystemDatabase } from '../db';
-import axios from 'axios';
 import { createGettersAndSetters } from '../utils';
 import { downloadMediaItems } from './download-media-items';
 import { indexFilesystem } from './index-filesystem';
@@ -16,39 +14,30 @@ interface Args {
 }
 
 export async function startDownload({ db, message, sendMessage }: Args) {
-  const { getDownloadedIds, getIngestedIds, getState, setState } = createGettersAndSetters(db);
-  const state = getState();
+  const { getDownloadState, updateDownloadState } = createGettersAndSetters(db);
+  const downloadState = getDownloadState();
+  const { isRunning } = getStateFlags(downloadState);
 
-  if (state.isRunning) {
+  if (isRunning) {
     try {
-      const indexingComplete = await indexFilesystem({ db, sendMessage });
+      if (downloadState.state === 'ingesting' || downloadState.state === 'indexing') {
+        const indexingComplete = await indexFilesystem({ db, sendMessage });
 
-      if (indexingComplete) {
-        const mediaItemIds = [...getIngestedIds()].filter((id) => !getDownloadedIds().has(id));
-
-        setState({
-          ...state,
-          isIndexComplete: true,
-          text: `Local file index complete. Downloading ${mediaItemIds.length} new media items`,
-        });
-
-        await Promise.all(
-          batchMediaItemIds(mediaItemIds)
-            .slice(0, 1)
-            .map((mediaItemIds) => downloadMediaItems({ mediaItemIds, db, sendMessage }))
-        );
-
-        throw new Error("Don't forget to set state to complete");
-
-        // setState({ ...state, isDownloadComplete: true, isRunning: false, text: 'Media item download complete' });
+        if (indexingComplete) {
+          updateDownloadState({ state: 'downloading', text: 'Local file index complete' });
+        }
       }
+
+      await Promise.all(
+        getDownloadState()
+          .folders.sort((a, b) => (a.folder > b.folder ? 1 : -1))
+          .map((f) => downloadFolder({ db, folder: f.folder, message, sendMessage }))
+      );
+
+      updateDownloadState({ state: 'complete', text: 'Media item download complete' });
     } catch (error) {
-      console.log('error', error);
-      console.log('instance', error instanceof Error);
-
-      const state = getState();
-
-      setState({ ...state, isRunning: false, text: 'Stopping due to error' });
+      console.error(error);
+      updateDownloadState({ isPaused: true, text: 'Pausing due to error' });
 
       if (typeof error === 'string') {
         sendMessage({ type: MessageType.download, payload: { error }, uuid: message.uuid });
@@ -61,9 +50,29 @@ export async function startDownload({ db, message, sendMessage }: Args) {
         }
 
         sendMessage({ type: MessageType.download, payload: { error: errorText }, uuid: message.uuid });
+      } else {
+        console.error(error);
       }
     }
   }
+}
+
+async function downloadFolder({ db, folder, message, sendMessage }: Args & { folder: string }) {
+  const { getIngestedIds, getDownloadedIds, updateDownloadState } = createGettersAndSetters(db);
+  const mediaItemIds = [...getIngestedIds(folder)].filter((id) => !getDownloadedIds(folder).has(id));
+
+  updateDownloadState({
+    state: 'downloading',
+    text: `Downloading ${mediaItemIds.length} new media items to ${folder}`,
+  });
+
+  throw new Error('Do not process files yet');
+
+  await Promise.all(
+    batchMediaItemIds(mediaItemIds)
+      .slice(0, 1)
+      .map((mediaItemIds) => downloadMediaItems({ folder, mediaItemIds, db, sendMessage }))
+  );
 }
 
 function batchMediaItemIds(mediaItemIds: string[]) {

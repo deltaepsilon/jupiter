@@ -62,39 +62,91 @@ export const tokensSchema = z.object({
 });
 export type Tokens = z.infer<typeof tokensSchema>;
 
+export const folderSchema = z.object({
+  folder: z.string(),
+  description: z.string(),
+  indexedCount: z.number().default(0),
+  isPaused: z.boolean().default(false),
+  downloadedCount: z.number().default(0),
+  mediaItemsCount: z.number().default(0),
+  state: z.enum(['idle', 'indexing', 'downloading', 'complete']).default('idle'),
+  updated: stringDate.default(() => new Date()),
+});
+export type Folder = z.infer<typeof folderSchema>;
+
 export const downloadStateSchema = z
   .object({
-    isRunning: z.boolean().default(false),
-    isDownloadComplete: z.boolean().default(false),
-    isIngestComplete: z.boolean().default(false),
-    isIndexComplete: z.boolean().default(false),
-    lastKey: z.string().optional(),
-    ingestedCount: z.number().default(0),
     downloadedCount: z.number().default(0),
-    progress: z.number(),
-    filesystemProgress: z.number(),
+    filesystemProgress: z.number().default(0),
+    folders: z.array(folderSchema).default([]),
+    isPaused: z.boolean().default(false),
+    lastKey: z.string().optional(),
+    state: z.enum(['idle', 'ingesting', 'indexing', 'downloading', 'complete']).default('idle'),
     text: z.string(),
     updated: stringDate.default(() => new Date()),
   })
   .default({
-    isRunning: false,
-    isDownloadComplete: false,
-    isIngestComplete: false,
-    isIndexComplete: false,
-    progress: 0,
-    filesystemProgress: 0,
-    ingestedCount: 0,
     downloadedCount: 0,
+    folders: [],
+    state: 'idle',
     text: '',
     updated: new Date(),
   });
 
+export const MISSING_DATE_FOLDER = 'missing-date';
 export const DEFAULT_DOWNLOAD_STATE = downloadStateSchema.parse(undefined);
-
 export type DownloadState = z.infer<typeof downloadStateSchema>;
+
+const RUNNING_STATES: Set<DownloadState['state']> = new Set(['ingesting', 'indexing', 'downloading']);
+export function getIsRunning(state: DownloadState) {
+  return RUNNING_STATES.has(state.state);
+}
+
+export function getShouldIngest(downloadState: DownloadState) {
+  return !downloadState.isPaused && downloadState.state === 'ingesting';
+}
+
+export function getStateFlags(downloadState: DownloadState = DEFAULT_DOWNLOAD_STATE) {
+  const { isPaused, state } = downloadState;
+
+  return {
+    isRunning: state && RUNNING_STATES.has(state),
+    isComplete: state === 'complete',
+    shouldIngest: !isPaused && state === 'ingesting',
+  };
+}
+
+export function getTotals(downloadState: DownloadState = DEFAULT_DOWNLOAD_STATE) {
+  return downloadState.folders.reduce(
+    (acc, folder) => {
+      acc.mediaItemsCount += folder.mediaItemsCount;
+      acc.downloadedCount += folder.downloadedCount;
+      acc.indexedCount += folder.indexedCount;
+      return acc;
+    },
+    { mediaItemsCount: 0, downloadedCount: 0, indexedCount: 0 }
+  );
+}
+
+export function updateFolder(
+  { folder, downloadState }: { folder: string; downloadState: DownloadState },
+  updateFunction: (folder: Folder) => Folder
+) {
+  const state = downloadStateSchema.parse(downloadState);
+  const folderIndex = state.folders.findIndex((f) => f.folder === folder);
+
+  if (folderIndex === -1) {
+    state.folders.push(updateFunction(folderSchema.parse({ folder, description: folder })));
+  } else {
+    state.folders[folderIndex] = updateFunction(state.folders[folderIndex]);
+  }
+
+  return state;
+}
 
 export const downloadDataSchema = z.object({
   libraryId: z.string(),
+  folder: z.string().optional(),
   tokens: tokensSchema.optional(),
   state: downloadStateSchema,
   mediaItem: mediaItemSchema.extend({ key: z.string() }).optional(),
