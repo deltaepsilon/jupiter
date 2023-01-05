@@ -60,13 +60,11 @@ export async function startDownload({ db, message, sendMessage }: Args) {
 async function downloadFolder({ db, folder, message, sendMessage }: Args & { folder: string }) {
   const { getIngestedIds, getDownloadedIds, updateDownloadState } = createGettersAndSetters(db);
   const mediaItemIds = [...getIngestedIds(folder)].filter((id) => !getDownloadedIds(folder).has(id));
+  const text = `Downloading ${mediaItemIds.length} new media items to ${folder}`;
 
-  updateDownloadState({
-    state: 'downloading',
-    text: `Downloading ${mediaItemIds.length} new media items to ${folder}`,
-  });
+  updateDownloadState({ state: 'downloading', text });
 
-  throw new Error('Do not process files yet');
+  sendMessage({ type: MessageType.download, payload: { text } });
 
   await Promise.all(
     batchMediaItemIds(mediaItemIds)

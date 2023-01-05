@@ -1,9 +1,21 @@
+import {
+  DOWNLOADING_FOLDER,
+  Exif,
+  MessageType,
+  SendMessage,
+  dateToExifDate,
+  downloadDataSchema,
+  updateFolder,
+} from 'data/daemon';
+import { GettersAndSetters, createGettersAndSetters, moveToDateFolder } from '../utils';
 import { MediaItem, batchGetMediaItemsResponseSchema } from 'data/media-items';
+import { getExif, getMd5, setExif } from '../exif';
 
 import { FilesystemDatabase } from '../db';
-import { SendMessage } from 'data/daemon';
 import axios from 'axios';
-import { createGettersAndSetters } from '../utils';
+import fs from 'fs';
+import fsPromises from 'fs/promises';
+import path from 'path';
 
 interface Args {
   folder: string;
@@ -13,29 +25,62 @@ interface Args {
 }
 
 export async function downloadMediaItems({ folder, mediaItemIds, db, sendMessage }: Args) {
-  const { getMediaItem } = createGettersAndSetters(db);
+  const { getDirectory, getDownloadState, getFileIndex, getMediaItem, setFileIndex, setDownloadState } =
+    createGettersAndSetters(db);
+  const directoryPath = getDirectory().path;
+  const downloadDirectory = path.join(directoryPath, DOWNLOADING_FOLDER);
+  let mediaItems = mediaItemIds.map((mediaItemId) => getMediaItem(folder, mediaItemId));
+  let i = mediaItems.length;
 
-  /**
-   *
-   * - Attempt to download it
-   * - If the url has expired, add it to a batchGetMediaItems request and update the local copy of the mediaItem
-   * - Add mediaItem to filesystem index
-   * - Recur
-   */
+  await fsPromises.mkdir(downloadDirectory, { recursive: true });
 
-  console.log('mediaItemIds', mediaItemIds);
+  while (i--) {
+    const {
+      hash,
+      filepath,
+      mediaItem,
+      mediaItems: updatedMediaItems,
+    } = await writeFile({ db, downloadDirectory, folder, mediaItem: mediaItems[i], mediaItems, mediaItemIds });
+    const { folder: yearMonthFolder, updated: yearMonthFilepath } = await moveToDateFolder({
+      date: new Date(mediaItem.mediaMetadata.creationTime),
+      directoryPath,
+      filepath,
+    });
 
-  return Promise.all(
-    mediaItemIds.map(async (mediaItemId) => {
-      const { baseUrl } = getMediaItem(folder, mediaItemId);
+    updateFileIndex({
+      directoryPath,
+      filepath: yearMonthFilepath,
+      folder: yearMonthFolder,
+      getFileIndex,
+      hash,
+      setFileIndex,
+    });
 
-      console.log({ baseUrl });
-    })
-  );
+    updateFolder({ folder: yearMonthFolder, downloadState: getDownloadState() }, (folder) => {
+      folder.downloadedCount++;
+
+      return folder;
+    });
+
+    sendMessage({
+      type: MessageType.download,
+      payload: { data: downloadDataSchema.parse({ libraryId: db.libraryId, state: getDownloadState() }) },
+    });
+
+    mediaItems = updatedMediaItems;
+  }
 }
 
-async function refreshMediaItems({ db, mediaItemIds }: { db: FilesystemDatabase; mediaItemIds: string[] }) {
-  const { getTokens, getUrls, setTokens } = createGettersAndSetters(db);
+async function refreshMediaItems({
+  db,
+  folder,
+  mediaItemIds,
+}: {
+  db: FilesystemDatabase;
+  folder: string;
+  mediaItemIds: string[];
+}) {
+  const { getTokens, getUrls, setTokens, setMediaItem } = createGettersAndSetters(db);
   const tokens = getTokens();
   const urls = getUrls();
 
@@ -50,5 +95,90 @@ async function refreshMediaItems({ db, mediaItemIds }: { db: FilesystemDatabase;
 
   setTokens({ accessToken, refreshToken, expiresAt: new Date(expiresAt) });
 
-  return mediaItemResults.map(({ mediaItem }) => mediaItem);
+  return mediaItemResults.map(({ mediaItem }) => setMediaItem(folder, mediaItem));
+}
+
+async function writeFile({
+  db,
+  downloadDirectory,
+  folder,
+  mediaItem,
+  mediaItems,
+  mediaItemIds,
+}: {
+  db: FilesystemDatabase;
+  downloadDirectory: string;
+  folder: string;
+  mediaItem: MediaItem;
+  mediaItems: MediaItem[];
+  mediaItemIds: string[];
+}) {
+  const response = await axios.get(mediaItem.baseUrl, { responseType: 'stream' }).catch(async (err) => {
+    const isBaseUrlExpired = err.response.status === 403;
+
+    if (isBaseUrlExpired) {
+      mediaItems = await refreshMediaItems({ db, folder, mediaItemIds });
+      const updatedMediaItem = mediaItems.find((m) => m.id === mediaItem.id);
+
+      if (updatedMediaItem) mediaItem = updatedMediaItem;
+
+      return axios.get(mediaItem.baseUrl, { responseType: 'stream' });
+    } else {
+      throw err;
+    }
+  });
+  const downloadingFilepath = path.join(downloadDirectory, mediaItem.filename);
+  const writeStream = fs.createWriteStream(downloadingFilepath);
+
+  response.data.pipe(writeStream);
+
+  return new Promise<{ exif: Exif; hash: string; filepath: string; mediaItem: MediaItem; mediaItems: MediaItem[] }>(
+    (resolve, reject) => {
+      writeStream.on('error', reject);
+
+      writeStream.on('finish', async () => {
+        try {
+          const { hash, filepath } = await getMd5(downloadingFilepath);
+          let exif = await getExif(downloadingFilepath);
+
+          if (!exif.ModifyDate || !exif.CreateDate) {
+            const dateTimeOriginal = dateToExifDate(mediaItem.mediaMetadata.creationTime, true);
+
+            exif = await setExif(filepath, {
+              DateTimeOriginal: dateTimeOriginal,
+              CreateDate: dateTimeOriginal,
+              ModifyDate: dateTimeOriginal,
+            });
+          }
+
+          resolve({ exif, hash, filepath, mediaItem, mediaItems });
+        } catch (error) {
+          reject(error);
+        }
+      });
+    }
+  );
+}
+
+function updateFileIndex({
+  directoryPath,
+  filepath,
+  folder,
+  getFileIndex,
+  hash,
+  setFileIndex,
+}: {
+  directoryPath: string;
+  filepath: string;
+  folder: string;
+  getFileIndex: GettersAndSetters['getFileIndex'];
+  hash: string;
+  setFileIndex: GettersAndSetters['setFileIndex'];
+}) {
+  const relativeFilepath = path.relative(directoryPath, filepath);
+  const fileIndex = getFileIndex(folder, hash);
+
+  fileIndex.relativePaths.push(relativeFilepath);
+
+  setFileIndex(folder, fileIndex);
 }

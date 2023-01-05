@@ -29,7 +29,7 @@ export async function batchGetMediaItems(params: BatchGetMediaItemsParams) {
   if (!accessToken) {
     throw new Error('No access token found');
   } else {
-    return queryMediaItems({ accessToken, refreshToken, expiresAt, mediaItemIds });
+    return queryMediaItems({ accessToken, refreshToken, expiresAt, mediaItemIds: mediaItemIds.split(',') });
   }
 }
 
@@ -41,11 +41,14 @@ async function queryMediaItems({
 }: {
   accessToken: string;
   expiresAt: number;
-  mediaItemIds: string;
+  mediaItemIds: string[];
   refreshToken: string;
 }) {
-  const { data } = await axios.get('https://photoslibrary.googleapis.com/v1/mediaItems:batchGet', {
-    params: { mediaItemIds },
+  const url = `https://photoslibrary.googleapis.com/v1/mediaItems:batchGet?mediaItemIds=${mediaItemIds.join(
+    '&mediaItemIds='
+  )}`;
+
+  const { data } = await axios.get(url, {
     headers: { Authorization: `Bearer ${accessToken}`, ContentType: 'application/json' },
   });
 

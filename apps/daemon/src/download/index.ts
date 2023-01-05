@@ -107,8 +107,10 @@ function start({ db, response }: { db: FilesystemDatabase; response: DaemonMessa
 function pause({ db }: { db: FilesystemDatabase }) {
   const { updateDownloadState } = createGettersAndSetters(db);
 
+  console.log('Pausing download...');
+
   updateDownloadState({
-    isPaused: false,
+    isPaused: true,
     text: 'Paused',
   });
 }

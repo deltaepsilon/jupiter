@@ -94,6 +94,7 @@ export const downloadStateSchema = z
   });
 
 export const MISSING_DATE_FOLDER = 'missing-date';
+export const DOWNLOADING_FOLDER = '__downloading';
 export const DEFAULT_DOWNLOAD_STATE = downloadStateSchema.parse(undefined);
 export type DownloadState = z.infer<typeof downloadStateSchema>;
 
@@ -110,7 +111,7 @@ export function getStateFlags(downloadState: DownloadState = DEFAULT_DOWNLOAD_ST
   const { isPaused, state } = downloadState;
 
   return {
-    isRunning: state && RUNNING_STATES.has(state),
+    isRunning: !isPaused && state && RUNNING_STATES.has(state),
     isComplete: state === 'complete',
     shouldIngest: !isPaused && state === 'ingesting',
   };

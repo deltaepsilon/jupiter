@@ -1,5 +1,5 @@
 import { MessageType, SendMessage, downloadDataSchema, exifDateToDate, updateFolder } from 'data/daemon';
-import { createGettersAndSetters, getFileTree, getFolderFromDate } from '../utils';
+import { createGettersAndSetters, getFileTree, getFolderFromDate, moveToDateFolder } from '../utils';
 import { getExif, getMd5 } from '../exif';
 
 import { FilesystemDatabase } from '../db';
@@ -55,32 +55,34 @@ export async function indexFilesystem(
 
       while (i--) {
         const initialFilepath = filepaths[i];
-        const currentPath = path.parse(initialFilepath);
-        const relativePath = initialFilepath.replace(directoryPath, '.');
+        const relativePath = path.relative(directoryPath, initialFilepath);
         const exif = await getExif(initialFilepath);
-        const folder = getFolderFromDate(exifDateToDate(exif.ModifyDate));
-        const yearMonthDirectory = path.join(directoryPath, folder);
-        const yearMonthFilepath = path.join(yearMonthDirectory, currentPath.base);
-        const needsToMove = yearMonthDirectory !== currentPath.dir;
-        const existingFileIndex = getFileIndexByFilepath(folder, yearMonthFilepath);
+        const {
+          isMoved,
+          filename,
+          folder,
+          updated: updatedFilepath,
+        } = await moveToDateFolder({
+          date: exifDateToDate(exif.DateTimeOriginal),
+          directoryPath,
+          filepath: initialFilepath,
+        });
+        const existingFileIndex = getFileIndexByFilepath(folder, updatedFilepath);
         const downloadState = getDownloadState();
 
-        if (needsToMove) {
-          await fsPromises.mkdir(yearMonthDirectory, { recursive: true });
-          await fsPromises.rename(initialFilepath, yearMonthFilepath);
-
+        if (isMoved) {
           sendMessage({
             type: MessageType.download,
             payload: {
               data: downloadDataSchema.parse({ libraryId: db.libraryId, state: downloadState }),
-              text: `Moved file: ${currentPath.base} -> ${yearMonthFilepath}`,
+              text: `Moved file: ${filename} -> ${updatedFilepath}`,
             },
           });
         } else if (existingFileIndex) {
           continue;
         }
 
-        const { hash, filepath, isRepaired } = await getMd5(yearMonthFilepath);
+        const { hash, filepath, isRepaired } = await getMd5(updatedFilepath);
         const fileIndex = getFileIndex(folder, hash);
         const updatedProgress = Math.round((100 * (filepaths.length - i)) / filepaths.length) / 100;
 

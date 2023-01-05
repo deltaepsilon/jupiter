@@ -1,6 +1,9 @@
 ## In Progress
 
-- [ ] Download media items while updating filesystem index
+- [x] Confirm that download succeeds
+- [ ] Overwrite original `-overwrite_original`
+- [ ] Move file from `__downloading`
+- [ ] Update filesystem index
 - [ ] Create FilesystemDb queue to handle media items
 
 ## Next actions

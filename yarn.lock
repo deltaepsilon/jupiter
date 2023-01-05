@@ -3731,12 +3731,13 @@ __metadata:
     esbuild: ^0.16.9
     exiftool.pl: ^10.53.0
     file-system-db: ^1.1.0
-    md5: ^2.3.0
     md5-file: ^5.0.0
     nodemon: ^2.0.20
     pkg: ^5.8.0
     windows-network-drive: ^4.0.1
     ws: ^8.11.0
+  bin:
+    daemon: index.js
   languageName: unknown
   linkType: soft
 
