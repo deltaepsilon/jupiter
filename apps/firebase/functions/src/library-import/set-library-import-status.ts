@@ -12,7 +12,7 @@ type Data = z.infer<typeof dataSchema>;
 
 export async function setLibraryImportStatus(data: Data, context: https.CallableContext) {
   const { libraryId, status } = libraryTaskStatusRequest.parse(data);
-  const xCallableContextAuth = context.rawRequest.headers['x-callable-context-auth'] as string;
+  const xCallableContextAuth = context.rawRequest.headers['x-callable-context-auth'] as string ?? '';
   const fakeAuth = decodeURIComponent(xCallableContextAuth);
   const fakeAuthParsed = fakeAuth && JSON.parse(fakeAuth);
   const userId = context.auth?.uid || fakeAuthParsed?.uid;

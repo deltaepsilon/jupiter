@@ -27,12 +27,16 @@ export async function startDownload({ db, message, sendMessage }: Args) {
           updateDownloadState({ state: 'downloading', text: 'Local file index complete' });
         }
       }
+      const folders = getDownloadState().folders.sort((a, b) => (a.folder > b.folder ? 1 : -1));
+      let i = downloadState.folders.length;
 
-      await Promise.all(
-        getDownloadState()
-          .folders.sort((a, b) => (a.folder > b.folder ? 1 : -1))
-          .map((f) => downloadFolder({ db, folder: f.folder, message, sendMessage }))
-      );
+      while (i--) {
+        const folder = folders[i];
+
+        if (folder.mediaItemsCount !== folder.downloadedCount) {
+          await downloadFolder({ db, folder: folder.folder, message, sendMessage });
+        }
+      }
 
       updateDownloadState({ state: 'complete', text: 'Media item download complete' });
     } catch (error) {
@@ -59,6 +63,7 @@ export async function startDownload({ db, message, sendMessage }: Args) {
 
 async function downloadFolder({ db, folder, message, sendMessage }: Args & { folder: string }) {
   const { getIngestedIds, getDownloadedIds, updateDownloadState } = createGettersAndSetters(db);
+  console.log({ folder });
   const mediaItemIds = [...getIngestedIds(folder)].filter((id) => !getDownloadedIds(folder).has(id));
   const text = `Downloading ${mediaItemIds.length} new media items to ${folder}`;
 

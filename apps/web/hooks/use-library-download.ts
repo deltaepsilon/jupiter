@@ -85,6 +85,8 @@ export function useLibraryDownload(libraryId: string, library: Library) {
         if (message.payload?.data) {
           const { state } = downloadDataSchema.parse(message.payload.data);
 
+          console.log(state);
+
           setDownloadState(state);
         }
       },

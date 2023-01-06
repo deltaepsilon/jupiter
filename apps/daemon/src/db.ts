@@ -6,7 +6,7 @@ export const DB_FOLDER_NAME = '__f_stop_admin_data';
 export type FilesystemDatabase = ReturnType<typeof createFilesystemDatabase>;
 
 export function createFilesystemDatabase({ directory, libraryId }: { libraryId: string; directory: string }) {
-  const metadataDb = new FSDB(path.join(directory, DB_FOLDER_NAME, `library-${libraryId}-metadata.json`), false);
+  const metadataDb = new FSDB(path.join(directory, DB_FOLDER_NAME, libraryId, `metadata.json`), false);
 
   function getSet(fsdb: FSDB) {
     return function set<T>(key: string, value: T) {
@@ -18,7 +18,12 @@ export function createFilesystemDatabase({ directory, libraryId }: { libraryId: 
 
   function getGet(fsdb: FSDB) {
     return function get(key: string) {
-      return fsdb.get(key);
+      try {
+        return fsdb.get(key);
+      } catch (error) {
+        console.error({ key, fsdb });
+        throw error;
+      }
     };
   }
 
@@ -38,7 +43,7 @@ export function createFilesystemDatabase({ directory, libraryId }: { libraryId: 
 
   function getFolderDb(folder: string) {
     const folderSlug = folder.replace(/[\\|\/]/g, '-');
-    const dbPath = path.join(directory, DB_FOLDER_NAME, `library-${libraryId}-folder-${folderSlug}.json`);
+    const dbPath = path.join(directory, DB_FOLDER_NAME, libraryId, `folder-${folderSlug}.json`);
 
     return getDb(new FSDB(dbPath, false));
   }

@@ -1,16 +1,17 @@
 ## In Progress
 
-- [x] Confirm that download succeeds
-- [ ] Overwrite original `-overwrite_original`
-- [ ] Move file from `__downloading`
-- [ ] Update filesystem index
-- [ ] Create FilesystemDb queue to handle media items
+- [ ] Check to see if the file already exists before downloading it
+- [ ] Handle files with identical filenames. 
+        - Upload a few files with identical filenames to Google Photos and see how it goes.
+- [ ] Tag downloaded files with Google's image id. Consider xmp tags from adobe.
+        - Google Photos EXIF chat: https://exiftool.org/forum/index.php?topic=9004.0
+        - User-defined XMP: https://exiftool.org/forum/index.php?topic=7312.0
+        - .cfg file: https://exiftool.org/config.html
+- [ ] Sync up metadata
 
 ## Next actions
 
-- [ ] Kick off download
-- [ ] Tag downloaded files with Google's image id.
-- [ ] Sync up metadata
+
 - [ ] Start processing images
 - [ ] Debug `context.auth` problem: https://github.com/firebase/firebase-tools/issues/5210
 - [ ] Build a drawer to track progress
@@ -36,6 +37,12 @@
 
 ## Archive
 
+- [x] Kick off download
+- [x] Confirm that download succeeds
+- [x] Overwrite original `-overwrite_original`
+- [x] Move file from `__downloading`
+- [x] Update filesystem index
+- [x] Create FilesystemDb queue to handle media items
 - [x] Complete indexing of directory
 - [x] Move `useDirectory` to a shared context to prevent out-of-sync errors
 - [x] Stream in media items

@@ -5,6 +5,7 @@ import {
   SendMessage,
   dateToExifDate,
   downloadDataSchema,
+  getStateFlags,
   updateFolder,
 } from 'data/daemon';
 import { GettersAndSetters, createGettersAndSetters, moveToDateFolder } from '../utils';
@@ -31,10 +32,11 @@ export async function downloadMediaItems({ folder, mediaItemIds, db, sendMessage
   const downloadDirectory = path.join(directoryPath, DOWNLOADING_FOLDER);
   let mediaItems = mediaItemIds.map((mediaItemId) => getMediaItem(folder, mediaItemId));
   let i = mediaItems.length;
+  let stateFlags = getStateFlags(getDownloadState());
 
   await fsPromises.mkdir(downloadDirectory, { recursive: true });
 
-  while (i--) {
+  while (i-- && stateFlags.isRunning) {
     const {
       hash,
       filepath,
@@ -47,6 +49,8 @@ export async function downloadMediaItems({ folder, mediaItemIds, db, sendMessage
       filepath,
     });
 
+    console.log('yearMonthFilepath', yearMonthFilepath);
+
     updateFileIndex({
       directoryPath,
       filepath: yearMonthFilepath,
@@ -56,17 +60,21 @@ export async function downloadMediaItems({ folder, mediaItemIds, db, sendMessage
       setFileIndex,
     });
 
-    updateFolder({ folder: yearMonthFolder, downloadState: getDownloadState() }, (folder) => {
-      folder.downloadedCount++;
+    const updatedDownloadState = updateFolder(
+      { folder: yearMonthFolder, downloadState: getDownloadState() },
+      (folder) => {
+        folder.downloadedCount++;
 
-      return folder;
-    });
+        return folder;
+      }
+    );
 
     sendMessage({
       type: MessageType.download,
       payload: { data: downloadDataSchema.parse({ libraryId: db.libraryId, state: getDownloadState() }) },
     });
 
+    stateFlags = getStateFlags(updatedDownloadState);
     mediaItems = updatedMediaItems;
   }
 }
@@ -139,7 +147,7 @@ async function writeFile({
       writeStream.on('finish', async () => {
         try {
           const { hash, filepath } = await getMd5(downloadingFilepath);
-          let exif = await getExif(downloadingFilepath);
+          let exif = await getExif(filepath);
 
           if (!exif.ModifyDate || !exif.CreateDate) {
             const dateTimeOriginal = dateToExifDate(mediaItem.mediaMetadata.creationTime, true);

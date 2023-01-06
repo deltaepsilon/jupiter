@@ -51,9 +51,12 @@ export function createGettersAndSetters(db: FilesystemDatabase) {
       const key = fileIndex.md5;
 
       fileIndex.relativePaths.forEach((relativePath) => {
-        folderDb.set<FileIndexByFilepath>(`${DownloadDbKeys.filesIndexByFilename}.${relativePath}`, {
-          fileIndexKey: key,
-        });
+        folderDb.set<FileIndexByFilepath>(
+          `${DownloadDbKeys.filesIndexByFilename}.${relativePath.replace(/\./g, '|')}`,
+          {
+            fileIndexKey: key,
+          }
+        );
       });
 
       return folderDb.set<FileIndex>(`${DownloadDbKeys.files}.${key}`, fileIndex);

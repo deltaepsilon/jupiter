@@ -23,9 +23,11 @@ import { MenuTrigger } from 'ui/components';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import PauseCircleOutlineIcon from '@mui/icons-material/PauseCircleOutline';
 import PlayCircleOutlineIcon from '@mui/icons-material/PlayCircleOutline';
+import ReplayIcon from '@mui/icons-material/Replay';
 import { UseDirectoryResult } from 'web/contexts';
 import { UseLibraryDownloadResult } from 'web/hooks/use-library-download';
 import { formatDate } from 'ui/utils';
+import { useMemo } from 'react';
 
 const GRID: SxProps = {
   display: 'grid',
@@ -111,10 +113,15 @@ export function DownloadLibraryPanel({ actions, directory, downloadState, librar
 }
 
 function FoldersProgress({ downloadState }: { downloadState: DownloadState }) {
+  const folders = useMemo(() => downloadState.folders.sort((a, b) => (a.folder < b.folder ? 1 : -1)), [downloadState]);
+
   return (
     <Box sx={{ gridColumn: '1/-1' }}>
-      {downloadState.folders.map((folder) => (
-        <Box key={folder.folder} sx={{ display: 'grid', gridTemplateColumns: '1fr 53px', gridGap: 16, paddingY: '4px' }}>
+      {folders.map((folder) => (
+        <Box
+          key={folder.folder}
+          sx={{ display: 'grid', gridTemplateColumns: '1fr 53px', gridGap: 16, paddingY: '4px' }}
+        >
           <Box sx={{ position: 'relative', display: 'grid', gridTemplateColumns: '2rem 1fr', alignItems: 'center' }}>
             <FolderIcon />
             <Box sx={{ position: 'relative', top: -5 }}>
@@ -170,10 +177,9 @@ function ActionButton({ actions, downloadState }: Pick<Props, 'actions' | 'downl
 
     case isComplete:
       return (
-        <CheckCircleOutlineIcon
-          fontSize='large'
-          sx={{ color: 'var(--color-jade-green)', marginTop: 0.5, marginLeft: 1 }}
-        />
+        <IconButton onClick={async () => actions.start()}>
+          <ReplayIcon fontSize='large' sx={{ color: 'var(--color-jade-green)' }} />
+        </IconButton>
       );
 
     default:
