@@ -1,6 +1,5 @@
 ## In Progress
 
-- [ ] Max sure ingestion and indexing are completed before downloading
 - [ ] Parallelize downloads
 
 ## Next actions
@@ -29,6 +28,7 @@
 
 ## Archive
 
+- [x] Debug download restart. It's getting confused after the pause.
 - [x] Make sure the new MediaItems ingest starts with newer items if over a day since last request
 - [x] Why does the WS keep disconnecting???
 - [x] Check to see if the file already exists before downloading it

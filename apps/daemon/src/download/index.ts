@@ -119,7 +119,7 @@ function start({ db, response }: { db: FilesystemDatabase; response: DaemonMessa
     });
   } else {
     response.payload.text = 'Resuming download...';
-    updateDownloadState({ isPaused: false, state: 'ingesting', text: 'Resuming download...' });
+    updateDownloadState({ isPaused: false, text: 'Resuming download...' });
   }
 
   tokens && setTokens(tokens);

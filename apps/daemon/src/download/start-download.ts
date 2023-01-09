@@ -80,7 +80,9 @@ export async function startDownload({ db, message, sendMessage }: Args) {
           const folder = folders[j];
           const folderNeedsDownload = folder.mediaItemsCount !== folder.downloadedCount;
 
-          if (folderNeedsDownload) {
+          stateFlags = getStateFlags(downloadState);
+
+          if (folderNeedsDownload && stateFlags.isRunning) {
             downloadState = setFolderState({ db, folder: folder.folder, state: 'downloading' });
             sendDownloadStateMessage({ db, downloadState, sendMessage });
 
@@ -94,7 +96,9 @@ export async function startDownload({ db, message, sendMessage }: Args) {
         stateFlags = getStateFlags(downloadState);
       }
 
-      updateDownloadState({ state: 'complete', text: 'Media item download complete' });
+      if (stateFlags.allFoldersComplete) {
+        updateDownloadState({ state: 'complete', text: 'Media item download complete' });
+      }
     } catch (error) {
       console.error(error);
       updateDownloadState({ isPaused: true, text: 'Pausing due to error' });

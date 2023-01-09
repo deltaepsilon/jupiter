@@ -154,25 +154,26 @@ async function writeFile({
         retry(
           async () => {
             try {
-              const { hash, filepath } = await getMd5(downloadingFilepath);
-              let exif = await getExif(filepath);
+              let exif = await getExif(downloadingFilepath);
 
-              if (!exif.ModifyDate || !exif.CreateDate) {
+              if (!exif.ModifyDate || !exif.CreateDate || !exif.DateTimeOriginal) {
                 const dateTimeOriginal = dateToExifDate(mediaItem.mediaMetadata.creationTime, true);
 
-                exif = await setExif(filepath, {
+                exif = await setExif(downloadingFilepath, {
                   DateTimeOriginal: dateTimeOriginal,
                   CreateDate: dateTimeOriginal,
                   ModifyDate: dateTimeOriginal,
                 });
               }
 
+              const { hash, filepath } = await getMd5(downloadingFilepath);
+
               resolve({ exif, hash, filepath, mediaItem, mediaItems });
             } catch (error) {
               reject(error);
             }
           },
-          { attempts: 5, millis: 1000 }
+          { attempts: 5, millis: 1000, failSilently: true }
         )();
       });
     }
