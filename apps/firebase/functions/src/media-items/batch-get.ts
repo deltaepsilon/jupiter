@@ -19,6 +19,6 @@ export async function batchGet(data: BatchGetMediaItemsParams, context: https.Ca
 
     return media;
   } catch (err) {
-    return error('api/media-items/batch-get', err);
+    return error('functions/src/media-items/batch-get', err);
   }
 }

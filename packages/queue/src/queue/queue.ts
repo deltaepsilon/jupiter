@@ -68,8 +68,6 @@ export function Queue<Data>({ batchSize = 1, callback, ref: queueRef }: QueueArg
       }
     );
 
-    console.log({ tasks, newTasks, updates });
-
     await update(queueRef, updates);
   }
 

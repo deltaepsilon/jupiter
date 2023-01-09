@@ -2,6 +2,7 @@ import * as admin from 'firebase-admin';
 import * as functions from 'firebase-functions';
 
 import { Library, LibraryTaskStatus, libraryImportSchema } from 'data/library';
+import { MEDIA_ITEMS_TTL_MS, REFRESH_FROM_TODAY_MS } from '../data';
 import { getApp, getLibrary } from '../utils';
 
 import { FIREBASE } from 'data/firebase';
@@ -9,7 +10,6 @@ import { MediaItem } from 'data/media-items';
 import { listMediaItems } from 'api/photos/list-media-items';
 import { setStatus } from './set-status';
 
-export const MEDIA_ITEMS_TTL_MS = 1000 * 60 * 60; // 1 Hour
 export const LIBRARY_IMPORT_PATH = 'user-owned/{userId}/library/{libraryId}/import';
 
 export async function libraryImportOnWrite(
@@ -22,6 +22,7 @@ export async function libraryImportOnWrite(
   const { libraryId, userId } = context.params;
   const libraryImportRef = snapshot.after.ref;
   const libraryMediaItemsRef = getApp().database().ref(FIREBASE.DATABASE.PATHS.LIBRARY_MEDIA_ITEMS(userId, libraryId));
+  const beforeParsed = libraryImportSchema.safeParse(snapshot.before.val());
   const afterParsed = libraryImportSchema.safeParse(snapshot.after.val());
   const isRunning = afterParsed.success && afterParsed.data.status === LibraryTaskStatus.running;
   const isDestroyed = afterParsed.success && afterParsed.data.status === LibraryTaskStatus.destroyed;
@@ -35,9 +36,14 @@ export async function libraryImportOnWrite(
     });
     await libraryMediaItemsRef.remove();
   } else if (isRunning) {
+    const beforeImport = beforeParsed.success && beforeParsed.data;
     const libraryImport = afterParsed.data;
     const { pageSize } = libraryImport;
-    let nextPageToken = libraryImport.nextPageToken;
+    const shouldStartFromBeginning =
+      beforeImport && libraryImport.updated.getTime() - beforeImport.updated.getTime() > REFRESH_FROM_TODAY_MS;
+    let nextPageToken = shouldStartFromBeginning ? null : libraryImport.nextPageToken;
+
+    console.log({ shouldStartFromBeginning, nextPageToken });
 
     const { library, librarySnapshot } = await getLibrary({ libraryId, userId });
     const { mediaItems, nextPageToken: maybeNextPageToken } = await getPage({

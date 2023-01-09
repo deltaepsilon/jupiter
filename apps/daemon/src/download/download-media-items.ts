@@ -18,6 +18,7 @@ import fs from 'fs';
 import fsPromises from 'fs/promises';
 import path from 'path';
 import { refreshMediaItems } from './refresh-media-items';
+import { retry } from 'ui/utils/retry';
 
 interface Args {
   folder: string;
@@ -122,23 +123,24 @@ async function writeFile({
   mediaItems: MediaItem[];
   mediaItemIds: string[];
 }) {
-  const isVideo = mediaItem.mimeType.startsWith('video');
-  const downloadUrl = `${mediaItem.baseUrl}=${isVideo ? 'dv' : 'd'}`;
-  const response = await axios.get(downloadUrl, { responseType: 'stream' }).catch(async (err) => {
-    const isBaseUrlExpired = err.response.status === 403;
+  const response = await axios
+    .get(getMediaItemDownloadUrl(mediaItem), { responseType: 'stream' })
+    .catch(async (err) => {
+      const isBaseUrlExpired = err.response.status === 403;
 
-    if (isBaseUrlExpired) {
-      mediaItems = await refreshMediaItems({ db, folder, mediaItemIds });
+      if (isBaseUrlExpired) {
+        mediaItems = await refreshMediaItems({ db, folder, mediaItemIds });
 
-      const updatedMediaItem = mediaItems.find((m) => m.id === mediaItem.id);
+        const updatedMediaItem = mediaItems.find((m) => m.id === mediaItem.id);
 
-      if (updatedMediaItem) mediaItem = updatedMediaItem;
+        if (updatedMediaItem) mediaItem = updatedMediaItem;
 
-      return axios.get(downloadUrl, { responseType: 'stream' });
-    } else {
-      throw err;
-    }
-  });
+        return axios.get(getMediaItemDownloadUrl(mediaItem), { responseType: 'stream' });
+      } else {
+        console.info('error downloading:', mediaItem.id, err.response.status, err.response.statusText);
+        throw err.response.statusText;
+      }
+    });
   const downloadingFilepath = path.join(downloadDirectory, mediaItem.filename);
   const writeStream = fs.createWriteStream(downloadingFilepath);
 
@@ -149,27 +151,38 @@ async function writeFile({
       writeStream.on('error', reject);
 
       writeStream.on('finish', async () => {
-        try {
-          const { hash, filepath } = await getMd5(downloadingFilepath);
-          let exif = await getExif(filepath);
+        retry(
+          async () => {
+            try {
+              const { hash, filepath } = await getMd5(downloadingFilepath);
+              let exif = await getExif(filepath);
 
-          if (!exif.ModifyDate || !exif.CreateDate) {
-            const dateTimeOriginal = dateToExifDate(mediaItem.mediaMetadata.creationTime, true);
+              if (!exif.ModifyDate || !exif.CreateDate) {
+                const dateTimeOriginal = dateToExifDate(mediaItem.mediaMetadata.creationTime, true);
 
-            exif = await setExif(filepath, {
-              DateTimeOriginal: dateTimeOriginal,
-              CreateDate: dateTimeOriginal,
-              ModifyDate: dateTimeOriginal,
-            });
-          }
+                exif = await setExif(filepath, {
+                  DateTimeOriginal: dateTimeOriginal,
+                  CreateDate: dateTimeOriginal,
+                  ModifyDate: dateTimeOriginal,
+                });
+              }
 
-          resolve({ exif, hash, filepath, mediaItem, mediaItems });
-        } catch (error) {
-          reject(error);
-        }
+              resolve({ exif, hash, filepath, mediaItem, mediaItems });
+            } catch (error) {
+              reject(error);
+            }
+          },
+          { attempts: 5, millis: 1000 }
+        )();
       });
     }
   );
+}
+
+function getMediaItemDownloadUrl(mediaItem: MediaItem) {
+  const isVideo = mediaItem.mimeType.startsWith('video');
+
+  return `${mediaItem.baseUrl}=${isVideo ? 'dv' : 'd'}`;
 }
 
 function updateFileIndex({

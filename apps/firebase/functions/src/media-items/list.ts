@@ -13,6 +13,6 @@ export async function list(data: ListMediaItemsRequest) {
 
     return listMediaItems(data);
   } catch (err) {
-    return error('api/media-items/list error', err);
+    return error('functions/src/media-items/list error', err);
   }
 }

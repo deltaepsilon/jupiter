@@ -25,7 +25,7 @@ export async function download({
   sendMessage: SendMessage;
 }) {
   const uuid = message.uuid;
-  const { folder, libraryId, tokens, urls } = downloadDataSchema.parse(message.payload.data);
+  const { libraryId, tokens, urls } = downloadDataSchema.parse(message.payload.data);
   const response = daemonMessage.parse({
     type: MessageType.download,
     payload: { action: message.payload.action },
@@ -86,7 +86,8 @@ export async function download({
 }
 
 function start({ db, response }: { db: FilesystemDatabase; response: DaemonMessage }) {
-  const { updateDownloadState, setTokens, getDownloadState, getTokens } = createGettersAndSetters(db);
+  const { getDownloadState, getIngestedIds, getTokens, setDownloadedIds, setTokens, updateDownloadState } =
+    createGettersAndSetters(db);
   const downloadState = getDownloadState();
   const tokens = getTokens();
 
@@ -100,14 +101,25 @@ function start({ db, response }: { db: FilesystemDatabase; response: DaemonMessa
   } else if (downloadState.state === 'complete') {
     response.payload.text = 'Restarting download...';
     updateDownloadState({
-      folders: downloadState.folders.map((folder) => ({ ...folder, state: 'downloading', downloadedCount: 0 })),
+      folders: downloadState.folders.map((folder) => {
+        const folderName = folder.folder;
+
+        setDownloadedIds(folderName, new Set([]));
+
+        return {
+          ...folder,
+          state: 'downloading',
+          downloadedCount: 0,
+          mediaItemsCount: getIngestedIds(folderName).size,
+        };
+      }),
       isPaused: false,
       state: 'downloading',
       text: 'Downloading media items',
     });
   } else {
     response.payload.text = 'Resuming download...';
-    updateDownloadState({ isPaused: false, text: 'Resuming download...' });
+    updateDownloadState({ isPaused: false, state: 'ingesting', text: 'Resuming download...' });
   }
 
   tokens && setTokens(tokens);

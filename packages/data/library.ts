@@ -30,13 +30,6 @@ export enum LibraryTaskStatus {
   complete = 'complete',
 }
 
-const libraryTaskSchema = z.object({
-  status: z.nativeEnum(LibraryTaskStatus).default(LibraryTaskStatus.idle),
-  count: z.number().default(0),
-  created: firestoreDate.default(() => new Date()),
-  updated: firestoreDate.default(() => new Date()),
-});
-
 export const libraryTaskStatusRequest = z.object({
   libraryId: z.string(),
   status: z.nativeEnum(LibraryTaskStatus),
@@ -48,22 +41,15 @@ export type LibraryTaskStatusRequest = z.infer<typeof libraryTaskStatusRequest>;
 export type LibraryTaskStatusResponse = z.infer<typeof libraryTaskStatusResponse>;
 
 // Library import
-export const libraryImportSchema = libraryTaskSchema.extend({
+export const libraryImportSchema = z.object({
+  status: z.nativeEnum(LibraryTaskStatus).default(LibraryTaskStatus.idle),
+  count: z.number().default(0),
+  created: firestoreDate.default(() => new Date()),
+  updated: firestoreDate.default(() => new Date()),
   nextPageToken: z.string().optional().nullable(),
   pageSize: z.number().default(100),
 });
 export type LibraryImport = z.infer<typeof libraryImportSchema>;
-
-// Library download
-export const libraryDownloadSchema = libraryTaskSchema.extend({
-  bytes: z.number().default(0),
-  lastKey: z.string().optional().nullable(),
-});
-// export const libraryDownloadTaskSchema = taskSchema.extend({
-//   [TaskKey.data]: z.object({ key: z.string(), mediaItem: mediaItemSchema }),
-// });
-export type LibraryDownload = z.infer<typeof libraryDownloadSchema>;
-// export type LibraryDownloadTask = z.infer<typeof libraryDownloadTaskSchema>;
 
 // Media items
 export const libraryImportMediaItemSchema = z.object({

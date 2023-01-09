@@ -1,6 +1,6 @@
 ## In Progress
 
-- [ ] Make sure the new MediaItems ingestor tries to ingest newer items before continuing on with "lastKey"
+- [ ] Max sure ingestion and indexing are completed before downloading
 - [ ] Parallelize downloads
 
 ## Next actions
@@ -29,6 +29,7 @@
 
 ## Archive
 
+- [x] Make sure the new MediaItems ingest starts with newer items if over a day since last request
 - [x] Why does the WS keep disconnecting???
 - [x] Check to see if the file already exists before downloading it
 - [x] Organize images by year/month folder structure

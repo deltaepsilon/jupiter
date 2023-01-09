@@ -13,6 +13,7 @@ import { FilesystemDatabase } from '../db';
 import { createGettersAndSetters } from '../utils';
 import { downloadMediaItems } from './download-media-items';
 import { indexFilesystem } from './index-filesystem';
+import { wait } from 'ui/utils/wait';
 
 const BATCH_SIZE = 50;
 
@@ -38,9 +39,27 @@ export async function startDownload({ db, message, sendMessage }: Args) {
       }
 
       downloadState = getDownloadState();
+      sendDownloadStateMessage({ db, downloadState, sendMessage });
 
-      while (!getStateFlags(downloadState).isFoldersComplete) {
+      let stateFlags = getStateFlags(downloadState);
+      let counter = 0;
+      while (!stateFlags.allFoldersComplete && stateFlags.isRunning) {
         const folders = downloadState.folders.sort((a, b) => (a.folder > b.folder ? 1 : -1));
+
+        counter++;
+
+        if (counter > 5) {
+          const downloadState = updateDownloadState({
+            isPaused: true,
+            text: 'Too many retries. Pausing download for now.',
+          });
+
+          sendDownloadStateMessage({ db, downloadState, sendMessage });
+
+          break;
+        } else {
+          await wait(500);
+        }
 
         let i = folders.length;
         while (i--) {
@@ -48,9 +67,9 @@ export async function startDownload({ db, message, sendMessage }: Args) {
           const folderNeedsDownload = folder.mediaItemsCount !== folder.downloadedCount;
 
           if (folderNeedsDownload) {
-            downloadState = setFolderState({ db, folder: folder.folder, sendMessage, state: 'idle' });
+            downloadState = setFolderState({ db, folder: folder.folder, state: 'idle' });
           } else {
-            downloadState = setFolderState({ db, folder: folder.folder, sendMessage, state: 'complete' });
+            downloadState = setFolderState({ db, folder: folder.folder, state: 'complete' });
           }
         }
 
@@ -62,15 +81,17 @@ export async function startDownload({ db, message, sendMessage }: Args) {
           const folderNeedsDownload = folder.mediaItemsCount !== folder.downloadedCount;
 
           if (folderNeedsDownload) {
-            downloadState = setFolderState({ db, folder: folder.folder, sendMessage, state: 'downloading' });
+            downloadState = setFolderState({ db, folder: folder.folder, state: 'downloading' });
             sendDownloadStateMessage({ db, downloadState, sendMessage });
 
             await downloadFolder({ db, folder: folder.folder, message, sendMessage });
 
-            downloadState = setFolderState({ db, folder: folder.folder, sendMessage, state: 'complete' });
+            downloadState = setFolderState({ db, folder: folder.folder, state: 'complete' });
             sendDownloadStateMessage({ db, downloadState, sendMessage });
           }
         }
+
+        stateFlags = getStateFlags(downloadState);
       }
 
       updateDownloadState({ state: 'complete', text: 'Media item download complete' });
@@ -96,10 +117,14 @@ export async function startDownload({ db, message, sendMessage }: Args) {
   }
 }
 
-async function downloadFolder({ db, folder, message, sendMessage }: Args & { folder: string }) {
+async function downloadFolder({ db, folder, sendMessage }: Args & { folder: string }) {
   const { getIngestedIds, getDownloadedIds, updateDownloadState } = createGettersAndSetters(db);
-  const mediaItemIds = [...getIngestedIds(folder)].filter((id) => !getDownloadedIds(folder).has(id));
+  const ingestedIds = getIngestedIds(folder);
+  const downloadedIds = getDownloadedIds(folder);
+  const mediaItemIds = [...ingestedIds].filter((id) => !downloadedIds.has(id));
   const text = `Downloading ${mediaItemIds.length} new media items to ${folder}`;
+
+  console.log('downloadFolder', { folder, ingestedIdsSize: ingestedIds.size, downloadedIdsSize: downloadedIds.size });
 
   updateDownloadState({ state: 'downloading', text });
 
@@ -113,12 +138,10 @@ async function downloadFolder({ db, folder, message, sendMessage }: Args & { fol
 function setFolderState({
   db,
   folder,
-  sendMessage,
   state,
 }: {
   db: FilesystemDatabase;
-  folder: string;
-  sendMessage: SendMessage;
+  folder: Folder['folder'];
   state: Folder['state'];
 }) {
   const { getDownloadState, setDownloadState } = createGettersAndSetters(db);
@@ -143,11 +166,15 @@ function sendDownloadStateMessage({
   sendMessage: SendMessage;
 }) {
   const { getDownloadState } = createGettersAndSetters(db);
+  const state = downloadState ?? getDownloadState();
+
+  console.log('sendDownloadStateMessage', { state: state.state, text: state.text });
 
   sendMessage({
     type: MessageType.download,
     payload: {
-      data: downloadDataSchema.parse({ libraryId: db.libraryId, state: downloadState ?? getDownloadState() }),
+      data: downloadDataSchema.parse({ libraryId: db.libraryId, state }),
+      text: state.text,
     },
   });
 }

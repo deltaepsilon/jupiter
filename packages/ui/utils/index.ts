@@ -8,5 +8,6 @@ export * from './noop';
 export * from './retry';
 export * from './routes';
 export * from './url';
+export * from './wait';
 
 export * as localforage from './localforage';

@@ -12,27 +12,15 @@ export function createFilesystemDatabase({ directory, libraryId }: { libraryId: 
 
   function getSet(fsdb: FSDB) {
     return function set<T>(key: string, value: T) {
-      try {
-        fsdb.set(key, value);
+      fsdb.set(key, value);
 
-        return value;
-      } catch (error) {
-        console.log('error', error);
-
-        throw error;
-      }
+      return value;
     };
   }
 
   function getGet(fsdb: FSDB) {
     return function get(key: string) {
-      try {
-        return fsdb.get(key);
-      } catch (error) {
-        console.log('error asdef', error);
-        console.error({ key, fsdb });
-        throw error;
-      }
+      return fsdb.get(key);
     };
   }
 
