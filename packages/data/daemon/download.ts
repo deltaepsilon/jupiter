@@ -100,20 +100,19 @@ export type DownloadState = z.infer<typeof downloadStateSchema>;
 
 const RUNNING_STATES: Set<DownloadState['state']> = new Set(['ingesting', 'indexing', 'downloading']);
 export function getIsRunning(state: DownloadState) {
-  return RUNNING_STATES.has(state.state);
+  return !state.isPaused && RUNNING_STATES.has(state.state);
 }
 
 export function getShouldIngest(downloadState: DownloadState) {
-  return !downloadState.isPaused && downloadState.state === 'ingesting';
+  return getIsRunning(downloadState);
 }
 
 export function getStateFlags(downloadState: DownloadState = DEFAULT_DOWNLOAD_STATE) {
-  const { isPaused, state } = downloadState;
-
   return {
-    isRunning: !isPaused && state && RUNNING_STATES.has(state),
-    isComplete: state === 'complete',
-    shouldIngest: !isPaused && state === 'ingesting',
+    isComplete: downloadState.state === 'complete',
+    isFoldersComplete: downloadState.folders.every((folder) => folder.downloadedCount === folder.mediaItemsCount),
+    isRunning: getIsRunning(downloadState),
+    shouldIngest: getShouldIngest(downloadState),
   };
 }
 

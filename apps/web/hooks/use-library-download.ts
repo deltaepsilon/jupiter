@@ -85,8 +85,6 @@ export function useLibraryDownload(libraryId: string, library: Library) {
         if (message.payload?.data) {
           const { state } = downloadDataSchema.parse(message.payload.data);
 
-          console.log(state);
-
           setDownloadState(state);
         }
       },
@@ -94,7 +92,6 @@ export function useLibraryDownload(libraryId: string, library: Library) {
   }, [registerHandler]);
 
   useEffect(() => {
-    console.log({ shouldIngest, downloadState });
     if (shouldIngest) {
       const lastKey = downloadState?.lastKey;
       const mediaItemsRef = ref(database, FIREBASE.DATABASE.PATHS.LIBRARY_MEDIA_ITEMS(userId, libraryId));

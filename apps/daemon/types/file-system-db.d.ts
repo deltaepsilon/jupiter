@@ -3,6 +3,7 @@ declare module 'file-system-db' {
     constructor(path: string, compact?: boolean);
 
     delete(key: string): void;
+    deleteAll(): void;
     get<T>(key: string): T;
     set<T>(key: string, value: T): void;
   }

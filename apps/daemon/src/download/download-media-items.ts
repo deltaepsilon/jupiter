@@ -9,14 +9,15 @@ import {
   updateFolder,
 } from 'data/daemon';
 import { GettersAndSetters, createGettersAndSetters, moveToDateFolder } from '../utils';
-import { MediaItem, batchGetMediaItemsResponseSchema } from 'data/media-items';
 import { getExif, getMd5, setExif } from '../exif';
 
 import { FilesystemDatabase } from '../db';
+import { MediaItem } from 'data/media-items';
 import axios from 'axios';
 import fs from 'fs';
 import fsPromises from 'fs/promises';
 import path from 'path';
+import { refreshMediaItems } from './refresh-media-items';
 
 interface Args {
   folder: string;
@@ -26,30 +27,45 @@ interface Args {
 }
 
 export async function downloadMediaItems({ folder, mediaItemIds, db, sendMessage }: Args) {
-  const { getDirectory, getDownloadState, getFileIndex, getMediaItem, setFileIndex, setDownloadState } =
-    createGettersAndSetters(db);
+  const {
+    getDirectory,
+    getDownloadedIds,
+    getDownloadState,
+    getFileIndex,
+    getMediaItem,
+    setFileIndex,
+    setDownloadedIds,
+    setDownloadState,
+  } = createGettersAndSetters(db);
   const directoryPath = getDirectory().path;
   const downloadDirectory = path.join(directoryPath, DOWNLOADING_FOLDER);
+  const downloadState = getDownloadState();
   let mediaItems = mediaItemIds.map((mediaItemId) => getMediaItem(folder, mediaItemId));
   let i = mediaItems.length;
-  let stateFlags = getStateFlags(getDownloadState());
+  let stateFlags = getStateFlags(downloadState);
 
   await fsPromises.mkdir(downloadDirectory, { recursive: true });
 
   while (i-- && stateFlags.isRunning) {
+    const mediaItem = mediaItems[i];
+    const downloadedIds = getDownloadedIds(folder);
+
+    if (downloadedIds.has(mediaItem.id)) {
+      console.log('skipping download:', mediaItem.id);
+      continue;
+    }
+
     const {
       hash,
       filepath,
-      mediaItem,
+      mediaItem: updatedMediaItem,
       mediaItems: updatedMediaItems,
-    } = await writeFile({ db, downloadDirectory, folder, mediaItem: mediaItems[i], mediaItems, mediaItemIds });
+    } = await writeFile({ db, downloadDirectory, folder, mediaItem, mediaItems, mediaItemIds });
     const { folder: yearMonthFolder, updated: yearMonthFilepath } = await moveToDateFolder({
-      date: new Date(mediaItem.mediaMetadata.creationTime),
+      date: new Date(updatedMediaItem.mediaMetadata.creationTime),
       directoryPath,
       filepath,
     });
-
-    console.log('yearMonthFilepath', yearMonthFilepath);
 
     updateFileIndex({
       directoryPath,
@@ -60,50 +76,35 @@ export async function downloadMediaItems({ folder, mediaItemIds, db, sendMessage
       setFileIndex,
     });
 
+    downloadedIds.add(mediaItem.id);
+    setDownloadedIds(folder, downloadedIds);
+
     const updatedDownloadState = updateFolder(
       { folder: yearMonthFolder, downloadState: getDownloadState() },
       (folder) => {
-        folder.downloadedCount++;
+        folder.state = 'downloading';
+        folder.downloadedCount = getDownloadedIds(yearMonthFolder).size;
 
         return folder;
       }
     );
 
+    setDownloadState(updatedDownloadState);
+
     sendMessage({
       type: MessageType.download,
-      payload: { data: downloadDataSchema.parse({ libraryId: db.libraryId, state: getDownloadState() }) },
+      payload: {
+        data: downloadDataSchema.parse({
+          libraryId: db.libraryId,
+          state: updatedDownloadState,
+        }),
+        text: `Downloaded: ${yearMonthFilepath}`,
+      },
     });
 
     stateFlags = getStateFlags(updatedDownloadState);
     mediaItems = updatedMediaItems;
   }
-}
-
-async function refreshMediaItems({
-  db,
-  folder,
-  mediaItemIds,
-}: {
-  db: FilesystemDatabase;
-  folder: string;
-  mediaItemIds: string[];
-}) {
-  const { getTokens, getUrls, setTokens, setMediaItem } = createGettersAndSetters(db);
-  const tokens = getTokens();
-  const urls = getUrls();
-
-  const result = await axios.post(urls.batchGetMediaItems, {
-    accessToken: tokens.accessToken,
-    refreshToken: tokens.refreshToken,
-    mediaItemIds: mediaItemIds.join(','),
-  });
-  const { accessToken, refreshToken, expiresAt, mediaItemResults } = batchGetMediaItemsResponseSchema.parse(
-    result.data
-  );
-
-  setTokens({ accessToken, refreshToken, expiresAt: new Date(expiresAt) });
-
-  return mediaItemResults.map(({ mediaItem }) => setMediaItem(folder, mediaItem));
 }
 
 async function writeFile({
@@ -121,16 +122,19 @@ async function writeFile({
   mediaItems: MediaItem[];
   mediaItemIds: string[];
 }) {
-  const response = await axios.get(mediaItem.baseUrl, { responseType: 'stream' }).catch(async (err) => {
+  const isVideo = mediaItem.mimeType.startsWith('video');
+  const downloadUrl = `${mediaItem.baseUrl}=${isVideo ? 'dv' : 'd'}`;
+  const response = await axios.get(downloadUrl, { responseType: 'stream' }).catch(async (err) => {
     const isBaseUrlExpired = err.response.status === 403;
 
     if (isBaseUrlExpired) {
       mediaItems = await refreshMediaItems({ db, folder, mediaItemIds });
+
       const updatedMediaItem = mediaItems.find((m) => m.id === mediaItem.id);
 
       if (updatedMediaItem) mediaItem = updatedMediaItem;
 
-      return axios.get(mediaItem.baseUrl, { responseType: 'stream' });
+      return axios.get(downloadUrl, { responseType: 'stream' });
     } else {
       throw err;
     }

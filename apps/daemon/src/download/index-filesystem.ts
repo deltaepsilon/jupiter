@@ -17,6 +17,7 @@ export async function indexFilesystem(
   function onProgress(folder: string, filesystemProgress: number) {
     const downloadState = getDownloadState();
     const updatedDownloadState = updateFolder({ folder, downloadState }, (folder) => {
+      folder.state = 'indexing';
       folder.indexedCount++;
 
       return folder;
@@ -30,7 +31,7 @@ export async function indexFilesystem(
       type: MessageType.download,
       payload: {
         data: downloadDataSchema.parse({ libraryId: db.libraryId, state: updatedDownloadState }),
-        text: `Filesystem index progress: ${filesystemProgress}`,
+        // text: `Filesystem index progress: ${filesystemProgress}`,
       },
     });
   }

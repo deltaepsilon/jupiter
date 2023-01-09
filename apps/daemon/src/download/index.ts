@@ -6,6 +6,7 @@ import {
   SendMessage,
   daemonMessage,
   downloadDataSchema,
+  folderSchema,
   getIsRunning,
   updateFolder,
 } from 'data/daemon';
@@ -89,15 +90,23 @@ function start({ db, response }: { db: FilesystemDatabase; response: DaemonMessa
   const downloadState = getDownloadState();
   const tokens = getTokens();
 
-  response.payload.text = 'Starting download...';
-
   if (downloadState.state === 'idle') {
+    response.payload.text = 'Starting download...';
     updateDownloadState({
       isPaused: false,
       state: 'ingesting',
       text: 'Transferring media items to daemon',
     });
+  } else if (downloadState.state === 'complete') {
+    response.payload.text = 'Restarting download...';
+    updateDownloadState({
+      folders: downloadState.folders.map((folder) => ({ ...folder, state: 'downloading', downloadedCount: 0 })),
+      isPaused: false,
+      state: 'downloading',
+      text: 'Downloading media items',
+    });
   } else {
+    response.payload.text = 'Resuming download...';
     updateDownloadState({ isPaused: false, text: 'Resuming download...' });
   }
 
@@ -106,8 +115,6 @@ function start({ db, response }: { db: FilesystemDatabase; response: DaemonMessa
 
 function pause({ db }: { db: FilesystemDatabase }) {
   const { updateDownloadState } = createGettersAndSetters(db);
-
-  console.log('Pausing download...');
 
   updateDownloadState({
     isPaused: true,
@@ -149,14 +156,14 @@ function addMediaItem({
     response.payload.error = 'No media item provided';
   } else {
     const ingestedIds = getIngestedIds(folder);
+    ingestedIds.add(mediaItem.id);
+
     const updatedDownloadState = updateFolder({ folder, downloadState }, (folder) => {
-      folder.mediaItemsCount++;
+      folder.mediaItemsCount = ingestedIds.size;
       folder.updated = new Date();
 
       return folder;
     });
-
-    ingestedIds.add(mediaItem.id);
 
     setIngestedIds(folder, ingestedIds);
     setMediaItem(folder, mediaItem);

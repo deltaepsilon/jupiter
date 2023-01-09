@@ -110,7 +110,7 @@ export function createGettersAndSetters(db: FilesystemDatabase) {
     updatedFolderState: (folder: string, state: Partial<DownloadState>) => {},
 
     // Tokens
-    getTokens: () => tokensSchema.parse(metadataDb.get(DownloadDbKeys.tokens) || undefined),
+    getTokens: () => tokensSchema.parse(metadataDb.get(DownloadDbKeys.tokens) || { refreshToken: '' }),
     setTokens: (tokens: Omit<Tokens, 'updated'>) =>
       metadataDb.set<Tokens>(DownloadDbKeys.tokens, tokensSchema.parse(tokens)),
 

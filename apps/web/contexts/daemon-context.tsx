@@ -105,7 +105,7 @@ export function DaemonProvider({ children, handlers }: Props) {
   const send = useCallback(
     async (message: GetMessageArgs) =>
       new Promise<DaemonMessage>(async (resolve, reject) => {
-        if (ws) {
+        if (ws && isConnected) {
           const { message: encoded, stringified } = encodeMessage(message);
 
           resolversRef.current.set(encoded.uuid, { resolve, reject });
@@ -117,7 +117,7 @@ export function DaemonProvider({ children, handlers }: Props) {
           reject('not connected');
         }
       }),
-    [onMessage, ws]
+    [isConnected, onMessage, ws]
   );
   const registerHandler = useCallback((messageTypeHandler: MessageTypeHandler) => {
     localHandlersRef.current.push(messageTypeHandler);
@@ -213,7 +213,10 @@ function usePingPong(ws: WebSocket | null, onClose: () => void) {
       const intervalTimer = setInterval(() => {
         ws.send(pingMessage);
 
-        timer = setTimeout(() => onClose(), 2500);
+        timer = setTimeout(() => {
+          console.info('Closing WebSocket due to missed ping.');
+          onClose();
+        }, 4500);
       }, 5000);
 
       function onMessage(messageEvent: MessageEvent) {

@@ -13,7 +13,6 @@ import {
 } from '@mui/material';
 import { DownloadState, getStateFlags, getTotals } from 'data/daemon';
 
-import BackupTableIcon from '@mui/icons-material/BackupTable';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import { DirectoryPicker } from 'web/components/daemon';
@@ -24,6 +23,7 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import PauseCircleOutlineIcon from '@mui/icons-material/PauseCircleOutline';
 import PlayCircleOutlineIcon from '@mui/icons-material/PlayCircleOutline';
 import ReplayIcon from '@mui/icons-material/Replay';
+import SyncIcon from '@mui/icons-material/Sync';
 import { UseDirectoryResult } from 'web/contexts';
 import { UseLibraryDownloadResult } from 'web/hooks/use-library-download';
 import { formatDate } from 'ui/utils';
@@ -32,7 +32,7 @@ import { useMemo } from 'react';
 const GRID: SxProps = {
   display: 'grid',
   gridGap: 4,
-  gridTemplateColumns: '1fr 3.5rem 51px 51px',
+  gridTemplateColumns: '1fr 8rem 51px 51px',
   alignItems: 'center',
 };
 
@@ -77,7 +77,7 @@ export function DownloadLibraryPanel({ actions, directory, downloadState, librar
             <Typography variant='caption'>{formatDate(downloadState?.updated, 'MMM d •  HH:mm:ss')}</Typography>
           </Box>
         </Box>
-        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: -0.5 }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start', paddingLeft: 1 }}>
           <Typography variant='body1'>
             {downloadedCount} / {mediaItemsCount}
           </Typography>
@@ -156,7 +156,7 @@ function FolderState({ folder }: { folder: DownloadState['folders'][0] }) {
     case 'idle':
       return <PauseCircleOutlineIcon />;
     case 'indexing':
-      return <BackupTableIcon />;
+      return <SyncIcon />;
     case 'downloading':
       return <DownloadingIcon />;
     case 'complete':

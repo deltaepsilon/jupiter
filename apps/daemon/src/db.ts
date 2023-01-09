@@ -6,13 +6,21 @@ export const DB_FOLDER_NAME = '__f_stop_admin_data';
 export type FilesystemDatabase = ReturnType<typeof createFilesystemDatabase>;
 
 export function createFilesystemDatabase({ directory, libraryId }: { libraryId: string; directory: string }) {
-  const metadataDb = new FSDB(path.join(directory, DB_FOLDER_NAME, libraryId, `metadata.json`), false);
+  const metadataFsdb = new FSDB(path.join(directory, DB_FOLDER_NAME, libraryId, `metadata.json`), false);
+
+  testDb(metadataFsdb);
 
   function getSet(fsdb: FSDB) {
     return function set<T>(key: string, value: T) {
-      fsdb.set(key, value);
+      try {
+        fsdb.set(key, value);
 
-      return value;
+        return value;
+      } catch (error) {
+        console.log('error', error);
+
+        throw error;
+      }
     };
   }
 
@@ -21,6 +29,7 @@ export function createFilesystemDatabase({ directory, libraryId }: { libraryId: 
       try {
         return fsdb.get(key);
       } catch (error) {
+        console.log('error asdef', error);
         console.error({ key, fsdb });
         throw error;
       }
@@ -44,14 +53,27 @@ export function createFilesystemDatabase({ directory, libraryId }: { libraryId: 
   function getFolderDb(folder: string) {
     const folderSlug = folder.replace(/[\\|\/]/g, '-');
     const dbPath = path.join(directory, DB_FOLDER_NAME, libraryId, `folder-${folderSlug}.json`);
+    const fsdb = new FSDB(dbPath, false);
 
-    return getDb(new FSDB(dbPath, false));
+    testDb(fsdb);
+
+    return getDb(fsdb);
+  }
+
+  function testDb(fsdb: FSDB) {
+    try {
+      fsdb.get('test');
+    } catch (error) {
+      if (error instanceof Error && error.toString() === 'SyntaxError: Unexpected end of JSON input') {
+        fsdb.deleteAll();
+      }
+    }
   }
 
   return {
     isDb: true,
     libraryId,
-    metadataDb: getDb(metadataDb),
+    metadataDb: getDb(metadataFsdb),
     getFolderDb,
   };
 }
