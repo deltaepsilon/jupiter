@@ -16,6 +16,7 @@ import { MediaItem } from 'data/media-items';
 import axios from 'axios';
 import fs from 'fs';
 import fsPromises from 'fs/promises';
+import { multiplex } from 'ui/utils/multiplex';
 import path from 'path';
 import { refreshMediaItems } from './refresh-media-items';
 import { retry } from 'ui/utils/retry';
@@ -37,10 +38,12 @@ export async function downloadMediaItems({ folder, mediaItemIds, db, sendMessage
     setFileIndex,
     setDownloadedIds,
     setDownloadState,
+    updateDownloadingIds,
   } = createGettersAndSetters(db);
   const directoryPath = getDirectory().path;
   const downloadDirectory = path.join(directoryPath, DOWNLOADING_FOLDER);
   const downloadState = getDownloadState();
+  const addToMultiplex = multiplex(5);
   let mediaItems = mediaItemIds.map((mediaItemId) => getMediaItem(folder, mediaItemId));
   let i = mediaItems.length;
   let stateFlags = getStateFlags(downloadState);
@@ -56,55 +59,30 @@ export async function downloadMediaItems({ folder, mediaItemIds, db, sendMessage
       continue;
     }
 
-    const {
-      hash,
-      filepath,
-      mediaItem: updatedMediaItem,
-      mediaItems: updatedMediaItems,
-    } = await writeFile({ db, downloadDirectory, folder, mediaItem, mediaItems, mediaItemIds });
-    const { folder: yearMonthFolder, updated: yearMonthFilepath } = await moveToDateFolder({
-      date: new Date(updatedMediaItem.mediaMetadata.creationTime),
-      directoryPath,
-      filepath,
+    const { filePromise, mediaItems: updatedMediaItems } = await writeFile({
+      db,
+      downloadDirectory,
+      folder,
+      mediaItem,
+      mediaItems,
+      mediaItemIds,
     });
-
-    updateFileIndex({
-      directoryPath,
-      filepath: yearMonthFilepath,
-      folder: yearMonthFolder,
-      getFileIndex,
-      hash,
-      setFileIndex,
-    });
-
-    downloadedIds.add(mediaItem.id);
-    setDownloadedIds(folder, downloadedIds);
-
-    const updatedDownloadState = updateFolder(
-      { folder: yearMonthFolder, downloadState: getDownloadState() },
-      (folder) => {
-        folder.state = 'downloading';
-        folder.downloadedCount = getDownloadedIds(yearMonthFolder).size;
-
-        return folder;
-      }
-    );
-
-    setDownloadState(updatedDownloadState);
-
-    sendMessage({
-      type: MessageType.download,
-      payload: {
-        data: downloadDataSchema.parse({
-          libraryId: db.libraryId,
-          state: updatedDownloadState,
-        }),
-        text: `Downloaded: ${yearMonthFilepath}`,
-      },
-    });
-
-    stateFlags = getStateFlags(updatedDownloadState);
     mediaItems = updatedMediaItems;
+
+    addToMultiplex(async () => {
+      updateDownloadingIds(folder, (downloadingIds) => downloadingIds.add(mediaItem.id));
+      const updatedDownloadState = await handleFilePromise({
+        db,
+        directoryPath,
+        filePromise,
+        folder,
+        mediaItem,
+        sendMessage,
+      });
+      updateDownloadingIds(folder, (downloadingIds) => (downloadingIds.delete(mediaItem.id), downloadingIds));
+
+      stateFlags = getStateFlags(updatedDownloadState);
+    });
   }
 }
 
@@ -146,44 +124,109 @@ async function writeFile({
 
   response.data.pipe(writeStream);
 
-  return new Promise<{ exif: Exif; hash: string; filepath: string; mediaItem: MediaItem; mediaItems: MediaItem[] }>(
-    (resolve, reject) => {
-      writeStream.on('error', reject);
+  const filePromise = new Promise<{
+    exif: Exif;
+    hash: string;
+    filepath: string;
+  }>((resolve, reject) => {
+    writeStream.on('error', reject);
 
-      writeStream.on('finish', async () => {
-        retry(
-          async () => {
-            try {
-              let exif = await getExif(downloadingFilepath);
+    writeStream.on('finish', async () => {
+      retry(
+        async ({ attempt }) => {
+          let exif = await getExif(downloadingFilepath);
 
-              if (!exif.ModifyDate || !exif.CreateDate || !exif.DateTimeOriginal) {
-                const dateTimeOriginal = dateToExifDate(mediaItem.mediaMetadata.creationTime, true);
+          if (!exif.ModifyDate || !exif.CreateDate || !exif.DateTimeOriginal) {
+            const dateTimeOriginal = dateToExifDate(mediaItem.mediaMetadata.creationTime, true);
 
-                exif = await setExif(downloadingFilepath, {
-                  DateTimeOriginal: dateTimeOriginal,
-                  CreateDate: dateTimeOriginal,
-                  ModifyDate: dateTimeOriginal,
-                });
-              }
+            exif = await setExif(downloadingFilepath, {
+              DateTimeOriginal: dateTimeOriginal,
+              CreateDate: dateTimeOriginal,
+              ModifyDate: dateTimeOriginal,
+            });
+          }
 
-              const { hash, filepath } = await getMd5(downloadingFilepath);
+          const { hash, filepath } = await getMd5(downloadingFilepath);
 
-              resolve({ exif, hash, filepath, mediaItem, mediaItems });
-            } catch (error) {
-              reject(error);
-            }
-          },
-          { attempts: 5, millis: 1000, failSilently: true }
-        )();
-      });
-    }
-  );
+          resolve({ exif, hash, filepath });
+        },
+        { attempts: 5, millis: 1000, failSilently: true }
+      )().catch(reject);
+    });
+  });
+
+  return { filePromise, mediaItem, mediaItems };
 }
 
 function getMediaItemDownloadUrl(mediaItem: MediaItem) {
   const isVideo = mediaItem.mimeType.startsWith('video');
 
   return `${mediaItem.baseUrl}=${isVideo ? 'dv' : 'd'}`;
+}
+
+async function handleFilePromise({
+  db,
+  directoryPath,
+  filePromise,
+  folder,
+  mediaItem,
+  sendMessage,
+}: {
+  db: FilesystemDatabase;
+  directoryPath: string;
+  filePromise: Promise<{ exif: Exif; hash: string; filepath: string }>;
+  folder: string;
+  mediaItem: MediaItem;
+  sendMessage: SendMessage;
+}) {
+  const { getDownloadedIds, getDownloadState, getFileIndex, setDownloadState, setFileIndex, updateDownloadedIds } =
+    createGettersAndSetters(db);
+
+  const { hash, filepath } = await filePromise;
+
+  console.log({ filepath });
+
+  const { folder: yearMonthFolder, updated: yearMonthFilepath } = await moveToDateFolder({
+    date: new Date(mediaItem.mediaMetadata.creationTime),
+    directoryPath,
+    filepath,
+  });
+
+  updateFileIndex({
+    directoryPath,
+    filepath: yearMonthFilepath,
+    folder: yearMonthFolder,
+    getFileIndex,
+    hash,
+    setFileIndex,
+  });
+
+  updateDownloadedIds(folder, (downloadIds) => downloadIds.add(mediaItem.id));
+
+  const updatedDownloadState = updateFolder(
+    { folder: yearMonthFolder, downloadState: getDownloadState() },
+    (folder) => {
+      folder.state = 'downloading';
+      folder.downloadedCount = getDownloadedIds(yearMonthFolder).size;
+
+      return folder;
+    }
+  );
+
+  setDownloadState(updatedDownloadState);
+
+  sendMessage({
+    type: MessageType.download,
+    payload: {
+      data: downloadDataSchema.parse({
+        libraryId: db.libraryId,
+        state: updatedDownloadState,
+      }),
+      text: `Downloaded: ${yearMonthFilepath}`,
+    },
+  });
+
+  return updatedDownloadState;
 }
 
 function updateFileIndex({

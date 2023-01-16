@@ -57,7 +57,7 @@ async function queryMediaItems({
   pageToken?: string;
   refreshToken: string;
 }) {
-  const { data } = await axios.get('https://photoslibrary.googleapis.com/v1/mediaItems', {
+  const { data, request } = await axios.get('https://photoslibrary.googleapis.com/v1/mediaItems', {
     params: { pageSize, pageToken },
     headers: { Authorization: `Bearer ${accessToken}`, ContentType: 'application/json' },
   });

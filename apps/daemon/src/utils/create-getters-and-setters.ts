@@ -4,6 +4,7 @@ import {
   DownloadDbKeys,
   DownloadState,
   DownloadedIds,
+  DownloadingIds,
   FileIndex,
   FileIndexByFilepath,
   IngestedIds,
@@ -12,6 +13,7 @@ import {
   directorySchema,
   downloadStateSchema,
   downloadedIdsSchema,
+  downloadingIdsSchema,
   fileIndexByFilepathSchema,
   fileIndexSchema,
   ingestedIdsSchema,
@@ -27,7 +29,7 @@ export type GettersAndSetters = ReturnType<typeof createGettersAndSetters>;
 export function createGettersAndSetters(db: FilesystemDatabase) {
   const { metadataDb, getFolderDb } = db;
 
-  return {
+  const getters = {
     // Directory
     getDirectory: () => directorySchema.parse(metadataDb.get(DirectoryDbKeys.directory) || undefined),
     setDirectory: (directory: Directory) =>
@@ -41,6 +43,32 @@ export function createGettersAndSetters(db: FilesystemDatabase) {
         DownloadDbKeys.downloadedIds,
         Array.from(downloadedIdsSchema.parse(downloadedIds))
       ),
+    updateDownloadedIds: (folder: string, callback: (downloadedIds: DownloadedIds) => DownloadedIds) => {
+      const downloadedIds = getters.getDownloadedIds(folder);
+      const newDownloadedIds = callback(downloadedIds);
+
+      return getters.setDownloadedIds(folder, newDownloadedIds);
+    },
+
+    // Downloading Ids
+    getDownloadingIds: (folder: string) =>
+      downloadingIdsSchema.parse(getFolderDb(folder).get(DownloadDbKeys.downloadingIds) || []),
+    setDownloadingIds: (folder: string, downloadingIds: DownloadingIds) =>
+      getFolderDb(folder).set<string[]>(
+        DownloadDbKeys.downloadingIds,
+        Array.from(downloadingIdsSchema.parse(downloadingIds))
+      ),
+    clearDownloadingIds: () => {
+      const folders = getters.getDownloadState().folders;
+
+      return folders.forEach((f) => getters.setDownloadingIds(f.folder, new Set()));
+    },
+    updateDownloadingIds: (folder: string, callback: (downloadingIds: DownloadingIds) => DownloadingIds) => {
+      const downloadingIds = getters.getDownloadingIds(folder);
+      const newDownloadingIds = callback(downloadingIds);
+
+      return getters.setDownloadingIds(folder, newDownloadingIds);
+    },
 
     // File Indices
     getFileIndex: (folder: string, md5: string) =>
@@ -100,14 +128,13 @@ export function createGettersAndSetters(db: FilesystemDatabase) {
     setDownloadState: (state: Omit<DownloadState, 'updated'>) =>
       metadataDb.set<DownloadState>(DownloadDbKeys.state, downloadStateSchema.parse({ ...state, updated: new Date() })),
     updateDownloadState: (state: Partial<DownloadState>) => {
-      const downloadState = downloadStateSchema.parse(metadataDb.get(DownloadDbKeys.state) || undefined);
+      const downloadState = getters.getDownloadState();
 
       return metadataDb.set<DownloadState>(
         DownloadDbKeys.state,
         downloadStateSchema.parse({ ...downloadState, ...state, updated: new Date() })
       );
     },
-    updatedFolderState: (folder: string, state: Partial<DownloadState>) => {},
 
     // Tokens
     getTokens: () => tokensSchema.parse(metadataDb.get(DownloadDbKeys.tokens) || { refreshToken: '' }),
@@ -118,4 +145,6 @@ export function createGettersAndSetters(db: FilesystemDatabase) {
     getUrls: () => urlsSchema.parse(metadataDb.get(DownloadDbKeys.urls) || []),
     setUrls: (urls: Urls) => metadataDb.set<Urls>(DownloadDbKeys.urls, urlsSchema.parse(urls)),
   };
+
+  return getters;
 }

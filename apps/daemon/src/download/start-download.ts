@@ -24,7 +24,7 @@ interface Args {
 }
 
 export async function startDownload({ db, message, sendMessage }: Args) {
-  const { getDownloadState, updateDownloadState } = createGettersAndSetters(db);
+  const { clearDownloadingIds, getDownloadState, updateDownloadState } = createGettersAndSetters(db);
   let downloadState = getDownloadState();
   const { isRunning } = getStateFlags(downloadState);
 
@@ -38,6 +38,7 @@ export async function startDownload({ db, message, sendMessage }: Args) {
         }
       }
 
+      clearDownloadingIds();
       downloadState = getDownloadState();
       sendDownloadStateMessage({ db, downloadState, sendMessage });
 
@@ -65,6 +66,8 @@ export async function startDownload({ db, message, sendMessage }: Args) {
         while (i--) {
           const folder = folders[i];
           const folderNeedsDownload = folder.mediaItemsCount !== folder.downloadedCount;
+
+          console.log(folder);
 
           if (folderNeedsDownload) {
             downloadState = setFolderState({ db, folder: folder.folder, state: 'idle' });
@@ -122,13 +125,19 @@ export async function startDownload({ db, message, sendMessage }: Args) {
 }
 
 async function downloadFolder({ db, folder, sendMessage }: Args & { folder: string }) {
-  const { getIngestedIds, getDownloadedIds, updateDownloadState } = createGettersAndSetters(db);
+  const { getIngestedIds, getDownloadedIds, getDownloadingIds, updateDownloadState } = createGettersAndSetters(db);
   const ingestedIds = getIngestedIds(folder);
   const downloadedIds = getDownloadedIds(folder);
-  const mediaItemIds = [...ingestedIds].filter((id) => !downloadedIds.has(id));
+  const downloadingIds = getDownloadingIds(folder);
+  const mediaItemIds = [...ingestedIds].filter((id) => !downloadedIds.has(id) && !downloadingIds.has(id));
   const text = `Downloading ${mediaItemIds.length} new media items to ${folder}`;
 
-  console.log('downloadFolder', { folder, ingestedIdsSize: ingestedIds.size, downloadedIdsSize: downloadedIds.size });
+  console.log('downloadFolder', {
+    folder,
+    downloadingIds,
+    ingestedIdsSize: ingestedIds.size,
+    downloadedIdsSize: downloadedIds.size,
+  });
 
   updateDownloadState({ state: 'downloading', text });
 

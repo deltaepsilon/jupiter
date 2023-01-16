@@ -2,6 +2,7 @@ import { mediaItemSchema } from '../media-items';
 import { z } from 'zod';
 
 export enum DownloadDbKeys {
+  downloadingIds = 'downloadingIds',
   downloadedIds = 'downloadedIds',
   files = 'files',
   filesIndexByFilename = 'filesIndexByFilename',
@@ -39,6 +40,9 @@ export const downloadedIdsSchema = z.preprocess((val) => {
   return val;
 }, z.set(z.string()));
 export type DownloadedIds = z.infer<typeof downloadedIdsSchema>;
+
+export const downloadingIdsSchema = downloadedIdsSchema;
+export type DownloadingIds = z.infer<typeof downloadingIdsSchema>;
 
 export enum DownloadAction {
   init = 'init',

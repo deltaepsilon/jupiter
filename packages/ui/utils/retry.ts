@@ -1,5 +1,5 @@
 export function retry<T>(
-  callback: () => T,
+  callback: ({ attempt }: { attempt: number }) => T,
   { attempts = 3, millis = 300, failSilently = false }: { attempts?: number; failSilently?: boolean; millis?: number }
 ): () => Promise<T> {
   let attempt = 0;
@@ -15,7 +15,7 @@ export function retry<T>(
         } else {
           setTimeout(async () => {
             try {
-              const result = await callback();
+              const result = await callback({ attempt });
 
               resolve(result);
             } catch (e) {

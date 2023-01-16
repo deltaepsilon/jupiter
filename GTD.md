@@ -1,11 +1,19 @@
 ## In Progress
 
-- [ ] Parallelize downloads
+- [ ] Imported drawer 
+      - Update count, display data table with month/day counts, drill down
+      - Enable the drawer button when the import is paused
+- [ ] Tag downloaded files with Google's image id. Consider xmp tags from adobe. 
+      - Google Photos EXIF chat: https://exiftool.org/forum/index.php?topic=9004.0 
+      - User-defined XMP: https://exiftool.org/forum/index.php?topic=7312.0 
+      - .cfg file: https://exiftool.org/config.html
 
 ## Next actions
 
-- [ ] Handle files with identical filenames. - Upload a few files with identical filenames to Google Photos and see how it goes.
-- [ ] Tag downloaded files with Google's image id. Consider xmp tags from adobe. - Google Photos EXIF chat: https://exiftool.org/forum/index.php?topic=9004.0 - User-defined XMP: https://exiftool.org/forum/index.php?topic=7312.0 - .cfg file: https://exiftool.org/config.html
+- [ ] Make sure that completed folders get marked `complete`
+
+- [ ] Handle files with identical filenames: https://photos.google.com/search/DSC01845.JPG
+
 - [ ] Sync up metadata
 - [ ] Restore metadata to images already on disk
 - [ ] Debug `context.auth` problem: https://github.com/firebase/firebase-tools/issues/5210
@@ -28,6 +36,9 @@
 
 ## Archive
 
+- [x] Read from start of media-items collection before continuing with lastKey
+- [x] Track ids in the multiplex queue so that they don't get duplicated
+- [x] Parallelize downloads
 - [x] Debug download restart. It's getting confused after the pause.
 - [x] Make sure the new MediaItems ingest starts with newer items if over a day since last request
 - [x] Why does the WS keep disconnecting???

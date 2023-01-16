@@ -4,6 +4,7 @@ export * from './create-queue';
 export * from './date';
 export * from './events';
 export * from './firebase';
+export * from './multiplex';
 export * from './noop';
 export * from './retry';
 export * from './routes';

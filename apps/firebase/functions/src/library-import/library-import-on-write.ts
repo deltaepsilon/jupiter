@@ -1,13 +1,13 @@
 import * as admin from 'firebase-admin';
 import * as functions from 'firebase-functions';
 
-import { Library, LibraryTaskStatus, libraryImportSchema } from 'data/library';
-import { MEDIA_ITEMS_TTL_MS, REFRESH_FROM_TODAY_MS } from '../data';
+import { LibraryTaskStatus, libraryImportSchema } from 'data/library';
 import { getApp, getLibrary } from '../utils';
 
 import { FIREBASE } from 'data/firebase';
 import { MediaItem } from 'data/media-items';
-import { listMediaItems } from 'api/photos/list-media-items';
+import { REFRESH_FROM_TODAY_MS } from '../data';
+import { getPage } from './get-page';
 import { setStatus } from './set-status';
 
 export const LIBRARY_IMPORT_PATH = 'user-owned/{userId}/library/{libraryId}/import';
@@ -39,11 +39,10 @@ export async function libraryImportOnWrite(
     const beforeImport = beforeParsed.success && beforeParsed.data;
     const libraryImport = afterParsed.data;
     const { pageSize } = libraryImport;
-    const shouldStartFromBeginning =
+    const isStale =
       beforeImport && libraryImport.updated.getTime() - beforeImport.updated.getTime() > REFRESH_FROM_TODAY_MS;
-    let nextPageToken = shouldStartFromBeginning ? null : libraryImport.nextPageToken;
-
-    console.log({ shouldStartFromBeginning, nextPageToken });
+    const isReadingFromStart = isStale || !!libraryImport.startNextPageToken;
+    let nextPageToken = isReadingFromStart ? libraryImport.startNextPageToken || null : libraryImport.nextPageToken;
 
     const { library, librarySnapshot } = await getLibrary({ libraryId, userId });
     const { mediaItems, nextPageToken: maybeNextPageToken } = await getPage({
@@ -55,42 +54,51 @@ export async function libraryImportOnWrite(
     const mediaItemsUpdates = getMediaItemUpdates(mediaItems);
     const isLastPage = !maybeNextPageToken;
 
+    if (isLastPage) throw new Error('TODO: Implement this');
+
     if (isLastPage) await setStatus({ libraryId, status: LibraryTaskStatus.complete, userId });
     nextPageToken = maybeNextPageToken;
 
-    await libraryMediaItemsRef.update(mediaItemsUpdates);
-    await libraryImportRef.update({
-      count: admin.database.ServerValue.increment(mediaItems.length),
-      nextPageToken: nextPageToken || null,
-      updated: new Date(),
-    });
+    if (isReadingFromStart) {
+      // TODO: Figure out how many of these records were new and update the count
+      const sortedMediaItemKeys = Object.keys(mediaItemsUpdates).sort();
+      const firstMediaItemKey = sortedMediaItemKeys[0];
+
+      if (!sortedMediaItemKeys.length) {
+        console.info('media items empty!!!', { library, nextPageToken });
+
+        await libraryImportRef.update({
+          status: 'paused',
+          updated: new Date(),
+        });
+
+        throw new Error('Missing media items when reading from front');
+      }
+
+      const query = libraryMediaItemsRef.orderByKey().endAt(firstMediaItemKey).limitToLast(pageSize);
+      const snapshot = await query.once('value');
+      const existingMediaItemKeys = Object.keys(snapshot.val()).sort();
+      const newKeys = sortedMediaItemKeys.filter((key) => !existingMediaItemKeys.includes(key));
+      const isAllNewKeys = newKeys.length === sortedMediaItemKeys.length;
+
+      await libraryMediaItemsRef.update(mediaItemsUpdates);
+
+      await libraryImportRef.update({
+        count: admin.database.ServerValue.increment(newKeys.length),
+        startNextPageToken: isAllNewKeys ? nextPageToken : null,
+        updated: new Date(),
+      });
+    } else {
+      await libraryMediaItemsRef.update(mediaItemsUpdates);
+      await libraryImportRef.update({
+        count: admin.database.ServerValue.increment(mediaItems.length),
+        nextPageToken: nextPageToken || null,
+        updated: new Date(),
+      });
+    }
 
     if (isLastPage) await librarySnapshot.ref.update({ imported: true, updated: new Date() });
   }
-}
-
-interface GetPageArgs {
-  library: Library;
-  librarySnapshot: admin.firestore.DocumentSnapshot<admin.firestore.DocumentData>;
-  nextPageToken?: string | null;
-  pageSize: number;
-}
-async function getPage({ library, librarySnapshot, pageSize, nextPageToken }: GetPageArgs) {
-  const { accessToken, refreshToken, updated } = library;
-  const isStale = !updated || updated.getTime() < Date.now() - MEDIA_ITEMS_TTL_MS;
-
-  const data = await listMediaItems({
-    accessToken: isStale ? undefined : accessToken,
-    refreshToken,
-    pageSize: String(pageSize),
-    nextPageToken: nextPageToken ?? undefined,
-  });
-
-  if (isStale) {
-    await librarySnapshot.ref.update({ accessToken: data.accessToken, updated: new Date() });
-  }
-
-  return { mediaItems: data.mediaItems, nextPageToken: data.nextPageToken };
 }
 
 function getMediaItemUpdates(mediaItems: MediaItem[]) {
