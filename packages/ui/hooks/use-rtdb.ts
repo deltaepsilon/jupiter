@@ -1,4 +1,4 @@
-import { DataSnapshot, DatabaseReference, onValue, ref } from 'firebase/database';
+import { DataSnapshot, DatabaseReference, get, onValue, ref } from 'firebase/database';
 
 import { NOOP } from 'ui/utils';
 import { useCallback } from 'react';
@@ -18,6 +18,18 @@ export function useRtdb() {
     },
     [database]
   );
+  const once = useCallback(
+    async (path: string | DatabaseReference) => {
+      if (database) {
+        const getRef = typeof path === 'string' ? ref(database, path) : path;
 
-  return { database, listen };
+        return get(getRef);
+      } else {
+        return null;
+      }
+    },
+    [database]
+  );
+
+  return { database, once, listen };
 }

@@ -8,7 +8,7 @@ import { useAuth } from 'ui/contexts';
 export type UseLibraryImportResult = ReturnType<typeof useLibraryImport>;
 
 export function useLibraryImport(libraryId: string) {
-  const { user } = useAuth();
+  const { userId } = useAuth();
   const { listen } = useRtdb();
   const { setLibraryImportStatus } = useFunctions();
   const [libraryImport, setLibraryImport] = useState<LibraryImport | null | undefined>();
@@ -27,9 +27,9 @@ export function useLibraryImport(libraryId: string) {
   const isLoading = typeof libraryImport === 'undefined';
 
   useEffect(() => {
-    if (!user) return;
+    if (!userId) return;
 
-    const path = FIREBASE.DATABASE.PATHS.LIBRARY_IMPORT(user.uid, libraryId);
+    const path = FIREBASE.DATABASE.PATHS.LIBRARY_IMPORT(userId, libraryId);
 
     return listen(path, (snapshot) => {
       const parsed = libraryImportSchema.safeParse(snapshot.val());
@@ -40,7 +40,7 @@ export function useLibraryImport(libraryId: string) {
         setLibraryImport(null);
       }
     });
-  }, [libraryId, listen, user]);
+  }, [libraryId, listen, userId]);
 
   return { isLoading, libraryImport, actions: { start, pause, cancel, destroy } };
 }

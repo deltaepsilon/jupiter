@@ -1,8 +1,8 @@
 type Callback = () => Promise<void>;
 
 export function multiplex(max = 1) {
+  const queue: Callback[] = [];
   let runningCount = 0;
-  let queue: Callback[] = [];
 
   async function startQueue() {
     const callback = queue.shift();

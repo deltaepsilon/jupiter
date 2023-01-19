@@ -27,9 +27,10 @@ export const FIREBASE = {
   },
   DATABASE: {
     PATHS: {
+      LIBRARY_IMPORT: (userId: string, libraryId: string) => `user-owned/${userId}/library/${libraryId}/import`,
       LIBRARY_MEDIA_ITEMS: (userId: string, libraryId: string) =>
         `user-owned/${userId}/library/${libraryId}/media-items`,
-      LIBRARY_IMPORT: (userId: string, libraryId: string) => `user-owned/${userId}/library/${libraryId}/import`,
+      LIBRARY_STATS: (userId: string, libraryId: string) => `user-owned/${userId}/library/${libraryId}/stats`,
       LIBRARY_DAEMON: (userId: string, libraryId: string) => `user-owned/${userId}/library/${libraryId}/daemon`,
       LIBRARY_DOWNLOAD: (userId: string, libraryId: string) => `user-owned/${userId}/library/${libraryId}/download`,
       LIBRARY_DOWNLOAD_QUEUE: (userId: string, libraryId: string) =>

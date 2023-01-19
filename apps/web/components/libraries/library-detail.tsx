@@ -88,7 +88,7 @@ function LibraryDetailConnected({ library, libraryId }: { library: Library; libr
             </Step>
           )}
 
-          <ImportLibraryPanel actions={importActions} libraryImport={libraryImport} />
+          <ImportLibraryPanel actions={importActions} libraryId={libraryId} libraryImport={libraryImport} />
         </Box>
 
         <Box sx={{ pointerEvents: hasLibraryRecords ? 'all' : 'none', opacity: hasLibraryRecords ? 1 : 0.5 }}>

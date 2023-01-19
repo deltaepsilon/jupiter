@@ -9,6 +9,7 @@ dotenv.config();
 export const batchGetMediaItems = functions.https.onCall(mediaItems.batchGet);
 export const batchGetMediaItemsOnRequest = functions.https.onRequest(mediaItems.batchGetOnRequest);
 export const listMediaItems = functions.https.onCall(mediaItems.list);
+export const refreshMediaItemStats = functions.https.onCall(mediaItems.refreshStats);
 
 export const getAuthUrl = functions.https.onCall(oauth.getAuthUrl);
 export const refreshAccessToken = functions.https.onRequest(oauth.refreshAccessToken);

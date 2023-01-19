@@ -2,10 +2,10 @@ import * as admin from 'firebase-admin';
 import * as functions from 'firebase-functions';
 
 import { LibraryTaskStatus, libraryImportSchema } from 'data/library';
+import { MediaItem, getMediaItemUpdates } from 'data/media-items';
 import { getApp, getLibrary } from '../utils';
 
 import { FIREBASE } from 'data/firebase';
-import { MediaItem } from 'data/media-items';
 import { REFRESH_FROM_TODAY_MS } from '../data';
 import { getPage } from './get-page';
 import { setStatus } from './set-status';
@@ -99,12 +99,4 @@ export async function libraryImportOnWrite(
 
     if (isLastPage) await librarySnapshot.ref.update({ imported: true, updated: new Date() });
   }
-}
-
-function getMediaItemUpdates(mediaItems: MediaItem[]) {
-  return mediaItems.reduce((acc, mediaItem) => {
-    acc[`date:${mediaItem.mediaMetadata.creationTime}|id:${mediaItem.id}`] = mediaItem;
-
-    return acc;
-  }, {} as Record<string, MediaItem>);
 }

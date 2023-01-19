@@ -28,6 +28,8 @@ const ModalDrawerContext = createContext<ModalDrawerValue>({
   onClose: NOOP,
 });
 
+export const MODAL_DRAWER_WIDTHS = ['100vw', 'calc(100vw - 10rem)', '75vw', '50vw', '40vw'];
+
 export function useModalDrawer() {
   return useContext(ModalDrawerContext);
 }
@@ -64,7 +66,13 @@ export function ModalDrawer({ children, isOpen = false, onClose, title = '', ...
             inset:
               debouncedIsOpen !== isOpen
                 ? ['100vh 0 0 0', '0 0 0 100vw']
-                : ['0 0 0 0', '0 0 0 10rem', '0 0 0 25vw', '0 0 0 50vw', '0 0 0 60vw'],
+                : [
+                    `0 0 0 calc(100vw - ${MODAL_DRAWER_WIDTHS[0]})`,
+                    `0 0 0 calc(100vw - ${MODAL_DRAWER_WIDTHS[1]})`,
+                    `0 0 0 calc(100vw - ${MODAL_DRAWER_WIDTHS[2]})`,
+                    `0 0 0 calc(100vw - ${MODAL_DRAWER_WIDTHS[3]})`,
+                    `0 0 0 calc(100vw - ${MODAL_DRAWER_WIDTHS[4]})`,
+                  ],
             transition: 'inset 300ms',
           }}
         >

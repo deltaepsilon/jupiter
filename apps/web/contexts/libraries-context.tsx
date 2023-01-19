@@ -2,6 +2,7 @@ import { Libraries, Library, librarySchema } from 'data/library';
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 
 import { FIREBASE } from 'data/firebase';
+import { MEDIA_ITEMS_TTL_MS } from 'data/media-items';
 import { getIsStaleAccessToken } from 'ui/utils';
 import { useFirestore } from 'ui/hooks';
 import { useGooglePhotos } from 'web/hooks';
@@ -12,6 +13,7 @@ interface LibrariesValue {
   addLibrary: (tokens: Tokens) => Promise<void>;
   getLibraries: () => Promise<void>;
   isLoading: boolean;
+  library?: Library;
   libraries: Libraries;
   refreshLibrary: (libraryId: string, shouldRefreshRecords: boolean) => Promise<boolean>;
 }
@@ -23,8 +25,6 @@ const LibrariesContext = createContext<LibrariesValue>({
   libraries: [],
   refreshLibrary: async () => false,
 });
-
-const MEDIA_ITEMS_TTL_MS = 1000 * 60 * 60; // 1 Hour
 
 export function useLibraries() {
   return useContext(LibrariesContext);
@@ -42,6 +42,7 @@ export function LibrariesProvider({ children, libraryId, userId }: Props) {
   const { isLoading: isFirestoreLoading, addDocs, getDocTuple, getDocTuples, updateDocs } = useFirestore();
   const [isLoading, setIsLoading] = useState<LibrariesValue['isLoading']>(true);
   const [libraries, setLibraries] = useState<LibrariesValue['libraries']>([]);
+  const [, library] = useMemo(() => libraries.find(([key]) => key === libraryId) ?? [], [libraries, libraryId]);
   const getLibraries = useCallback(async () => {
     if (userId) {
       getDocTuples(FIREBASE.FIRESTORE.COLLECTIONS.LIBRARIES(userId))
@@ -148,7 +149,7 @@ export function LibrariesProvider({ children, libraryId, userId }: Props) {
   }, [isFirestoreLoading, refreshRecords]);
 
   return (
-    <LibrariesContext.Provider value={{ addLibrary, getLibraries, isLoading, libraries, refreshLibrary }}>
+    <LibrariesContext.Provider value={{ addLibrary, getLibraries, isLoading, library, libraries, refreshLibrary }}>
       {children}
     </LibrariesContext.Provider>
   );

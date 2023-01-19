@@ -10,11 +10,10 @@ interface Props {
 }
 
 export function LibraryPage({ libraryId }: Props) {
-  const { user } = useAuth({ forceRedirect: true });
-  const userId = user?.uid;
+  const { userId } = useAuth({ forceRedirect: true });
 
   return userId ? (
-    <LibrariesProvider libraryId={libraryId} userId={user?.uid}>
+    <LibrariesProvider libraryId={libraryId} userId={userId}>
       <Container sx={{ display: 'flex', justifyContent: 'center' }}>
         <LibraryPageConnected />
       </Container>

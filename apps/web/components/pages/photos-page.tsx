@@ -6,11 +6,10 @@ import { LibrariesList } from 'web/components/libraries';
 import { useAuth } from 'ui/contexts';
 
 export function PhotosPage() {
-  const { user } = useAuth({ forceRedirect: true });
-  const userId = user?.uid;
+  const { userId } = useAuth({ forceRedirect: true });
 
   return userId ? (
-    <LibrariesProvider userId={user?.uid}>
+    <LibrariesProvider userId={userId}>
       <Container sx={{ display: 'flex', justifyContent: 'center' }}>
         <PhotosPageConnected />
       </Container>

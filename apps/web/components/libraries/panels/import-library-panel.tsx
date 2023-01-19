@@ -1,5 +1,6 @@
 import {
   Box,
+  Button,
   IconButton,
   LinearProgress,
   ListItemIcon,
@@ -13,19 +14,22 @@ import {
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import { LibraryTaskStatus } from 'data/library';
+import { MediaItemsDrawer } from '../drawers/media-items-drawer';
 import { MenuTrigger } from 'ui/components';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import PauseCircleOutlineIcon from '@mui/icons-material/PauseCircleOutline';
 import PlayCircleOutlineIcon from '@mui/icons-material/PlayCircleOutline';
+import TableChartIcon from '@mui/icons-material/TableChart';
 import { UseLibraryImportResult } from 'web/hooks/use-library-import';
 import { formatDate } from 'ui/utils';
 
 interface Props {
   actions: UseLibraryImportResult['actions'];
+  libraryId: string;
   libraryImport: UseLibraryImportResult['libraryImport'];
 }
 
-export function ImportLibraryPanel({ actions, libraryImport }: Props) {
+export function ImportLibraryPanel({ actions, libraryId, libraryImport }: Props) {
   const isRunning = libraryImport?.status === LibraryTaskStatus.running;
   const isComplete = libraryImport?.status === LibraryTaskStatus.complete;
   const isEmpty = !libraryImport;
@@ -45,7 +49,20 @@ export function ImportLibraryPanel({ actions, libraryImport }: Props) {
         </Typography>
       </Box>
       <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: -0.5 }}>
-        <Typography variant='body1'>{libraryImport?.count}</Typography>
+        <MediaItemsDrawer libraryId={libraryId}>
+          <Typography
+            sx={{
+              cursor: 'pointer',
+              userSelect: 'none',
+              '&:hover': {
+                textDecoration: 'underline',
+              },
+            }}
+            variant='body1'
+          >
+            {libraryImport?.count}
+          </Typography>
+        </MediaItemsDrawer>
       </Box>
       <Box>
         <ActionButton actions={actions} libraryImport={libraryImport} />
@@ -61,6 +78,14 @@ export function ImportLibraryPanel({ actions, libraryImport }: Props) {
           }
         >
           <MenuList>
+            <MediaItemsDrawer libraryId={libraryId}>
+              <MenuItem>
+                <ListItemIcon>
+                  <TableChartIcon />
+                </ListItemIcon>
+                <ListItemText>View Imports</ListItemText>
+              </MenuItem>
+            </MediaItemsDrawer>
             <MenuItem onClick={() => actions.destroy()}>
               <ListItemIcon>
                 <DeleteForeverIcon />
@@ -74,7 +99,7 @@ export function ImportLibraryPanel({ actions, libraryImport }: Props) {
   );
 }
 
-function ActionButton({ actions, libraryImport }: Props) {
+function ActionButton({ actions, libraryImport }: Pick<Props, 'actions' | 'libraryImport'>) {
   switch (libraryImport?.status) {
     case LibraryTaskStatus.complete:
       return (

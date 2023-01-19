@@ -19,8 +19,8 @@
 
   --font-light-weight: 400;
   --font-regular-weight: 400;
-  --font-bold-weight: 400;
-  --font-extrabold-weight: 700;
+  --font-bold-weight: 700;
+  --font-extrabold-weight: 900;
 }
 
 body {
@@ -46,11 +46,11 @@ a:visited {
   font-weight: var(--font-light-weight);
 }
 
-.bold {
+.bold, b {
   font-weight: var(--font-bold-weight);
 }
 
-.extrabold {
+.extrabold, strong {
   font-weight: var(--font-extrabold-weight);
 }
 

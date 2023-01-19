@@ -1,3 +1,10 @@
+import {
+  BatchGetMediaItemsParams,
+  RefreshMediaItemStatsParams,
+  batchGetMediaItemsParamsSchema,
+  refreshMediaItemStatsParamsSchema,
+} from 'data/functions';
+import { BatchGetMediaItemsResponse, batchGetMediaItemsResponseSchema } from 'data/media-items';
 import { GetAuthUrlRequest, GetAuthUrlResponse, getAuthUrlRequest, getAuthUrlResponse } from 'data/auth';
 import {
   LibraryTaskStatusRequest,
@@ -5,21 +12,50 @@ import {
   libraryTaskStatusRequest,
   libraryTaskStatusResponse,
 } from 'data/library';
-import { ListMediaItemsRequest, ListMediaItemsResponse, listMediaItemsResponse } from 'api/photos/list-media-items';
+import { ListMediaItemsRequest, ListMediaItemsResponse, listMediaItemsResponse } from 'api';
 
 import { httpsCallable } from 'firebase/functions';
 import { useCallback } from 'react';
 import { useFirebase } from 'ui/contexts';
 
 enum FunctionName {
-  listMediaItems = 'listMediaItems',
   batchGetMediaItems = 'batchGetMediaItems',
   getAuthUrl = 'getAuthUrl',
+  listMediaItems = 'listMediaItems',
+  refreshMediaItemStats = 'refreshMediaItemStats',
   setLibraryImportStatus = 'setLibraryImportStatus',
 }
 
+export type UseFunctionsResult = ReturnType<typeof useFunctions>;
+
 export function useFunctions() {
   const { functions } = useFirebase();
+
+  const batchGetMediaItems = useCallback(
+    async (params: BatchGetMediaItemsParams) => {
+      if (!functions) throw new Error('Functions not initialized');
+
+      const func = httpsCallable<BatchGetMediaItemsParams, BatchGetMediaItemsResponse>(
+        functions,
+        FunctionName.batchGetMediaItems
+      );
+      const response = await func(batchGetMediaItemsParamsSchema.parse(params));
+
+      return batchGetMediaItemsResponseSchema.parse(response.data);
+    },
+    [functions]
+  );
+  const getAuthUrl = useCallback(
+    async (params: GetAuthUrlRequest) => {
+      if (!functions) throw new Error('Functions not initialized');
+
+      const func = httpsCallable<GetAuthUrlRequest, GetAuthUrlResponse>(functions, FunctionName.getAuthUrl);
+      const response = await func(getAuthUrlRequest.parse(params));
+
+      return getAuthUrlResponse.parse(response.data);
+    },
+    [functions]
+  );
   const listMediaItems = useCallback(
     async (params: ListMediaItemsRequest) => {
       if (!functions) throw new Error('Functions not initialized');
@@ -36,14 +72,15 @@ export function useFunctions() {
     },
     [functions]
   );
-  const getAuthUrl = useCallback(
-    async (params: GetAuthUrlRequest) => {
+
+  const refreshMediaItemStats = useCallback(
+    async (params: RefreshMediaItemStatsParams) => {
       if (!functions) throw new Error('Functions not initialized');
 
-      const func = httpsCallable<GetAuthUrlRequest, GetAuthUrlResponse>(functions, FunctionName.getAuthUrl);
-      const response = await func(getAuthUrlRequest.parse(params));
+      const func = httpsCallable<RefreshMediaItemStatsParams, void>(functions, FunctionName.refreshMediaItemStats);
+      const response = await func(refreshMediaItemStatsParamsSchema.parse(params));
 
-      return getAuthUrlResponse.parse(response.data);
+      return response.data;
     },
     [functions]
   );
@@ -62,5 +99,5 @@ export function useFunctions() {
     [functions]
   );
 
-  return { getAuthUrl, listMediaItems, setLibraryImportStatus };
+  return { batchGetMediaItems, getAuthUrl, listMediaItems, refreshMediaItemStats, setLibraryImportStatus };
 }

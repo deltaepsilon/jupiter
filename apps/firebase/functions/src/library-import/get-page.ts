@@ -1,7 +1,7 @@
 import * as admin from 'firebase-admin';
 
 import { Library } from 'data/library';
-import { MEDIA_ITEMS_TTL_MS } from '../data';
+import { MEDIA_ITEMS_TTL_MS } from 'data/media-items';
 import { listMediaItems } from 'api/photos/list-media-items';
 
 interface GetPageArgs {

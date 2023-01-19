@@ -21,7 +21,7 @@ import { useRtdb } from 'ui/hooks';
 export type UseLibraryDownloadResult = ReturnType<typeof useLibraryDownload>;
 
 export function useLibraryDownload(libraryId: string, library: Library) {
-  const { user } = useAuth();
+  const { userId } = useAuth();
   const { isDbReady, registerHandler, send } = useDaemon();
   const [downloadState, setDownloadState] = useState<DownloadState>(DEFAULT_DOWNLOAD_STATE);
   const { database } = useRtdb();
@@ -70,13 +70,12 @@ export function useLibraryDownload(libraryId: string, library: Library) {
     };
   }, [library.refreshToken, libraryId, send]);
   const isLoading = typeof downloadState === 'undefined';
-  const userId = user?.uid;
   const shouldIngest =
     isDbReady && downloadState && getShouldIngest(downloadState) && !!database && !!userId && !!libraryId;
 
   useEffect(() => {
-    user && isDbReady && init();
-  }, [init, isDbReady, user]);
+    userId && isDbReady && init();
+  }, [init, isDbReady, userId]);
 
   useEffect(() => {
     return registerHandler({

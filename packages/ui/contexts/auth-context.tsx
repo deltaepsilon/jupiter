@@ -20,6 +20,7 @@ export interface AuthValue {
   signInWithGoogle: () => Promise<Credential>;
   signOut: () => void;
   user?: User | null;
+  userId?: string;
 }
 
 const DEFAULT_AUTH: AuthValue = { signInWithGoogle: async () => null, signOut: NOOP, user: null };
@@ -78,6 +79,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, [auth]);
 
   return (
-    <AuthContext.Provider value={{ credential, signInWithGoogle, signOut, user }}>{children}</AuthContext.Provider>
+    <AuthContext.Provider value={{ credential, signInWithGoogle, signOut, user, userId: user?.uid }}>
+      {children}
+    </AuthContext.Provider>
   );
 }

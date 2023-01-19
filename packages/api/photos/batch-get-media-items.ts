@@ -3,19 +3,15 @@ import { batchGetMediaItemsResponseSchema } from 'data/media-items';
 import { refreshAccessToken } from '../utils/jwt';
 import { z } from 'zod';
 
-const BATCH_GET_MEDIA_ITEMS_PARAMS_SCHEMA = z.object({
-  accessToken: z.string().optional(),
+export const batchGetMediaItemsParamsSchema = z.object({
+  accessToken: z.string().nullish(),
   refreshToken: z.string(),
   mediaItemIds: z.string(),
 });
-export type BatchGetMediaItemsParams = z.infer<typeof BATCH_GET_MEDIA_ITEMS_PARAMS_SCHEMA>;
+export type BatchGetMediaItemsParams = z.infer<typeof batchGetMediaItemsParamsSchema>;
 
 export async function batchGetMediaItems(params: BatchGetMediaItemsParams) {
-  const {
-    accessToken: maybeAccessToken,
-    refreshToken,
-    mediaItemIds,
-  } = BATCH_GET_MEDIA_ITEMS_PARAMS_SCHEMA.parse(params);
+  const { accessToken: maybeAccessToken, refreshToken, mediaItemIds } = batchGetMediaItemsParamsSchema.parse(params);
   let accessToken = maybeAccessToken;
   let expiresAt = 0;
 

@@ -1,26 +1,23 @@
+import { BaseUrlDecorators, decorateImageBaseUrl } from 'data/media-items';
+
 import { Image } from 'ui/components';
 import { MediaItem } from 'data/media-items';
 import { NOOP } from 'ui/utils';
 import { SxProps } from '@mui/material';
-import { decorateImageBaseUrl } from 'data/media-items';
 
-interface Props {
-  crop?: true;
-  description?: true;
-  height: number;
+export interface MediaItemImageProps extends Omit<BaseUrlDecorators, 'download'> {
   mediaItem: MediaItem;
   onError?: () => void;
-  width: number;
   sx?: SxProps;
 }
 
-export function MediaItemImage({ description, crop, height, mediaItem, onError = NOOP, sx = {}, width }: Props) {
+export function MediaItemImage({ crop, height, mediaItem, onError = NOOP, sx = {}, width }: MediaItemImageProps) {
   return (
     <Image
       alt={mediaItem.filename}
       height={height}
       onError={onError}
-      src={decorateImageBaseUrl(mediaItem.baseUrl, { height, crop, description })}
+      src={decorateImageBaseUrl(mediaItem.baseUrl, { height, crop })}
       sx={{ ...sx, objectFit: 'cover' }}
       width={width}
     />

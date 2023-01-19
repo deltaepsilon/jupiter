@@ -52,14 +52,42 @@ export const libraryImportSchema = z.object({
 });
 export type LibraryImport = z.infer<typeof libraryImportSchema>;
 
-// Media items
-export const libraryImportMediaItemSchema = z.object({
-  success: z.boolean(),
-  created: z
-    .date()
-    .default(() => new Date())
-    .optional(),
-  mediaItem: mediaItemSchema,
+// Stats
+export const yearSchema = z.object({
+  id: z.string(),
+  year: z.number(),
+  count: z.number(),
+  lastKey: z.string(),
 });
-
-export type LibraryImportMediaItem = z.infer<typeof libraryImportMediaItemSchema>;
+export const monthSchema = z.object({
+  id: z.string(),
+  year: z.number(),
+  month: z.number(),
+  count: z.number(),
+  lastKey: z.string(),
+});
+export const dateSchema = z.object({
+  id: z.string(),
+  year: z.number(),
+  month: z.number(),
+  date: z.number(),
+  count: z.number(),
+  lastKey: z.string(),
+});
+export const libraryImportStatsSchema = z
+  .object({
+    years: z.array(yearSchema),
+    months: z.array(monthSchema),
+    dates: z.array(dateSchema),
+    created: firestoreDate.default(() => new Date()),
+  })
+  .default({ years: [], months: [], dates: [] });
+export type Year = z.infer<typeof yearSchema>;
+export type Month = z.infer<typeof monthSchema>;
+export type Date = z.infer<typeof dateSchema>;
+export type LibraryImportStats = z.infer<typeof libraryImportStatsSchema>;
+export type LibraryImportStatsMap = {
+  years: Record<string, Year>;
+  months: Record<string, Month>;
+  dates: Record<string, Date>;
+};

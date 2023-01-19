@@ -63,21 +63,19 @@ export const listMediaItemsResponseSchema = z.object({
 export type BatchGetMediaItemsResponse = z.infer<typeof batchGetMediaItemsResponseSchema>;
 export type MediaItem = z.infer<typeof mediaItemSchema>;
 export type MediaItems = MediaItem[];
-export type MediaItemTuple = [string, MediaItem];
-export type MediaItemTuples = MediaItemTuple[];
+export type MediaItemRecords = Record<string, MediaItem>;
 
-// export function extractTuplesFromQueueTasks(queueTasks: QueueTasks): MediaItemTuples {
-//   return Object.values(queueTasks).map((queueTask) => {
-//     const key = z.string().parse(queueTask.data.key);
-//     const mediaItem = mediaItemSchema.parse(queueTask.data.mediaItem);
-
-//     return [key, mediaItem];
-//   });
-// }
-
-export function decorateImageBaseUrl(
-  baseUrl: string,
-  { width, height, crop, description }: { width?: number; height?: number; crop?: true; description?: true }
-) {
-  return addParams(baseUrl, { w: width, h: height, c: crop, d: description });
+export type BaseUrlDecorators = { width?: number; height?: number; crop?: true; download?: true };
+export function decorateImageBaseUrl(baseUrl: string, { width, height, crop, download }: BaseUrlDecorators) {
+  return addParams(baseUrl, { w: width, h: height, c: crop, d: download });
 }
+
+export function getMediaItemUpdates(mediaItems: MediaItem[]) {
+  return mediaItems.reduce((acc, mediaItem) => {
+    acc[`date:${mediaItem.mediaMetadata.creationTime}|id:${mediaItem.id}`] = { ...mediaItem, updated: new Date() };
+
+    return acc;
+  }, {} as Record<string, MediaItem>);
+}
+
+export const MEDIA_ITEMS_TTL_MS = 1000 * 60 * 60; // 1 Hour

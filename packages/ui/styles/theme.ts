@@ -7,7 +7,7 @@ const FONT_BOLD = {
 
 const FONT_SEMIBOLD = {
   fontFamily: 'skolar-sans-latin-condensed, sans-serif', // TODO: remove filicudi-solid
-  fontWeight: 600,
+  fontWeight: 700,
 };
 
 const FONT_BLACK = {

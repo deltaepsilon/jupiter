@@ -1,13 +1,15 @@
 import { BatchGetMediaItemsParams, batchGetMediaItems } from '../../../../../packages/api';
+import { error, getContextAuth } from '../utils';
 
-import { error } from '../utils';
 import { https } from 'firebase-functions';
 
 export async function batchGet(data: BatchGetMediaItemsParams, context: https.CallableContext) {
   try {
+    console.log({ data });
     const { accessToken, refreshToken } = data;
+    const auth = getContextAuth(context);
 
-    if (!context.auth) {
+    if (!auth.userId) {
       return new https.HttpsError('unauthenticated', 'Unauthorized');
     }
 

@@ -4,6 +4,7 @@ export * from './container';
 export * from './hidden-scroll';
 export * from './image';
 export * from './link';
+export * from './media-item-carousel';
 export * from './media-item-image';
 export * from './menu-trigger';
 export * from './modal-drawer';

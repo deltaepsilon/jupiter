@@ -8,8 +8,7 @@ import { useRtdb } from 'ui/hooks';
 
 export function useDaemonRecord(libraryId: string) {
   const [daemonRecord, setDaemonRecord] = useState<DaemonRecord>();
-  const { user } = useAuth();
-  const userId = user?.uid;
+  const { userId } = useAuth();
   const { database } = useRtdb();
   const daemonRef = useMemo(
     () => database && userId && ref(database, FIREBASE.DATABASE.PATHS.LIBRARY_DAEMON(userId, libraryId)),

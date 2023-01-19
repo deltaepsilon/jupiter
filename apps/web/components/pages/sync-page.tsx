@@ -7,11 +7,10 @@ import { SyncTasksList } from 'web/components/sync-tasks';
 import { useAuth } from 'ui/contexts';
 
 export function SyncPage() {
-  const { user } = useAuth({ forceRedirect: true });
-  const userId = user?.uid;
+  const { userId } = useAuth({ forceRedirect: true });
 
   return userId ? (
-    <SyncTasksProvider userId={user?.uid}>
+    <SyncTasksProvider userId={userId}>
       <Container sx={{ display: 'flex', justifyContent: 'center' }}>
         <SyncPageConnected />
       </Container>
