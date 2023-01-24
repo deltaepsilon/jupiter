@@ -1,5 +1,5 @@
 import { Box, Button, IconButton, List, ListItem, SxProps, TextField, Typography } from '@mui/material';
-import { Date, LibraryImportStats, Month, Year } from 'data/library';
+import { ItemDate, ItemMonth, ItemYear, LibraryImportStats } from 'data/library';
 import { MODAL_DRAWER_WIDTHS, ModalDrawer, ModalDrawerFooter } from 'ui/components';
 import { MediaItemsProvider, useMediaItems } from 'web/contexts/media-items-context';
 import { useEffect, useState } from 'react';
@@ -25,11 +25,11 @@ export function MediaItemsDrawer({ children, disabled = false, libraryId, sx = {
   return (
     <>
       <ModalDrawer
-        aria-describedby='pick a local directory'
-        aria-labelledby='pick a local directory'
+        aria-describedby='imported media items'
+        aria-labelledby='imported media items'
         isOpen={isOpen}
         onClose={onClose}
-        title='Pick a local directory to sync'
+        title='Imported media items'
       >
         <MediaItemsProvider libraryId={libraryId}>
           <MediaItemsContent />
@@ -53,9 +53,21 @@ function MediaItemsContent() {
   const created = libraryImportStats?.created;
 
   return (
-    <Box sx={{ display: 'grid', gridGap: 8, padding: 2, background: 'gold', maxWidth: MODAL_DRAWER_WIDTHS }}>
+    <Box
+      sx={{
+        padding: 2,
+        maxWidth: MODAL_DRAWER_WIDTHS,
+      }}
+    >
       <Box
-        sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', textAlign: 'right', paddingRight: 2 }}
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'flex-end',
+          gridGap: 8,
+          textAlign: 'right',
+          marginBottom: 2,
+        }}
       >
         <Typography sx={{ position: 'relative', top: -3 }} variant='body2'>
           {created && formatDistanceToNow(created)}
@@ -68,8 +80,6 @@ function MediaItemsContent() {
         sx={{
           border: '1px solid var(--color-light-gray)',
           borderWidth: '1px 1px 0 1px',
-          maxWidth: 'calc(100% - 2rem)',
-          outline: '1px solid red',
         }}
       >
         {libraryImportStats?.years.map((year) => {
@@ -82,7 +92,7 @@ function MediaItemsContent() {
   );
 }
 
-function YearRow({ dates, year, yearMonths }: { dates: Date[]; year: Year; yearMonths: Month[] }) {
+function YearRow({ dates, year, yearMonths }: { dates: ItemDate[]; year: ItemYear; yearMonths: ItemMonth[] }) {
   return (
     <Box sx={{ display: 'grid', gridTemplateColumns: '7rem 1fr' }}>
       <Box sx={{ borderBottom: '1px solid var(--color-light-gray)', paddingTop: 1 }}>
@@ -100,7 +110,7 @@ function YearRow({ dates, year, yearMonths }: { dates: Date[]; year: Year; yearM
   );
 }
 
-function MonthRow({ monthDates, month }: { monthDates: Date[]; month: Month }) {
+function MonthRow({ monthDates, month }: { monthDates: ItemDate[]; month: ItemMonth }) {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -143,7 +153,7 @@ function MonthRow({ monthDates, month }: { monthDates: Date[]; month: Month }) {
   );
 }
 
-function DateRow({ date }: { date: Date }) {
+function DateRow({ date }: { date: ItemDate }) {
   const mediaItems = useDateMediaItems(date);
 
   return (
@@ -165,13 +175,25 @@ function DateRow({ date }: { date: Date }) {
       </Box>
 
       <Box sx={{ paddingY: 1 }}>
-        <MediaItemCarousel mediaItemProps={{ height: 100, width: 100 }} mediaItems={mediaItems} />
+        <MediaItemCarousel
+          mediaItemProps={{ height: 100, width: 100 }}
+          mediaItems={mediaItems}
+          sx={{
+            width: [
+              'calc(100vw - 25rem)',
+              'calc(100vw - 35rem)',
+              'calc(75vw - 25rem)',
+              'calc(50vw - 25rem)',
+              'calc(40vw - 25rem)',
+            ],
+          }}
+        />
       </Box>
     </Box>
   );
 }
 
-function useDateMediaItems(date: Date) {
+function useDateMediaItems(date: ItemDate) {
   const [mediaItems, setMediaItems] = useState<MediaItemRecords>({});
   const { getMediaItems, libraryId } = useMediaItems();
   const refreshedMediaItems = useRefreshedMediaItems(libraryId, mediaItems);

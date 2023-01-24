@@ -82,12 +82,12 @@ export const libraryImportStatsSchema = z
     created: firestoreDate.default(() => new Date()),
   })
   .default({ years: [], months: [], dates: [] });
-export type Year = z.infer<typeof yearSchema>;
-export type Month = z.infer<typeof monthSchema>;
-export type Date = z.infer<typeof dateSchema>;
+export type ItemYear = z.infer<typeof yearSchema>;
+export type ItemMonth = z.infer<typeof monthSchema>;
+export type ItemDate = z.infer<typeof dateSchema>;
 export type LibraryImportStats = z.infer<typeof libraryImportStatsSchema>;
 export type LibraryImportStatsMap = {
-  years: Record<string, Year>;
-  months: Record<string, Month>;
-  dates: Record<string, Date>;
+  years: Record<string, ItemYear>;
+  months: Record<string, ItemMonth>;
+  dates: Record<string, ItemDate>;
 };

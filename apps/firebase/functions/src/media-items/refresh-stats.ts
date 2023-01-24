@@ -3,6 +3,7 @@ import { RefreshMediaItemStatsParams, refreshMediaItemStatsParamsSchema } from '
 import { error, getApp, getContextAuth } from '../utils';
 
 import { FIREBASE } from 'data/firebase';
+import addMinutes from 'date-fns/addMinutes';
 import { https } from 'firebase-functions';
 import { mediaItemSchema } from 'data/media-items';
 
@@ -14,18 +15,19 @@ export async function refreshStats(data: RefreshMediaItemStatsParams, context: h
       return new https.HttpsError('unauthenticated', 'Unauthorized');
     }
 
-    const { libraryId, userId } = refreshMediaItemStatsParamsSchema.parse({
+    const args = refreshMediaItemStatsParamsSchema.parse({
       libraryId: data.libraryId,
+      timezoneOffset: data.timezoneOffset,
       userId: auth.userId,
     });
 
-    return refresh({ libraryId, userId });
+    return refresh(args);
   } catch (err) {
     return error('functions/src/media-items/batch-get', err);
   }
 }
 
-async function refresh({ libraryId, userId }: RefreshMediaItemStatsParams) {
+async function refresh({ libraryId, timezoneOffset, userId }: RefreshMediaItemStatsParams) {
   const database = getApp().database();
   const importRef = database.ref(FIREBASE.DATABASE.PATHS.LIBRARY_IMPORT(userId, libraryId));
   const mediaItemsRef = database.ref(FIREBASE.DATABASE.PATHS.LIBRARY_MEDIA_ITEMS(userId, libraryId));
@@ -35,7 +37,7 @@ async function refresh({ libraryId, userId }: RefreshMediaItemStatsParams) {
   const statsMap = Object.entries(mediaItems).reduce(
     (acc, [key, value]) => {
       const mediaItem = mediaItemSchema.parse(value);
-      const createdDate = new Date(mediaItem.mediaMetadata.creationTime);
+      const createdDate = addMinutes(new Date(mediaItem.mediaMetadata.creationTime), -timezoneOffset);
       const year = createdDate.getUTCFullYear();
       const month = createdDate.getUTCMonth() + 1;
       const date = createdDate.getUTCDate();
@@ -94,9 +96,11 @@ async function refresh({ libraryId, userId }: RefreshMediaItemStatsParams) {
         : -1
     ),
   });
+  const statsUpdates = { ...stats, created: stats.created.toISOString() };
+  const count = Object.keys(mediaItems).length;
 
-  await statsRef.set(stats);
-  await importRef.update({ count: Object.keys(mediaItems).length });
+  await statsRef.set(statsUpdates);
+  await importRef.update({ count });
 
   return stats;
 }

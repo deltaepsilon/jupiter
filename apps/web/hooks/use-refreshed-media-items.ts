@@ -6,7 +6,6 @@ import { useFunctions, useRtdb } from 'ui/hooks';
 import { FIREBASE } from 'data/firebase';
 import { getIsStaleAccessToken } from 'ui/utils';
 import { getMediaItemUpdates } from 'data/media-items';
-import { stringify } from 'querystring';
 import { useAuth } from 'ui/contexts';
 import { useLibraries } from 'web/contexts';
 
@@ -22,6 +21,10 @@ export function useRefreshedMediaItems(libraryId: string, mediaItemRecords: Medi
         ([, mediaItem]) => new Date().getTime() - new Date(mediaItem.updated).getTime() > MEDIA_ITEMS_TTL_MS
       ),
     [mediaItemRecords]
+  );
+  const sortedMediaItems = useMemo(
+    () => mediaItems.sort((a, b) => (a.mediaMetadata.creationTime < b.mediaMetadata.creationTime ? 1 : -1)),
+    [mediaItems]
   );
 
   useEffect(() => {
@@ -57,5 +60,5 @@ export function useRefreshedMediaItems(libraryId: string, mediaItemRecords: Medi
     }
   }, [batchGetMediaItems, database, expiredMediaItemEntries, library, libraryId, mediaItemRecords, userId]);
 
-  return mediaItems;
+  return sortedMediaItems;
 }

@@ -1,11 +1,13 @@
 import { LibraryImportStats, libraryImportStatsSchema } from 'data/library';
 import { MediaItem, MediaItemRecords, mediaItemSchema } from 'data/media-items';
 import { createContext, useCallback, useContext, useEffect, useRef, useState } from 'react';
-import { endAt, get, limitToLast, query, ref } from 'firebase/database';
+import { endAt, get, limitToFirst, limitToLast, orderByKey, query, ref, startAt } from 'firebase/database';
 import { useFunctions, useRtdb } from 'ui/hooks';
 
 import { FIREBASE } from 'data/firebase';
 import { useAuth } from 'ui/contexts';
+
+const LIBRARY_IMPORT_TTL = 1000 * 60 * 60 * 1; // 1 hour
 
 type MediaItemsMap = Map<string, MediaItemRecords>;
 
@@ -47,7 +49,7 @@ export function MediaItemsProvider({ children, libraryId }: Props) {
     if (userId) {
       setIsLoading(true);
 
-      await refreshMediaItemStats({ libraryId, userId });
+      await refreshMediaItemStats({ libraryId, timezoneOffset: new Date().getTimezoneOffset(), userId });
 
       setIsLoading(false);
     }
@@ -61,9 +63,9 @@ export function MediaItemsProvider({ children, libraryId }: Props) {
         if (cached) return cached;
 
         const mediaItemsPath = FIREBASE.DATABASE.PATHS.LIBRARY_MEDIA_ITEMS(userId, libraryId);
-        const mediaItemsQuery = query(ref(database, mediaItemsPath), endAt(lastKey), limitToLast(count));
+        const mediaItemsQuery = query(ref(database, mediaItemsPath), orderByKey(), endAt(lastKey), limitToLast(count));
         const snapshot = await get(mediaItemsQuery);
-        const result = Object.entries(snapshot?.val()).reduce((acc, [key, value]) => {
+        const result = Object.entries(snapshot.val()).reduce((acc, [key, value]) => {
           acc[key] = mediaItemSchema.parse(value);
 
           return acc;
@@ -92,6 +94,14 @@ export function MediaItemsProvider({ children, libraryId }: Props) {
       }
     });
   }, [libraryId, listen, userId]);
+
+  useEffect(() => {
+    if (libraryImportStats) {
+      const isStale = libraryImportStats && libraryImportStats.created.getTime() < Date.now() - LIBRARY_IMPORT_TTL;
+
+      isStale && refresh();
+    }
+  }, [libraryImportStats, refresh]);
 
   return (
     <MediaItemsContext.Provider value={{ getMediaItems, isLoading, libraryId, libraryImportStats, refresh }}>
