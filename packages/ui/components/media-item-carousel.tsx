@@ -3,6 +3,7 @@ import { SxProps, Theme } from '@mui/material';
 
 import { Box } from '@mui/material';
 import { HiddenScroll } from './hidden-scroll';
+import { Link } from 'ui/components';
 import { MediaItems } from 'data/media-items';
 
 interface Props {
@@ -23,12 +24,9 @@ export function MediaItemCarousel({ mediaItems, mediaItemProps, sx = {} }: Props
         }}
       >
         {mediaItems.map((mediaItem) => (
-          <MediaItemImage
-            key={mediaItem.id}
-            mediaItem={mediaItem}
-            sx={{ display: 'flex', ...mediaItemProps.sx }}
-            {...mediaItemProps}
-          />
+          <Link href={mediaItem.productUrl} key={mediaItem.id} target='_blank'>
+            <MediaItemImage mediaItem={mediaItem} sx={{ display: 'flex', ...mediaItemProps.sx }} {...mediaItemProps} />
+          </Link>
         ))}
       </Box>
     </HiddenScroll>

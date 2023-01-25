@@ -1,14 +1,6 @@
 ## In Progress
 
-- [ ] Drawer table cleanup
-      - Add headers
-      - Make date-triangle navigation more intuitive
-      - Link images to Google Photos detail pages
-      - Handle 403s. Click through a bunch of months to find a 403.
-- [ ] Tag downloaded files with Google's image id. Consider xmp tags from adobe. 
-      - Google Photos EXIF chat: https://exiftool.org/forum/index.php?topic=9004.0 
-      - User-defined XMP: https://exiftool.org/forum/index.php?topic=7312.0 
-      - .cfg file: https://exiftool.org/config.html
+- [ ] Tag downloaded files with Google's image id. Consider xmp tags from adobe. - Google Photos EXIF chat: https://exiftool.org/forum/index.php?topic=9004.0 - User-defined XMP: https://exiftool.org/forum/index.php?topic=7312.0 - .cfg file: https://exiftool.org/config.html
 
 ## Next actions
 
@@ -39,9 +31,8 @@
 
 ## Archive
 
-- [x] Imported drawer 
-      - Update count, display data table with month/day counts, drill down
-      - Enable the drawer button when the import is paused
+- [x] Drawer table cleanup - [x] Add headers - [x] Make date-triangle navigation more intuitive - [x] Link images to Google Photos detail pages - [x] Handle 403s. Click through a bunch of months to find a 403.
+- [x] Imported drawer - Update count, display data table with month/day counts, drill down - Enable the drawer button when the import is paused
 - [x] Read from start of media-items collection before continuing with lastKey
 - [x] Track ids in the multiplex queue so that they don't get duplicated
 - [x] Parallelize downloads

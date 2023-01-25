@@ -1,5 +1,5 @@
-import { Box, Button, IconButton, List, ListItem, SxProps, TextField, Typography } from '@mui/material';
-import { ItemDate, ItemMonth, ItemYear, LibraryImportStats } from 'data/library';
+import { Box, Button, IconButton, SxProps, Typography } from '@mui/material';
+import { ItemDate, ItemMonth, ItemYear } from 'data/library';
 import { MODAL_DRAWER_WIDTHS, ModalDrawer, ModalDrawerFooter } from 'ui/components';
 import { MediaItemsProvider, useMediaItems } from 'web/contexts/media-items-context';
 import { useEffect, useState } from 'react';
@@ -8,6 +8,7 @@ import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import { MediaItemCarousel } from 'ui/components';
 import { MediaItemRecords } from 'data/media-items';
 import RefreshIcon from '@mui/icons-material/Refresh';
+import format from 'date-fns/format';
 import formatDistanceToNow from 'date-fns/formatDistanceToNow';
 import { useModalState } from 'ui/hooks';
 import { useRefreshedMediaItems } from 'web/hooks';
@@ -78,6 +79,31 @@ function MediaItemsContent() {
       </Box>
       <Box
         sx={{
+          display: 'grid',
+          gridTemplateColumns: ['calc(7rem + 2px) calc(9rem + 1px) 1fr'],
+          div: {
+            border: '1px solid var(--color-light-gray)',
+            borderWidth: '1px 1px 0 0',
+            padding: 2,
+
+            '&:first-of-type': {
+              borderLeftWidth: '1px',
+            },
+          },
+        }}
+      >
+        <Box>
+          <Typography>Year</Typography>
+        </Box>
+        <Box>
+          <Typography>Month</Typography>
+        </Box>
+        <Box>
+          <Typography>Date</Typography>
+        </Box>
+      </Box>
+      <Box
+        sx={{
           border: '1px solid var(--color-light-gray)',
           borderWidth: '1px 1px 0 1px',
         }}
@@ -96,7 +122,7 @@ function YearRow({ dates, year, yearMonths }: { dates: ItemDate[]; year: ItemYea
   return (
     <Box sx={{ display: 'grid', gridTemplateColumns: '7rem 1fr' }}>
       <Box sx={{ borderBottom: '1px solid var(--color-light-gray)', paddingTop: 1 }}>
-        <CountText count={year.count} text={String(year.year)} />
+        <CountText count={year.count} sticky text={String(year.year)} />
       </Box>
 
       <Box>
@@ -117,30 +143,36 @@ function MonthRow({ monthDates, month }: { monthDates: ItemDate[]; month: ItemMo
     <Box
       sx={{
         display: 'grid',
-        gridTemplateColumns: '6rem 1fr',
+        gridTemplateColumns: '9rem 1fr',
         border: '1px solid var(--color-light-gray)',
         borderWidth: '0 0 0 1px',
       }}
     >
-      <Box sx={{ borderBottom: '1px solid var(--color-light-gray)', paddingTop: 1 }}>
-        <CountText count={month.count} text={String(month.month).padStart(2, '0')} />
+      <Box
+        sx={{
+          display: 'flex',
+          alignItems: 'flex-start',
+          justifyContent: 'space-between',
+          borderBottom: '1px solid var(--color-light-gray)',
+          paddingY: 1,
+          paddingRight: 1,
+        }}
+      >
+        <CountText count={month.count} sticky text={format(new Date().setMonth(month.month - 1), 'MMM')} />
+
+        <IconButton onClick={() => setIsOpen(!isOpen)}>
+          <ArrowDropDownIcon
+            sx={{ transform: isOpen ? 'rotate(0deg)' : 'rotate(-90deg)', transition: 'transform 300ms' }}
+          />
+        </IconButton>
       </Box>
 
       <Box
         sx={{
-          display: 'grid',
-          gridTemplateColumns: '3.5rem 1fr',
           border: '1px solid var(--color-light-gray)',
           borderWidth: '0 0 1px 1px',
         }}
       >
-        <Box sx={{ padding: 1, borderRight: '1px solid var(--color-light-gray)' }}>
-          <IconButton onClick={() => setIsOpen(!isOpen)}>
-            <ArrowDropDownIcon
-              sx={{ transform: isOpen ? 'rotate(0deg)' : 'rotate(-90deg)', transition: 'transform 300ms' }}
-            />
-          </IconButton>
-        </Box>
         {isOpen ? (
           <Box data-top>
             {monthDates.map((date) => (
@@ -160,7 +192,6 @@ function DateRow({ date }: { date: ItemDate }) {
     <Box
       sx={{
         display: 'grid',
-
         gridTemplateColumns: '6rem 1fr',
         border: '1px solid var(--color-light-gray)',
         borderWidth: '0 0 1px 0',
@@ -205,22 +236,24 @@ function useDateMediaItems(date: ItemDate) {
   return refreshedMediaItems;
 }
 
-function CountText({ text, count }: { text: string; count: number }) {
+function CountText({ sticky = false, text, count }: { sticky?: boolean; text: string; count: number }) {
   return (
     <Box
       sx={{
-        display: 'grid',
-        gridTemplateColumns: '1fr 1fr',
+        position: sticky ? 'sticky' : 'static',
+        top: '0.5rem',
+        display: 'flex',
+        gridGap: 4,
         textAlign: 'center',
         alignItems: 'center',
-        paddingX: 2,
+        paddingLeft: 2,
         paddingY: 1,
       }}
     >
       <Typography sx={{ textAlign: 'left' }}>
         <b>{text}</b>
       </Typography>
-      <Typography sx={{ color: 'var(--color-miami-blue)', textAlign: 'right' }}>{count}</Typography>
+      <Typography sx={{ color: 'var(--color-miami-blue)', textAlign: 'right' }}>({count})</Typography>
     </Box>
   );
 }
