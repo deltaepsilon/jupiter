@@ -1,15 +1,20 @@
+import { CONFIG_PATH, EXIFTOOL_PATH } from './data';
 import { Exif, exifSchema } from 'data/daemon';
 
-import { EXIFTOOL_PATH } from './data';
 import { execFile } from 'child_process';
 import { getExif } from './get-exif';
 
 export function setExif(filepath: string, exif: Partial<Exif>) {
-  const args = Object.entries(exif).reduce((acc, [key, value]) => {
-    acc.push(`-${key}="${value}"`);
+  const args = Object.entries(exif).reduce(
+    (acc, [key, value]) => {
+      acc.push(`-${key}="${value}"`);
 
-    return acc;
-  }, [] as string[]);
+      return acc;
+    },
+    ['-config', CONFIG_PATH] as string[]
+  );
+
+  console.log('setExif', filepath, args);
 
   return new Promise((resolve, reject) => {
     execFile(

@@ -2,5 +2,8 @@
   "editor.wordWrapColumn": 120,
   "editor.rulers": [
     120
+  ],
+  "cSpell.words": [
+    "EXIF"
   ]
 }

@@ -67,8 +67,6 @@ export async function startDownload({ db, message, sendMessage }: Args) {
           const folder = folders[i];
           const folderNeedsDownload = folder.mediaItemsCount !== folder.downloadedCount;
 
-          console.log(folder);
-
           if (folderNeedsDownload) {
             downloadState = setFolderState({ db, folder: folder.folder, state: 'idle' });
           } else {
@@ -132,13 +130,6 @@ async function downloadFolder({ db, folder, sendMessage }: Args & { folder: stri
   const mediaItemIds = [...ingestedIds].filter((id) => !downloadedIds.has(id) && !downloadingIds.has(id));
   const text = `Downloading ${mediaItemIds.length} new media items to ${folder}`;
 
-  console.log('downloadFolder', {
-    folder,
-    downloadingIds,
-    ingestedIdsSize: ingestedIds.size,
-    downloadedIdsSize: downloadedIds.size,
-  });
-
   updateDownloadState({ state: 'downloading', text });
 
   sendMessage({ type: MessageType.download, payload: { text } });
@@ -180,8 +171,6 @@ function sendDownloadStateMessage({
 }) {
   const { getDownloadState } = createGettersAndSetters(db);
   const state = downloadState ?? getDownloadState();
-
-  console.log('sendDownloadStateMessage', { state: state.state, text: state.text });
 
   sendMessage({
     type: MessageType.download,

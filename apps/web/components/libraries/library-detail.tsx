@@ -38,6 +38,7 @@ function LibraryDetailConnected({ library, libraryId }: { library: Library; libr
   const isComplete = libraryImport?.status === LibraryTaskStatus.complete;
   const isRunning = libraryImport?.status === LibraryTaskStatus.running;
   const hasLibraryRecords = !!libraryImport?.count;
+  const isDownloadActive = isDaemonConnected && hasLibraryRecords;
 
   return (
     <Container
@@ -103,7 +104,7 @@ function LibraryDetailConnected({ library, libraryId }: { library: Library; libr
           <DaemonPanel />
         </Box>
 
-        <Box sx={{ pointerEvents: isDaemonConnected ? 'all' : 'none', opacity: isDaemonConnected ? 1 : 0.5 }}>
+        <Box sx={{ pointerEvents: isDownloadActive ? 'all' : 'none', opacity: isDownloadActive ? 1 : 0.5 }}>
           <Step>
             <Typography variant='h4'>Download to your hard drive</Typography>
             <Typography sx={{ a: { textDecoration: 'underline' } }} variant='body1'>

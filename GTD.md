@@ -1,10 +1,9 @@
 ## In Progress
 
-- [ ] Tag downloaded files with Google's image id. Consider xmp tags from adobe. - Google Photos EXIF chat: https://exiftool.org/forum/index.php?topic=9004.0 - User-defined XMP: https://exiftool.org/forum/index.php?topic=7312.0 - .cfg file: https://exiftool.org/config.html
+- [ ] Skip download if file with correct `Google Media Item Id` EXIF already exists
 
 ## Next actions
 
-- [ ]
 - [ ] Make sure that completed folders get marked `complete`
 
 - [ ] Handle files with identical filenames: https://photos.google.com/search/DSC01845.JPG
@@ -31,6 +30,10 @@
 
 ## Archive
 
+- [x] Tag downloaded files with Google's image id. Consider xmp tags from adobe. 
+      - Google Photos EXIF chat: https://exiftool.org/forum/index.php?topic=9004.0 
+      - User-defined XMP: https://exiftool.org/forum/index.php?topic=7312.0 
+      - .cfg file: https://exiftool.org/config.html
 - [x] Drawer table cleanup - [x] Add headers - [x] Make date-triangle navigation more intuitive - [x] Link images to Google Photos detail pages - [x] Handle 403s. Click through a bunch of months to find a 403.
 - [x] Imported drawer - Update count, display data table with month/day counts, drill down - Enable the drawer button when the import is paused
 - [x] Read from start of media-items collection before continuing with lastKey

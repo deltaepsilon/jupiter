@@ -35,7 +35,6 @@ export function useRefreshedMediaItems(libraryId: string, mediaItemRecords: Medi
         const isStaleAccessToken = getIsStaleAccessToken(library.updated);
         const mediaItemsRef = ref(database, FIREBASE.DATABASE.PATHS.LIBRARY_MEDIA_ITEMS(userId, libraryId));
         const accessToken = isStaleAccessToken ? undefined : library.accessToken;
-        console.log({ accessToken });
 
         const batches = batch<string>(
           expiredMediaItemEntries.map(([, mediaItem]) => mediaItem.id),

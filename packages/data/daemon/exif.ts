@@ -15,6 +15,7 @@ export const exifSchema = z.object({
   DateTimeOriginal: z.string().optional(),
   ImageSize: z.string().optional(),
   Megapixels: z.number().optional(),
+  GoogleMediaItemId: z.string().optional(),
 });
 
 export type Exif = z.infer<typeof exifSchema>;

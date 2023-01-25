@@ -136,17 +136,26 @@ async function writeFile({
         async ({ attempt }) => {
           let exif = await getExif(downloadingFilepath);
 
+          console.log('initial exif', downloadingFilepath, exif);
+
           if (!exif.ModifyDate || !exif.CreateDate || !exif.DateTimeOriginal) {
             const dateTimeOriginal = dateToExifDate(mediaItem.mediaMetadata.creationTime, true);
 
             exif = await setExif(downloadingFilepath, {
+              GoogleMediaItemId: mediaItem.id,
               DateTimeOriginal: dateTimeOriginal,
               CreateDate: dateTimeOriginal,
               ModifyDate: dateTimeOriginal,
             });
+          } else {
+            exif = await setExif(downloadingFilepath, {
+              GoogleMediaItemId: mediaItem.id,
+            });
           }
 
           const { hash, filepath } = await getMd5(downloadingFilepath);
+
+          console.log('set exif', filepath, exif);
 
           resolve({ exif, hash, filepath });
         },
@@ -183,8 +192,6 @@ async function handleFilePromise({
     createGettersAndSetters(db);
 
   const { hash, filepath } = await filePromise;
-
-  console.log({ filepath });
 
   const { folder: yearMonthFolder, updated: yearMonthFilepath } = await moveToDateFolder({
     date: new Date(mediaItem.mediaMetadata.creationTime),
