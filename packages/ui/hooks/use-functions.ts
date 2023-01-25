@@ -40,6 +40,7 @@ export function useFunctions() {
         FunctionName.batchGetMediaItems
       );
       const response = await func(batchGetMediaItemsParamsSchema.parse(params));
+    
 
       return batchGetMediaItemsResponseSchema.parse(response.data);
     },

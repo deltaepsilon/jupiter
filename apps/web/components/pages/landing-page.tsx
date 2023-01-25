@@ -53,6 +53,7 @@ export function LandingPage() {
                   alt='transfer google photos'
                   ratio={419 / 698}
                   src='/images/google-photos-gallery.png'
+                  
                   sx={{ img: { borderRadius: 1 } }}
                 />
               </PhoneBorder>

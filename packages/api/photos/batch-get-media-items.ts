@@ -44,14 +44,24 @@ async function queryMediaItems({
     '&mediaItemIds='
   )}`;
 
-  const { data } = await axios.get(url, {
-    headers: { Authorization: `Bearer ${accessToken}`, ContentType: 'application/json' },
-  });
+  const response = await axios
+    .get(url, {
+      headers: { Authorization: `Bearer ${accessToken}`, ContentType: 'application/json' },
+    })
+    .catch((error) => {
+      throw error.response.data;
+    });
+
+  if (response.status === 400) {
+    throw new Error('400 error');
+  } else if (response.status !== 200) {
+    throw new Error('Unknown error');
+  }
 
   return batchGetMediaItemsResponseSchema.parse({
     accessToken,
     refreshToken,
     expiresAt: new Date(expiresAt).toISOString(),
-    ...data,
+    ...response.data,
   });
 }

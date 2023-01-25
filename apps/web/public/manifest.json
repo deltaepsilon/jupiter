@@ -3,7 +3,7 @@
   "name": "Master your Google Photos library",
   "icons": [
     {
-      "src": "/icons/app.svg",
+      "src": "/icons/app-filled.svg",
       "type": "image/svg+xml",
       "sizes": "144x144"
     }

@@ -5,7 +5,6 @@ import { https } from 'firebase-functions';
 
 export async function batchGet(data: BatchGetMediaItemsParams, context: https.CallableContext) {
   try {
-    console.log({ data });
     const { accessToken, refreshToken } = data;
     const auth = getContextAuth(context);
 
@@ -17,9 +16,9 @@ export async function batchGet(data: BatchGetMediaItemsParams, context: https.Ca
       return new https.HttpsError('internal', 'No access token or refresh token found');
     }
 
-    const media = await batchGetMediaItems(data);
-
-    return media;
+    return batchGetMediaItems(data).catch((err) => {
+      return error('functions/src/media-items/batch-get', err);
+    });
   } catch (err) {
     return error('functions/src/media-items/batch-get', err);
   }

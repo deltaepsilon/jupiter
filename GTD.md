@@ -4,6 +4,7 @@
       - Add headers
       - Make date-triangle navigation more intuitive
       - Link images to Google Photos detail pages
+      - Handle 403s. Click through a bunch of months to find a 403.
 - [ ] Tag downloaded files with Google's image id. Consider xmp tags from adobe. 
       - Google Photos EXIF chat: https://exiftool.org/forum/index.php?topic=9004.0 
       - User-defined XMP: https://exiftool.org/forum/index.php?topic=7312.0 

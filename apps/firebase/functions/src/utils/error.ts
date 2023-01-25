@@ -1,7 +1,7 @@
 import { https } from 'firebase-functions';
 
 export function error(path: string, error: unknown) {
-  console.error(path, error?.toString());
+  console.error(path, error);
 
   if (error instanceof Error) {
     if (error.toString().includes('No access token found')) {
