@@ -14,8 +14,6 @@ export function setExif(filepath: string, exif: Partial<Exif>) {
     ['-config', CONFIG_PATH] as string[]
   );
 
-  console.log('setExif', filepath, args);
-
   return new Promise((resolve, reject) => {
     execFile(
       EXIFTOOL_PATH,

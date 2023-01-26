@@ -6,19 +6,34 @@ import { FilesystemDatabase } from '../db';
 import fsPromises from 'fs/promises';
 import path from 'path';
 
+interface OnProgressArgs {
+  folder: string;
+  filesystemProgress: number;
+  isDownloaded: boolean;
+}
+
 export async function indexFilesystem(
   { db, sendMessage }: { db: FilesystemDatabase; sendMessage: SendMessage },
   incomingPath = ''
 ) {
-  const { getDirectory, getFileIndex, getFileIndexByFilepath, getDownloadState, setFileIndex, setDownloadState } =
-    createGettersAndSetters(db);
+  const {
+    getDirectory,
+    getFileIndex,
+    getFileIndexByFilepath,
+    getDownloadState,
+    setFileIndex,
+    setDownloadState,
+    updateDownloadedIds,
+  } = createGettersAndSetters(db);
   const directory = getDirectory();
   const directoryPath = incomingPath || directory.path;
-  function onProgress(folder: string, filesystemProgress: number) {
+  function onProgress({ folder, filesystemProgress, isDownloaded }: OnProgressArgs) {
     const downloadState = getDownloadState();
     const updatedDownloadState = updateFolder({ folder, downloadState }, (folder) => {
       folder.state = 'indexing';
       folder.indexedCount++;
+
+      if (isDownloaded) folder.downloadedCount++;
 
       return folder;
     });
@@ -70,6 +85,12 @@ export async function indexFilesystem(
         });
         const existingFileIndex = getFileIndexByFilepath(folder, updatedFilepath);
         const downloadState = getDownloadState();
+        const googleMediaItemId = exif.GoogleMediaItemId;
+        const isDownloaded = !!googleMediaItemId;
+
+        if (googleMediaItemId) {
+          updateDownloadedIds(folder, (downloadIds) => downloadIds.add(googleMediaItemId));
+        }
 
         if (downloadState.isPaused) {
           sendMessage({
@@ -92,7 +113,7 @@ export async function indexFilesystem(
             },
           });
         } else if (existingFileIndex) {
-          updateProgress({ filepaths, folder, i, onProgress, progress });
+          progress = updateProgress({ filepaths, folder, i, isDownloaded, onProgress });
 
           continue;
         }
@@ -114,7 +135,7 @@ export async function indexFilesystem(
 
         setFileIndex(folder, fileIndex);
 
-        updateProgress({ filepaths, folder, i, onProgress, progress });
+        progress = updateProgress({ filepaths, folder, i, isDownloaded, onProgress });
       }
 
       resolve(true);
@@ -127,20 +148,19 @@ export async function indexFilesystem(
 function updateProgress({
   filepaths,
   folder,
-  progress,
-  onProgress,
   i,
+  isDownloaded,
+  onProgress,
 }: {
   filepaths: string[];
   folder: string;
-  progress: number;
-  onProgress: (folder: string, filesystemProgress: number) => void;
   i: number;
+  isDownloaded: boolean;
+  onProgress: (args: OnProgressArgs) => void;
 }) {
-  const updatedProgress = Math.round((100 * (filepaths.length - i)) / filepaths.length) / 100;
+  const filesystemProgress = Math.round((100 * (filepaths.length - i)) / filepaths.length) / 100;
 
-  if (updatedProgress - progress > 0.01) {
-    onProgress(folder, updatedProgress);
-    progress = updatedProgress;
-  }
+  onProgress({ folder, filesystemProgress, isDownloaded });
+
+  return filesystemProgress;
 }

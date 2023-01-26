@@ -29,17 +29,8 @@ interface Args {
 }
 
 export async function downloadMediaItems({ folder, mediaItemIds, db, sendMessage }: Args) {
-  const {
-    getDirectory,
-    getDownloadedIds,
-    getDownloadState,
-    getFileIndex,
-    getMediaItem,
-    setFileIndex,
-    setDownloadedIds,
-    setDownloadState,
-    updateDownloadingIds,
-  } = createGettersAndSetters(db);
+  const { getDirectory, getDownloadedIds, getDownloadState, getMediaItem, updateDownloadingIds } =
+    createGettersAndSetters(db);
   const directoryPath = getDirectory().path;
   const downloadDirectory = path.join(directoryPath, DOWNLOADING_FOLDER);
   const downloadState = getDownloadState();
@@ -68,6 +59,7 @@ export async function downloadMediaItems({ folder, mediaItemIds, db, sendMessage
       mediaItemIds,
     });
     mediaItems = updatedMediaItems;
+    stateFlags = getStateFlags(getDownloadState());
 
     addToMultiplex(async () => {
       updateDownloadingIds(folder, (downloadingIds) => downloadingIds.add(mediaItem.id));
@@ -136,8 +128,6 @@ async function writeFile({
         async ({ attempt }) => {
           let exif = await getExif(downloadingFilepath);
 
-          console.log('initial exif', downloadingFilepath, exif);
-
           if (!exif.ModifyDate || !exif.CreateDate || !exif.DateTimeOriginal) {
             const dateTimeOriginal = dateToExifDate(mediaItem.mediaMetadata.creationTime, true);
 
@@ -154,8 +144,6 @@ async function writeFile({
           }
 
           const { hash, filepath } = await getMd5(downloadingFilepath);
-
-          console.log('set exif', filepath, exif);
 
           resolve({ exif, hash, filepath });
         },
@@ -215,6 +203,7 @@ async function handleFilePromise({
     (folder) => {
       folder.state = 'downloading';
       folder.downloadedCount = getDownloadedIds(yearMonthFolder).size;
+      folder.indexedCount++;
 
       return folder;
     }

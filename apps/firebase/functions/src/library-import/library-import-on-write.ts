@@ -2,11 +2,11 @@ import * as admin from 'firebase-admin';
 import * as functions from 'firebase-functions';
 
 import { LibraryTaskStatus, libraryImportSchema } from 'data/library';
-import { MediaItem, getMediaItemUpdates } from 'data/media-items';
 import { getApp, getLibrary } from '../utils';
 
 import { FIREBASE } from 'data/firebase';
 import { REFRESH_FROM_TODAY_MS } from '../data';
+import { getMediaItemUpdates } from 'data/media-items';
 import { getPage } from './get-page';
 import { setStatus } from './set-status';
 

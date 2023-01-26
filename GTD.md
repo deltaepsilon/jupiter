@@ -1,6 +1,6 @@
 ## In Progress
 
-- [ ] Skip download if file with correct `Google Media Item Id` EXIF already exists
+- [ ] Multiplex `index-fileysystem.ts`
 
 ## Next actions
 
@@ -30,6 +30,7 @@
 
 ## Archive
 
+- [x] Skip download if file with correct `Google Media Item Id` EXIF already exists
 - [x] Tag downloaded files with Google's image id. Consider xmp tags from adobe. 
       - Google Photos EXIF chat: https://exiftool.org/forum/index.php?topic=9004.0 
       - User-defined XMP: https://exiftool.org/forum/index.php?topic=7312.0 

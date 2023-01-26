@@ -97,7 +97,7 @@ export function useLibraryDownload(libraryId: string, library: Library) {
       const mediaItemsQuery = lastKey
         ? query(mediaItemsRef, orderByKey(), startAfter(lastKey))
         : query(mediaItemsRef, orderByKey());
-      const queuedAddMediaItem = createQueue(addMediaItem, 100);
+      const queuedAddMediaItem = createQueue(addMediaItem, 50);
 
       const unsubscribe = onChildAdded(mediaItemsQuery, (snapshot) =>
         queuedAddMediaItem({ mediaItem: { key: snapshot.key, ...snapshot.val() } })
