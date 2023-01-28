@@ -8,6 +8,7 @@ import {
   FileIndex,
   FileIndexByFilepath,
   IngestedIds,
+  RelativeFilePaths,
   Tokens,
   Urls,
   directorySchema,
@@ -17,6 +18,7 @@ import {
   fileIndexByFilepathSchema,
   fileIndexSchema,
   ingestedIdsSchema,
+  relativeFilePathsSchema,
   tokensSchema,
   urlsSchema,
 } from 'data/daemon';
@@ -79,6 +81,8 @@ export function createGettersAndSetters(db: FilesystemDatabase) {
       const key = fileIndex.md5;
 
       fileIndex.relativePaths.forEach((relativePath) => {
+        getters.addRelativeFilePath(folder, relativePath);
+
         folderDb.set<FileIndexByFilepath>(
           `${DownloadDbKeys.filesIndexByFilename}.${relativePath.replace(/\./g, '|')}`,
           {
@@ -122,6 +126,31 @@ export function createGettersAndSetters(db: FilesystemDatabase) {
       return getFolderDb(folder).set<MediaItem>(`${DownloadDbKeys.mediaItems}.${parsed.id}`, parsed);
     },
     removeMediaItems: (folder: string) => getFolderDb(folder).remove(DownloadDbKeys.mediaItems),
+
+    // Relative File Paths
+    getRelativeFilePaths: (folder: string) =>
+      relativeFilePathsSchema.parse(getFolderDb(folder).get(DownloadDbKeys.relativeFilePaths) || []),
+    setRelativeFilePaths: (folder: string, relativeFilePaths: RelativeFilePaths) =>
+      getFolderDb(folder).set<string[]>(
+        DownloadDbKeys.relativeFilePaths,
+        Array.from(relativeFilePathsSchema.parse(relativeFilePaths))
+      ),
+    addRelativeFilePath: (folder: string, relativePath: string) => {
+      const relativeFilePaths = getters.getRelativeFilePaths(folder);
+
+      relativeFilePaths.add(relativePath);
+
+      return getters.setRelativeFilePaths(folder, relativeFilePaths);
+    },
+    getAllRelativeFilePaths: () => {
+      return getters.getDownloadState().folders.reduce<RelativeFilePaths>((acc, f) => {
+        const relativeFilePaths = getters.getRelativeFilePaths(f.folder);
+
+        relativeFilePaths.forEach((p) => acc.add(p));
+
+        return acc;
+      }, new Set());
+    },
 
     // State
     getDownloadState: () => downloadStateSchema.parse(metadataDb.get(DownloadDbKeys.state) || undefined),

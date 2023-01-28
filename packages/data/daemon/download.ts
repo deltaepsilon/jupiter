@@ -8,6 +8,7 @@ export enum DownloadDbKeys {
   filesIndexByFilename = 'filesIndexByFilename',
   ingestedIds = 'ingestedIds',
   mediaItems = 'mediaItems',
+  relativeFilePaths = 'relativeFilePaths',
   state = 'state',
   tokens = 'tokens',
   urls = 'urls',
@@ -40,6 +41,15 @@ export const downloadedIdsSchema = z.preprocess((val) => {
   return val;
 }, z.set(z.string()));
 export type DownloadedIds = z.infer<typeof downloadedIdsSchema>;
+
+export const relativeFilePathsSchema = z.preprocess((val) => {
+  if (Array.isArray(val)) {
+    return new Set(val);
+  }
+
+  return val;
+}, z.set(z.string()));
+export type RelativeFilePaths = z.infer<typeof relativeFilePathsSchema>;
 
 export const downloadingIdsSchema = downloadedIdsSchema;
 export type DownloadingIds = z.infer<typeof downloadingIdsSchema>;

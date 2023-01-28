@@ -7,7 +7,7 @@ import { getExif } from './get-exif';
 export function setExif(filepath: string, exif: Partial<Exif>) {
   const args = Object.entries(exif).reduce(
     (acc, [key, value]) => {
-      acc.push(`-${key}="${value}"`);
+      acc.push(`-${key}=${value}`);
 
       return acc;
     },

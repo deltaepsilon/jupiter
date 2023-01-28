@@ -1,22 +1,20 @@
 ## In Progress
 
-- [ ] Multiplex `index-fileysystem.ts`
+- [ ] IMG_1965.HEIC is getting renamed to IMG_1965.jpg and it's not getting found and throwing
+- [ ] Make sure that completed folders get marked `complete`
 
 ## Next actions
 
-- [ ] Make sure that completed folders get marked `complete`
-
 - [ ] Handle files with identical filenames: https://photos.google.com/search/DSC01845.JPG
-
 - [ ] Sync up metadata
 - [ ] Restore metadata to images already on disk
-- [ ] Debug `context.auth` problem: https://github.com/firebase/firebase-tools/issues/5210
 - [ ] Create logo
 - [ ] Clean up `manifest.json`
 
 ## Waiting for
 
 - [ ] Download on a cron job
+- [ ] Debug `context.auth` problem: https://github.com/firebase/firebase-tools/issues/5210
 
 ## Someday
 
@@ -30,11 +28,10 @@
 
 ## Archive
 
+- [x] Double-check download counts
+- [x] Multiplex `index-filesystem.ts`
 - [x] Skip download if file with correct `Google Media Item Id` EXIF already exists
-- [x] Tag downloaded files with Google's image id. Consider xmp tags from adobe. 
-      - Google Photos EXIF chat: https://exiftool.org/forum/index.php?topic=9004.0 
-      - User-defined XMP: https://exiftool.org/forum/index.php?topic=7312.0 
-      - .cfg file: https://exiftool.org/config.html
+- [x] Tag downloaded files with Google's image id. Consider xmp tags from adobe. - Google Photos EXIF chat: https://exiftool.org/forum/index.php?topic=9004.0 - User-defined XMP: https://exiftool.org/forum/index.php?topic=7312.0 - .cfg file: https://exiftool.org/config.html
 - [x] Drawer table cleanup - [x] Add headers - [x] Make date-triangle navigation more intuitive - [x] Link images to Google Photos detail pages - [x] Handle 403s. Click through a bunch of months to find a 403.
 - [x] Imported drawer - Update count, display data table with month/day counts, drill down - Enable the drawer button when the import is paused
 - [x] Read from start of media-items collection before continuing with lastKey

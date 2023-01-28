@@ -4,7 +4,10 @@ import { getExif, getMd5 } from '../exif';
 
 import { FilesystemDatabase } from '../db';
 import fsPromises from 'fs/promises';
+import { multiplex } from 'ui/utils';
 import path from 'path';
+
+const MULTIPLEX_THREADS = 10;
 
 interface OnProgressArgs {
   folder: string;
@@ -21,6 +24,9 @@ export async function indexFilesystem(
     getFileIndex,
     getFileIndexByFilepath,
     getDownloadState,
+    getDownloadedIds,
+    getRelativeFilePaths,
+    getAllRelativeFilePaths,
     setFileIndex,
     setDownloadState,
     updateDownloadedIds,
@@ -31,9 +37,8 @@ export async function indexFilesystem(
     const downloadState = getDownloadState();
     const updatedDownloadState = updateFolder({ folder, downloadState }, (folder) => {
       folder.state = 'indexing';
-      folder.indexedCount++;
-
-      if (isDownloaded) folder.downloadedCount++;
+      folder.downloadedCount = getDownloadedIds(folder.folder).size;
+      folder.indexedCount = getRelativeFilePaths(folder.folder).size;
 
       return folder;
     });
@@ -65,78 +70,99 @@ export async function indexFilesystem(
   });
 
   return new Promise<boolean>(async (resolve, reject) => {
+    const indexFile = multiplex(MULTIPLEX_THREADS);
+
     try {
       let i = filepaths.length;
-      let progress = 0;
+      let hasMessagedPause = false;
 
       while (i--) {
         const initialFilepath = filepaths[i];
-        const relativePath = path.relative(directoryPath, initialFilepath);
-        const exif = await getExif(initialFilepath);
-        const {
-          isMoved,
-          filename,
-          folder,
-          updated: updatedFilepath,
-        } = await moveToDateFolder({
-          date: exifDateToDate(exif.DateTimeOriginal),
-          directoryPath,
-          filepath: initialFilepath,
+
+        indexFile(async () => {
+          const relativePath = path.relative(directoryPath, initialFilepath);
+          const exif = await getExif(initialFilepath);
+          const {
+            isMoved,
+            filename,
+            folder,
+            updated: updatedFilepath,
+          } = await moveToDateFolder({
+            date: exifDateToDate(exif.DateTimeOriginal),
+            directoryPath,
+            filepath: initialFilepath,
+          });
+          const existingFileIndex = getFileIndexByFilepath(folder, updatedFilepath);
+          const downloadState = getDownloadState();
+          const googleMediaItemId = exif.GoogleMediaItemId;
+          const isDownloaded = !!googleMediaItemId;
+
+          if (googleMediaItemId) {
+            updateDownloadedIds(folder, (downloadIds) => downloadIds.add(googleMediaItemId));
+          }
+
+          if (downloadState.isPaused) {
+            sendMessage({
+              type: MessageType.download,
+              payload: {
+                data: downloadDataSchema.parse({ libraryId: db.libraryId, state: downloadState }),
+                text: hasMessagedPause ? undefined : 'Indexing paused.',
+              },
+            });
+
+            hasMessagedPause = true;
+
+            return resolve(false);
+          }
+
+          if (isMoved) {
+            sendMessage({
+              type: MessageType.download,
+              payload: {
+                data: downloadDataSchema.parse({ libraryId: db.libraryId, state: downloadState }),
+                text: `Moved file: ${filename} -> ${updatedFilepath}`,
+              },
+            });
+          } else if (existingFileIndex) {
+            updateProgress({
+              filepaths,
+              folder,
+              isDownloaded,
+              onProgress,
+              relativeFilePathsSize: getAllRelativeFilePaths().size,
+            });
+
+            return;
+          }
+
+          const { hash, filepath, isRepaired } = await getMd5(updatedFilepath);
+          const fileIndex = getFileIndex(folder, hash);
+
+          if (isRepaired) {
+            sendMessage({
+              type: MessageType.download,
+              payload: {
+                data: downloadDataSchema.parse({ libraryId: db.libraryId, state: downloadState }),
+                text: `Repaired file: ${filepath}`,
+              },
+            });
+          }
+
+          fileIndex.relativePaths.push(relativePath);
+
+          setFileIndex(folder, fileIndex);
+
+          updateProgress({
+            filepaths,
+            folder,
+            isDownloaded,
+            onProgress,
+            relativeFilePathsSize: getAllRelativeFilePaths().size,
+          });
         });
-        const existingFileIndex = getFileIndexByFilepath(folder, updatedFilepath);
-        const downloadState = getDownloadState();
-        const googleMediaItemId = exif.GoogleMediaItemId;
-        const isDownloaded = !!googleMediaItemId;
-
-        if (googleMediaItemId) {
-          updateDownloadedIds(folder, (downloadIds) => downloadIds.add(googleMediaItemId));
-        }
-
-        if (downloadState.isPaused) {
-          sendMessage({
-            type: MessageType.download,
-            payload: {
-              data: downloadDataSchema.parse({ libraryId: db.libraryId, state: downloadState }),
-              text: 'Indexing paused.',
-            },
-          });
-
-          return resolve(false);
-        }
-
-        if (isMoved) {
-          sendMessage({
-            type: MessageType.download,
-            payload: {
-              data: downloadDataSchema.parse({ libraryId: db.libraryId, state: downloadState }),
-              text: `Moved file: ${filename} -> ${updatedFilepath}`,
-            },
-          });
-        } else if (existingFileIndex) {
-          progress = updateProgress({ filepaths, folder, i, isDownloaded, onProgress });
-
-          continue;
-        }
-
-        const { hash, filepath, isRepaired } = await getMd5(updatedFilepath);
-        const fileIndex = getFileIndex(folder, hash);
-
-        if (isRepaired) {
-          sendMessage({
-            type: MessageType.download,
-            payload: {
-              data: downloadDataSchema.parse({ libraryId: db.libraryId, state: downloadState }),
-              text: `Repaired file: ${filepath}`,
-            },
-          });
-        }
-
-        fileIndex.relativePaths.push(relativePath);
-
-        setFileIndex(folder, fileIndex);
-
-        progress = updateProgress({ filepaths, folder, i, isDownloaded, onProgress });
       }
+
+      await indexFile.promise;
 
       resolve(true);
     } catch (error) {
@@ -148,17 +174,17 @@ export async function indexFilesystem(
 function updateProgress({
   filepaths,
   folder,
-  i,
   isDownloaded,
   onProgress,
+  relativeFilePathsSize,
 }: {
   filepaths: string[];
   folder: string;
-  i: number;
   isDownloaded: boolean;
   onProgress: (args: OnProgressArgs) => void;
+  relativeFilePathsSize: number;
 }) {
-  const filesystemProgress = Math.round((100 * (filepaths.length - i)) / filepaths.length) / 100;
+  const filesystemProgress = Math.round((100 * relativeFilePathsSize) / filepaths.length) / 100;
 
   onProgress({ folder, filesystemProgress, isDownloaded });
 

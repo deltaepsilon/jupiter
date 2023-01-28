@@ -135,16 +135,27 @@ function pause({ db }: { db: FilesystemDatabase }) {
 }
 
 function destroy({ db }: { db: FilesystemDatabase }) {
-  const { removeMediaItems, resetFileIndices, setIngestedIds, setDownloadState, setDownloadedIds, getDownloadState } =
-    createGettersAndSetters(db);
+  const {
+    clearDownloadingIds,
+    setRelativeFilePaths,
+    removeMediaItems,
+    resetFileIndices,
+    setIngestedIds,
+    setDownloadState,
+    setDownloadedIds,
+    getDownloadState,
+  } = createGettersAndSetters(db);
   const downloadState = getDownloadState();
 
   downloadState.folders.forEach(({ folder }) => {
     removeMediaItems(folder);
     resetFileIndices(folder);
     setIngestedIds(folder, new Set([]));
+    setRelativeFilePaths(folder, new Set());
     setDownloadedIds(folder, new Set([]));
   });
+
+  clearDownloadingIds();
 
   setDownloadState(DEFAULT_DOWNLOAD_STATE);
 }

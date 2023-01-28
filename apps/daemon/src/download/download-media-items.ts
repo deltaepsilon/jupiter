@@ -21,6 +21,8 @@ import path from 'path';
 import { refreshMediaItems } from './refresh-media-items';
 import { retry } from 'ui/utils/retry';
 
+const MULTIPLEX_THREADS = 10;
+
 interface Args {
   folder: string;
   mediaItemIds: string[];
@@ -34,7 +36,7 @@ export async function downloadMediaItems({ folder, mediaItemIds, db, sendMessage
   const directoryPath = getDirectory().path;
   const downloadDirectory = path.join(directoryPath, DOWNLOADING_FOLDER);
   const downloadState = getDownloadState();
-  const addToMultiplex = multiplex(5);
+  const addToMultiplex = multiplex(MULTIPLEX_THREADS);
   let mediaItems = mediaItemIds.map((mediaItemId) => getMediaItem(folder, mediaItemId));
   let i = mediaItems.length;
   let stateFlags = getStateFlags(downloadState);
@@ -176,8 +178,15 @@ async function handleFilePromise({
   mediaItem: MediaItem;
   sendMessage: SendMessage;
 }) {
-  const { getDownloadedIds, getDownloadState, getFileIndex, setDownloadState, setFileIndex, updateDownloadedIds } =
-    createGettersAndSetters(db);
+  const {
+    getDownloadedIds,
+    getDownloadState,
+    getFileIndex,
+    getRelativeFilePaths,
+    setDownloadState,
+    setFileIndex,
+    updateDownloadedIds,
+  } = createGettersAndSetters(db);
 
   const { hash, filepath } = await filePromise;
 
@@ -203,7 +212,7 @@ async function handleFilePromise({
     (folder) => {
       folder.state = 'downloading';
       folder.downloadedCount = getDownloadedIds(yearMonthFolder).size;
-      folder.indexedCount++;
+      folder.indexedCount = getRelativeFilePaths(yearMonthFolder).size;
 
       return folder;
     }

@@ -2,6 +2,7 @@ type Callback = () => Promise<void>;
 
 export function multiplex(max = 1) {
   const queue: Callback[] = [];
+  let resolve: (resolved: boolean) => void;
   let runningCount = 0;
 
   async function startQueue() {
@@ -15,14 +16,20 @@ export function multiplex(max = 1) {
       runningCount--;
 
       startQueue();
+    } else if (runningCount === 0 && resolve) {
+      resolve(true);
     }
   }
 
-  return (callback: Callback) => {
+  function addQueueItem(callback: Callback) {
     queue.push(callback);
 
     if (runningCount < max) {
       startQueue();
     }
-  };
+  }
+
+  addQueueItem.promise = new Promise((r) => (resolve = r));
+
+  return addQueueItem;
 }
