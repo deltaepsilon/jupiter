@@ -1,11 +1,11 @@
 ## In Progress
 
-- [ ] IMG_1965.HEIC is getting renamed to IMG_1965.jpg and it's not getting found and throwing
 - [ ] Make sure that completed folders get marked `complete`
+- [ ] Handle files with identical filenames: https://photos.google.com/search/DSC01845.JPG
 
 ## Next actions
 
-- [ ] Handle files with identical filenames: https://photos.google.com/search/DSC01845.JPG
+
 - [ ] Sync up metadata
 - [ ] Restore metadata to images already on disk
 - [ ] Create logo
@@ -28,6 +28,7 @@
 
 ## Archive
 
+- [x] IMG_1965.HEIC is getting renamed to IMG_1965.jpg and it's not getting found and throwing
 - [x] Double-check download counts
 - [x] Multiplex `index-filesystem.ts`
 - [x] Skip download if file with correct `Google Media Item Id` EXIF already exists

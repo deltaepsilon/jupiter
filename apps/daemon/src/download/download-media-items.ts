@@ -149,7 +149,7 @@ async function writeFile({
 
           resolve({ exif, hash, filepath });
         },
-        { attempts: 5, millis: 1000, failSilently: true }
+        { attempts: 10, millis: 1000, failSilently: true }
       )().catch(reject);
     });
   });

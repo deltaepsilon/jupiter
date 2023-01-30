@@ -20,7 +20,7 @@ export function setExif(filepath: string, exif: Partial<Exif>) {
       [...args, '-overwrite_original', filepath],
       (err: unknown, stdout: string, stderr: string) => {
         if (err) {
-          console.error(stderr);
+          console.error('set-exif.ts', stderr);
           reject(err);
         }
 
