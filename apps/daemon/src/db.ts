@@ -10,6 +10,12 @@ export function createFilesystemDatabase({ directory, libraryId }: { libraryId: 
 
   testDb(metadataFsdb);
 
+  function getAll(fsdb: FSDB) {
+    return function all() {
+      return fsdb.all();
+    };
+  }
+
   function getSet(fsdb: FSDB) {
     return function set<T>(key: string, value: T) {
       fsdb.set(key, value);
@@ -32,6 +38,7 @@ export function createFilesystemDatabase({ directory, libraryId }: { libraryId: 
 
   function getDb(db: FSDB) {
     return {
+      all: getAll(db),
       set: getSet(db),
       get: getGet(db),
       remove: getRemove(db),

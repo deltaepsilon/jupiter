@@ -8,10 +8,11 @@ import {
   encodeMessage,
 } from 'data/daemon';
 import { WebSocket, WebSocketServer } from 'ws';
-import { directory, requestDirectory } from './directory';
+import { handleDirectory, requestDirectory } from './directory/handle-directory';
 
 import { FilesystemDatabase } from 'daemon/src/db';
-import { download } from './download';
+import { handleDownload } from './download/handle-download';
+import { handleFolderMessage } from './folder';
 
 const wss = new WebSocketServer({ port: PORT });
 
@@ -27,7 +28,7 @@ wss.on('connection', async (ws) => {
         return sendPing(sendMessage, message);
 
       case MessageType.directory: {
-        const result = await directory({ message, sendMessage });
+        const result = await handleDirectory({ message, sendMessage });
 
         if (result?.isDb) {
           db = result;
@@ -39,7 +40,14 @@ wss.on('connection', async (ws) => {
         if (!db) {
           return sendMessage({ type: MessageType.download, payload: { error: 'Filesystem database not initialized' } });
         } else {
-          return download({ db, message, sendMessage });
+          return handleDownload({ db, message, sendMessage });
+        }
+
+      case MessageType.folder:
+        if (!db) {
+          return sendMessage({ type: MessageType.folder, payload: { error: 'Filesystem database not initialized' } });
+        } else {
+          return handleFolderMessage({ db, message, sendMessage });
         }
 
       default:

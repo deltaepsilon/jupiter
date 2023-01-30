@@ -17,6 +17,7 @@ import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import { DirectoryPicker } from 'web/components/daemon';
 import DownloadingIcon from '@mui/icons-material/Downloading';
+import { FolderDrawer } from '../drawers';
 import FolderIcon from '@mui/icons-material/Folder';
 import { MenuTrigger } from 'ui/components';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
@@ -113,46 +114,63 @@ export function DownloadLibraryPanel({ actions, directory, downloadState, librar
 }
 
 function FoldersProgress({ downloadState }: { downloadState: DownloadState }) {
-  const folders = useMemo(() => downloadState.folders.sort((a, b) => (a.folder < b.folder ? 1 : -1)), [downloadState]);
+  const folderSummaries = useMemo(
+    () => downloadState.folderSummaries.sort((a, b) => (a.folder < b.folder ? 1 : -1)),
+    [downloadState]
+  );
 
   return (
     <Box sx={{ gridColumn: '1/-1' }}>
-      {folders.map((folder) => (
-        <Box
-          key={folder.folder}
-          sx={{ display: 'grid', gridTemplateColumns: '1fr 53px', gridGap: 16, paddingY: '4px' }}
-        >
-          <Box sx={{ position: 'relative', display: 'grid', gridTemplateColumns: '2rem 1fr', alignItems: 'center' }}>
-            <FolderIcon />
-            <Box sx={{ position: 'relative', top: -5 }}>
-              <LinearProgress value={(folder.downloadedCount / folder.mediaItemsCount) * 100} variant='determinate' />
+      {folderSummaries.map((folderSummary) => (
+        <FolderDrawer folder={folderSummary.folder} key={folderSummary.folder}>
+          <Box
+            sx={{
+              display: 'grid',
+              gridTemplateColumns: '1fr 53px',
+              gridGap: 16,
+              paddingY: '4px',
+              cursor: 'pointer',
+              '&:hover [data-folder-icon]': {
+                color: 'var(--color-jade-green)',
+              },
+            }}
+          >
+            <Box sx={{ position: 'relative', display: 'grid', gridTemplateColumns: '2rem 1fr', alignItems: 'center' }}>
+              <FolderIcon data-folder-icon />
+              <Box sx={{ position: 'relative', top: -5 }}>
+                <LinearProgress
+                  value={(folderSummary.downloadedCount / folderSummary.mediaItemsCount) * 100}
+                  variant='determinate'
+                />
+              </Box>
+              <Box
+                sx={{
+                  position: 'absolute',
+                  inset: '10px 0px 5px 30px',
+                  display: 'grid',
+                  gridTemplateColumns: '1fr 4.5rem 6rem 3.5rem',
+                  userSelect: 'none',
+                }}
+              >
+                <Typography variant='caption'>{folderSummary.folder}</Typography>
+                <Typography variant='caption'>Indexed: {folderSummary.indexedCount}</Typography>
+                <Typography variant='caption'>Downloaded: {folderSummary.downloadedCount}</Typography>
+                <Typography variant='caption'>Media: {folderSummary.mediaItemsCount}</Typography>
+              </Box>
             </Box>
-            <Box
-              sx={{
-                position: 'absolute',
-                inset: '10px 0px 5px 30px',
-                display: 'grid',
-                gridTemplateColumns: '1fr 4.5rem 6rem 3.5rem',
-              }}
-            >
-              <Typography variant='caption'>{folder.folder}</Typography>
-              <Typography variant='caption'>Indexed: {folder.indexedCount}</Typography>
-              <Typography variant='caption'>Downloaded: {folder.downloadedCount}</Typography>
-              <Typography variant='caption'>Media: {folder.mediaItemsCount}</Typography>
-            </Box>
-          </Box>
 
-          <Box sx={{ textAlign: 'center', color: 'var(--color-mid-gray)' }}>
-            <FolderState folder={folder} />
+            <Box sx={{ textAlign: 'center', color: 'var(--color-mid-gray)' }}>
+              <FolderState folderSummary={folderSummary} />
+            </Box>
           </Box>
-        </Box>
+        </FolderDrawer>
       ))}
     </Box>
   );
 }
 
-function FolderState({ folder }: { folder: DownloadState['folders'][0] }) {
-  switch (folder.state) {
+function FolderState({ folderSummary }: { folderSummary: DownloadState['folderSummaries'][0] }) {
+  switch (folderSummary.state) {
     case 'idle':
       return <PauseCircleOutlineIcon />;
     case 'indexing':

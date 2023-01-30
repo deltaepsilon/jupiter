@@ -1,4 +1,4 @@
-import { MessageType, SendMessage, downloadDataSchema, exifDateToDate, getStateFlags, updateFolder } from 'data/daemon';
+import { MessageType, SendMessage, exifDateToDate, folderMessageDataSchema, getStateFlags, updateFolder } from 'data/daemon';
 import { createGettersAndSetters, getFileTree, getFolderFromDate, moveToDateFolder } from '../utils';
 import { getExif, getMd5 } from '../exif';
 
@@ -35,12 +35,12 @@ export async function indexFilesystem(
   const directoryPath = incomingPath || directory.path;
   function onProgress({ folder, filesystemProgress, isDownloaded }: OnProgressArgs) {
     const downloadState = getDownloadState();
-    const updatedDownloadState = updateFolder({ folder, downloadState }, (folder) => {
-      folder.state = 'indexing';
-      folder.downloadedCount = getDownloadedIds(folder.folder).size;
-      folder.indexedCount = getRelativeFilePaths(folder.folder).size;
+    const updatedDownloadState = updateFolder({ folder, downloadState }, (folderSummary) => {
+      folderSummary.state = 'indexing';
+      folderSummary.downloadedCount = getDownloadedIds(folderSummary.folder).size;
+      folderSummary.indexedCount = getRelativeFilePaths(folderSummary.folder).size;
 
-      return folder;
+      return folderSummary;
     });
 
     updatedDownloadState.filesystemProgress = filesystemProgress;
@@ -50,7 +50,7 @@ export async function indexFilesystem(
     sendMessage({
       type: MessageType.download,
       payload: {
-        data: downloadDataSchema.parse({ libraryId: db.libraryId, state: updatedDownloadState }),
+        data: folderMessageDataSchema.parse({ libraryId: db.libraryId, state: updatedDownloadState }),
         // text: `Filesystem index progress: ${filesystemProgress}`,
       },
     });
@@ -64,7 +64,7 @@ export async function indexFilesystem(
   sendMessage({
     type: MessageType.download,
     payload: {
-      data: downloadDataSchema.parse({ libraryId: db.libraryId, state: getDownloadState() }),
+      data: folderMessageDataSchema.parse({ libraryId: db.libraryId, state: getDownloadState() }),
       text: `Found ${filepaths.length} files in filesystem. Indexing...`,
     },
   });
@@ -105,7 +105,7 @@ export async function indexFilesystem(
             sendMessage({
               type: MessageType.download,
               payload: {
-                data: downloadDataSchema.parse({ libraryId: db.libraryId, state: downloadState }),
+                data: folderMessageDataSchema.parse({ libraryId: db.libraryId, state: downloadState }),
                 text: hasMessagedPause ? undefined : 'Indexing paused.',
               },
             });
@@ -119,7 +119,7 @@ export async function indexFilesystem(
             sendMessage({
               type: MessageType.download,
               payload: {
-                data: downloadDataSchema.parse({ libraryId: db.libraryId, state: downloadState }),
+                data: folderMessageDataSchema.parse({ libraryId: db.libraryId, state: downloadState }),
                 text: `Moved file: ${filename} -> ${updatedFilepath}`,
               },
             });
@@ -142,7 +142,7 @@ export async function indexFilesystem(
             sendMessage({
               type: MessageType.download,
               payload: {
-                data: downloadDataSchema.parse({ libraryId: db.libraryId, state: downloadState }),
+                data: folderMessageDataSchema.parse({ libraryId: db.libraryId, state: downloadState }),
                 text: `Repaired file: ${filepath}`,
               },
             });

@@ -1,5 +1,6 @@
 import { DirectoryAction } from './directory';
 import { DownloadAction } from './download';
+import { FolderAction } from './folder';
 import { RawData } from 'ws';
 import { WebSocket } from 'ws';
 import short from 'short-uuid';
@@ -9,6 +10,7 @@ export enum MessageType {
   ping = 'ping',
   directory = 'directory',
   download = 'download',
+  folder = 'folder',
 }
 
 export const payloadSchema = z.object({
@@ -24,6 +26,7 @@ export const payloadSchema = z.object({
       DownloadAction.destroy,
       DownloadAction.addMediaItem,
       DownloadAction.indexFilesystem,
+      FolderAction.get,
     ])
     .optional(),
   error: z.string().optional(),

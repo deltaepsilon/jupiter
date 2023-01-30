@@ -7,6 +7,7 @@ import {
   DownloadingIds,
   FileIndex,
   FileIndexByFilepath,
+  FolderData,
   IngestedIds,
   RelativeFilePaths,
   Tokens,
@@ -17,6 +18,7 @@ import {
   downloadingIdsSchema,
   fileIndexByFilepathSchema,
   fileIndexSchema,
+  folderDataSchema,
   ingestedIdsSchema,
   relativeFilePathsSchema,
   tokensSchema,
@@ -26,12 +28,26 @@ import { MediaItem, mediaItemSchema } from 'data/media-items';
 
 import { FilesystemDatabase } from 'daemon/src/db';
 
+const DEFAULT_FOLDER_DATA = folderDataSchema.parse(undefined);
+
 export type GettersAndSetters = ReturnType<typeof createGettersAndSetters>;
 
 export function createGettersAndSetters(db: FilesystemDatabase) {
   const { metadataDb, getFolderDb } = db;
 
   const getters = {
+    // META
+    getFolderData: (folder: string) => {
+      const all = getFolderDb(folder).all();
+      const mapped = all.reduce((acc, { ID, data }) => {
+        // @ts-ignore
+        acc[ID] = data;
+
+        return acc;
+      }, DEFAULT_FOLDER_DATA);
+
+      return folderDataSchema.parse(mapped);
+    },
     // Directory
     getDirectory: () => directorySchema.parse(metadataDb.get(DirectoryDbKeys.directory) || undefined),
     setDirectory: (directory: Directory) =>
@@ -60,11 +76,8 @@ export function createGettersAndSetters(db: FilesystemDatabase) {
         DownloadDbKeys.downloadingIds,
         Array.from(downloadingIdsSchema.parse(downloadingIds))
       ),
-    clearDownloadingIds: () => {
-      const folders = getters.getDownloadState().folders;
-
-      return folders.forEach((f) => getters.setDownloadingIds(f.folder, new Set()));
-    },
+    clearDownloadingIds: () =>
+      getters.getDownloadState().folderSummaries.forEach((f) => getters.setDownloadingIds(f.folder, new Set())),
     updateDownloadingIds: (folder: string, callback: (downloadingIds: DownloadingIds) => DownloadingIds) => {
       const downloadingIds = getters.getDownloadingIds(folder);
       const newDownloadingIds = callback(downloadingIds);
@@ -143,7 +156,7 @@ export function createGettersAndSetters(db: FilesystemDatabase) {
       return getters.setRelativeFilePaths(folder, relativeFilePaths);
     },
     getAllRelativeFilePaths: () => {
-      return getters.getDownloadState().folders.reduce<RelativeFilePaths>((acc, f) => {
+      return getters.getDownloadState().folderSummaries.reduce<RelativeFilePaths>((acc, f) => {
         const relativeFilePaths = getters.getRelativeFilePaths(f.folder);
 
         relativeFilePaths.forEach((p) => acc.add(p));

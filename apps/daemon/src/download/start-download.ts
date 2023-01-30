@@ -1,10 +1,10 @@
 import {
   DaemonMessage,
   DownloadState,
-  Folder,
+  FolderSummary,
   MessageType,
   SendMessage,
-  downloadDataSchema,
+  folderMessageDataSchema,
   getStateFlags,
   updateFolder,
 } from 'data/daemon';
@@ -39,13 +39,14 @@ export async function startDownload({ db, message, sendMessage }: Args) {
       }
 
       clearDownloadingIds();
-      downloadState = getDownloadState();
+      downloadState = updateDownloadState({ text: '' });
       sendDownloadStateMessage({ db, downloadState, sendMessage });
 
       let stateFlags = getStateFlags(downloadState);
       let counter = 0;
+
       while (!stateFlags.allFoldersComplete && stateFlags.isRunning) {
-        const folders = downloadState.folders.sort((a, b) => (a.folder > b.folder ? 1 : -1));
+        const folderSummaries = downloadState.folderSummaries.sort((a, b) => (a.folder > b.folder ? 1 : -1));
 
         counter++;
 
@@ -62,43 +63,44 @@ export async function startDownload({ db, message, sendMessage }: Args) {
           await wait(500);
         }
 
-        let i = folders.length;
+        let i = folderSummaries.length;
         while (i--) {
-          const folder = folders[i];
-          const folderNeedsDownload = folder.mediaItemsCount !== folder.downloadedCount;
+          const folderSummary = folderSummaries[i];
+          const folderNeedsDownload = folderSummary.mediaItemsCount < folderSummary.downloadedCount;
 
           if (folderNeedsDownload) {
-            downloadState = setFolderState({ db, folder: folder.folder, state: 'idle' });
+            downloadState = setFolderState({ db, folder: folderSummary.folder, state: 'idle' });
           } else {
-            downloadState = setFolderState({ db, folder: folder.folder, state: 'complete' });
+            downloadState = setFolderState({ db, folder: folderSummary.folder, state: 'complete' });
           }
         }
 
         sendDownloadStateMessage({ db, downloadState, sendMessage });
 
-        let j = folders.length;
+        let j = folderSummaries.length;
         while (j--) {
-          const folder = folders[j];
-          const folderNeedsDownload = folder.mediaItemsCount !== folder.downloadedCount;
+          const folderSummary = folderSummaries[j];
+          const folderNeedsDownload = folderSummary.mediaItemsCount !== folderSummary.downloadedCount;
 
           stateFlags = getStateFlags(downloadState);
 
           if (folderNeedsDownload && stateFlags.isRunning) {
-            downloadState = setFolderState({ db, folder: folder.folder, state: 'downloading' });
+            downloadState = setFolderState({ db, folder: folderSummary.folder, state: 'downloading' });
             sendDownloadStateMessage({ db, downloadState, sendMessage });
 
-            await downloadFolder({ db, folder: folder.folder, message, sendMessage });
-
-            downloadState = setFolderState({ db, folder: folder.folder, state: 'complete' });
-            sendDownloadStateMessage({ db, downloadState, sendMessage });
+            await downloadFolder({ db, folder: folderSummary.folder, message, sendMessage });
           }
+
+          downloadState = setFolderState({ db, folder: folderSummary.folder, state: 'complete' });
+          sendDownloadStateMessage({ db, downloadState, sendMessage });
         }
 
         stateFlags = getStateFlags(downloadState);
       }
 
       if (stateFlags.allFoldersComplete) {
-        updateDownloadState({ state: 'complete', text: 'Media item download complete' });
+        downloadState = updateDownloadState({ state: 'complete', text: 'Media item download complete' });
+        sendDownloadStateMessage({ db, downloadState, sendMessage });
       }
     } catch (error) {
       console.error(error);
@@ -130,13 +132,19 @@ async function downloadFolder({ db, folder, sendMessage }: Args & { folder: stri
   const mediaItemIds = [...ingestedIds].filter((id) => !downloadedIds.has(id) && !downloadingIds.has(id));
   const text = `Downloading ${mediaItemIds.length} new media items to ${folder}`;
 
-  updateDownloadState({ state: 'downloading', text });
+  console.log({ downloadedIds, downloadingIds, ingestedIds, mediaItemIds });
 
-  sendMessage({ type: MessageType.download, payload: { text } });
+  if (mediaItemIds.length) {
+    updateDownloadState({ state: 'downloading', text });
 
-  await Promise.all(
-    batchMediaItemIds(mediaItemIds).map((mediaItemIds) => downloadMediaItems({ folder, mediaItemIds, db, sendMessage }))
-  );
+    sendMessage({ type: MessageType.download, payload: { text } });
+
+    await Promise.all(
+      batchMediaItemIds(mediaItemIds).map((mediaItemIds) =>
+        downloadMediaItems({ folder, mediaItemIds, db, sendMessage })
+      )
+    );
+  }
 }
 
 function setFolderState({
@@ -145,14 +153,14 @@ function setFolderState({
   state,
 }: {
   db: FilesystemDatabase;
-  folder: Folder['folder'];
-  state: Folder['state'];
+  folder: FolderSummary['folder'];
+  state: FolderSummary['state'];
 }) {
   const { getDownloadState, setDownloadState } = createGettersAndSetters(db);
-  const downloadState = updateFolder({ folder, downloadState: getDownloadState() }, (folder: Folder) => {
-    folder.state = state;
+  const downloadState = updateFolder({ folder, downloadState: getDownloadState() }, (folderSummary: FolderSummary) => {
+    folderSummary.state = state;
 
-    return folder;
+    return folderSummary;
   });
 
   setDownloadState(downloadState);
@@ -175,7 +183,7 @@ function sendDownloadStateMessage({
   sendMessage({
     type: MessageType.download,
     payload: {
-      data: downloadDataSchema.parse({ libraryId: db.libraryId, state }),
+      data: folderMessageDataSchema.parse({ libraryId: db.libraryId, state }),
       text: state.text,
     },
   });

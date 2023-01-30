@@ -4,7 +4,7 @@ import {
   MessageType,
   SendMessage,
   dateToExifDate,
-  downloadDataSchema,
+  folderMessageDataSchema,
   getStateFlags,
   updateFolder,
 } from 'data/daemon';
@@ -209,12 +209,12 @@ async function handleFilePromise({
 
   const updatedDownloadState = updateFolder(
     { folder: yearMonthFolder, downloadState: getDownloadState() },
-    (folder) => {
-      folder.state = 'downloading';
-      folder.downloadedCount = getDownloadedIds(yearMonthFolder).size;
-      folder.indexedCount = getRelativeFilePaths(yearMonthFolder).size;
+    (folderSummary) => {
+      folderSummary.state = 'downloading';
+      folderSummary.downloadedCount = getDownloadedIds(yearMonthFolder).size;
+      folderSummary.indexedCount = getRelativeFilePaths(yearMonthFolder).size;
 
-      return folder;
+      return folderSummary;
     }
   );
 
@@ -223,7 +223,7 @@ async function handleFilePromise({
   sendMessage({
     type: MessageType.download,
     payload: {
-      data: downloadDataSchema.parse({
+      data: folderMessageDataSchema.parse({
         libraryId: db.libraryId,
         state: updatedDownloadState,
       }),

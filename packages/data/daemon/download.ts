@@ -24,36 +24,6 @@ const stringDate = z.preprocess((arg) => {
   return undefined;
 }, z.date().optional());
 
-export const ingestedIdsSchema = z.preprocess((val) => {
-  if (Array.isArray(val)) {
-    return new Set(val);
-  }
-
-  return val;
-}, z.set(z.string()));
-export type IngestedIds = z.infer<typeof ingestedIdsSchema>;
-
-export const downloadedIdsSchema = z.preprocess((val) => {
-  if (Array.isArray(val)) {
-    return new Set(val);
-  }
-
-  return val;
-}, z.set(z.string()));
-export type DownloadedIds = z.infer<typeof downloadedIdsSchema>;
-
-export const relativeFilePathsSchema = z.preprocess((val) => {
-  if (Array.isArray(val)) {
-    return new Set(val);
-  }
-
-  return val;
-}, z.set(z.string()));
-export type RelativeFilePaths = z.infer<typeof relativeFilePathsSchema>;
-
-export const downloadingIdsSchema = downloadedIdsSchema;
-export type DownloadingIds = z.infer<typeof downloadingIdsSchema>;
-
 export enum DownloadAction {
   init = 'init',
   start = 'start',
@@ -76,7 +46,7 @@ export const tokensSchema = z.object({
 });
 export type Tokens = z.infer<typeof tokensSchema>;
 
-export const folderSchema = z.object({
+const folderSummarySchema = z.object({
   folder: z.string(),
   description: z.string(),
   indexedCount: z.number().default(0),
@@ -86,13 +56,13 @@ export const folderSchema = z.object({
   state: z.enum(['idle', 'indexing', 'downloading', 'complete']).default('idle'),
   updated: stringDate.default(() => new Date()),
 });
-export type Folder = z.infer<typeof folderSchema>;
+export type FolderSummary = z.infer<typeof folderSummarySchema>;
 
 export const downloadStateSchema = z
   .object({
     downloadedCount: z.number().default(0),
     filesystemProgress: z.number().default(0),
-    folders: z.array(folderSchema).default([]),
+    folderSummaries: z.array(folderSummarySchema).default([]),
     isPaused: z.boolean().default(false),
     lastKey: z.string().optional(),
     state: z.enum(['idle', 'ingesting', 'indexing', 'downloading', 'complete']).default('idle'),
@@ -101,7 +71,7 @@ export const downloadStateSchema = z
   })
   .default({
     downloadedCount: 0,
-    folders: [],
+    folderSummaries: [],
     state: 'idle',
     text: '',
     updated: new Date(),
@@ -124,18 +94,20 @@ export function getShouldIngest(downloadState: DownloadState) {
 export function getStateFlags(downloadState: DownloadState = DEFAULT_DOWNLOAD_STATE) {
   return {
     isComplete: downloadState.state === 'complete',
-    allFoldersComplete: downloadState.folders.every((folder) => folder.downloadedCount === folder.mediaItemsCount),
+    allFoldersComplete: downloadState.folderSummaries.every(
+      (folderSummary) => folderSummary.downloadedCount >= folderSummary.mediaItemsCount
+    ),
     isRunning: getIsRunning(downloadState),
     shouldIngest: getShouldIngest(downloadState),
   };
 }
 
 export function getTotals(downloadState: DownloadState = DEFAULT_DOWNLOAD_STATE) {
-  return downloadState.folders.reduce(
-    (acc, folder) => {
-      acc.mediaItemsCount += folder.mediaItemsCount;
-      acc.downloadedCount += folder.downloadedCount;
-      acc.indexedCount += folder.indexedCount;
+  return downloadState.folderSummaries.reduce(
+    (acc, folderSummary) => {
+      acc.mediaItemsCount += folderSummary.mediaItemsCount;
+      acc.downloadedCount += folderSummary.downloadedCount;
+      acc.indexedCount += folderSummary.indexedCount;
       return acc;
     },
     { mediaItemsCount: 0, downloadedCount: 0, indexedCount: 0 }
@@ -144,21 +116,21 @@ export function getTotals(downloadState: DownloadState = DEFAULT_DOWNLOAD_STATE)
 
 export function updateFolder(
   { folder, downloadState }: { folder: string; downloadState: DownloadState },
-  updateFunction: (folder: Folder) => Folder
+  updateFunction: (folderSummary: FolderSummary) => FolderSummary
 ) {
   const state = downloadStateSchema.parse(downloadState);
-  const folderIndex = state.folders.findIndex((f) => f.folder === folder);
+  const folderIndex = state.folderSummaries.findIndex((f) => f.folder === folder);
 
   if (folderIndex === -1) {
-    state.folders.push(updateFunction(folderSchema.parse({ folder, description: folder })));
+    state.folderSummaries.push(updateFunction(folderSummarySchema.parse({ folder, description: folder })));
   } else {
-    state.folders[folderIndex] = updateFunction(state.folders[folderIndex]);
+    state.folderSummaries[folderIndex] = updateFunction(state.folderSummaries[folderIndex]);
   }
 
   return state;
 }
 
-export const downloadDataSchema = z.object({
+export const downloadMessageDataSchema = z.object({
   libraryId: z.string(),
   folder: z.string().optional(),
   tokens: tokensSchema.optional(),
@@ -166,16 +138,4 @@ export const downloadDataSchema = z.object({
   mediaItem: mediaItemSchema.extend({ key: z.string() }).optional(),
   urls: urlsSchema.optional(),
 });
-export type DownloadData = z.infer<typeof downloadDataSchema>;
-
-export const fileIndexSchema = z.object({
-  md5: z.string(),
-  relativePaths: z.array(z.string()),
-  mediaItemId: z.string().optional(),
-});
-export type FileIndex = z.infer<typeof fileIndexSchema>;
-
-export const fileIndexByFilepathSchema = z.object({
-  fileIndexKey: z.string(),
-});
-export type FileIndexByFilepath = z.infer<typeof fileIndexByFilepathSchema>;
+export type DownloadMessageData = z.infer<typeof downloadMessageDataSchema>;

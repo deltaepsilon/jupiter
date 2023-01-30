@@ -1,3 +1,9 @@
+## Jan 30, 2023
+
+I was low-energy this morning. I could barely get out of bed, and I didn't want to code on this project.
+
+I managed to get moving eventually... like around 6:30am... and I did clean some stuff up. I'm still seeing odd results for indexed/downloaded/mediaItem counts. I decided to build a whole drawer system just to inspect those numbers. I need to understand why they're so unpredictable.
+
 ## Jan 28, 2023
 
 So... my multiplexing function didn't resolve its promise correctly. It resolved early, which caused a bunch of issues.

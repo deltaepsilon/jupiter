@@ -1,10 +1,10 @@
 import {
   DEFAULT_DOWNLOAD_STATE,
   DownloadAction,
-  DownloadData,
+  DownloadMessageData,
   DownloadState,
   MessageType,
-  downloadDataSchema,
+  downloadMessageDataSchema,
   getShouldIngest,
 } from 'data/daemon';
 import { onChildAdded, orderByKey, query, ref, startAfter } from 'firebase/database';
@@ -28,7 +28,7 @@ export function useLibraryDownload(libraryId: string, library: Library) {
   const { init, start, pause, cancel, destroy, addMediaItem } = useMemo(() => {
     function createSender(action: DownloadAction) {
       return ({ mediaItem }: { mediaItem?: MediaItem } = {}) => {
-        let urls: DownloadData['urls'];
+        let urls: DownloadMessageData['urls'];
 
         if (action === DownloadAction.addMediaItem && !mediaItem) {
           throw new Error('mediaItem is required for addMediaItem action');
@@ -45,7 +45,7 @@ export function useLibraryDownload(libraryId: string, library: Library) {
           type: MessageType.download,
           payload: {
             action,
-            data: downloadDataSchema.parse({
+            data: downloadMessageDataSchema.parse({
               libraryId,
               tokens: { refreshToken: library.refreshToken },
               mediaItem,
@@ -53,7 +53,7 @@ export function useLibraryDownload(libraryId: string, library: Library) {
             }),
           },
         }).then((result) => {
-          const { state } = downloadDataSchema.parse(result.payload.data);
+          const { state } = downloadMessageDataSchema.parse(result.payload.data);
 
           setDownloadState(state);
         });
@@ -82,7 +82,7 @@ export function useLibraryDownload(libraryId: string, library: Library) {
       type: MessageType.download,
       handler: (message) => {
         if (message.payload?.data) {
-          const { state } = downloadDataSchema.parse(message.payload.data);
+          const { state } = downloadMessageDataSchema.parse(message.payload.data);
 
           setDownloadState(state);
         }

@@ -1,6 +1,6 @@
 ## In Progress
 
-- [ ] Make sure that completed folders get marked `complete`
+- [ ] Folder analysis drawer.
 - [ ] Handle files with identical filenames: https://photos.google.com/search/DSC01845.JPG
 
 ## Next actions
@@ -28,6 +28,7 @@
 
 ## Archive
 
+- [x] Make sure that completed folders get marked `complete`
 - [x] IMG_1965.HEIC is getting renamed to IMG_1965.jpg and it's not getting found and throwing
 - [x] Double-check download counts
 - [x] Multiplex `index-filesystem.ts`
