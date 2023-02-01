@@ -1,4 +1,11 @@
-import { MessageType, SendMessage, exifDateToDate, folderMessageDataSchema, getStateFlags, updateFolder } from 'data/daemon';
+import {
+  MessageType,
+  SendMessage,
+  downloadMessageDataSchema,
+  exifDateToDate,
+  getStateFlags,
+  updateFolder,
+} from 'data/daemon';
 import { createGettersAndSetters, getFileTree, getFolderFromDate, moveToDateFolder } from '../utils';
 import { getExif, getMd5 } from '../exif';
 
@@ -50,7 +57,7 @@ export async function indexFilesystem(
     sendMessage({
       type: MessageType.download,
       payload: {
-        data: folderMessageDataSchema.parse({ libraryId: db.libraryId, state: updatedDownloadState }),
+        data: downloadMessageDataSchema.parse({ libraryId: db.libraryId, state: updatedDownloadState }),
         // text: `Filesystem index progress: ${filesystemProgress}`,
       },
     });
@@ -64,7 +71,7 @@ export async function indexFilesystem(
   sendMessage({
     type: MessageType.download,
     payload: {
-      data: folderMessageDataSchema.parse({ libraryId: db.libraryId, state: getDownloadState() }),
+      data: downloadMessageDataSchema.parse({ libraryId: db.libraryId, state: getDownloadState() }),
       text: `Found ${filepaths.length} files in filesystem. Indexing...`,
     },
   });
@@ -105,7 +112,7 @@ export async function indexFilesystem(
             sendMessage({
               type: MessageType.download,
               payload: {
-                data: folderMessageDataSchema.parse({ libraryId: db.libraryId, state: downloadState }),
+                data: downloadMessageDataSchema.parse({ libraryId: db.libraryId, state: downloadState }),
                 text: hasMessagedPause ? undefined : 'Indexing paused.',
               },
             });
@@ -119,7 +126,7 @@ export async function indexFilesystem(
             sendMessage({
               type: MessageType.download,
               payload: {
-                data: folderMessageDataSchema.parse({ libraryId: db.libraryId, state: downloadState }),
+                data: downloadMessageDataSchema.parse({ libraryId: db.libraryId, state: downloadState }),
                 text: `Moved file: ${filename} -> ${updatedFilepath}`,
               },
             });
@@ -142,10 +149,14 @@ export async function indexFilesystem(
             sendMessage({
               type: MessageType.download,
               payload: {
-                data: folderMessageDataSchema.parse({ libraryId: db.libraryId, state: downloadState }),
+                data: downloadMessageDataSchema.parse({ libraryId: db.libraryId, state: downloadState }),
                 text: `Repaired file: ${filepath}`,
               },
             });
+          }
+
+          if (googleMediaItemId) {
+            fileIndex.mediaItemId = googleMediaItemId;
           }
 
           fileIndex.relativePaths.push(relativePath);

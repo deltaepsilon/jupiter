@@ -119,8 +119,6 @@ function start({ db, response }: { db: FilesystemDatabase; response: DaemonMessa
   } else {
     response.payload.text = 'Resuming download...';
 
-    console.log({ downloadState });
-
     updateDownloadState({ isPaused: false, text: 'Resuming download...' });
   }
 

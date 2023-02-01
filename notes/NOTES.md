@@ -1,3 +1,15 @@
+## Feb 1, 2023
+
+I've got the downloads/ingested/files data chart working, and it cleared up all of my confusion as I had hoped.
+
+I'm feeling a lot better about the stability of the product now. The data chart makes discrepancies easy to identify and remedy. I immediately found some bugs, fixed them and... I win?? It's working so much better now. Everything is going more smoothly, more inline with expectations.
+
+Individual file progress was a little tough to track, so I've added a progress event and now I just need to find a way to display progress succinctly.
+
+I get so discourage with this project, assuming that I'll either never get it stable, or nobody will ever want to buy it. But it is getting stable, and people are continuing to post to Reddit about needing a solution... so the bigger risk is how much I can charge for it.
+
+I'm still terrified that nobody will pay more than $30 for the thing. That could be ok... but I'd have to sell a metric ton, and I'd have to keep selling forever and ever. This really should be SaaS, because I'm going to have to maintain it forever, and I'd like to keep adding features and building it out. But is one more subscription going to piss off potential customers???
+
 ## Jan 30, 2023
 
 I was low-energy this morning. I could barely get out of bed, and I didn't want to code on this project.

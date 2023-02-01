@@ -90,7 +90,7 @@ export function ImportLibraryPanel({ actions, libraryId, libraryImport }: Props)
               <ListItemIcon>
                 <DeleteForeverIcon />
               </ListItemIcon>
-              <ListItemText>Destroy records</ListItemText>
+              <ListItemText>Start over</ListItemText>
             </MenuItem>
           </MenuList>
         </MenuTrigger>

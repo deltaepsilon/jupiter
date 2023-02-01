@@ -5,10 +5,12 @@ import md5File from 'md5-file';
 export async function getMd5(filepath: string) {
   const exif = await getExif(filepath);
   const filenameParts = filepath.split('.').slice(0, -1);
-  const repairedFilepath = [...filenameParts, exif.FileTypeExtension].join('.');
+  let repairedFilepath = [...filenameParts, exif.FileTypeExtension].join('.');
   const filepathNeedsRepair = repairedFilepath !== filepath;
 
   if (filepathNeedsRepair) {
+    repairedFilepath = `${filepath}.${exif.FileTypeExtension}`;
+
     await fsPromises.rename(filepath, repairedFilepath);
   }
 

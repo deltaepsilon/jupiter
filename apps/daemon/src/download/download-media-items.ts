@@ -4,8 +4,9 @@ import {
   MessageType,
   SendMessage,
   dateToExifDate,
-  folderMessageDataSchema,
+  downloadMessageDataSchema,
   getStateFlags,
+  progressMessageDataSchema,
   updateFolder,
 } from 'data/daemon';
 import { GettersAndSetters, createGettersAndSetters, moveToDateFolder } from '../utils';
@@ -48,7 +49,6 @@ export async function downloadMediaItems({ folder, mediaItemIds, db, sendMessage
     const downloadedIds = getDownloadedIds(folder);
 
     if (downloadedIds.has(mediaItem.id)) {
-      console.log('skipping download:', mediaItem.id);
       continue;
     }
 
@@ -59,6 +59,7 @@ export async function downloadMediaItems({ folder, mediaItemIds, db, sendMessage
       mediaItem,
       mediaItems,
       mediaItemIds,
+      sendMessage,
     });
     mediaItems = updatedMediaItems;
     stateFlags = getStateFlags(getDownloadState());
@@ -73,11 +74,14 @@ export async function downloadMediaItems({ folder, mediaItemIds, db, sendMessage
         mediaItem,
         sendMessage,
       });
+
       updateDownloadingIds(folder, (downloadingIds) => (downloadingIds.delete(mediaItem.id), downloadingIds));
 
       stateFlags = getStateFlags(updatedDownloadState);
     });
   }
+
+  await addToMultiplex.promise;
 }
 
 async function writeFile({
@@ -87,6 +91,7 @@ async function writeFile({
   mediaItem,
   mediaItems,
   mediaItemIds,
+  sendMessage,
 }: {
   db: FilesystemDatabase;
   downloadDirectory: string;
@@ -94,9 +99,24 @@ async function writeFile({
   mediaItem: MediaItem;
   mediaItems: MediaItem[];
   mediaItemIds: string[];
+  sendMessage: SendMessage;
 }) {
   const response = await axios
-    .get(getMediaItemDownloadUrl(mediaItem), { responseType: 'stream' })
+    .get(getMediaItemDownloadUrl(mediaItem), {
+      onDownloadProgress: (progressEvent) =>
+        sendMessage({
+          type: MessageType.progress,
+          payload: {
+            data: progressMessageDataSchema.parse({
+              id: mediaItem.id,
+              folder,
+              filename: mediaItem.filename,
+              progressEvent: progressEvent,
+            }),
+          },
+        }),
+      responseType: 'stream',
+    })
     .catch(async (err) => {
       const isBaseUrlExpired = err.response.status === 403;
 
@@ -149,7 +169,7 @@ async function writeFile({
 
           resolve({ exif, hash, filepath });
         },
-        { attempts: 10, millis: 1000, failSilently: true }
+        { attempts: 30, millis: 1000, failSilently: true }
       )().catch(reject);
     });
   });
@@ -202,6 +222,7 @@ async function handleFilePromise({
     folder: yearMonthFolder,
     getFileIndex,
     hash,
+    mediaItemId: mediaItem.id,
     setFileIndex,
   });
 
@@ -223,7 +244,7 @@ async function handleFilePromise({
   sendMessage({
     type: MessageType.download,
     payload: {
-      data: folderMessageDataSchema.parse({
+      data: downloadMessageDataSchema.parse({
         libraryId: db.libraryId,
         state: updatedDownloadState,
       }),
@@ -240,6 +261,7 @@ function updateFileIndex({
   folder,
   getFileIndex,
   hash,
+  mediaItemId,
   setFileIndex,
 }: {
   directoryPath: string;
@@ -247,11 +269,13 @@ function updateFileIndex({
   folder: string;
   getFileIndex: GettersAndSetters['getFileIndex'];
   hash: string;
+  mediaItemId: string;
   setFileIndex: GettersAndSetters['setFileIndex'];
 }) {
   const relativeFilepath = path.relative(directoryPath, filepath);
   const fileIndex = getFileIndex(folder, hash);
 
+  fileIndex.mediaItemId = mediaItemId;
   fileIndex.relativePaths.push(relativeFilepath);
 
   setFileIndex(folder, fileIndex);

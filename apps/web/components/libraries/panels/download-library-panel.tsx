@@ -11,7 +11,8 @@ import {
   SxProps,
   Typography,
 } from '@mui/material';
-import { DownloadState, getStateFlags, getTotals } from 'data/daemon';
+import { DownloadState, ProgressMessageData, getStateFlags, getTotals } from 'data/daemon';
+import { useEffect, useMemo, useState } from 'react';
 
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
@@ -20,6 +21,7 @@ import DownloadingIcon from '@mui/icons-material/Downloading';
 import { FolderDrawer } from '../drawers';
 import FolderIcon from '@mui/icons-material/Folder';
 import { MenuTrigger } from 'ui/components';
+import { MessageType } from 'data/daemon';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import PauseCircleOutlineIcon from '@mui/icons-material/PauseCircleOutline';
 import PlayCircleOutlineIcon from '@mui/icons-material/PlayCircleOutline';
@@ -28,7 +30,8 @@ import SyncIcon from '@mui/icons-material/Sync';
 import { UseDirectoryResult } from 'web/contexts';
 import { UseLibraryDownloadResult } from 'web/hooks/use-library-download';
 import { formatDate } from 'ui/utils';
-import { useMemo } from 'react';
+import { progressMessageDataSchema } from 'data/daemon';
+import { useDaemon } from 'web/contexts';
 
 const GRID: SxProps = {
   display: 'grid',
@@ -101,7 +104,7 @@ export function DownloadLibraryPanel({ actions, directory, downloadState, librar
                 <ListItemIcon>
                   <DeleteForeverIcon />
                 </ListItemIcon>
-                <ListItemText>Destroy records</ListItemText>
+                <ListItemText>Start over</ListItemText>
               </MenuItem>
             </MenuList>
           </MenuTrigger>
@@ -113,63 +116,95 @@ export function DownloadLibraryPanel({ actions, directory, downloadState, librar
   );
 }
 
+type ProgressMap = Record<string, ProgressMessageData>;
+const DEFAULT_PROGRESS_MAP = {} as ProgressMap;
+
 function FoldersProgress({ downloadState }: { downloadState: DownloadState }) {
+  const [progressMapsByFolder, setProgressMapsByFolder] = useState<Map<string, ProgressMap>>(new Map());
   const folderSummaries = useMemo(
     () => downloadState.folderSummaries.sort((a, b) => (a.folder < b.folder ? 1 : -1)),
     [downloadState]
   );
+  const { registerHandler } = useDaemon();
+
+  useEffect(() => {
+    registerHandler({
+      type: MessageType.progress,
+      handler: (message) => {
+        const data = progressMessageDataSchema.parse(message.payload?.data);
+        const existing = progressMapsByFolder.get(data.folder) ?? DEFAULT_PROGRESS_MAP;
+
+        existing[data.id] = data;
+
+        setProgressMapsByFolder((prev) => new Map(prev).set(data.folder, existing));
+      },
+    });
+  }, [progressMapsByFolder, registerHandler]);
 
   return (
     <Box sx={{ gridColumn: '1/-1' }}>
-      {folderSummaries.map((folderSummary) => (
-        <FolderDrawer folder={folderSummary.folder} key={folderSummary.folder}>
-          <Box
-            sx={{
-              display: 'grid',
-              gridTemplateColumns: '1fr 53px',
-              gridGap: 16,
-              paddingY: '4px',
-              cursor: 'pointer',
-              '&:hover [data-folder-icon]': {
-                color: 'var(--color-jade-green)',
-              },
-            }}
-          >
-            <Box sx={{ position: 'relative', display: 'grid', gridTemplateColumns: '2rem 1fr', alignItems: 'center' }}>
-              <FolderIcon data-folder-icon />
-              <Box sx={{ position: 'relative', top: -5 }}>
-                <LinearProgress
-                  value={(folderSummary.downloadedCount / folderSummary.mediaItemsCount) * 100}
-                  variant='determinate'
-                />
-              </Box>
-              <Box
-                sx={{
-                  position: 'absolute',
-                  inset: '10px 0px 5px 30px',
-                  display: 'grid',
-                  gridTemplateColumns: '1fr 4.5rem 6rem 3.5rem',
-                  userSelect: 'none',
-                }}
-              >
-                <Typography variant='caption'>{folderSummary.folder}</Typography>
-                <Typography variant='caption'>Indexed: {folderSummary.indexedCount}</Typography>
-                <Typography variant='caption'>Downloaded: {folderSummary.downloadedCount}</Typography>
-                <Typography variant='caption'>Media: {folderSummary.mediaItemsCount}</Typography>
-              </Box>
-            </Box>
+      {folderSummaries.map((folderSummary) => {
+        const progressMap = progressMapsByFolder.get(folderSummary.folder) ?? DEFAULT_PROGRESS_MAP;
 
-            <Box sx={{ textAlign: 'center', color: 'var(--color-mid-gray)' }}>
-              <FolderState folderSummary={folderSummary} />
+        return (
+          <FolderDrawer folder={folderSummary.folder} key={folderSummary.folder}>
+            <Box
+              sx={{
+                display: 'grid',
+                gridTemplateColumns: '1fr 53px',
+                gridGap: 16,
+                paddingY: '4px',
+                cursor: 'pointer',
+                '&:hover [data-folder-icon]': {
+                  color: 'var(--color-jade-green)',
+                },
+              }}
+            >
+              <Box
+                sx={{ position: 'relative', display: 'grid', gridTemplateColumns: '2rem 1fr', alignItems: 'center' }}
+              >
+                <FolderIcon data-folder-icon />
+                <Box sx={{ position: 'relative', top: -5 }}>
+                  <LinearProgress
+                    value={(folderSummary.downloadedCount / folderSummary.mediaItemsCount) * 100}
+                    variant='determinate'
+                  />
+                </Box>
+                <Box
+                  sx={{
+                    position: 'absolute',
+                    inset: '10px 0px 5px 30px',
+                    display: 'grid',
+                    gridTemplateColumns: '1fr 4.5rem 6rem 3.5rem',
+                    userSelect: 'none',
+                  }}
+                >
+                  <Typography variant='caption'>{folderSummary.folder}</Typography>
+                  <Typography variant='caption'>Indexed: {folderSummary.indexedCount}</Typography>
+                  <Typography variant='caption'>Downloaded: {folderSummary.downloadedCount}</Typography>
+                  <Typography variant='caption'>Media: {folderSummary.mediaItemsCount}</Typography>
+                </Box>
+              </Box>
+
+              <Box sx={{ textAlign: 'center', color: 'var(--color-mid-gray)' }}>
+                <FolderState folderSummary={folderSummary} progressMap={progressMap} />
+              </Box>
             </Box>
-          </Box>
-        </FolderDrawer>
-      ))}
+          </FolderDrawer>
+        );
+      })}
     </Box>
   );
 }
 
-function FolderState({ folderSummary }: { folderSummary: DownloadState['folderSummaries'][0] }) {
+function FolderState({
+  progressMap,
+  folderSummary,
+}: {
+  progressMap: ProgressMap;
+  folderSummary: DownloadState['folderSummaries'][0];
+}) {
+  console.log('FolderState', folderSummary, progressMap);
   switch (folderSummary.state) {
     case 'idle':
       return <PauseCircleOutlineIcon />;

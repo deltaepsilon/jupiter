@@ -139,3 +139,20 @@ export const downloadMessageDataSchema = z.object({
   urls: urlsSchema.optional(),
 });
 export type DownloadMessageData = z.infer<typeof downloadMessageDataSchema>;
+
+export const progressMessageDataSchema = z.object({
+  id: z.string(),
+  folder: z.string(),
+  filename: z.string(),
+  progressEvent: z.object({
+    loaded: z.number(),
+    total: z.number(),
+    progress: z.number(),
+    bytes: z.number(),
+    rate: z.number().optional(),
+    estimated: z.number().optional(),
+    download: z.boolean(),
+  }),
+  created: z.number().default(() => Date.now()),
+});
+export type ProgressMessageData = z.infer<typeof progressMessageDataSchema>;

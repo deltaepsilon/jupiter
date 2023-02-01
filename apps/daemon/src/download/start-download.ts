@@ -4,7 +4,7 @@ import {
   FolderSummary,
   MessageType,
   SendMessage,
-  folderMessageDataSchema,
+  downloadMessageDataSchema,
   getStateFlags,
   updateFolder,
 } from 'data/daemon';
@@ -132,8 +132,6 @@ async function downloadFolder({ db, folder, sendMessage }: Args & { folder: stri
   const mediaItemIds = [...ingestedIds].filter((id) => !downloadedIds.has(id) && !downloadingIds.has(id));
   const text = `Downloading ${mediaItemIds.length} new media items to ${folder}`;
 
-  console.log({ downloadedIds, downloadingIds, ingestedIds, mediaItemIds });
-
   if (mediaItemIds.length) {
     updateDownloadState({ state: 'downloading', text });
 
@@ -183,7 +181,7 @@ function sendDownloadStateMessage({
   sendMessage({
     type: MessageType.download,
     payload: {
-      data: folderMessageDataSchema.parse({ libraryId: db.libraryId, state }),
+      data: downloadMessageDataSchema.parse({ libraryId: db.libraryId, state }),
       text: state.text,
     },
   });

@@ -2,6 +2,7 @@ import { CONFIG_PATH, EXIFTOOL_PATH } from './data';
 import { Exif, exifSchema } from 'data/daemon';
 
 import { execFile } from 'child_process';
+import fsPromises from 'fs/promises';
 import { getExif } from './get-exif';
 
 export function setExif(filepath: string, exif: Partial<Exif>) {
@@ -14,7 +15,9 @@ export function setExif(filepath: string, exif: Partial<Exif>) {
     ['-config', CONFIG_PATH] as string[]
   );
 
-  return new Promise((resolve, reject) => {
+  return new Promise(async (resolve, reject) => {
+    await fsPromises.unlink(`${filepath}_exiftool_tmp`).catch(() => {});
+
     execFile(
       EXIFTOOL_PATH,
       [...args, '-overwrite_original', filepath],

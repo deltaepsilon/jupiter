@@ -10,6 +10,7 @@ export enum MessageType {
   ping = 'ping',
   directory = 'directory',
   download = 'download',
+  progress = 'progress',
   folder = 'folder',
 }
 

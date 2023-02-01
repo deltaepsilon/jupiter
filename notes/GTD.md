@@ -1,11 +1,10 @@
 ## In Progress
 
-- [ ] Folder analysis drawer.
-- [ ] Handle files with identical filenames: https://photos.google.com/search/DSC01845.JPG
+- [ ] Display file-level progress
 
 ## Next actions
 
-
+- [ ] Handle files with identical filenames: https://photos.google.com/u/1/search/DSC01845.JPG
 - [ ] Sync up metadata
 - [ ] Restore metadata to images already on disk
 - [ ] Create logo
@@ -28,6 +27,7 @@
 
 ## Archive
 
+- [x] Folder analysis drawer.
 - [x] Make sure that completed folders get marked `complete`
 - [x] IMG_1965.HEIC is getting renamed to IMG_1965.jpg and it's not getting found and throwing
 - [x] Double-check download counts
