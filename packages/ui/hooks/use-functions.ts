@@ -94,8 +94,6 @@ export function useFunctions() {
       );
       const response = await func(libraryTaskStatusRequest.parse(params));
 
-      console.log(response.data);
-
       return libraryTaskStatusResponse.parse(response.data);
     },
     [functions]

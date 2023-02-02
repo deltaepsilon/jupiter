@@ -1,8 +1,11 @@
 import { Box, Button, Paper, SxProps, Typography } from '@mui/material';
 import { Container, Link, MediaItemImage } from 'ui/components';
+import { useEffect, useState } from 'react';
 
 import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
+import { Library } from 'data/library';
 import { LibraryPickerTrigger } from './library-picker-trigger';
+import PhotoIcon from '@mui/icons-material/Photo';
 import PhotoLibraryIcon from '@mui/icons-material/PhotoLibrary';
 import SettingsIcon from '@mui/icons-material/Settings';
 import { WEB } from 'data/web';
@@ -44,48 +47,9 @@ export function LibrariesList({}: Props) {
           color: 'var(--color-gentian-blue-metallic)',
         }}
       >
-        {libraries.map(([key, library]) => {
-          const mediaItem = library.mediaItems?.[0];
-
-          return (
-            <Link href={WEB.ROUTES.LIBRARY(key)} key={key}>
-              <Paper elevation={2} sx={{ ...CARD_SX }}>
-                {mediaItem ? (
-                  <MediaItemImage
-                    height={200}
-                    mediaItem={mediaItem}
-                    onError={() => refreshLibrary(key, true)}
-                    sx={{ position: 'absolute', inset: 0 }}
-                    width={200}
-                  />
-                ) : (
-                  <PhotoLibraryIcon sx={{ color: '', width: 100, height: 100 }} />
-                )}
-                <Box
-                  sx={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-
-                    position: 'absolute',
-                    bottom: 0,
-                    left: 0,
-                    right: 0,
-                    textTransform: 'capitalize',
-                    backgroundColor: 'rgba(255, 255, 255, 0.9)',
-                    paddingX: 1,
-                    paddingY: '2px',
-                  }}
-                >
-                  <Typography sx={{}} variant='subtitle2'>
-                    {library.name}
-                  </Typography>
-                  <SettingsIcon />
-                </Box>
-              </Paper>
-            </Link>
-          );
-        })}
+        {libraries.map(([libraryKey, library]) => (
+          <LibraryItem library={library} libraryKey={libraryKey} />
+        ))}
         <LibraryPickerTrigger>
           <Paper elevation={1} sx={{ ...CARD_SX }}>
             <Button startIcon={<AddPhotoAlternateIcon />} variant='text'>
@@ -95,5 +59,60 @@ export function LibrariesList({}: Props) {
         </LibraryPickerTrigger>
       </Box>
     </Container>
+  );
+}
+
+function LibraryItem({ library, libraryKey }: { library: Library; libraryKey: string }) {
+  const [isBrokenImage, setIsBrokenImage] = useState(false);
+  const { refreshLibrary } = useLibraries();
+  const mediaItem = library.mediaItems?.[0];
+  const baseUrl = mediaItem?.baseUrl;
+
+  useEffect(() => {
+    setIsBrokenImage(false);
+  }, [baseUrl]);
+
+  return (
+    <Link href={WEB.ROUTES.LIBRARY(libraryKey)} key={libraryKey}>
+      <Paper elevation={2} sx={{ ...CARD_SX }}>
+        {isBrokenImage ? (
+          <PhotoIcon sx={{ color: '', width: 100, height: 100 }} />
+        ) : mediaItem ? (
+          <MediaItemImage
+            height={200}
+            mediaItem={mediaItem}
+            onError={() => {
+              setIsBrokenImage(true);
+              refreshLibrary(libraryKey, true);
+            }}
+            sx={{ position: 'absolute', inset: 0 }}
+            width={200}
+          />
+        ) : (
+          <PhotoLibraryIcon sx={{ color: '', width: 100, height: 100 }} />
+        )}
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+
+            position: 'absolute',
+            bottom: 0,
+            left: 0,
+            right: 0,
+            textTransform: 'capitalize',
+            backgroundColor: 'rgba(255, 255, 255, 0.9)',
+            paddingX: 1,
+            paddingY: '2px',
+          }}
+        >
+          <Typography sx={{}} variant='subtitle2'>
+            {library.name}
+          </Typography>
+          <SettingsIcon />
+        </Box>
+      </Paper>
+    </Link>
   );
 }

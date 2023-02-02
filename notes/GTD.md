@@ -1,9 +1,11 @@
 ## In Progress
 
-- [ ] Handle files with identical filenames: https://photos.google.com/u/1/search/DSC01845.JPG
+- [ ] Streamline ingestion and indexing
+- [ ] Don't delete `lastKey` when restarting import from "completed" state (library-import-on-write)
 
 ## Next actions
 
+- [ ] Handle files with identical filenames: https://photos.google.com/u/1/search/DSC01845.JPG
 - [ ] Sync up metadata
 - [ ] Restore metadata to images already on disk
 - [ ] Create logo

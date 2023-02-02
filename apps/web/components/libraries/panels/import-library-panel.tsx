@@ -78,6 +78,14 @@ export function ImportLibraryPanel({ actions, libraryId, libraryImport }: Props)
           }
         >
           <MenuList>
+            {isComplete && (
+              <MenuItem>
+                <ListItemIcon onClick={() => actions.start}>
+                  <PlayCircleOutlineIcon />
+                </ListItemIcon>
+                <ListItemText>Import new media</ListItemText>
+              </MenuItem>
+            )}
             <MediaItemsDrawer libraryId={libraryId}>
               <MenuItem>
                 <ListItemIcon>
@@ -99,8 +107,14 @@ export function ImportLibraryPanel({ actions, libraryId, libraryImport }: Props)
   );
 }
 
+const LIBRARY_IMPORT_STALE_MILLIS = 1000 * 60 * 10;
+
 function ActionButton({ actions, libraryImport }: Pick<Props, 'actions' | 'libraryImport'>) {
-  switch (libraryImport?.status) {
+  const isStale = libraryImport && libraryImport?.updated.getTime() < Date.now() - LIBRARY_IMPORT_STALE_MILLIS;
+  const libraryImportStatus =
+    isStale && libraryImport?.status === LibraryTaskStatus.complete ? LibraryTaskStatus.idle : libraryImport?.status;
+
+  switch (libraryImportStatus) {
     case LibraryTaskStatus.complete:
       return (
         <CheckCircleOutlineIcon

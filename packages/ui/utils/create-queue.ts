@@ -1,9 +1,17 @@
-export function createQueue<T>(fn: (item: T) => Promise<void>, millis = 0) {
-  let queue = [] as T[];
+import { animals, colors, uniqueNamesGenerator } from 'unique-names-generator';
+
+function generateName() {
+  return uniqueNamesGenerator({ dictionaries: [colors, animals], length: 2 });
+}
+
+export function createQueue<Item>(fn: (item: Item) => Promise<void>, millis = 0) {
+  const name = generateName();
+  let i = 0;
+  let queue = [] as { i: number; item: Item }[];
   let isRunning = false;
 
-  async function addToQueue(item: T) {
-    queue.push(item);
+  async function addToQueue(item: Item) {
+    queue.push({ i: ++i, item });
 
     if (isRunning) {
       return;
@@ -12,9 +20,14 @@ export function createQueue<T>(fn: (item: T) => Promise<void>, millis = 0) {
     isRunning = true;
 
     while (queue.length) {
-      const item = queue.shift();
+      const queueItem = queue.shift();
+      const timeName = JSON.stringify({ name, i: queueItem?.i, length: queue.length });
 
-      item && (await fn(item));
+      console.time(timeName);
+
+      queueItem && (await fn(queueItem.item));
+
+      console.timeEnd(timeName);
 
       await wait(millis);
     }

@@ -54,13 +54,10 @@ export async function libraryImportOnWrite(
     const mediaItemsUpdates = getMediaItemUpdates(mediaItems);
     const isLastPage = !maybeNextPageToken;
 
-    if (isLastPage) throw new Error('TODO: Implement this');
-
     if (isLastPage) await setStatus({ libraryId, status: LibraryTaskStatus.complete, userId });
     nextPageToken = maybeNextPageToken;
 
     if (isReadingFromStart) {
-      // TODO: Figure out how many of these records were new and update the count
       const sortedMediaItemKeys = Object.keys(mediaItemsUpdates).sort();
       const firstMediaItemKey = sortedMediaItemKeys[0];
 
