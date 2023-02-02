@@ -146,8 +146,8 @@ export const progressMessageDataSchema = z.object({
   filename: z.string(),
   progressEvent: z.object({
     loaded: z.number(),
-    total: z.number(),
-    progress: z.number(),
+    total: z.number().optional(),
+    progress: z.number().optional(),
     bytes: z.number(),
     rate: z.number().optional(),
     estimated: z.number().optional(),

@@ -14,7 +14,7 @@ import fsPromises from 'fs/promises';
 import { multiplex } from 'ui/utils';
 import path from 'path';
 
-const MULTIPLEX_THREADS = 10;
+const MULTIPLEX_THREADS = 20;
 
 interface OnProgressArgs {
   folder: string;

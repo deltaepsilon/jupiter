@@ -248,7 +248,7 @@ async function handleFilePromise({
         libraryId: db.libraryId,
         state: updatedDownloadState,
       }),
-      text: `Downloaded: ${yearMonthFilepath}`,
+      // text: `Downloaded: ${yearMonthFilepath}`,
     },
   });
 

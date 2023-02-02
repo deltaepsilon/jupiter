@@ -12,7 +12,8 @@ import {
   Typography,
 } from '@mui/material';
 import { DownloadState, ProgressMessageData, getStateFlags, getTotals } from 'data/daemon';
-import { useEffect, useMemo, useState } from 'react';
+import { HiddenScroll, MenuTrigger, useScrollToBottom } from 'ui/components';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
@@ -20,7 +21,6 @@ import { DirectoryPicker } from 'web/components/daemon';
 import DownloadingIcon from '@mui/icons-material/Downloading';
 import { FolderDrawer } from '../drawers';
 import FolderIcon from '@mui/icons-material/Folder';
-import { MenuTrigger } from 'ui/components';
 import { MessageType } from 'data/daemon';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import PauseCircleOutlineIcon from '@mui/icons-material/PauseCircleOutline';
@@ -50,6 +50,7 @@ type Props = {
 export function DownloadLibraryPanel({ actions, directory, downloadState, libraryId }: Props) {
   const { isRunning } = getStateFlags(downloadState);
   const { downloadedCount, mediaItemsCount } = getTotals(downloadState);
+  const { emptyFolderProgress, progressMapsByFolder } = useFolderProgress();
   const isEmpty = mediaItemsCount === 0;
 
   return (
@@ -87,7 +88,7 @@ export function DownloadLibraryPanel({ actions, directory, downloadState, librar
           </Typography>
         </Box>
         <Box>
-          <ActionButton actions={actions} downloadState={downloadState} />
+          <ActionButton actions={actions} downloadState={downloadState} emptyFolderProgress={emptyFolderProgress} />
         </Box>
 
         <Box sx={{ position: 'relative', pointerEvents: isEmpty ? 'none' : 'all', opacity: isEmpty ? 0.5 : 1 }}>
@@ -100,7 +101,12 @@ export function DownloadLibraryPanel({ actions, directory, downloadState, librar
             }
           >
             <MenuList>
-              <MenuItem onClick={() => actions.destroy()}>
+              <MenuItem
+                onClick={() => {
+                  emptyFolderProgress();
+                  actions.destroy();
+                }}
+              >
                 <ListItemIcon>
                   <DeleteForeverIcon />
                 </ListItemIcon>
@@ -110,29 +116,29 @@ export function DownloadLibraryPanel({ actions, directory, downloadState, librar
           </MenuTrigger>
         </Box>
 
-        <FoldersProgress downloadState={downloadState} />
+        <FoldersProgress downloadState={downloadState} progressMapsByFolder={progressMapsByFolder} />
       </Box>
     </Paper>
   );
 }
 
 type ProgressMap = Record<string, ProgressMessageData>;
-const DEFAULT_PROGRESS_MAP = {} as ProgressMap;
+type ProgressMapByFolder = Map<string, ProgressMap>;
+function getDefaultProgressMap() {
+  return {} as ProgressMap;
+}
 
-function FoldersProgress({ downloadState }: { downloadState: DownloadState }) {
-  const [progressMapsByFolder, setProgressMapsByFolder] = useState<Map<string, ProgressMap>>(new Map());
-  const folderSummaries = useMemo(
-    () => downloadState.folderSummaries.sort((a, b) => (a.folder < b.folder ? 1 : -1)),
-    [downloadState]
-  );
+function useFolderProgress() {
+  const [progressMapsByFolder, setProgressMapsByFolder] = useState<ProgressMapByFolder>(new Map());
   const { registerHandler } = useDaemon();
+  const emptyFolderProgress = useCallback(() => setProgressMapsByFolder(new Map()), []);
 
   useEffect(() => {
     registerHandler({
       type: MessageType.progress,
       handler: (message) => {
         const data = progressMessageDataSchema.parse(message.payload?.data);
-        const existing = progressMapsByFolder.get(data.folder) ?? DEFAULT_PROGRESS_MAP;
+        const existing = progressMapsByFolder.get(data.folder) ?? getDefaultProgressMap();
 
         existing[data.id] = data;
 
@@ -141,10 +147,29 @@ function FoldersProgress({ downloadState }: { downloadState: DownloadState }) {
     });
   }, [progressMapsByFolder, registerHandler]);
 
+  return { emptyFolderProgress, progressMapsByFolder };
+}
+
+function FoldersProgress({
+  downloadState,
+  progressMapsByFolder,
+}: {
+  downloadState: DownloadState;
+  progressMapsByFolder: ProgressMapByFolder;
+}) {
+  const folderSummaries = useMemo(
+    () => downloadState.folderSummaries.sort((a, b) => (a.folder < b.folder ? 1 : -1)),
+    [downloadState]
+  );
+
   return (
     <Box sx={{ gridColumn: '1/-1' }}>
       {folderSummaries.map((folderSummary) => {
-        const progressMap = progressMapsByFolder.get(folderSummary.folder) ?? DEFAULT_PROGRESS_MAP;
+        const progressMap = progressMapsByFolder.get(folderSummary.folder) ?? getDefaultProgressMap();
+
+        if (folderSummary.folder === 'missing-date' && Object.keys(progressMap).length) {
+          console.log(folderSummary.folder, progressMap, progressMapsByFolder);
+        }
 
         return (
           <FolderDrawer folder={folderSummary.folder} key={folderSummary.folder}>
@@ -189,6 +214,10 @@ function FoldersProgress({ downloadState }: { downloadState: DownloadState }) {
               <Box sx={{ textAlign: 'center', color: 'var(--color-mid-gray)' }}>
                 <FolderState folderSummary={folderSummary} progressMap={progressMap} />
               </Box>
+
+              <Box>
+                <FolderProgress progressMap={progressMap} />
+              </Box>
             </Box>
           </FolderDrawer>
         );
@@ -204,7 +233,6 @@ function FolderState({
   progressMap: ProgressMap;
   folderSummary: DownloadState['folderSummaries'][0];
 }) {
-  console.log('FolderState', folderSummary, progressMap);
   switch (folderSummary.state) {
     case 'idle':
       return <PauseCircleOutlineIcon />;
@@ -217,7 +245,11 @@ function FolderState({
   }
 }
 
-function ActionButton({ actions, downloadState }: Pick<Props, 'actions' | 'downloadState'>) {
+function ActionButton({
+  actions,
+  downloadState,
+  emptyFolderProgress,
+}: Pick<Props, 'actions' | 'downloadState'> & { emptyFolderProgress: () => void }) {
   const { isComplete, isRunning } = getStateFlags(downloadState);
 
   switch (true) {
@@ -230,7 +262,12 @@ function ActionButton({ actions, downloadState }: Pick<Props, 'actions' | 'downl
 
     case isComplete:
       return (
-        <IconButton onClick={async () => actions.start()}>
+        <IconButton
+          onClick={async () => {
+            emptyFolderProgress();
+            actions.start();
+          }}
+        >
           <ReplayIcon fontSize='large' sx={{ color: 'var(--color-jade-green)' }} />
         </IconButton>
       );
@@ -242,4 +279,35 @@ function ActionButton({ actions, downloadState }: Pick<Props, 'actions' | 'downl
         </IconButton>
       );
   }
+}
+
+function FolderProgress({ progressMap }: { progressMap: ProgressMap }) {
+  const scrollableRef = useRef<HTMLDivElement>(null);
+  const progressMapFlat = Object.values(progressMap).filter((p) => p.progressEvent.progress !== 1);
+
+  useScrollToBottom(scrollableRef, [progressMapFlat]);
+
+  return progressMapFlat.length ? (
+    <Box sx={{ position: 'relative', height: 197 }}>
+      <HiddenScroll
+        ref={scrollableRef}
+        sx={{
+          position: 'absolute',
+          inset: '0rem -1rem 0rem 1rem',
+          padding: 2,
+          userSelect: 'none',
+          background: 'var(--color-extralight-gray)',
+        }}
+      >
+        {progressMapFlat.map(({ id, filename, progressEvent }) => (
+          <Box key={id}>
+            <LinearProgress color='info' value={(progressEvent?.progress ?? 0) * 100} variant='determinate' />
+            <Typography sx={{ position: 'relative', top: -7 }} variant='caption'>
+              {filename}
+            </Typography>
+          </Box>
+        ))}
+      </HiddenScroll>
+    </Box>
+  ) : null;
 }

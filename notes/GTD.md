@@ -1,10 +1,9 @@
 ## In Progress
 
-- [ ] Display file-level progress
+- [ ] Handle files with identical filenames: https://photos.google.com/u/1/search/DSC01845.JPG
 
 ## Next actions
 
-- [ ] Handle files with identical filenames: https://photos.google.com/u/1/search/DSC01845.JPG
 - [ ] Sync up metadata
 - [ ] Restore metadata to images already on disk
 - [ ] Create logo
@@ -27,6 +26,7 @@
 
 ## Archive
 
+- [x] Display file-level progress
 - [x] Folder analysis drawer.
 - [x] Make sure that completed folders get marked `complete`
 - [x] IMG_1965.HEIC is getting renamed to IMG_1965.jpg and it's not getting found and throwing

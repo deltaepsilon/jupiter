@@ -54,7 +54,7 @@ export function LibrariesList({}: Props) {
                   <MediaItemImage
                     height={200}
                     mediaItem={mediaItem}
-                    onError={() => refreshLibrary(key)}
+                    onError={() => refreshLibrary(key, true)}
                     sx={{ position: 'absolute', inset: 0 }}
                     width={200}
                   />

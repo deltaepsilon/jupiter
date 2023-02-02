@@ -1,7 +1,6 @@
 import Box, { BoxProps } from '@mui/material/Box';
 import { SxProps, Theme } from '@mui/system';
-
-import { forwardRef } from 'react';
+import { forwardRef, useEffect } from 'react';
 
 export const hiddenScrollSx: BoxProps['sx'] = {
   overflow: 'auto',
@@ -30,3 +29,12 @@ export const HiddenScroll = forwardRef(({ children, sx = {}, ...props }: BoxProp
 });
 
 HiddenScroll.displayName = 'HiddenScroll';
+
+export function useScrollToBottom(scrollableRef: React.RefObject<HTMLElement>, memoArray: any[] = []) {
+  useEffect(() => {
+    if (scrollableRef.current) {
+      scrollableRef.current.scrollTop = scrollableRef.current.scrollHeight;
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, memoArray);
+}

@@ -1,9 +1,9 @@
 import { Box, Button, IconButton, Paper, Typography } from '@mui/material';
+import { HiddenScroll, useScrollToBottom } from 'ui/components';
 import { MessageType, encodeMessage } from 'data/daemon';
 import { useEffect, useRef } from 'react';
 
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
-import { HiddenScroll } from 'ui/components';
 import SyncProblemIcon from '@mui/icons-material/SyncProblem';
 import format from 'date-fns/format';
 import { useDaemon } from 'web/contexts/daemon-context';
@@ -15,11 +15,7 @@ export function DaemonPanel() {
   const { connect, emptyMessages, isConnected, messages, send } = useDaemon();
   const lastMessage = messages[messages.length - 1];
 
-  useEffect(() => {
-    if (scrollableRef.current) {
-      scrollableRef.current.scrollTop = scrollableRef.current.scrollHeight;
-    }
-  }, [lastMessage?.created]);
+  useScrollToBottom(scrollableRef, [lastMessage?.created]);
 
   return (
     <Paper elevation={1}>

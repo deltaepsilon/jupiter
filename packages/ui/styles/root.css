@@ -6,6 +6,7 @@
   --color-miami-blue: #00b5c8;
   --color-pastel-blue: #a0d8fb;
   --color-rubystone-red: #f3037e;
+  --color-extralight-gray: rgba(0, 0, 0, 0.03);
   --color-light-gray: #eeeeee;
   --color-mid-gray: #666666;
   --color-dark-gray: #222222;
@@ -46,11 +47,13 @@ a:visited {
   font-weight: var(--font-light-weight);
 }
 
-.bold, b {
+.bold,
+b {
   font-weight: var(--font-bold-weight);
 }
 
-.extrabold, strong {
+.extrabold,
+strong {
   font-weight: var(--font-extrabold-weight);
 }
 

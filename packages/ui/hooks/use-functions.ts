@@ -40,7 +40,6 @@ export function useFunctions() {
         FunctionName.batchGetMediaItems
       );
       const response = await func(batchGetMediaItemsParamsSchema.parse(params));
-    
 
       return batchGetMediaItemsResponseSchema.parse(response.data);
     },
@@ -94,6 +93,8 @@ export function useFunctions() {
         FunctionName.setLibraryImportStatus
       );
       const response = await func(libraryTaskStatusRequest.parse(params));
+
+      console.log(response.data);
 
       return libraryTaskStatusResponse.parse(response.data);
     },
