@@ -77,7 +77,7 @@ export async function indexFilesystem(
   });
 
   return new Promise<boolean>(async (resolve, reject) => {
-    const indexFile = multiplex(MULTIPLEX_THREADS);
+    const multiplexer = multiplex(MULTIPLEX_THREADS);
 
     try {
       let i = filepaths.length;
@@ -86,7 +86,7 @@ export async function indexFilesystem(
       while (i--) {
         const initialFilepath = filepaths[i];
 
-        indexFile(async () => {
+        multiplexer.add(async () => {
           const relativePath = path.relative(directoryPath, initialFilepath);
           const exif = await getExif(initialFilepath);
           const {
@@ -173,7 +173,7 @@ export async function indexFilesystem(
         });
       }
 
-      await indexFile.promise;
+      await multiplexer.getPromise();
 
       resolve(true);
     } catch (error) {

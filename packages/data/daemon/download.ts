@@ -94,9 +94,11 @@ export function getShouldIngest(downloadState: DownloadState) {
 export function getStateFlags(downloadState: DownloadState = DEFAULT_DOWNLOAD_STATE) {
   return {
     isComplete: downloadState.state === 'complete',
-    allFoldersComplete: downloadState.folderSummaries.every(
-      (folderSummary) => folderSummary.downloadedCount >= folderSummary.mediaItemsCount
-    ),
+    allFoldersComplete:
+      !!downloadState.folderSummaries.length &&
+      downloadState.folderSummaries.every(
+        (folderSummary) => folderSummary.downloadedCount >= folderSummary.mediaItemsCount
+      ),
     isRunning: getIsRunning(downloadState),
     shouldIngest: getShouldIngest(downloadState),
   };

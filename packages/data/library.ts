@@ -46,6 +46,7 @@ export const libraryImportSchema = z.object({
   created: firestoreDate.default(() => new Date()),
   updated: firestoreDate.default(() => new Date()),
   startNextPageToken: z.string().optional(),
+  endNextPageToken: z.string().optional(),
   nextPageToken: z.string().optional().nullable(),
   pageSize: z.number().default(100),
 });

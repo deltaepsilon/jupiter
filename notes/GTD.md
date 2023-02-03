@@ -1,5 +1,6 @@
 ## In Progress
 
+- [ ] File progress is getting hung for some files.
 - [ ] Streamline ingestion and indexing
 - [ ] Don't delete `lastKey` when restarting import from "completed" state (library-import-on-write)
 

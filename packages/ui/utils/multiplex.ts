@@ -21,7 +21,7 @@ export function multiplex(max = 1) {
     }
   }
 
-  function addQueueItem(callback: Callback) {
+  function add(callback: Callback) {
     queue.push(callback);
 
     if (runningCount < max) {
@@ -29,7 +29,9 @@ export function multiplex(max = 1) {
     }
   }
 
-  addQueueItem.promise = new Promise((r) => (resolve = r));
+  function getPromise() {
+    return queue.length ? new Promise((r) => (resolve = r)) : Promise.resolve(true);
+  }
 
-  return addQueueItem;
+  return { add, getPromise };
 }

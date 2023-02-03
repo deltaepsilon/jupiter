@@ -37,7 +37,7 @@ export async function downloadMediaItems({ folder, mediaItemIds, db, sendMessage
   const directoryPath = getDirectory().path;
   const downloadDirectory = path.join(directoryPath, DOWNLOADING_FOLDER);
   const downloadState = getDownloadState();
-  const addToMultiplex = multiplex(MULTIPLEX_THREADS);
+  const multiplexer = multiplex(MULTIPLEX_THREADS);
   let mediaItems = mediaItemIds.map((mediaItemId) => getMediaItem(folder, mediaItemId));
   let i = mediaItems.length;
   let stateFlags = getStateFlags(downloadState);
@@ -64,7 +64,7 @@ export async function downloadMediaItems({ folder, mediaItemIds, db, sendMessage
     mediaItems = updatedMediaItems;
     stateFlags = getStateFlags(getDownloadState());
 
-    addToMultiplex(async () => {
+    multiplexer.add(async () => {
       updateDownloadingIds(folder, (downloadingIds) => downloadingIds.add(mediaItem.id));
       const updatedDownloadState = await handleFilePromise({
         db,
@@ -81,7 +81,9 @@ export async function downloadMediaItems({ folder, mediaItemIds, db, sendMessage
     });
   }
 
-  await addToMultiplex.promise;
+  console.log('multiplexer.getPromise()');
+
+  await multiplexer.getPromise();
 }
 
 async function writeFile({
@@ -133,7 +135,7 @@ async function writeFile({
         throw err.response.statusText;
       }
     });
-  const downloadingFilepath = path.join(downloadDirectory, mediaItem.filename);
+  let downloadingFilepath = path.join(downloadDirectory, mediaItem.filename);
   const writeStream = fs.createWriteStream(downloadingFilepath);
 
   response.data.pipe(writeStream);
@@ -152,17 +154,22 @@ async function writeFile({
 
           if (!exif.ModifyDate || !exif.CreateDate || !exif.DateTimeOriginal) {
             const dateTimeOriginal = dateToExifDate(mediaItem.mediaMetadata.creationTime, true);
-
-            exif = await setExif(downloadingFilepath, {
+            const setExifResult = await setExif(downloadingFilepath, {
               GoogleMediaItemId: mediaItem.id,
               DateTimeOriginal: dateTimeOriginal,
               CreateDate: dateTimeOriginal,
               ModifyDate: dateTimeOriginal,
             });
+
+            exif = setExifResult.exif;
+            downloadingFilepath = setExifResult.filepath;
           } else {
-            exif = await setExif(downloadingFilepath, {
+            const setExifResult = await setExif(downloadingFilepath, {
               GoogleMediaItemId: mediaItem.id,
             });
+
+            exif = setExifResult.exif;
+            downloadingFilepath = setExifResult.filepath;
           }
 
           const { hash, filepath } = await getMd5(downloadingFilepath);

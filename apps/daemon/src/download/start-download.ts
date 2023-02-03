@@ -60,7 +60,7 @@ export async function startDownload({ db, message, sendMessage }: Args) {
 
           break;
         } else {
-          await wait(500);
+          await wait(2000);
         }
 
         let i = folderSummaries.length;
@@ -95,6 +95,7 @@ export async function startDownload({ db, message, sendMessage }: Args) {
           sendDownloadStateMessage({ db, downloadState, sendMessage });
         }
 
+        downloadState = getDownloadState();
         stateFlags = getStateFlags(downloadState);
       }
 

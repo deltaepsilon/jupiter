@@ -91,20 +91,21 @@ export function useLibraryDownload(libraryId: string, library: Library) {
   }, [registerHandler]);
 
   useEffect(() => {
+    console.log({ shouldIngest, downloadState });
     if (shouldIngest) {
       const lastKey = downloadState?.lastKey;
       const mediaItemsRef = ref(database, FIREBASE.DATABASE.PATHS.LIBRARY_MEDIA_ITEMS(userId, libraryId));
       const mediaItemsQuery = lastKey
         ? query(mediaItemsRef, orderByKey(), startAfter(lastKey))
         : query(mediaItemsRef, orderByKey());
-      const queuedAddMediaItem = createQueue(addMediaItem, 0);
+      const { add: addToQueue } = createQueue(addMediaItem, 0);
 
       const unsubscribe = onChildAdded(mediaItemsQuery, (snapshot) =>
-        queuedAddMediaItem({ mediaItem: { key: snapshot.key, ...snapshot.val() } })
+        addToQueue({ mediaItem: { key: snapshot.key, ...snapshot.val() } })
       );
 
       return () => {
-        queuedAddMediaItem.empty();
+        addToQueue.empty();
         unsubscribe();
       };
     }

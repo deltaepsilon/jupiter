@@ -49,8 +49,6 @@ export function FolderDataProvider({ children, folder }: Props) {
       return acc;
     }, {});
 
-    console.log('folderData', { folderData, mediaItemIdToMd5 });
-
     setMediaItemIdToMd5(mediaItemIdToMd5);
   }, [folderData]);
 

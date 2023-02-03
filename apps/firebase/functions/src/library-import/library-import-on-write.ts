@@ -1,7 +1,7 @@
 import * as admin from 'firebase-admin';
 import * as functions from 'firebase-functions';
 
-import { LibraryTaskStatus, libraryImportSchema } from 'data/library';
+import { LibraryImport, LibraryTaskStatus, libraryImportSchema } from 'data/library';
 import { getApp, getLibrary } from '../utils';
 
 import { FIREBASE } from 'data/firebase';
@@ -79,18 +79,31 @@ export async function libraryImportOnWrite(
       const isAllNewKeys = newKeys.length === sortedMediaItemKeys.length;
 
       await libraryMediaItemsRef.update(mediaItemsUpdates);
-
       await libraryImportRef.update({
         count: admin.database.ServerValue.increment(newKeys.length),
         startNextPageToken: isAllNewKeys ? nextPageToken : null,
         updated: new Date(),
       });
     } else {
+      const libraryImportUpdates: Partial<LibraryImport> = {
+        nextPageToken: nextPageToken || null,
+        updated: new Date(),
+      };
+
+      if (!nextPageToken && libraryImport.nextPageToken) {
+        libraryImportUpdates.endNextPageToken = libraryImport.nextPageToken;
+
+        /**
+         * TODO:
+         * - Make sure that endNextPageToken is set correctly
+         * - Swap endNextPageToken to nextPageToken when restarting the import
+         */
+      }
+
       await libraryMediaItemsRef.update(mediaItemsUpdates);
       await libraryImportRef.update({
         count: admin.database.ServerValue.increment(mediaItems.length),
-        nextPageToken: nextPageToken || null,
-        updated: new Date(),
+        ...libraryImportUpdates,
       });
     }
 

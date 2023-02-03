@@ -10,7 +10,7 @@ export function createQueue<Item>(fn: (item: Item) => Promise<void>, millis = 0)
   let queue = [] as { i: number; item: Item }[];
   let isRunning = false;
 
-  async function addToQueue(item: Item) {
+  async function add(item: Item) {
     queue.push({ i: ++i, item });
 
     if (isRunning) {
@@ -35,12 +35,12 @@ export function createQueue<Item>(fn: (item: Item) => Promise<void>, millis = 0)
     isRunning = false;
   }
 
-  addToQueue.empty = () => {
+  add.empty = () => {
     isRunning = true;
     queue = [];
   };
 
-  return addToQueue;
+  return { add, name };
 }
 
 function wait(millis: number) {
