@@ -10,11 +10,11 @@ import {
   updateFolder,
 } from 'data/daemon';
 import { GettersAndSetters, createGettersAndSetters, moveToDateFolder } from '../utils';
+import axios, { AxiosProgressEvent } from 'axios';
 import { getExif, getMd5, setExif } from '../exif';
 
 import { FilesystemDatabase } from '../db';
 import { MediaItem } from 'data/media-items';
-import axios from 'axios';
 import fs from 'fs';
 import fsPromises from 'fs/promises';
 import { multiplex } from 'ui/utils/multiplex';
@@ -103,20 +103,22 @@ async function writeFile({
   mediaItemIds: string[];
   sendMessage: SendMessage;
 }) {
+  function onDownloadProgress(progressEvent: AxiosProgressEvent) {
+    sendMessage({
+      type: MessageType.progress,
+      payload: {
+        data: progressMessageDataSchema.parse({
+          id: mediaItem.id,
+          folder,
+          filename: mediaItem.filename,
+          progressEvent: progressEvent,
+        }),
+      },
+    });
+  }
   const response = await axios
     .get(getMediaItemDownloadUrl(mediaItem), {
-      onDownloadProgress: (progressEvent) =>
-        sendMessage({
-          type: MessageType.progress,
-          payload: {
-            data: progressMessageDataSchema.parse({
-              id: mediaItem.id,
-              folder,
-              filename: mediaItem.filename,
-              progressEvent: progressEvent,
-            }),
-          },
-        }),
+      onDownloadProgress,
       responseType: 'stream',
     })
     .catch(async (err) => {
@@ -129,7 +131,7 @@ async function writeFile({
 
         if (updatedMediaItem) mediaItem = updatedMediaItem;
 
-        return axios.get(getMediaItemDownloadUrl(mediaItem), { responseType: 'stream' });
+        return axios.get(getMediaItemDownloadUrl(mediaItem), { onDownloadProgress, responseType: 'stream' });
       } else {
         console.info('error downloading:', mediaItem.id, err.response.status, err.response.statusText);
         throw err.response.statusText;

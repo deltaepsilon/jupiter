@@ -167,10 +167,6 @@ function FoldersProgress({
       {folderSummaries.map((folderSummary) => {
         const progressMap = progressMapsByFolder.get(folderSummary.folder) ?? getDefaultProgressMap();
 
-        if (folderSummary.folder === 'missing-date' && Object.keys(progressMap).length) {
-          console.log(folderSummary.folder, progressMap, progressMapsByFolder);
-        }
-
         return (
           <FolderDrawer folder={folderSummary.folder} key={folderSummary.folder}>
             <Box
