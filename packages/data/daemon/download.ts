@@ -32,6 +32,7 @@ export enum DownloadAction {
   destroy = 'destroy',
 
   addMediaItem = 'add-media-item',
+  invalidateMediaItems = 'invalidateMediaItems',
   indexFilesystem = 'index-filesystem',
 }
 
@@ -158,3 +159,9 @@ export const progressMessageDataSchema = z.object({
   created: z.number().default(() => Date.now()),
 });
 export type ProgressMessageData = z.infer<typeof progressMessageDataSchema>;
+
+export const invalidateMediaItemsMessageDataSchema = z.object({
+  invalidMediaIds: z.array(z.string()),
+  invalidMediaKeys: z.array(z.string()),
+});
+export type InvalidateMediaItemsMessageData = z.infer<typeof invalidateMediaItemsMessageDataSchema>;

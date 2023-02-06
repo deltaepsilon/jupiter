@@ -21,11 +21,10 @@ export async function refreshMediaItems({
     refreshToken: tokens.refreshToken,
     mediaItemIds: mediaItemIds.join(','),
   });
-  const { accessToken, refreshToken, expiresAt, mediaItemResults } = batchGetMediaItemsResponseSchema.parse(
-    result.data
-  );
+  const { accessToken, refreshToken, expiresAt, invalidMediaIds, mediaItemResults } =
+    batchGetMediaItemsResponseSchema.parse(result.data);
 
   setTokens({ accessToken, refreshToken, expiresAt: new Date(expiresAt) });
 
-  return mediaItemResults.map(({ mediaItem }) => setMediaItem(folder, mediaItem));
+  return { invalidMediaIds, mediaItems: mediaItemResults.map(({ mediaItem }) => setMediaItem(folder, mediaItem)) };
 }

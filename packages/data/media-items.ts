@@ -45,12 +45,14 @@ export const mediaItemSchema = z.object({
     .optional(),
   fileSystem: fileSystemSchema.optional(),
   updated: firestoreDate.default(() => new Date()),
+  isInvalid: z.boolean().default(false),
 });
 
 export const batchGetMediaItemsResponseSchema = z.object({
   accessToken: z.string(),
   refreshToken: z.string(),
   expiresAt: z.string(),
+  invalidMediaIds: z.array(z.string()),
   mediaItemResults: z.array(z.object({ mediaItem: mediaItemSchema })),
 });
 export const listMediaItemsResponseSchema = z.object({
@@ -72,10 +74,20 @@ export function decorateImageBaseUrl(baseUrl: string, { width, height, crop, dow
 
 export function getMediaItemUpdates(mediaItems: MediaItem[]) {
   return mediaItems.reduce((acc, mediaItem) => {
-    acc[`date:${mediaItem.mediaMetadata.creationTime}|id:${mediaItem.id}`] = { ...mediaItem, updated: new Date() };
+    const key = getMediaItemKey(mediaItem);
+
+    acc[key] = { ...mediaItem, updated: new Date() };
 
     return acc;
   }, {} as Record<string, MediaItem>);
+}
+
+export function getMediaItemKeys(mediaItems: MediaItem[]) {
+  return mediaItems.map(getMediaItemKey);
+}
+
+function getMediaItemKey(mediaItem: MediaItem) {
+  return `date:${mediaItem.mediaMetadata.creationTime}|id:${mediaItem.id}`;
 }
 
 export const MEDIA_ITEMS_TTL_MS = 1000 * 60 * 60; // 1 Hour

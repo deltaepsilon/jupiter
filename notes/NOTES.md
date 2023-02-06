@@ -1,3 +1,9 @@
+## Feb 6, 2023
+
+I'm having a tough time getting started in the morning. My faith is waning, even as the bugs are disappearing and the code is running great.
+
+I guess I keep going???
+
 ## Feb 1, 2023
 
 I've got the downloads/ingested/files data chart working, and it cleared up all of my confusion as I had hoped.

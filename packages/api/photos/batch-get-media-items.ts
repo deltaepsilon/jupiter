@@ -1,7 +1,10 @@
+import { batchGetMediaItemsResponseSchema, mediaItemSchema } from 'data/media-items';
+
 import axios from 'axios';
-import { batchGetMediaItemsResponseSchema } from 'data/media-items';
 import { refreshAccessToken } from '../utils/jwt';
 import { z } from 'zod';
+
+const INVALID_MEDIA_ID_CODE = 3;
 
 export const batchGetMediaItemsParamsSchema = z.object({
   accessToken: z.string().nullish(),
@@ -9,6 +12,14 @@ export const batchGetMediaItemsParamsSchema = z.object({
   mediaItemIds: z.string(),
 });
 export type BatchGetMediaItemsParams = z.infer<typeof batchGetMediaItemsParamsSchema>;
+
+const batchGetSuccessResult = z.object({ mediaItem: mediaItemSchema });
+const batchGetErrorResult = z.object({ status: z.object({ code: z.number(), message: z.string() }) });
+const responseDataSchema = z.object({
+  mediaItemResults: z.array(z.union([batchGetSuccessResult, batchGetErrorResult])),
+});
+type BatchGetSuccessResult = z.infer<typeof batchGetSuccessResult>;
+type BatchGetErrorResult = z.infer<typeof batchGetErrorResult>;
 
 export async function batchGetMediaItems(params: BatchGetMediaItemsParams) {
   const { accessToken: maybeAccessToken, refreshToken, mediaItemIds } = batchGetMediaItemsParamsSchema.parse(params);
@@ -58,10 +69,30 @@ async function queryMediaItems({
     throw new Error('Unknown error');
   }
 
+  const responseData = responseDataSchema.parse(response.data);
+  const results = responseData.mediaItemResults.reduce<{
+    invalidMediaIds: string[];
+    mediaItemResults: BatchGetSuccessResult[];
+  }>(
+    (acc, r, index) => {
+      const parsedSuccess = batchGetSuccessResult.safeParse(r);
+      const parsedError = batchGetErrorResult.safeParse(r);
+
+      if (parsedError.success && parsedError.data.status.code === INVALID_MEDIA_ID_CODE) {
+        acc.invalidMediaIds.push(mediaItemIds[index]);
+      } else if (parsedSuccess.success) {
+        acc.mediaItemResults.push(parsedSuccess.data);
+      }
+
+      return acc;
+    },
+    { invalidMediaIds: [], mediaItemResults: [] }
+  );
+
   return batchGetMediaItemsResponseSchema.parse({
     accessToken,
     refreshToken,
     expiresAt: new Date(expiresAt).toISOString(),
-    ...response.data,
+    ...results,
   });
 }

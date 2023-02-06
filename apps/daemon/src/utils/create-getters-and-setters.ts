@@ -129,6 +129,13 @@ export function createGettersAndSetters(db: FilesystemDatabase) {
       ingestedIdsSchema.parse(getFolderDb(folder).get(DownloadDbKeys.ingestedIds) || []),
     setIngestedIds: (folder: string, ingestedIds: IngestedIds) =>
       getFolderDb(folder).set<string[]>(DownloadDbKeys.ingestedIds, Array.from(ingestedIdsSchema.parse(ingestedIds))),
+    removeIngestedIds: (folder: string, ingestedIds: string[]) => {
+      const ids = getters.getIngestedIds(folder);
+
+      ingestedIds.forEach((id) => ids.delete(id));
+
+      return getters.setIngestedIds(folder, ids);
+    },
 
     // Media Items
     getMediaItem: (folder: string, id: string) =>
@@ -137,6 +144,11 @@ export function createGettersAndSetters(db: FilesystemDatabase) {
       const parsed = mediaItemSchema.parse(mediaItem);
 
       return getFolderDb(folder).set<MediaItem>(`${DownloadDbKeys.mediaItems}.${parsed.id}`, parsed);
+    },
+    removeMediaItemsByIds: (folder: string, ids: string[]) => {
+      const folderDb = getFolderDb(folder);
+
+      return ids.map((id) => folderDb.remove(`${DownloadDbKeys.mediaItems}.${id}`));
     },
     removeMediaItems: (folder: string) => getFolderDb(folder).remove(DownloadDbKeys.mediaItems),
 

@@ -158,7 +158,10 @@ function FoldersProgress({
   progressMapsByFolder: ProgressMapByFolder;
 }) {
   const folderSummaries = useMemo(
-    () => downloadState.folderSummaries.sort((a, b) => (a.folder < b.folder ? 1 : -1)),
+    () =>
+      downloadState.folderSummaries
+        .filter((f) => f.indexedCount || f.mediaItemsCount)
+        .sort((a, b) => (a.folder < b.folder ? 1 : -1)),
     [downloadState]
   );
 

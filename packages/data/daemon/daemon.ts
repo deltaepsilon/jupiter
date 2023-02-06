@@ -27,6 +27,7 @@ export const payloadSchema = z.object({
       DownloadAction.destroy,
       DownloadAction.addMediaItem,
       DownloadAction.indexFilesystem,
+      DownloadAction.invalidateMediaItems,
       FolderAction.get,
     ])
     .optional(),

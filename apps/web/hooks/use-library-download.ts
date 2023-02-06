@@ -6,8 +6,9 @@ import {
   MessageType,
   downloadMessageDataSchema,
   getShouldIngest,
+  invalidateMediaItemsMessageDataSchema,
 } from 'data/daemon';
-import { onChildAdded, orderByKey, query, ref, startAfter } from 'firebase/database';
+import { increment, onChildAdded, orderByKey, query, ref, startAfter, update } from 'firebase/database';
 import { useEffect, useMemo, useState } from 'react';
 
 import { FIREBASE } from 'data/firebase';
@@ -80,18 +81,35 @@ export function useLibraryDownload(libraryId: string, library: Library) {
   useEffect(() => {
     return registerHandler({
       type: MessageType.download,
-      handler: (message) => {
-        if (message.payload?.data) {
-          const { state } = downloadMessageDataSchema.parse(message.payload.data);
+      handler: async (message) => {
+        const isInvalidateMediaItemsMessage =
+          message.payload?.data && message.payload?.action === DownloadAction.invalidateMediaItems;
 
-          setDownloadState(state);
+        if (isInvalidateMediaItemsMessage && database && userId) {
+          const { invalidMediaKeys } = invalidateMediaItemsMessageDataSchema.parse(message.payload.data);
+          const mediaItemsRef = ref(database, FIREBASE.DATABASE.PATHS.LIBRARY_MEDIA_ITEMS(userId, libraryId));
+          const importRef = ref(database, FIREBASE.DATABASE.PATHS.LIBRARY_IMPORT(userId, libraryId));
+          const mediaItemsUpdates = invalidMediaKeys.reduce<Record<string, null>>((acc, key) => {
+            acc[key] = null;
+
+            return acc;
+          }, {});
+          const importUpdates = { count: increment(-invalidMediaKeys.length) };
+
+          await update(mediaItemsRef, mediaItemsUpdates);
+          await update(importRef, importUpdates);
+        } else {
+          const parsed = downloadMessageDataSchema.safeParse(message.payload.data);
+
+          if (parsed.success) {
+            setDownloadState(parsed.data.state);
+          }
         }
       },
     });
-  }, [registerHandler]);
+  }, [database, libraryId, registerHandler, userId]);
 
   useEffect(() => {
-    console.log({ shouldIngest, downloadState });
     if (shouldIngest) {
       const lastKey = downloadState?.lastKey;
       const mediaItemsRef = ref(database, FIREBASE.DATABASE.PATHS.LIBRARY_MEDIA_ITEMS(userId, libraryId));
