@@ -119,40 +119,42 @@ async function writeFile({
     });
   }
   function invalidateMediaIds(invalidMediaIds: string[], mediaItems: MediaItems) {
-    const invalidMediaItems = mediaItems.filter((m) => invalidMediaIds.includes(m.id));
-    const invalidMediaKeys = getMediaItemKeys(invalidMediaItems);
+    if (invalidMediaIds.length) {
+      const invalidMediaItems = mediaItems.filter((m) => invalidMediaIds.includes(m.id));
+      const invalidMediaKeys = getMediaItemKeys(invalidMediaItems);
 
-    removeMediaItemsByIds(folder, invalidMediaIds);
-    removeIngestedIds(folder, invalidMediaIds);
+      removeMediaItemsByIds(folder, invalidMediaIds);
+      removeIngestedIds(folder, invalidMediaIds);
 
-    const updatedDownloadState = updateFolder({ folder, downloadState: getDownloadState() }, (folderSummary) => {
-      const ingestedIds = getIngestedIds(folder);
-      folderSummary.mediaItemsCount = ingestedIds.size;
-      folderSummary.updated = new Date();
+      const updatedDownloadState = updateFolder({ folder, downloadState: getDownloadState() }, (folderSummary) => {
+        const ingestedIds = getIngestedIds(folder);
+        folderSummary.mediaItemsCount = ingestedIds.size;
+        folderSummary.updated = new Date();
 
-      return folderSummary;
-    });
+        return folderSummary;
+      });
 
-    setDownloadState(updatedDownloadState);
+      setDownloadState(updatedDownloadState);
 
-    sendMessage({
-      type: MessageType.download,
-      payload: {
-        action: DownloadAction.invalidateMediaItems,
-        data: invalidateMediaItemsMessageDataSchema.parse({ invalidMediaIds, invalidMediaKeys }),
-        text: `Invalidated ${invalidMediaIds.length} deleted media items`,
-      },
-    });
+      sendMessage({
+        type: MessageType.download,
+        payload: {
+          action: DownloadAction.invalidateMediaItems,
+          data: invalidateMediaItemsMessageDataSchema.parse({ invalidMediaIds, invalidMediaKeys }),
+          text: `Invalidated ${invalidMediaIds.length} deleted media items`,
+        },
+      });
 
-    sendMessage({
-      type: MessageType.download,
-      payload: {
-        data: downloadMessageDataSchema.parse({
-          libraryId: db.libraryId,
-          state: updatedDownloadState,
-        }),
-      },
-    });
+      sendMessage({
+        type: MessageType.download,
+        payload: {
+          data: downloadMessageDataSchema.parse({
+            libraryId: db.libraryId,
+            state: updatedDownloadState,
+          }),
+        },
+      });
+    }
   }
   const response = await axios
     .get(getMediaItemDownloadUrl(mediaItem), {

@@ -159,6 +159,14 @@ function useWebsocket(onMessageHandler: OnMessageHandler) {
     setIsConnected(false);
   }, [ws, setIsConnected]);
 
+  useEffect(() => {
+    if (!isConnected) {
+      const timer = setInterval(connect, 1000);
+
+      return () => clearInterval(timer);
+    }
+  }, [isConnected, connect]);
+
   usePingPong(ws, closeWebsocket);
 
   return { connect, isConnected, ws };
