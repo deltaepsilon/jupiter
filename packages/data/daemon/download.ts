@@ -32,8 +32,9 @@ export enum DownloadAction {
   destroy = 'destroy',
 
   addMediaItem = 'add-media-item',
-  invalidateMediaItems = 'invalidateMediaItems',
+  invalidateMediaItems = 'invalidate-media-items',
   indexFilesystem = 'index-filesystem',
+  restartIngest = 'restart-ingest',
 }
 
 export const urlsSchema = z.object({ refreshAccessToken: z.string(), batchGetMediaItems: z.string() });

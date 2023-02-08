@@ -75,6 +75,13 @@ export async function handleDownload({
       break;
     }
 
+    case DownloadAction.restartIngest: {
+      restartIngest({ db, sendMessage });
+
+      startDownload({ db, message, sendMessage });
+      break;
+    }
+
     default:
       break;
   }
@@ -179,6 +186,7 @@ function addMediaItem({
     response.payload.error = 'No media item provided';
   } else {
     const ingestedIds = getIngestedIds(folder);
+
     ingestedIds.add(mediaItem.id);
 
     const updatedDownloadState = updateFolder({ folder, downloadState }, (folderSummary) => {
@@ -192,4 +200,14 @@ function addMediaItem({
     setMediaItem(folder, mediaItem);
     setDownloadState({ ...updatedDownloadState, lastKey: mediaItem.key });
   }
+}
+
+function restartIngest({ db, sendMessage }: { db: FilesystemDatabase; sendMessage: SendMessage }) {
+  const { updateDownloadState } = createGettersAndSetters(db);
+  const state = updateDownloadState({ lastKey: undefined, isPaused: false, state: 'ingesting' });
+
+  sendMessage({
+    type: MessageType.download,
+    payload: { data: downloadMessageDataSchema.parse({ libraryId: db.libraryId, state }) },
+  });
 }

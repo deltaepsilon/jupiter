@@ -39,13 +39,13 @@ export type RelativeFilePaths = z.infer<typeof relativeFilePathsSchema>;
 
 export const folderDataSchema = z
   .object({
-    downloadedIds: downloadedIdsSchema,
-    downloadingIds: downloadingIdsSchema,
-    files: z.record(z.string(), fileIndexSchema),
-    filesIndexByFilename: z.record(z.string(), fileIndexByFilepathSchema),
-    ingestedIds: ingestedIdsSchema,
-    mediaItems: z.record(z.string(), mediaItemSchema),
-    relativeFilePaths: relativeFilePathsSchema,
+    downloadedIds: downloadedIdsSchema.default(new Set()),
+    downloadingIds: downloadingIdsSchema.default(new Set()),
+    files: z.record(z.string(), fileIndexSchema).default({}),
+    filesIndexByFilename: z.record(z.string(), fileIndexByFilepathSchema).default({}),
+    ingestedIds: ingestedIdsSchema.default(new Set()),
+    mediaItems: z.record(z.string(), mediaItemSchema).default({}),
+    relativeFilePaths: relativeFilePathsSchema.default(new Set()),
   })
   .default({
     downloadedIds: new Set(),

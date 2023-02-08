@@ -15,14 +15,13 @@ import { GettersAndSetters, createGettersAndSetters, moveToDateFolder } from '..
 import { MediaItem, MediaItems, getMediaItemKeys } from 'data/media-items';
 import axios, { AxiosProgressEvent } from 'axios';
 import { getExif, getMd5, setExif } from '../exif';
+import { multiplex, retry } from 'ui/utils';
 
 import { FilesystemDatabase } from '../db';
+import { createAndEmptyFolder } from '../utils';
 import fs from 'fs';
-import fsPromises from 'fs/promises';
-import { multiplex } from 'ui/utils/multiplex';
 import path from 'path';
 import { refreshMediaItems } from './refresh-media-items';
-import { retry } from 'ui/utils/retry';
 
 const MULTIPLEX_THREADS = 10;
 
@@ -44,7 +43,7 @@ export async function downloadMediaItems({ folder, mediaItemIds, db, sendMessage
   let i = mediaItems.length;
   let stateFlags = getStateFlags(downloadState);
 
-  await fsPromises.mkdir(downloadDirectory, { recursive: true });
+  await createAndEmptyFolder(downloadDirectory);
 
   while (i-- && stateFlags.isRunning) {
     const mediaItem = mediaItems[i];
@@ -68,6 +67,7 @@ export async function downloadMediaItems({ folder, mediaItemIds, db, sendMessage
 
     multiplexer.add(async () => {
       updateDownloadingIds(folder, (downloadingIds) => downloadingIds.add(mediaItem.id));
+
       const updatedDownloadState = await handleFilePromise({
         db,
         directoryPath,
@@ -217,6 +217,7 @@ async function writeFile({
 
             if (!exif.ModifyDate || !exif.CreateDate || !exif.DateTimeOriginal) {
               const dateTimeOriginal = dateToExifDate(mediaItem.mediaMetadata.creationTime, true);
+
               const setExifResult = await setExif(downloadingFilepath, {
                 GoogleMediaItemId: mediaItem.id,
                 DateTimeOriginal: dateTimeOriginal,

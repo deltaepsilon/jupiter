@@ -26,7 +26,7 @@ export function useLibraryDownload(libraryId: string, library: Library) {
   const { isDbReady, registerHandler, send } = useDaemon();
   const [downloadState, setDownloadState] = useState<DownloadState>(DEFAULT_DOWNLOAD_STATE);
   const { database } = useRtdb();
-  const { init, start, pause, cancel, destroy, addMediaItem } = useMemo(() => {
+  const { init, start, pause, cancel, destroy, addMediaItem, restartIngest } = useMemo(() => {
     function createSender(action: DownloadAction) {
       return ({ mediaItem }: { mediaItem?: MediaItem } = {}) => {
         let urls: DownloadMessageData['urls'];
@@ -68,6 +68,7 @@ export function useLibraryDownload(libraryId: string, library: Library) {
       cancel: createSender(DownloadAction.cancel),
       destroy: createSender(DownloadAction.destroy),
       addMediaItem: createSender(DownloadAction.addMediaItem),
+      restartIngest: createSender(DownloadAction.restartIngest),
     };
   }, [library.refreshToken, libraryId, send]);
   const isLoading = typeof downloadState === 'undefined';
@@ -132,7 +133,7 @@ export function useLibraryDownload(libraryId: string, library: Library) {
 
   return {
     isLoading,
-    actions: { start, pause, cancel, destroy },
+    actions: { start, pause, cancel, destroy, restartIngest },
     downloadState,
   };
 }

@@ -26,6 +26,7 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import PauseCircleOutlineIcon from '@mui/icons-material/PauseCircleOutline';
 import PlayCircleOutlineIcon from '@mui/icons-material/PlayCircleOutline';
 import ReplayIcon from '@mui/icons-material/Replay';
+import SoapIcon from '@mui/icons-material/Soap';
 import SyncIcon from '@mui/icons-material/Sync';
 import { UseDirectoryResult } from 'web/contexts';
 import { UseLibraryDownloadResult } from 'web/hooks/use-library-download';
@@ -101,6 +102,23 @@ export function DownloadLibraryPanel({ actions, directory, downloadState, librar
             }
           >
             <MenuList>
+              <MenuItem onClick={() => emptyFolderProgress()}>
+                <ListItemIcon>
+                  <SoapIcon />
+                </ListItemIcon>
+                <ListItemText>Clean up progress</ListItemText>
+              </MenuItem>
+              <MenuItem
+                onClick={() => {
+                  emptyFolderProgress();
+                  actions.restartIngest();
+                }}
+              >
+                <ListItemIcon>
+                  <ReplayIcon />
+                </ListItemIcon>
+                <ListItemText>Restart ingest</ListItemText>
+              </MenuItem>
               <MenuItem
                 onClick={() => {
                   emptyFolderProgress();
@@ -301,12 +319,23 @@ function FolderProgress({ progressMap }: { progressMap: ProgressMap }) {
         {progressMapFlat.map(({ id, filename, progressEvent }) => (
           <Box key={id}>
             <LinearProgress color='info' value={(progressEvent?.progress ?? 0) * 100} variant='determinate' />
-            <Typography sx={{ position: 'relative', top: -7 }} variant='caption'>
-              {filename}
-            </Typography>
+            <Box
+              sx={{ position: 'relative', top: -2, height: '1.5rem', display: 'flex', justifyContent: 'space-between' }}
+            >
+              <Typography variant='caption'>{filename}</Typography>
+              {progressEvent.progress && (
+                <Typography variant='caption'>
+                  {bitsToKb(progressEvent.total || 0)} kb &nbsp;&nbsp; {Math.round(progressEvent.progress * 100)}%
+                </Typography>
+              )}
+            </Box>
           </Box>
         ))}
       </HiddenScroll>
     </Box>
   ) : null;
+}
+
+function bitsToKb(bits: number) {
+  return Math.round(bits / 1024 / 8).toLocaleString();
 }

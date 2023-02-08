@@ -48,7 +48,7 @@ export function LibrariesList({}: Props) {
         }}
       >
         {libraries.map(([libraryKey, library]) => (
-          <LibraryItem library={library} libraryKey={libraryKey} />
+          <LibraryItem key={libraryKey} library={library} libraryKey={libraryKey} />
         ))}
         <LibraryPickerTrigger>
           <Paper elevation={1} sx={{ ...CARD_SX }}>

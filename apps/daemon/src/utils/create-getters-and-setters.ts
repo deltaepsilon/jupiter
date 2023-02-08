@@ -28,8 +28,6 @@ import { MediaItem, mediaItemSchema } from 'data/media-items';
 
 import { FilesystemDatabase } from 'daemon/src/db';
 
-const DEFAULT_FOLDER_DATA = folderDataSchema.parse(undefined);
-
 export type GettersAndSetters = ReturnType<typeof createGettersAndSetters>;
 
 export function createGettersAndSetters(db: FilesystemDatabase) {
@@ -37,17 +35,8 @@ export function createGettersAndSetters(db: FilesystemDatabase) {
 
   const getters = {
     // META
-    getFolderData: (folder: string) => {
-      const all = getFolderDb(folder).all();
-      const mapped = all.reduce((acc, { ID, data }) => {
-        // @ts-ignore
-        acc[ID] = data;
+    getFolderData: (folder: string) => folderDataSchema.parse(getFolderDb(folder).all()),
 
-        return acc;
-      }, DEFAULT_FOLDER_DATA);
-
-      return folderDataSchema.parse(mapped);
-    },
     // Directory
     getDirectory: () => directorySchema.parse(metadataDb.get(DirectoryDbKeys.directory) || undefined),
     setDirectory: (directory: Directory) =>
