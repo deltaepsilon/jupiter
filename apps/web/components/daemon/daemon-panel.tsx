@@ -48,7 +48,7 @@ export function DaemonPanel() {
                 }}
               >
                 <Typography variant='body2'>{format(new Date(message.created), 'K:mm:ss')}:</Typography>
-                <Typography key={message.uuid} variant='body2'>
+                <Typography key={message.uuid} sx={{ wordBreak: 'break-word' }} variant='body2'>
                   {text}
                 </Typography>
               </Box>

@@ -1,3 +1,29 @@
+## Feb 10, 2023
+
+The progress file-tree FINALLY looks passable.
+
+It's a real challenge to fit so much dense data into a single pane and keep it legible, but with some inspiration from https://berkeleygraphics.com/, I pulled something off.
+
+Now I'm stuck chasing bugs around. The goal is to download full libraries without any unhandled errors. I'm closing in on it... but there are so many ways that a file can be broken. Fortunately, my library is pretty diverse. Once I get Melissa's library downloaded too, we'll likely have seen all of the ugliness that can exist in a Google Photos library.
+
+I can't quit. I keep having these nasty thoughts about quitting, but I have to ignore them and soldier on.
+
+I haven't shipped any personal projects in three years. COVID took the wind right out of my sails.
+
+I'm proving that I can still ship. I will not give up. I will get this all the way out into customers' hands.
+
+## Feb 8, 2023
+
+My filesystem db was running slowly. Like really slowly. It was reading/writing to the filesystem for every data change.
+
+I spent yesterday diagnosing the problem and coming up with a quick solution. I'm holding the data in an in-memory cache with a 30s ttl. I'm writing to the filesystem every 2s.
+
+I cleaned up the solution a bit this morning... and it worked. It almost worked the first try.
+
+My DB access sped up by at least a factor of 10. It's kinda nuts how fast it's going now. I'm running into new bugs due to the speed!
+
+Now that I'm ingesting tons of data, I need to spend some time scaling up my UX. I can consistently download my small test library in seconds. Now I need to get a clean download of my full library. It's a much higher bar.
+
 ## Feb 6, 2023
 
 I'm having a tough time getting started in the morning. My faith is waning, even as the bugs are disappearing and the code is running great.

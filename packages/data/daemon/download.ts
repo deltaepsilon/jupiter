@@ -1,4 +1,5 @@
 import { mediaItemSchema } from '../media-items';
+import short from 'short-uuid';
 import { z } from 'zod';
 
 export enum DownloadDbKeys {
@@ -49,6 +50,7 @@ export const tokensSchema = z.object({
 export type Tokens = z.infer<typeof tokensSchema>;
 
 const folderSummarySchema = z.object({
+  id: z.string().default(() => short.uuid()),
   folder: z.string(),
   description: z.string(),
   indexedCount: z.number().default(0),
@@ -78,6 +80,25 @@ export const downloadStateSchema = z
     text: '',
     updated: new Date(),
   });
+
+export const yearStatsSchema = z
+  .object({
+    indexedCount: z.number(),
+    downloadedCount: z.number(),
+    mediaItemsCount: z.number(),
+    progress: z.number(),
+    bytes: z.number(),
+    total: z.number(),
+  })
+  .default({
+    indexedCount: 0,
+    downloadedCount: 0,
+    mediaItemsCount: 0,
+    progress: 0,
+    bytes: 0,
+    total: 0,
+  });
+export type YearStats = z.infer<typeof yearStatsSchema>;
 
 export const MISSING_DATE_FOLDER = 'missing-date';
 export const DOWNLOADING_FOLDER = '__downloading';

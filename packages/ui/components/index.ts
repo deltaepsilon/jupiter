@@ -1,6 +1,7 @@
 export * from './app';
 export * from './auth';
 export * from './container';
+export * from './filesystem-graphics';
 export * from './hidden-scroll';
 export * from './image';
 export * from './link';

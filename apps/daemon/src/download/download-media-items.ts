@@ -24,6 +24,7 @@ import path from 'path';
 import { refreshMediaItems } from './refresh-media-items';
 
 const MULTIPLEX_THREADS = 10;
+const SEPARATOR = '_____';
 
 interface Args {
   folder: string;
@@ -198,7 +199,7 @@ async function writeFile({
   if (!response) {
     return { filePromise: Promise.resolve(null), mediaItems };
   } else {
-    let downloadingFilepath = path.join(downloadDirectory, `${mediaItem.id}|${mediaItem.filename}`);
+    let downloadingFilepath = path.join(downloadDirectory, `${mediaItem.id}${SEPARATOR}${mediaItem.filename}`);
     const writeStream = fs.createWriteStream(downloadingFilepath);
 
     response.data.pipe(writeStream);

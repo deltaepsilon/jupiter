@@ -7,7 +7,7 @@ import { useDebounce } from 'usehooks-ts';
 export interface ModalState {
   isOpen: boolean;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  onOpen: () => void;
+  onOpen: (e?: SyntheticEvent) => void;
   onClose: (event?: SyntheticEvent) => void;
   toggle: (event?: SyntheticEvent) => void;
 }
@@ -29,14 +29,19 @@ export function useModalState(
   const [rawIsOpen, setIsOpen] = useState(startOpen);
   const [scrollPosition, setScrollPosition] = useState<number | null>(null);
   const isOpen = useDebounce<boolean>(rawIsOpen || isMatchingHash, delay);
-  const onOpen = useCallback(() => {
-    isClient(() => {
-      setScrollPosition(window.pageYOffset);
-    });
+  const onOpen = useCallback(
+    (e?: SyntheticEvent) => {
+      e?.stopPropagation();
 
-    setIsOpen(true);
-    openModalHash();
-  }, [openModalHash]);
+      isClient(() => {
+        setScrollPosition(window.pageYOffset);
+      });
+
+      setIsOpen(true);
+      openModalHash();
+    },
+    [openModalHash]
+  );
   const onClose = useCallback(
     (e?: SyntheticEvent) => {
       stopClick(e);

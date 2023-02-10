@@ -1,10 +1,10 @@
 ## In Progress
 
-- [ ] Collapse progress to year bars
-- [ ] Don't delete `lastKey` when restarting import from "completed" state (library-import-on-write)
+- [ ] Debug pausing mid-download
 
 ## Next actions
 
+- [ ] Don't delete `lastKey` when restarting import from "completed" state (library-import-on-write)
 - [ ] Sync up metadata
 - [ ] Restore metadata to images already on disk
 - [ ] Create logo
@@ -27,6 +27,7 @@
 
 ## Archive
 
+- [x] Collapse progress to year bars
 - [x] Write tests for db.ts
 - [x] Streamline ingestion and indexing - Speed up the daemon first - Filesystem db access is a likely culprit. Consider keeping DBs in memory and writing async - Consider converting create-queue to a multiplex of 1, or switching to multiplex
 - [x] Handle files with identical filenames: https://photos.google.com/u/1/search/DSC01845.JPG
