@@ -1,5 +1,7 @@
 ## In Progress
 
+- [ ] Deploy to Firebase
+
 ## Next actions
 
 - [ ] Create logo
