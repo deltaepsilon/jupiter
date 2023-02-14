@@ -1,9 +1,7 @@
 module.exports = {
-  reactStrictMode: true,
-  experimental: {
-    transpilePackages: ['ui'],
-  },
   images: {
     domains: ['lh3.googleusercontent.com', 'firebasestorage.googleapis.com'],
   },
+  reactStrictMode: true,
+  transpilePackages: ['ui'],
 };
