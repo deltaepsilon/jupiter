@@ -8,9 +8,9 @@ import {
   getStateFlags,
   updateFolder,
 } from 'data/daemon';
+import { createAndEmptyFolder, createGettersAndSetters, getDownloadDirectory } from '../utils';
 
 import { FilesystemDatabase } from '../db';
-import { createGettersAndSetters } from '../utils';
 import { downloadMediaItems } from './download-media-items';
 import { indexFilesystem } from './index-filesystem';
 import { wait } from 'ui/utils/wait';
@@ -25,6 +25,7 @@ interface Args {
 
 export async function startDownload({ db, message, sendMessage }: Args) {
   const { clearDownloadingIds, getDownloadState, updateDownloadState } = createGettersAndSetters(db);
+  const { downloadDirectory } = getDownloadDirectory(db);
   let downloadState = getDownloadState();
   const { isRunning } = getStateFlags(downloadState);
 
@@ -38,6 +39,7 @@ export async function startDownload({ db, message, sendMessage }: Args) {
         }
       }
 
+      await createAndEmptyFolder(downloadDirectory);
       clearDownloadingIds();
       downloadState = updateDownloadState({ text: '' });
       sendDownloadStateMessage({ db, downloadState, sendMessage });

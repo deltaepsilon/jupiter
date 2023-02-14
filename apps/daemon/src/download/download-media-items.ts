@@ -1,5 +1,5 @@
 import {
-  DOWNLOADING_FOLDER,
+  CORRUPTED_FOLDER,
   DownloadAction,
   Exif,
   MessageType,
@@ -13,13 +13,14 @@ import {
 } from 'data/daemon';
 import { GettersAndSetters, createGettersAndSetters, moveToDateFolder } from '../utils';
 import { MediaItem, MediaItems, getMediaItemKeys } from 'data/media-items';
+import { SetExifError, getExif, getMd5, setExif } from '../exif';
 import axios, { AxiosProgressEvent } from 'axios';
-import { getExif, getMd5, setExif } from '../exif';
 import { multiplex, retry } from 'ui/utils';
 
 import { FilesystemDatabase } from '../db';
-import { createAndEmptyFolder } from '../utils';
 import fs from 'fs';
+import fsPromises from 'fs/promises';
+import { getDownloadDirectory } from '../utils';
 import path from 'path';
 import { refreshMediaItems } from './refresh-media-items';
 
@@ -34,17 +35,13 @@ interface Args {
 }
 
 export async function downloadMediaItems({ folder, mediaItemIds, db, sendMessage }: Args) {
-  const { getDirectory, getDownloadedIds, getDownloadState, getMediaItem, updateDownloadingIds } =
-    createGettersAndSetters(db);
-  const directoryPath = getDirectory().path;
-  const downloadDirectory = path.join(directoryPath, DOWNLOADING_FOLDER);
+  const { getDownloadedIds, getDownloadState, getMediaItem, updateDownloadingIds } = createGettersAndSetters(db);
+  const { directoryPath, downloadDirectory } = getDownloadDirectory(db);
   const downloadState = getDownloadState();
   const multiplexer = multiplex(MULTIPLEX_THREADS);
   let mediaItems = mediaItemIds.map((mediaItemId) => getMediaItem(folder, mediaItemId));
   let i = mediaItems.length;
   let stateFlags = getStateFlags(downloadState);
-
-  await createAndEmptyFolder(downloadDirectory);
 
   while (i-- && stateFlags.isRunning) {
     const mediaItem = mediaItems[i];
@@ -119,6 +116,7 @@ async function writeFile({
       },
     });
   }
+
   function invalidateMediaIds(invalidMediaIds: string[], mediaItems: MediaItems) {
     if (invalidMediaIds.length) {
       const invalidMediaItems = mediaItems.filter((m) => invalidMediaIds.includes(m.id));
@@ -157,6 +155,7 @@ async function writeFile({
       });
     }
   }
+
   const response = await axios
     .get(getMediaItemDownloadUrl(mediaItem), {
       onDownloadProgress,
@@ -208,38 +207,46 @@ async function writeFile({
       exif: Exif;
       hash: string;
       filepath: string;
-    }>((resolve, reject) => {
+    } | null>((resolve, reject) => {
       writeStream.on('error', reject);
 
       writeStream.on('finish', async () => {
         retry(
           async () => {
             let exif = await getExif(downloadingFilepath);
+            const isMissingDates = !exif.ModifyDate || !exif.CreateDate || !exif.DateTimeOriginal;
+            const dateTimeOriginal = dateToExifDate(mediaItem.mediaMetadata.creationTime, true);
+            let setExifPayload: Partial<Exif> = isMissingDates
+              ? {
+                  GoogleMediaItemId: mediaItem.id,
+                  DateTimeOriginal: dateTimeOriginal,
+                  CreateDate: dateTimeOriginal,
+                  ModifyDate: dateTimeOriginal,
+                }
+              : {
+                  GoogleMediaItemId: mediaItem.id,
+                };
 
-            if (!exif.ModifyDate || !exif.CreateDate || !exif.DateTimeOriginal) {
-              const dateTimeOriginal = dateToExifDate(mediaItem.mediaMetadata.creationTime, true);
+            const setExifResult = await setExif(downloadingFilepath, setExifPayload).catch(
+              getHandleSetExifError({
+                db,
+                mediaItem,
+                sendMessage,
+              })
+            );
 
-              const setExifResult = await setExif(downloadingFilepath, {
-                GoogleMediaItemId: mediaItem.id,
-                DateTimeOriginal: dateTimeOriginal,
-                CreateDate: dateTimeOriginal,
-                ModifyDate: dateTimeOriginal,
-              });
-
+            if (setExifResult === false) {
+              return resolve(null);
+            } else if (typeof setExifResult === 'object') {
               exif = setExifResult.exif;
               downloadingFilepath = setExifResult.filepath;
+
+              const { hash, filepath } = await getMd5(downloadingFilepath);
+
+              resolve({ exif, hash, filepath });
             } else {
-              const setExifResult = await setExif(downloadingFilepath, {
-                GoogleMediaItemId: mediaItem.id,
-              });
-
-              exif = setExifResult.exif;
-              downloadingFilepath = setExifResult.filepath;
+              throw new Error(`setExif failed: ${mediaItem.filename}`);
             }
-
-            const { hash, filepath } = await getMd5(downloadingFilepath);
-
-            resolve({ exif, hash, filepath });
           },
           { attempts: 30, millis: 1000, failSilently: true }
         )().catch(reject);
@@ -254,6 +261,73 @@ function getMediaItemDownloadUrl(mediaItem: MediaItem) {
   const isVideo = mediaItem.mimeType.startsWith('video');
 
   return `${mediaItem.baseUrl}=${isVideo ? 'dv' : 'd'}`;
+}
+
+function getHandleSetExifError({
+  db,
+  mediaItem,
+  sendMessage,
+}: {
+  db: FilesystemDatabase;
+  mediaItem: MediaItem;
+  sendMessage: SendMessage;
+}) {
+  const {
+    getDirectory,
+    getFileIndex,
+    setFileIndex,
+    updateDownloadedIds,
+    getDownloadState,
+    getRelativeFilePaths,
+    getDownloadedIds,
+    setDownloadState,
+  } = createGettersAndSetters(db);
+  return async function handleSetExifError(e: SetExifError) {
+    const { base } = path.parse(e.filepath);
+    const cleanBase = base.split(SEPARATOR).pop() ?? base;
+    const directoryPath = path.join(getDirectory().path, CORRUPTED_FOLDER);
+    const corruptFilepath = path.join(directoryPath, cleanBase);
+    const { hash, filepath } = await getMd5(e.filepath);
+
+    await fsPromises.rename(filepath, corruptFilepath);
+
+    updateFileIndex({
+      directoryPath,
+      filepath: base,
+      folder: CORRUPTED_FOLDER,
+      getFileIndex,
+      hash,
+      mediaItemId: mediaItem.id,
+      setFileIndex,
+    });
+
+    updateDownloadedIds(CORRUPTED_FOLDER, (downloadIds) => downloadIds.add(mediaItem.id));
+
+    const updatedDownloadState = updateFolder(
+      { folder: CORRUPTED_FOLDER, downloadState: getDownloadState() },
+      (folderSummary) => {
+        folderSummary.state = 'downloading';
+        folderSummary.downloadedCount = getDownloadedIds(CORRUPTED_FOLDER).size;
+        folderSummary.indexedCount = getRelativeFilePaths(CORRUPTED_FOLDER).size;
+
+        return folderSummary;
+      }
+    );
+
+    setDownloadState(updatedDownloadState);
+
+    sendMessage({
+      type: MessageType.download,
+      payload: {
+        data: downloadMessageDataSchema.parse({
+          libraryId: db.libraryId,
+          state: updatedDownloadState,
+        }),
+      },
+    });
+
+    return false;
+  };
 }
 
 async function handleFilePromise({

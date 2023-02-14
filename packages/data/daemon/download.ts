@@ -101,6 +101,7 @@ export const yearStatsSchema = z
 export type YearStats = z.infer<typeof yearStatsSchema>;
 
 export const MISSING_DATE_FOLDER = 'missing-date';
+export const CORRUPTED_FOLDER = 'corrupted';
 export const DOWNLOADING_FOLDER = '__downloading';
 export const DEFAULT_DOWNLOAD_STATE = downloadStateSchema.parse(undefined);
 export type DownloadState = z.infer<typeof downloadStateSchema>;

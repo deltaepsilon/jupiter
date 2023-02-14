@@ -3,6 +3,7 @@ import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { FolderDataProvider, FolderDataValue, useFolderData } from 'web/contexts';
 import { ModalDrawer, ModalDrawerFooter } from 'ui/components';
 
+import { MODAL_DRAWER_WIDTHS } from 'ui/components';
 import { useMemo } from 'react';
 import { useModalState } from 'ui/hooks';
 
@@ -78,7 +79,7 @@ function FolderDrawerContents() {
           <span>Downloaded:</span> <span>{folderDataValue.folderData.downloadedIds.size}</span>
         </Typography>
       </Box>
-      <Box sx={{ height: '100%', width: '100%' }}>
+      <Box sx={{ height: 'calc(100% - 57px)', width: MODAL_DRAWER_WIDTHS }}>
         <DataGrid columns={columns} rows={rows} />
       </Box>
     </Box>

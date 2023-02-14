@@ -84,7 +84,7 @@ export function DownloadLibraryPanel({ actions, directory, downloadState, librar
           <ActionButton actions={actions} downloadState={downloadState} emptyFolderProgress={emptyFolderProgress} />
         </Box>
         <Box>
-          <DownloadMenu actions={actions} isEmpty={isEmpty} />
+          <DownloadMenu actions={actions} emptyFolderProgress={emptyFolderProgress} isEmpty={isEmpty} />
         </Box>
       </Box>
 
@@ -104,7 +104,7 @@ export function DownloadLibraryPanel({ actions, directory, downloadState, librar
             flex: 1,
             display: 'grid',
             gridGap: 8,
-            gridTemplateColumns: '1fr 1fr 1fr',
+            gridTemplateColumns: '79px 66px 66px',
             textAlign: 'right',
             position: 'relative',
             top: 2,
@@ -128,26 +128,26 @@ export function DownloadLibraryPanel({ actions, directory, downloadState, librar
 }
 
 type ProgressMap = Record<string, ProgressMessageData>;
-type ProgressMapByFolder = Map<string, ProgressMap>;
+type ProgressMapByFolder = Record<string, ProgressMap>;
 function getDefaultProgressMap() {
   return {} as ProgressMap;
 }
 
 function useFolderProgress() {
-  const [progressMapsByFolder, setProgressMapsByFolder] = useState<ProgressMapByFolder>(new Map());
+  const [progressMapsByFolder, setProgressMapsByFolder] = useState<ProgressMapByFolder>({});
   const { registerHandler } = useDaemon();
-  const emptyFolderProgress = useCallback(() => setProgressMapsByFolder(new Map()), []);
+  const emptyFolderProgress = useCallback(() => setProgressMapsByFolder({}), []);
 
   useEffect(() => {
     registerHandler({
       type: MessageType.progress,
       handler: (message) => {
         const data = progressMessageDataSchema.parse(message.payload?.data);
-        const existing = progressMapsByFolder.get(data.folder) ?? getDefaultProgressMap();
+        const existing = progressMapsByFolder[data.folder] ?? getDefaultProgressMap();
 
         existing[data.id] = data;
 
-        setProgressMapsByFolder((prev) => new Map(prev).set(data.folder, existing));
+        setProgressMapsByFolder((prev) => ({ ...prev, [data.folder]: existing }));
       },
     });
   }, [progressMapsByFolder, registerHandler]);
@@ -191,9 +191,15 @@ function ActionButton({
   }
 }
 
-function DownloadMenu({ actions, isEmpty }: { actions: Props['actions']; isEmpty: boolean }) {
-  const { emptyFolderProgress } = useFolderProgress();
-
+function DownloadMenu({
+  actions,
+  emptyFolderProgress,
+  isEmpty,
+}: {
+  actions: Props['actions'];
+  emptyFolderProgress: ReturnType<typeof useFolderProgress>['emptyFolderProgress'];
+  isEmpty: boolean;
+}) {
   return (
     <Box sx={{ position: 'relative', pointerEvents: isEmpty ? 'none' : 'all', opacity: isEmpty ? 0.5 : 1 }}>
       <MenuTrigger
@@ -374,27 +380,31 @@ function YearSummary({
         {isOpen && (
           <Box
             sx={{
-              display: 'grid',
-              gridTemplateColumns: '24px 1fr',
               gridColumn: '1/-1',
               paddingBottom: 4,
             }}
           >
             {folderSummaries.map((folderSummary, i) => {
-              const progressMap = progressMapsByFolder.get(folderSummary.folder) ?? getDefaultProgressMap();
+              const progressMap = progressMapsByFolder[folderSummary.folder] ?? getDefaultProgressMap();
               const isLast = i === folderSummaries.length - 1;
 
               return (
-                <>
+                <Box
+                  key={folderSummary.id}
+                  sx={{
+                    display: 'grid',
+                    gridTemplateColumns: '24px 1fr',
+                  }}
+                >
                   {isLast ? (
                     <LastChildGraphic />
                   ) : (
                     <ChildGraphic sx={{ height: '100%', '[data-child-graphic-horizontal]': { height: '16px' } }} />
                   )}
                   <Box>
-                    <FolderSummary folderSummary={folderSummary} key={folderSummary.id} progressMap={progressMap} />
+                    <FolderSummary folderSummary={folderSummary} progressMap={progressMap} />
                   </Box>
-                </>
+                </Box>
               );
             })}
           </Box>
@@ -414,7 +424,7 @@ function useYearStats({
   return useMemo(
     () =>
       folderSummaries.reduce<YearStats>((acc, folderSummary) => {
-        const progressMap = progressMapsByFolder.get(folderSummary.folder) ?? getDefaultProgressMap();
+        const progressMap = progressMapsByFolder[folderSummary.folder] ?? getDefaultProgressMap();
         const bytes = Object.values(progressMap).reduce((acc, progress) => acc + progress.progressEvent.bytes, 0);
         const total = Object.values(progressMap).reduce(
           (acc, progress) => acc + (progress.progressEvent.total ?? 0),
@@ -446,7 +456,7 @@ function FolderSummary({ folderSummary, progressMap }: { folderSummary: FolderSu
         sx={{
           cursor: 'pointer',
           userSelect: 'none',
-          '&:hover > div:first-child': {
+          '&:hover > div:first-of-type': {
             color: 'var(--color-jade-green)',
           },
         }}

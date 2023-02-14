@@ -6,6 +6,11 @@ import fsPromises from 'fs/promises';
 import { getExif } from './get-exif';
 import { repairFilename } from './repair-filename';
 
+export type SetExifError = {
+  error: string;
+  filepath: string;
+};
+
 export async function setExif(filepath: string, exif: Partial<Exif>) {
   const args = Object.entries(exif).reduce(
     (acc, [key, value]) => {
@@ -13,7 +18,7 @@ export async function setExif(filepath: string, exif: Partial<Exif>) {
 
       return acc;
     },
-    ['-config', CONFIG_PATH] as string[]
+    ['-config', CONFIG_PATH, '-ignoreMinorErrors'] as string[]
   );
 
   const { isRepaired, repairedFilepath, stdout } = await new Promise<{
@@ -29,8 +34,7 @@ export async function setExif(filepath: string, exif: Partial<Exif>) {
       [...args, '-overwrite_original', repairedFilepath],
       (err: unknown, stdout: string, stderr: string) => {
         if (err) {
-          console.error('set-exif.ts', err, stderr);
-          reject(err);
+          reject({ error: stderr || err, filepath: repairedFilepath });
         }
 
         resolve({ isRepaired, repairedFilepath, stdout });

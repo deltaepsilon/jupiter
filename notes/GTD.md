@@ -1,12 +1,9 @@
 ## In Progress
 
-- [ ] Debug pausing mid-download
+- [ ] Don't delete `lastKey` when restarting import from "completed" state (library-import-on-write)
 
 ## Next actions
 
-- [ ] Don't delete `lastKey` when restarting import from "completed" state (library-import-on-write)
-- [ ] Sync up metadata
-- [ ] Restore metadata to images already on disk
 - [ ] Create logo
 - [ ] Clean up `manifest.json`
 
@@ -17,16 +14,20 @@
 
 ## Someday
 
-- Copy
-  You searched "how to download Google Photos"
-  "Why is my Google Photos metadata garbage"
-  or something like "how to export all Google Photos"
-  Surprise! Google has provided a lousy process via Google Takeout,
-  but it wrecks image metadata and messes up all of your dates,
-  leading to a scrambled feed of images with untold duplicates.
+- [ ] Copy
+      You searched "how to download Google Photos"
+      "Why is my Google Photos metadata garbage"
+      or something like "how to export all Google Photos"
+      Surprise! Google has provided a lousy process via Google Takeout,
+      but it wrecks image metadata and messes up all of your dates,
+      leading to a scrambled feed of images with untold duplicates.
+- [ ] Sync up metadata
+- [ ] Restore metadata to images already on disk
 
 ## Archive
 
+- [x] Move corrupt files to `corrupt-files`, add mediaItem to corrupt-files.json db file
+- [x] Debug pausing mid-download
 - [x] Collapse progress to year bars
 - [x] Write tests for db.ts
 - [x] Streamline ingestion and indexing - Speed up the daemon first - Filesystem db access is a likely culprit. Consider keeping DBs in memory and writing async - Consider converting create-queue to a multiplex of 1, or switching to multiplex
