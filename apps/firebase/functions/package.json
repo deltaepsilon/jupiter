@@ -2,7 +2,7 @@
   "name": "functions",
   "scripts": {
     "lint": "eslint --ext .js,.ts .",
-    "dev": "yarn build && chokidar \"./src/**/*.ts\" -c \"yarn build\"",
+    "dev": "npm build && chokidar \"./src/**/*.ts\" -c \"npm build\"",
     "build": "esbuild src/index.ts --bundle --sourcemap --platform=node --outfile=./lib/index.js",
     "serve": "npm run build && firebase emulators:start --only functions",
     "shell": "npm run build && firebase functions:shell",
@@ -33,6 +33,7 @@
     "eslint-config-google": "^0.14.0",
     "eslint-plugin-import": "^2.27.5",
     "firebase-functions-test": "^3.0.0",
+    "firebase-tools": "^11.23.0",
     "typescript": "^4.9.5"
   },
   "private": true

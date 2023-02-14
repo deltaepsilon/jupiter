@@ -3829,24 +3829,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"docs@workspace:apps/docs":
-  version: 0.0.0-use.local
-  resolution: "docs@workspace:apps/docs"
-  dependencies:
-    "@babel/core": ^7.20.12
-    "@types/node": ^18.13.0
-    "@types/react": ^18.0.28
-    "@types/react-dom": ^18.0.10
-    eslint: 8.34.0
-    eslint-config-custom: "*"
-    next: 13.1.6
-    react: ^18.2.0
-    react-dom: ^18.2.0
-    tsconfig: "*"
-    typescript: ^4.9.5
-  languageName: unknown
-  linkType: soft
-
 "doctrine@npm:^2.1.0":
   version: 2.1.0
   resolution: "doctrine@npm:2.1.0"

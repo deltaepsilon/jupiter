@@ -1,6 +1,7 @@
 ## In Progress
 
-- [ ] Deploy to Firebase
+- [ ] Sort out Cloud Run deploy
+- [ ] Deploy to Firebase + Firebase Hosting
 
 ## Next actions
 
