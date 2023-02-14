@@ -9,5 +9,4 @@ export * from './media-item-carousel';
 export * from './media-item-image';
 export * from './menu-trigger';
 export * from './modal-drawer';
-export * from './navigate-filesystem';
 export * from './phone-border';

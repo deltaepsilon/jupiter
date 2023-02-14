@@ -1,24 +1,6 @@
 import axios from 'axios';
 import { z } from 'zod';
 
-export async function getAccessToken() {
-  try {
-    const cookies = getCookies();
-
-    if (cookies.accessToken) {
-      return cookies.accessToken;
-    } else if (!cookies.accessToken && cookies.refreshToken) {
-      const { access_token, expires_in } = await refreshAccessToken(cookies.refreshToken);
-
-      return access_token;
-    }
-  } catch (error) {
-    return false;
-  }
-
-  return false;
-}
-
 export const refreshAccessTokenResponse = z.object({
   access_token: z.string(),
   expires_in: z.number(),
