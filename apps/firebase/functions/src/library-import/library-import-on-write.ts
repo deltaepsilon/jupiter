@@ -57,6 +57,24 @@ export async function libraryImportOnWrite(
     if (isLastPage) await setStatus({ libraryId, status: LibraryTaskStatus.complete, userId });
     nextPageToken = maybeNextPageToken;
 
+    /**
+     * Strategy:
+     *
+     * Always read from the beginning of the list of the import is stale, or if we're currently reading from the start.
+     * We'll know when the "read from start" operation is through, because the ids will begin to overlap with
+     * existing ids, so we delete startNextPageToken and continue reading from the end.
+     *
+     * The big question is how to read from the end.
+     *
+     * I'm currently leaning toward NOT deleting nextPageToken when we're done reading from the end.
+     * The issue is that a user could spam the "restart" button and keep reading the same records from the end.
+     *
+     * This isn't a big deal, as the read/write itself is idempotent, but it screws with the counts.
+     *
+     * Refreshing the import stats will always reset the count, so maybe we just force that to happen whenever the
+     * import is complete??? I'll do that from the front-end. I'll force a call to refreshStats.
+     */
+
     if (isReadingFromStart) {
       const sortedMediaItemKeys = Object.keys(mediaItemsUpdates).sort();
       const firstMediaItemKey = sortedMediaItemKeys[0];
@@ -90,14 +108,14 @@ export async function libraryImportOnWrite(
         updated: new Date(),
       };
 
-      if (!nextPageToken && libraryImport.nextPageToken) {
-        libraryImportUpdates.endNextPageToken = libraryImport.nextPageToken;
-
+      if (!nextPageToken && beforeImport && beforeImport.nextPageToken) {
         /**
-         * TODO:
-         * - Make sure that endNextPageToken is set correctly
-         * - Swap endNextPageToken to nextPageToken when restarting the import
+         * 2/14/23
+         * Unsure if this is right, but destroying the nextPageToken forces the import to start from the beginning.
+         * We don't usually want to start from the beginning. Instread we want to enable isReadingFromStart
+         * to do its thing. The user can always "start over" the import from scratch to achieve a fresh import.
          */
+        libraryImportUpdates.nextPageToken = beforeImport.nextPageToken;
       }
 
       await libraryMediaItemsRef.update(mediaItemsUpdates);

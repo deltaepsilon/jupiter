@@ -49,7 +49,7 @@ export function MediaItemsProvider({ children, libraryId }: Props) {
     if (userId) {
       setIsLoading(true);
 
-      await refreshMediaItemStats({ libraryId, timezoneOffset: new Date().getTimezoneOffset(), userId });
+      await refreshMediaItemStats({ libraryId, userId });
 
       setIsLoading(false);
     }

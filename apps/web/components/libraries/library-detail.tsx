@@ -3,13 +3,15 @@ import { DaemonProvider, DirectoryProvider, useDaemon, useDirectory, useLibrarie
 import { DownloadLibraryPanel, ImportLibraryPanel } from './panels';
 import { Library, LibraryTaskStatus } from 'data/library';
 import { useDaemonRecord, useLibraryDownload, useLibraryImport } from 'web/hooks';
+import { useEffect, useMemo } from 'react';
 
 import { Container } from 'ui/components';
 import { DaemonPanel } from 'web/components/daemon';
 import { MessageType } from 'data/daemon';
 import { formatDate } from 'ui/utils';
 import { getDirectoryHandler } from 'web/components/daemon/handlers/directory-handler';
-import { useMemo } from 'react';
+import { useAuth } from 'ui/contexts';
+import { useFunctions } from 'ui/hooks';
 
 export function LibraryDetail() {
   const { libraries } = useLibraries();
@@ -31,14 +33,22 @@ export function LibraryDetail() {
 }
 
 function LibraryDetailConnected({ library, libraryId }: { library: Library; libraryId: string }) {
+  const { userId } = useAuth();
   const { actions: importActions, libraryImport } = useLibraryImport(libraryId);
   const { actions: downloadActions, downloadState } = useLibraryDownload(libraryId, library);
   const { directory } = useDirectory();
+  const { refreshMediaItemStats } = useFunctions();
   const { isConnected: isDaemonConnected } = useDaemon();
   const isComplete = libraryImport?.status === LibraryTaskStatus.complete;
   const isRunning = libraryImport?.status === LibraryTaskStatus.running;
   const hasLibraryRecords = !!libraryImport?.count;
   const isDownloadActive = isDaemonConnected && hasLibraryRecords;
+
+  useEffect(() => {
+    if (isComplete && userId) {
+      refreshMediaItemStats({ libraryId, userId });
+    }
+  }, [isComplete, libraryId, refreshMediaItemStats, userId]);
 
   return (
     <Container

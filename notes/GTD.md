@@ -1,13 +1,15 @@
 ## In Progress
 
-- [ ] Don't delete `lastKey` when restarting import from "completed" state (library-import-on-write)
-
 ## Next actions
 
 - [ ] Create logo
 - [ ] Clean up `manifest.json`
 
 ## Waiting for
+
+- [ ] Restart Blush Swallow import and downloads. Don't delete files. See how well it recovers.
+
+  - Test the restart-import functionality. Make sure that a `complete` import doesn't start from the beginning.
 
 - [ ] Download on a cron job
 - [ ] Debug `context.auth` problem: https://github.com/firebase/firebase-tools/issues/5210
@@ -26,6 +28,7 @@
 
 ## Archive
 
+- [x] Don't delete `lastKey` when restarting import from "completed" state (library-import-on-write)
 - [x] Move corrupt files to `corrupt-files`, add mediaItem to corrupt-files.json db file
 - [x] Debug pausing mid-download
 - [x] Collapse progress to year bars
