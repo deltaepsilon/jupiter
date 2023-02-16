@@ -5,10 +5,12 @@ REPOSITORY=docker-images
 REGISTRY=us-central1-docker.pkg.dev
 
 docker build . -t $DEPLOY_NAME:latest
-PROJECT_ID=$PROJECT_ID $SCRIPT_PATH/../gcloud/configure.sh
+
+# PROJECT_ID=$PROJECT_ID $SCRIPT_PATH/../gcloud/configure.sh
+# gcloud config set account chris@christopheresplin.com
 
 gcloud config set run/region us-central1
-gcloud config set account chris@christopheresplin.com
+gcloud config configurations list
 gcloud auth configure-docker us-central1-docker.pkg.dev
 
 docker tag $DEPLOY_NAME:latest $REGISTRY/$PROJECT_ID/$REPOSITORY/$DEPLOY_NAME
