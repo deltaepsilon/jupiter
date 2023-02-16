@@ -24,10 +24,7 @@ jobs:
       - name: 🚀 Deploy
         working-directory: apps/firebase
         run: |
-          echo Deploying...
-          echo $FIREBASE_DIRECTORY
-          echo $GOOGLE_APPLICATION_CREDENTIALS
-          cd ./functions && pwd && yarn build
+          cd ./functions && pwd && npm install && npm build
           echo pwd
           yarn service-account:decode
           yarn deploy || rm $GOOGLE_APPLICATION_CREDENTIALS
