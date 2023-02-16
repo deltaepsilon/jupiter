@@ -22,13 +22,13 @@ jobs:
           YARN_ENABLE_IMMUTABLE_INSTALLS: false
       - run: yarn build
       - name: 🚀 Deploy
+        working-directory: apps/firebase
         run: |
           echo Deploying...
           echo $FIREBASE_DIRECTORY
           echo $GOOGLE_APPLICATION_CREDENTIALS
-          cd $FIREBASE_DIRECTORY/functions && pwd
-          yarn build
-          cd $FIREBASE_DIRECTORY && pwd
+          cd ./functions && pwd && yarn build
+          echo pwd
           yarn service-account:decode
           yarn deploy || rm $GOOGLE_APPLICATION_CREDENTIALS
           rm $GOOGLE_APPLICATION_CREDENTIALS
