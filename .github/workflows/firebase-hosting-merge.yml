@@ -28,4 +28,4 @@ jobs:
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_PHOTOS_TOOLS_2022 }}'
           channelId: live
           projectId: photos-tools-2022
-          entrypoint: app/firebase
+          entrypoint: apps/firebase
