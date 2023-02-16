@@ -59,8 +59,13 @@ jobs:
         name: 'Authenticate to Google Cloud'
         uses: 'google-github-actions/auth@v1'
         with:
+          create_credentials_file: true
           workload_identity_provider: 'projects/550579950350/locations/global/workloadIdentityPools/github/providers/github-provider-id'
           service_account: 'artifact-registry@photos-tools-2022.iam.gserviceaccount.com'
+      - name: Login to Artifact Registry
+        run: |
+          gcloud auth login --brief --cred-file="${{ steps.auth.outputs.credentials_file_path }}"
+          gcloud services list
       - name: 🚀 Deploy Web (Docker)
         run: |
           sh bin/docker/deploy.sh
