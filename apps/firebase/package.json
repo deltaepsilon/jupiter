@@ -4,15 +4,12 @@
     "dev": "yarn emulators & cd functions && yarn dev",
     "deploy": "yarn firebase:experiments:enable && yarn firebase:deploy",
     "next:copy": "cp -r ../web/.next ./hosting",
-
     "firebase": "npx firebase --project=photos-tools-2022",
     "firebase:deploy": "firebase deploy",
     "firebase:deploy:database": "yarn firebase deploy --only database",
     "firebase:deploy:firestore": "yarn firebase deploy --only firestore",
-    
     "emulators": "yarn clean && firebase emulators:start --import ./.emulator-data --export-on-exit",
     "clean": "rm /tmp/hub-photos-tools-2022.json || exit 0 && lsof -t -i:9099 -i:5001 -i:8081 -i:9000 -i:5000 -i:9199 -i:4000 | xargs kill -9",
-
     "service-account:encode": "cat ./service-account.json | base64 -w 0",
     "service-account:decode": "echo $SERVICE_ACCOUNT_BASE64 | base64 --decode > ./service-account.json"
   },
