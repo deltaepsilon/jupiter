@@ -34,5 +34,5 @@ jobs:
           rm $GOOGLE_APPLICATION_CREDENTIALS
         env:
           SERVICE_ACCOUNT_BASE64: '${{ secrets.SERVICE_ACCOUNT_BASE64 }}'
-          GOOGLE_APPLICATION_CREDENTIALS: ${{ github.GITHUB_WORKSPACE }}/apps/firebase/service-account.json
-          FIREBASE_DIRECTORY: ${{ github.GITHUB_WORKSPACE }}/app/firebase
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ github.workspace }}/apps/firebase/service-account.json
+          FIREBASE_DIRECTORY: ${{ github.workspace }}/app/firebase
