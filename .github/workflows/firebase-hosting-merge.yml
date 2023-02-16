@@ -23,13 +23,16 @@ jobs:
       - run: yarn build
       - name: 🚀 Deploy
         run: |
-          cd $GITHUB_WORKSPACE/apps/firebase/functions
-          yarn build
-          cd $GITHUB_WORKSPACE/apps/firebase
-          yarn service-account:decode
+          echo Deploying...
+          echo $FIREBASE_DIRECTORY
           echo $GOOGLE_APPLICATION_CREDENTIALS
-          yarn deploy
+          cd $FIREBASE_DIRECTORY/functions && pwd
+          yarn build
+          cd $FIREBASE_DIRECTORY && pwd
+          yarn service-account:decode
+          yarn deploy || rm $GOOGLE_APPLICATION_CREDENTIALS
           rm $GOOGLE_APPLICATION_CREDENTIALS
         env:
           SERVICE_ACCOUNT_BASE64: '${{ secrets.SERVICE_ACCOUNT_BASE64 }}'
-          GOOGLE_APPLICATION_CREDENTIALS: ${{ env.GITHUB_WORKSPACE }}/apps/firebase/service-account.json
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ github.GITHUB_WORKSPACE }}/apps/firebase/service-account.json
+          FIREBASE_DIRECTORY: ${{ github.GITHUB_WORKSPACE }}/app/firebase
