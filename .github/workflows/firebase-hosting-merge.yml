@@ -25,9 +25,6 @@ jobs:
         working-directory: apps/firebase
         run: |
           cd ./functions && pwd && npm install && npm run build && cd ..
-          echo SERVICE_ACCOUNT_BASE64: 
-          echo $SERVICE_ACCOUNT_BASE64 | cat
-          echo $SERVICE_ACCOUNT_BASE64 | awk '{print length}'
           yarn service-account:decode
           yarn deploy || rm $GOOGLE_APPLICATION_CREDENTIALS
           rm $GOOGLE_APPLICATION_CREDENTIALS
