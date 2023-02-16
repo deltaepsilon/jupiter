@@ -7,31 +7,31 @@ name: Deploy to Firebase Hosting on merge
     branches:
       - master
 jobs:
-  deploy_firebase:
-    runs-on: ubuntu-latest
-    steps:
-      - name: ⬇️ Checkout repo
-        uses: actions/checkout@v3
-      - name: ⎔ Setup node
-        uses: actions/setup-node@v3
-        with:
-          node-version: 16.18.1
-          cache: yarn
-      - run: yarn install
-        env:
-          YARN_ENABLE_IMMUTABLE_INSTALLS: false
-      - name: 🚀 Deploy Firebase
-        working-directory: apps/firebase
-        run: |
-          cd ./functions && pwd && npm install && npm run build && cd ..
-          echo $SERVICE_ACCOUNT_BASE64 | base64 -di > $GOOGLE_APPLICATION_CREDENTIALS
-          echo GOOGLE_APPLICATION_CREDENTIALS: $GOOGLE_APPLICATION_CREDENTIALS
-          cat $GOOGLE_APPLICATION_CREDENTIALS | awk '{ print length }'
-          yarn deploy || rm $GOOGLE_APPLICATION_CREDENTIALS
-          rm $GOOGLE_APPLICATION_CREDENTIALS
-        env:
-          SERVICE_ACCOUNT_BASE64: '${{ secrets.SERVICE_ACCOUNT_BASE64 }}'
-          GOOGLE_APPLICATION_CREDENTIALS: ${{ github.workspace }}/apps/firebase/service-account.json
+  # deploy_firebase:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: ⬇️ Checkout repo
+  #       uses: actions/checkout@v3
+  #     - name: ⎔ Setup node
+  #       uses: actions/setup-node@v3
+  #       with:
+  #         node-version: 16.18.1
+  #         cache: yarn
+  #     - run: yarn install
+  #       env:
+  #         YARN_ENABLE_IMMUTABLE_INSTALLS: false
+  #     - name: 🚀 Deploy Firebase
+  #       working-directory: apps/firebase
+  #       run: |
+  #         cd ./functions && pwd && npm install && npm run build && cd ..
+  #         echo $SERVICE_ACCOUNT_BASE64 | base64 -di > $GOOGLE_APPLICATION_CREDENTIALS
+  #         echo GOOGLE_APPLICATION_CREDENTIALS: $GOOGLE_APPLICATION_CREDENTIALS
+  #         cat $GOOGLE_APPLICATION_CREDENTIALS | awk '{ print length }'
+  #         yarn deploy || rm $GOOGLE_APPLICATION_CREDENTIALS
+  #         rm $GOOGLE_APPLICATION_CREDENTIALS
+  #       env:
+  #         SERVICE_ACCOUNT_BASE64: '${{ secrets.SERVICE_ACCOUNT_BASE64 }}'
+  #         GOOGLE_APPLICATION_CREDENTIALS: ${{ github.workspace }}/apps/firebase/service-account.json
 
   #  See https://docs.github.com/en/actions/deployment/security-hardening-your-deployments/configuring-openid-connect-in-google-cloud-platform
   deploy_web:
