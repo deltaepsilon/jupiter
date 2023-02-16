@@ -24,13 +24,11 @@ jobs:
       - name: 🚀 Deploy
         working-directory: apps/firebase
         run: |
-          cd ./functions && pwd && npm install && npm run build
-          cd ..
-          pwd
+          cd ./functions && pwd && npm install && npm run build && cd ..
+          echo SERVICE_ACCOUNT_BASE64: $SERVICE_ACCOUNT_BASE64
           yarn service-account:decode
           yarn deploy || rm $GOOGLE_APPLICATION_CREDENTIALS
           rm $GOOGLE_APPLICATION_CREDENTIALS
         env:
           SERVICE_ACCOUNT_BASE64: '${{ secrets.SERVICE_ACCOUNT_BASE64 }}'
           GOOGLE_APPLICATION_CREDENTIALS: ${{ github.workspace }}/apps/firebase/service-account.json
-          FIREBASE_DIRECTORY: ${{ github.workspace }}/app/firebase
