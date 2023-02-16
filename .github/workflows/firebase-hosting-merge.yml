@@ -25,7 +25,8 @@ jobs:
         working-directory: apps/firebase
         run: |
           cd ./functions && pwd && npm install && npm run build
-          echo pwd
+          cd ..
+          pwd
           yarn service-account:decode
           yarn deploy || rm $GOOGLE_APPLICATION_CREDENTIALS
           rm $GOOGLE_APPLICATION_CREDENTIALS
