@@ -17,17 +17,46 @@ jobs:
         with:
           node-version: 16.18.1
           cache: yarn
-      - run: node --version && yarn install
+      - run: yarn install
         env:
           YARN_ENABLE_IMMUTABLE_INSTALLS: false
-      - run: yarn build
-      - name: 🚀 Deploy
+      - name: 🚀 Deploy Firebase
         working-directory: apps/firebase
         run: |
           cd ./functions && pwd && npm install && npm run build && cd ..
-          yarn service-account:decode
+          echo $SERVICE_ACCOUNT_BASE64 | base64 -di > $GOOGLE_APPLICATION_CREDENTIALS
+          echo GOOGLE_APPLICATION_CREDENTIALS: $GOOGLE_APPLICATION_CREDENTIALS
+          cat $GOOGLE_APPLICATION_CREDENTIALS | | awk '{ print length }'
           yarn deploy || rm $GOOGLE_APPLICATION_CREDENTIALS
           rm $GOOGLE_APPLICATION_CREDENTIALS
         env:
           SERVICE_ACCOUNT_BASE64: '${{ secrets.SERVICE_ACCOUNT_BASE64 }}'
           GOOGLE_APPLICATION_CREDENTIALS: ${{ github.workspace }}/apps/firebase/service-account.json
+  
+  deploy_web:
+    runs-on: ubuntu-latest
+    steps:
+      - name: ⬇️ Checkout repo
+        uses: actions/checkout@v3
+      - name: ⎔ Setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16.18.1
+          cache: yarn
+      - run: yarn install
+        env:
+          YARN_ENABLE_IMMUTABLE_INSTALLS: false
+      - run: yarn build
+      - name: 'Set up Cloud SDK'
+        uses: 'google-github-actions/setup-gcloud@v1'
+        with:
+          version: '>= 417.0.0'
+      - id: 'auth'
+        name: 'Authenticate to Google Cloud'
+        uses: 'google-github-actions/auth@v1'
+        with:
+          workload_identity_provider: 'https://iam.googleapis.com/projects/550579950350/locations/global/workloadIdentityPools/github/providers/github-provider-id'
+          service_account: 'artifact-registry@photos-tools-2022.iam.gserviceaccount.com'
+      - name: 🚀 Deploy Web (Docker)
+        run: |
+          sh bin/docker/deploy.sh
