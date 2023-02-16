@@ -1,1 +1,1 @@
-docker build . -t jupiter
+docker build . -t jupiter-web

@@ -1,7 +1,7 @@
 ## In Progress
 
-- [ ] Sort out Cloud Run deploy
 - [ ] Deploy to Firebase + Firebase Hosting
+- [ ] Github Actions
 
 ## Next actions
 
@@ -31,6 +31,7 @@
 
 ## Archive
 
+- [x] Sort out Cloud Run deploy
 - [x] Don't delete `lastKey` when restarting import from "completed" state (library-import-on-write)
 - [x] Move corrupt files to `corrupt-files`, add mediaItem to corrupt-files.json db file
 - [x] Debug pausing mid-download

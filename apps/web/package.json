@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "GOOGLE_APPLICATION_CREDENTIALS=./service-account.json next dev -H 127.0.0.1",
     "build": "next build",
-    "start": "next start",
+    "start": "next start -p ${PORT:-8080}",
     "lint": "next lint",
     "firebase": "GOOGLE_APPLICATION_CREDENTIALS=./service-account.json npx firebase --project=photos-tools-2022",
     "firebase:deploy:database": "yarn firebase deploy --only database",
@@ -21,11 +21,13 @@
     "@mui/x-data-grid": "^5.17.23",
     "@types/follow-redirects": "^1.14.1",
     "axios": "^1.3.3",
+    "firebase": "^9.17.1",
     "follow-redirects": "^1.15.2",
     "googleapis": "^111.0.0",
     "next": "13.1.6",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "sharp": "^0.31.3",
     "tempy": "^3.0.0"
   },
   "bundledDependencies": [

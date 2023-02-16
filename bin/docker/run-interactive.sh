@@ -1,1 +1,0 @@
-docker run --rm -it --entrypoint bash jupiter

@@ -1,0 +1,1 @@
+docker run --rm -it --entrypoint bash -p 3000:8080 jupiter-web

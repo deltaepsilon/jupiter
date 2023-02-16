@@ -1,0 +1,1 @@
+docker run --rm -it -p 3000:8080 --name jupiter-web jupiter-web
