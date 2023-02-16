@@ -18,6 +18,8 @@ jobs:
           node-version: 16.15.1
           cache: yarn
       - run: yarn install
+        env:
+          YARN_ENABLE_IMMUTABLE_INSTALLS: false
       - run: yarn build
       - name: 🚀 Deploy
         uses: FirebaseExtended/action-hosting-deploy@v0
