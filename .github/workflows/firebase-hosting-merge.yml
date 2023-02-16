@@ -18,6 +18,8 @@ jobs:
           node-version: 16.18.1
           cache: yarn
       - run: node --version && yarn install
+        env:
+          YARN_ENABLE_IMMUTABLE_INSTALLS: false
       - run: yarn build
       - name: 🚀 Deploy
         run: |
@@ -25,6 +27,9 @@ jobs:
           yarn build
           cd $GITHUB_WORKSPACE/apps/firebase
           yarn service-account:decode
-          GOOGLE_APPLICATION_CREDENTIALS=$GITHUB_WORKSPACE/apps/firebase/service-account.json yarn deploy
+          echo $GOOGLE_APPLICATION_CREDENTIALS
+          yarn deploy
+          rm $GOOGLE_APPLICATION_CREDENTIALS
         env:
           SERVICE_ACCOUNT_BASE64: '${{ secrets.SERVICE_ACCOUNT_BASE64 }}'
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ env.GITHUB_WORKSPACE }}/apps/firebase/service-account.json
