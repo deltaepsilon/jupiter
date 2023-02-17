@@ -8,11 +8,8 @@
     "dev:run": "nodemon index.js",
     "build": "yarn build:bundle && yarn build:pkg && yarn build:distribute",
     "build:bundle": "esbuild src/index.ts --bundle --platform=node --sourcemap --outfile=./index.js",
-    "build:pkg": "pkg . && yarn build:linux && yarn build:macos && yarn build:windows",
-    "build:linux": "rm -rf dist/linux && mkdir dist/linux && mv dist/daemon-linux dist/linux/daemon && cp -r vendor dist/linux/vendor && rm -rf dist/linux/vendor/exiftool-12.55",
-    "build:macos": "rm -rf dist/macos && mkdir dist/macos && mv dist/daemon-macos dist/macos/daemon && cp -r vendor dist/macos/vendor && rm -rf dist/linux/vendor/exiftool-12.55",
-    "build:windows": "rm -rf dist/windows && mkdir dist/windows && mv dist/daemon-win.exe dist/windows/daemon.exe && cp -r vendor dist/windows/vendor && rm -rf dist/windows/vendor/Image-ExifTool-12.55",
-    "build:distribute": "cp -r dist ../web/public/daemon"
+    "build:pkg": "pkg .",
+    "build:distribute": "sh bin/distribute.sh"
   },
   "pkg": {
     "scripts": "index.js",
