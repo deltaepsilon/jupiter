@@ -34,6 +34,11 @@ jobs:
   #         GOOGLE_APPLICATION_CREDENTIALS: ${{ github.workspace }}/apps/firebase/service-account.json
 
   #  See https://docs.github.com/en/actions/deployment/security-hardening-your-deployments/configuring-openid-connect-in-google-cloud-platform
+  # Don't forget!!
+  # gcloud iam service-accounts add-iam-policy-binding "artifact-registry@photos-tools-2022.iam.gserviceaccount.com" \
+  #   --project="photos-tools-2022" \
+  #   --role="roles/iam.workloadIdentityUser" \
+  #   --member="principalSet://iam.googleapis.com/projects/550579950350/locations/global/workloadIdentityPools/github/attribute.repository/deltaepsilon/jupiter"
   deploy_web:
     runs-on: ubuntu-latest
     permissions:
@@ -62,22 +67,6 @@ jobs:
           token_format: 'access_token'
           workload_identity_provider: 'projects/550579950350/locations/global/workloadIdentityPools/github/providers/github-provider-id'
           service_account: 'artifact-registry@photos-tools-2022.iam.gserviceaccount.com'
-      # - name: Login to Artifact Registry
-      #   run: |
-      #     gcloud auth login --brief --cred-file="${{ steps.auth.outputs.credentials_file_path }}"
-      #     gcloud services list
-
-      # - name: Checkout actions-oidc-debugger
-      #   uses: actions/checkout@v3
-      #   with:
-      #     repository: github/actions-oidc-debugger
-      #     ref: main
-      #     token: ${{ steps.auth.outputs.access_token }}
-      #     path: ./.github/actions/actions-oidc-debugger
-      # - name: Debug OIDC Claims
-      #   uses: ./.github/actions/actions-oidc-debugger
-      #   with:
-      #     audience: 'https://github.com/github'
 
       - name: 🚀 Deploy Web (Docker)
         run: |
