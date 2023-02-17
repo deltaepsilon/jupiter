@@ -35,3 +35,4 @@ yarn-error.log*
 
 service-account.json
 temp
+gha-creds-*.json

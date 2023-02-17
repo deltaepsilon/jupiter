@@ -11,7 +11,7 @@ docker build . -t $DEPLOY_NAME:latest
 # gcloud config set account chris@christopheresplin.com
 
 gcloud config set run/region $REGION
-echo y | gcloud auth configure-docker $REGISTRY
+gcloud auth configure-docker $REGISTRY
 
 docker tag $DEPLOY_NAME:latest $REGISTRY/$PROJECT_ID/$REPOSITORY/$DEPLOY_NAME
 docker push $REGISTRY/$PROJECT_ID/$REPOSITORY/$DEPLOY_NAME

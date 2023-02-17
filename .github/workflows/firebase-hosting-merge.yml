@@ -59,13 +59,28 @@ jobs:
         name: 'Authenticate to Google Cloud'
         uses: 'google-github-actions/auth@v1'
         with:
-          create_credentials_file: true
           workload_identity_provider: 'projects/550579950350/locations/global/workloadIdentityPools/github/providers/github-provider-id'
           service_account: 'artifact-registry@photos-tools-2022.iam.gserviceaccount.com'
-      - name: Login to Artifact Registry
-        run: |
-          gcloud auth login --brief --cred-file="${{ steps.auth.outputs.credentials_file_path }}"
-          gcloud services list
+      # - name: Login to Artifact Registry
+      #   run: |
+      #     gcloud auth login --brief --cred-file="${{ steps.auth.outputs.credentials_file_path }}"
+      #     gcloud services list
+      
+      - name: Checkout actions-oidc-debugger
+        uses: actions/checkout@v3
+        with:
+          repository: github/actions-oidc-debugger
+          ref: main
+          token: ${{ secrets.your-checkout-token }}
+          path: ./.github/actions/actions-oidc-debugger
+      - name: Debug OIDC Claims
+        uses: ./.github/actions/actions-oidc-debugger
+        with:
+          audience: 'https://github.com/github'
+      
       - name: 🚀 Deploy Web (Docker)
         run: |
+          ls -al
           sh bin/docker/deploy.sh
+        env:
+          ACTIONS_STEP_DEBUG: true
