@@ -1,4 +1,3 @@
-
 name: Deploy to Firebase Hosting on merge
 'on':
   push:
@@ -22,9 +21,6 @@ jobs:
         working-directory: apps/firebase
         run: |
           cd ./functions && pwd && npm install && npm run build && cd ..
-          echo $SERVICE_ACCOUNT_BASE64 | base64 -di > $GOOGLE_APPLICATION_CREDENTIALS
-          echo GOOGLE_APPLICATION_CREDENTIALS: $GOOGLE_APPLICATION_CREDENTIALS
-          cat $GOOGLE_APPLICATION_CREDENTIALS | awk '{ print length }'
           yarn deploy || rm $GOOGLE_APPLICATION_CREDENTIALS
           rm $GOOGLE_APPLICATION_CREDENTIALS
         env:
@@ -33,6 +29,7 @@ jobs:
 
   deploy_web:
     runs-on: ubuntu-latest
+    needs: 'deploy_firebase'
     permissions:
       id-token: write # This is required for requesting the JWT
       contents: read # This is required for actions/checkout
