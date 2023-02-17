@@ -38,7 +38,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       id-token: write # This is required for requesting the JWT
-      contents: read  # This is required for actions/checkout
+      contents: read # This is required for actions/checkout
     steps:
       - name: ⬇️ Checkout repo
         uses: actions/checkout@v3
@@ -59,25 +59,26 @@ jobs:
         name: 'Authenticate to Google Cloud'
         uses: 'google-github-actions/auth@v1'
         with:
+          token_format: 'access_token'
           workload_identity_provider: 'projects/550579950350/locations/global/workloadIdentityPools/github/providers/github-provider-id'
           service_account: 'artifact-registry@photos-tools-2022.iam.gserviceaccount.com'
       # - name: Login to Artifact Registry
       #   run: |
       #     gcloud auth login --brief --cred-file="${{ steps.auth.outputs.credentials_file_path }}"
       #     gcloud services list
-      
+
       - name: Checkout actions-oidc-debugger
         uses: actions/checkout@v3
         with:
           repository: github/actions-oidc-debugger
           ref: main
-          token: ${{ secrets.your-checkout-token }}
+          token: ${{ steps.auth.outputs.access_token }}
           path: ./.github/actions/actions-oidc-debugger
       - name: Debug OIDC Claims
         uses: ./.github/actions/actions-oidc-debugger
         with:
           audience: 'https://github.com/github'
-      
+
       - name: 🚀 Deploy Web (Docker)
         run: |
           ls -al
