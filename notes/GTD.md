@@ -1,12 +1,12 @@
 ## In Progress
 
-- [ ] Deploy to Firebase + Firebase Hosting
-- [ ] Github Actions
+- [ ] Daemon downloader
 
 ## Next actions
 
-- [ ] Create logo
-- [ ] Clean up `manifest.json`
+- [ ] Logo and landing page
+- [ ] `manifest.json`
+- [ ] Stripe integration
 
 ## Waiting for
 
@@ -31,6 +31,8 @@
 
 ## Archive
 
+- [x] Deploy to Firebase + Firebase Hosting
+- [x] Github Actions
 - [x] Sort out Cloud Run deploy
 - [x] Don't delete `lastKey` when restarting import from "completed" state (library-import-on-write)
 - [x] Move corrupt files to `corrupt-files`, add mediaItem to corrupt-files.json db file
