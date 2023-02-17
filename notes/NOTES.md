@@ -1,3 +1,11 @@
+## Feb 17, 2023
+
+I spent all yesterday fighting with GitHub Actions and Docker to establish a continuous deployment pipeline.
+
+I don't strictly need CD, but it's so nice to fall back on if I need to make quick edits in the future. I can do them from anywhere, directly to GitHub, and it'll just push to prod.
+
+Now I've got to actually ship the thing. Every step of the way seems like slogging through thick sand... but I've gotta get this shipped.
+
 ## Feb 10, 2023
 
 The progress file-tree FINALLY looks passable.

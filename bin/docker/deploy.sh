@@ -7,9 +7,6 @@ REGISTRY=$REGION-docker.pkg.dev
 
 docker build . -t $DEPLOY_NAME:latest
 
-# PROJECT_ID=$PROJECT_ID $SCRIPT_PATH/../gcloud/configure.sh
-# gcloud config set account chris@christopheresplin.com
-
 gcloud config set run/region $REGION
 gcloud auth configure-docker $REGISTRY
 
