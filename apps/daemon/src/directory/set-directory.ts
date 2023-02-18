@@ -15,7 +15,7 @@ export async function setDirectory(sendMessage: SendMessage, message: DaemonMess
   try {
     const { directory, libraryId } = setDirectoryData.parse(message.payload.data);
     const data = setDirectoryData.parse({ directory, libraryId });
-    const db = createFilesystemDatabase({ directory, libraryId });
+    const db = await createFilesystemDatabase({ directory, libraryId });
     const { setDirectory } = createGettersAndSetters(db);
 
     setDirectory({ path: directory, name: directory });

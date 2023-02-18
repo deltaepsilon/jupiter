@@ -13,7 +13,7 @@ const CACHE_TTL = SECONDS_MS * 30;
 const CACHE_MAX_WRITE_MS = SECONDS_MS * 2;
 const DEBUG = false;
 
-export type FilesystemDatabase = ReturnType<typeof createFilesystemDatabase>;
+export type FilesystemDatabase = Awaited<ReturnType<typeof createFilesystemDatabase>>;
 
 interface MetadataData {
   directory: Directory;
@@ -34,9 +34,12 @@ interface FolderData {
 
 type Db = ReturnType<typeof createDb>;
 
-export function createFilesystemDatabase({ directory, libraryId }: { libraryId: string; directory: string }) {
-  const metadataDbPath = path.join(directory, DB_FOLDER_NAME, libraryId, `metadata.json`);
+export async function createFilesystemDatabase({ directory, libraryId }: { libraryId: string; directory: string }) {
+  const libraryPath = path.join(directory, DB_FOLDER_NAME, libraryId);
+  const metadataDbPath = path.join(libraryPath, `metadata.json`);
   const folderDbs: Map<string, Db> = new Map();
+
+  await fsPromises.mkdir(libraryPath, { recursive: true });
 
   function getFolderDb(folder: string): Db {
     const folderSlug = folder.replace(/[\\|\/]/g, '-');
@@ -148,7 +151,7 @@ function createDb<DataType>(path: string) {
 }
 
 async function writeDb(path: string, data: Record<string, unknown>) {
-  return fsPromises.writeFile(path, JSON.stringify(data, null, DEBUG ? 2 : undefined));
+  return fsPromises.writeFile(path, JSON.stringify(data, null, DEBUG ? 2 : undefined), { flag: 'w' });
 }
 
 function readDb(path: string): Record<string, unknown> | undefined {
@@ -160,6 +163,7 @@ function readDb(path: string): Record<string, unknown> | undefined {
     if (isErrnoException(error) && error.code === 'ENOENT') {
       return {};
     } else {
+      console.log('throwing');
       throw error;
     }
   }
