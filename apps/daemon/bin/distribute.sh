@@ -1,10 +1,11 @@
 SCRIPT_PATH=$PWD/$(dirname $0) # /root/dev/jupiter/apps/daemon/bin
-DIST_PATH=$(dirname $SCRIPT_PATH)/dist # /root/dev/jupiter/apps/daemon/dist
-VENDOR_PATH=$(dirname $SCRIPT_PATH)/vendor # /root/dev/jupiter/apps/daemon/vendor
-VENDOR_CONFIG_PATH=$(dirname $SCRIPT_PATH)/vendor/custom.cfg # /root/dev/jupiter/apps/daemon/vendor
-WEB_DAEMON_PATH=$(dirname $SCRIPT_PATH)/../web/public/daemon # /root/dev/jupiter/apps/web/daemon
+DAEMON_PATH=$(dirname $SCRIPT_PATH) # /root/dev/jupiter/apps/daemon
+DIST_PATH=$DAEMON_PATH/dist # /root/dev/jupiter/apps/daemon/dist
+VENDOR_PATH=$DAEMON_PATH/vendor # /root/dev/jupiter/apps/daemon/vendor
+LAUNCHERS_PATH=$DAEMON_PATH/launchers # /root/dev/jupiter/apps/daemon/launchers
+VENDOR_CONFIG_PATH=$DAEMON_PATH/vendor/custom.cfg # /root/dev/jupiter/apps/daemon/vendor
+WEB_DAEMON_PATH=$DAEMON_PATH/../web/public/daemon # /root/dev/jupiter/apps/web/daemon
 NOW=$(date +"%Y%m%d%H%M%S") # 20210315120000
-
 
 buildDaemon() {
   DAEMON_DIRECTORY=$DIST_PATH/$1 # /root/dev/jupiter/apps/daemon/dist/linux
@@ -25,11 +26,14 @@ buildDaemon() {
   echo $NOW > $DIST_PATH/$1/date.txt
 }
 
-
 buildDaemon "linux" "daemon-linux" "Image-ExifTool-12.55"
 buildDaemon "macos" "daemon-macos" "Image-ExifTool-12.55"
 buildDaemon "windows" "daemon-win.exe" "exiftool-12.55"
 
 rm -rf $WEB_DAEMON_PATH
 cp -r $DIST_PATH $WEB_DAEMON_PATH
+cp -r $LAUNCHERS_PATH $WEB_DAEMON_PATH
+
 rm $WEB_DAEMON_PATH/daemon*
+
+echo Distributed daemon to $WEB_DAEMON_PATH

@@ -20,6 +20,11 @@
 ## Someday
 
 - [ ] Copy
+      Own your media
+      Google Photos is not archival
+      If you don't store the bits yourself, you don't truly own them
+      Keep using Google Photos, but archive to your hard disc
+
       You searched "how to download Google Photos"
       "Why is my Google Photos metadata garbage"
       or something like "how to export all Google Photos"
