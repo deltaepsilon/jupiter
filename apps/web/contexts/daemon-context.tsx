@@ -8,8 +8,7 @@ import {
   encodeMessage,
 } from 'data/daemon';
 import { createContext, useCallback, useContext, useEffect, useRef, useState } from 'react';
-
-import { localforage } from 'ui/utils';
+import { exponentialBackoff, localforage } from 'ui/utils';
 
 export interface DaemonValue {
   connect: () => void;
@@ -159,13 +158,10 @@ function useWebsocket(onMessageHandler: OnMessageHandler) {
     setIsConnected(false);
   }, [ws, setIsConnected]);
 
-  useEffect(() => {
-    if (!isConnected) {
-      const timer = setInterval(connect, 1000);
-
-      return () => clearInterval(timer);
-    }
-  }, [isConnected, connect]);
+  useEffect(
+    () => (isConnected ? undefined : exponentialBackoff({ delay: 250, callback: connect, max: 10000 })),
+    [isConnected, connect]
+  );
 
   usePingPong(ws, closeWebsocket);
 

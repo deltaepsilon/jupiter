@@ -1,6 +1,7 @@
 ## In Progress
 
-- [ ] Daemon downloader
+- [ ] Get daemon-win.exe working
+- [ ] Daemon version check or launcher
 
 ## Next actions
 
@@ -36,6 +37,7 @@
 
 ## Archive
 
+- [x] Exponential back-off 
 - [x] Deploy to Firebase + Firebase Hosting
 - [x] Github Actions
 - [x] Sort out Cloud Run deploy

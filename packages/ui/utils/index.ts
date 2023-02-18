@@ -4,6 +4,7 @@ export * from './batch';
 export * from './create-queue';
 export * from './date';
 export * from './events';
+export * from './exponential-backoff';
 export * from './firebase';
 export * from './multiplex';
 export * from './noop';

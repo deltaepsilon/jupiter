@@ -19,16 +19,15 @@ export default async function oauth2(req: NextApiRequest, res: NextApiResponse) 
   const host = req.headers['x-forwarded-host'] || req.headers.host;
   const protocol = host?.includes('localhost') ? 'http' : 'https';
   const redirectUri = `${protocol}://${host}/api/oauth2`;
-  console.log('req.headers', req.headers);
-  console.log('redirectUri', redirectUri);
   const oauth2Client = new google.auth.OAuth2({
     clientId: GOOGLE_AUTH_CLIENT_ID,
     clientSecret: GOOGLE_AUTH_CLIENT_SECRET,
     redirectUri,
   });
 
+  // Cookies don't get passed into Cloud Run: https://firebase.google.com/docs/hosting/manage-cache#using_cookies
   const cookies = parseCookies({ req });
-  const redirect = typeof cookies.redirect === 'string' ? cookies.redirect : '/';
+  const redirect = typeof cookies.redirect === 'string' ? cookies.redirect : '/photos#library-picker';
 
   const { tokens } = await oauth2Client.getToken(req.query.code as string);
   const { access_token, refresh_token } = tokens;
