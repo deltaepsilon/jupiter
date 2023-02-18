@@ -163,7 +163,6 @@ function readDb(path: string): Record<string, unknown> | undefined {
     if (isErrnoException(error) && error.code === 'ENOENT') {
       return {};
     } else {
-      console.log('throwing');
       throw error;
     }
   }

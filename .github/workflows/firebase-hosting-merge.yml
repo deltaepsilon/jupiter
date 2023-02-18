@@ -30,7 +30,7 @@ jobs:
 
   deploy_web:
     runs-on: ubuntu-latest
-    needs: deploy_firebase
+    # needs: deploy_firebase
     permissions:
       id-token: write # This is required for requesting the JWT
       contents: read # This is required for actions/checkout
@@ -49,12 +49,7 @@ jobs:
 
       #  See https://docs.github.com/en/actions/deployment/security-hardening-your-deployments/configuring-openid-connect-in-google-cloud-platform
       #
-      # Don't forget!!
-      #
-      # gcloud iam service-accounts add-iam-policy-binding "artifact-registry@photos-tools-2022.iam.gserviceaccount.com" \
-      #   --project="photos-tools-2022" \
-      #   --role="roles/iam.workloadIdentityUser" \
-      #   --member="principalSet://iam.googleapis.com/projects/550579950350/locations/global/workloadIdentityPools/github/attribute.repository/deltaepsilon/jupiter"
+      # Also see notes/artifact-registry.md
       - name: Set up Cloud SDK
         uses: google-github-actions/setup-gcloud@v1
         with:

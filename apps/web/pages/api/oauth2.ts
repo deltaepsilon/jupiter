@@ -16,9 +16,11 @@ const { GOOGLE_AUTH_CLIENT_ID, GOOGLE_AUTH_CLIENT_SECRET } = z
   .parse(process.env);
 
 export default async function oauth2(req: NextApiRequest, res: NextApiResponse) {
-  const host = req.headers.host;
+  const host = req.headers['x-forwarded-host'] || req.headers.host;
   const protocol = host?.includes('localhost') ? 'http' : 'https';
   const redirectUri = `${protocol}://${host}/api/oauth2`;
+  console.log('req.headers', req.headers);
+  console.log('redirectUri', redirectUri);
   const oauth2Client = new google.auth.OAuth2({
     clientId: GOOGLE_AUTH_CLIENT_ID,
     clientSecret: GOOGLE_AUTH_CLIENT_SECRET,
