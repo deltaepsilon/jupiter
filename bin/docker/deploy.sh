@@ -12,4 +12,6 @@ gcloud auth configure-docker $REGISTRY
 
 docker tag $DEPLOY_NAME:latest $REGISTRY/$PROJECT_ID/$REPOSITORY/$DEPLOY_NAME
 docker push $REGISTRY/$PROJECT_ID/$REPOSITORY/$DEPLOY_NAME
-gcloud run deploy $DEPLOY_NAME --allow-unauthenticated --port=3000 --image $REGISTRY/$PROJECT_ID/$REPOSITORY/$DEPLOY_NAME
+gcloud run deploy $DEPLOY_NAME --allow-unauthenticated --port=3000 \
+  --image $REGISTRY/$PROJECT_ID/$REPOSITORY/$DEPLOY_NAME \
+  --set-env-vars GOOGLE_AUTH_CLIENT_ID=$GOOGLE_AUTH_CLIENT_ID,GOOGLE_AUTH_CLIENT_SECRET=$GOOGLE_AUTH_CLIENT_SECRET
