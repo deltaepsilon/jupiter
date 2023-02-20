@@ -159,7 +159,7 @@ function useWebsocket(onMessageHandler: OnMessageHandler) {
   }, [ws, setIsConnected]);
 
   useEffect(
-    () => (isConnected ? undefined : exponentialBackoff({ delay: 250, callback: connect, max: 10000 })),
+    () => (isConnected ? undefined : exponentialBackoff({ delay: 250, callback: connect, max: 1000 * 30 })),
     [isConnected, connect]
   );
 

@@ -3,7 +3,9 @@
   "main": "index.js",
   "bin": "index.js",
   "scripts": {
-    "dev": "yarn build:bundle && chokidar \"./src/**/*.ts\" -c \"yarn build:bundle\" & yarn dev:run",
+    "dev": "yarn dev:watch:pkg",
+    "dev:watch:bundle": "yarn build:bundle && chokidar \"./src/**/*.ts\" -c \"yarn build:bundle\" & yarn dev:run",
+    "dev:watch:pkg": "yarn build:pkg && chokidar \"./src/**/*.ts\" -c \"yarn build:pkg\" && echo Daemon is built, but not running",
     "dev:pkg": "chokidar \"./src/**/*.ts\" -c \"yarn build:bundle\"",
     "dev:run": "nodemon index.js",
     "build": "yarn build:bundle && yarn build:pkg && yarn build:distribute",
