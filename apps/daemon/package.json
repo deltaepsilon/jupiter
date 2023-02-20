@@ -5,25 +5,15 @@
   "scripts": {
     "dev": "yarn dev:watch:pkg",
     "dev:watch:bundle": "yarn build:bundle && chokidar \"./src/**/*.ts\" -c \"yarn build:bundle\" & yarn dev:run",
-    "dev:watch:pkg": "yarn build:pkg && chokidar \"./src/**/*.ts\" -c \"yarn build:pkg\" && echo Daemon is built, but not running",
+    "dev:watch:pkg": "yarn build && chokidar \"./src/**/*.ts\" -c \"yarn build\" && echo Daemon is built, but not running",
     "dev:pkg": "chokidar \"./src/**/*.ts\" -c \"yarn build:bundle\"",
     "dev:run": "nodemon index.js",
     "build": "yarn build:bundle && yarn build:pkg && yarn build:distribute",
     "build:bundle": "esbuild src/index.ts --bundle --platform=node --sourcemap --outfile=./index.js",
-    "build:pkg": "pkg .",
+    "build:pkg": "yarn build:pkg:win & yarn build:pkg:unix",
+    "build:pkg:unix": "pkg --config pkg-config-unix.json index.js",
+    "build:pkg:win": "pkg --config pkg-config-win.json index.js",
     "build:distribute": "sh bin/distribute.sh"
-  },
-  "pkg": {
-    "scripts": "index.js",
-    "assets": [
-      "vendor/**/*"
-    ],
-    "targets": [
-      "node16-linux-x64",
-      "node16-macos-x64",
-      "node16-win-x64"
-    ],
-    "outputPath": "dist"
   },
   "devDependencies": {
     "@types/ws": "^8.5.4",

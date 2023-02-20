@@ -11,7 +11,7 @@ import {
   progressMessageDataSchema,
   updateFolder,
 } from 'data/daemon';
-import { GettersAndSetters, createGettersAndSetters, moveToDateFolder } from '../utils';
+import { GettersAndSetters, createGettersAndSetters, moveToDateFolder, SEPARATOR } from '../utils';
 import { MediaItem, MediaItems, getMediaItemKeys } from 'data/media-items';
 import { SetExifError, getExif, getMd5, setExif } from '../exif';
 import axios, { AxiosProgressEvent } from 'axios';
@@ -25,7 +25,6 @@ import path from 'path';
 import { refreshMediaItems } from './refresh-media-items';
 
 const MULTIPLEX_THREADS = 10;
-const SEPARATOR = '_____';
 
 interface Args {
   folder: string;
@@ -214,6 +213,7 @@ async function writeFile({
         retry(
           async () => {
             let exif = await getExif(downloadingFilepath);
+
             const isMissingDates = !exif.ModifyDate || !exif.CreateDate || !exif.DateTimeOriginal;
             const dateTimeOriginal = dateToExifDate(mediaItem.mediaMetadata.creationTime, true);
             let setExifPayload: Partial<Exif> = isMissingDates
@@ -289,6 +289,7 @@ function getHandleSetExifError({
     const corruptFilepath = path.join(directoryPath, cleanBase);
     const { hash, filepath } = await getMd5(e.filepath);
 
+    await fsPromises.mkdir(directoryPath, { recursive: true });
     await fsPromises.rename(filepath, corruptFilepath);
 
     updateFileIndex({

@@ -48,10 +48,7 @@ export async function handleDownload({
       break;
 
     case DownloadAction.start:
-      start({
-        db,
-        response,
-      });
+      start({ db, response });
 
       startDownload({ db, message, sendMessage });
       break;

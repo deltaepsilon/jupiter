@@ -62,7 +62,8 @@ export async function indexFilesystem(
       },
     });
   }
-  const filepaths = await getFileTree(directoryPath);
+  const allFilepaths = await getFileTree(directoryPath);
+  const filepaths = allFilepaths.filter((filepath) => !filepath.includes('__downloading'));
 
   if (!directory) {
     throw new Error('Directory not set');

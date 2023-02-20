@@ -14,7 +14,12 @@ import { FilesystemDatabase } from 'daemon/src/db';
 import { handleDownload } from './download/handle-download';
 import { handleFolderMessage } from './folder';
 
+// import { debug } from './debug';
+// debug();
+
 const wss = new WebSocketServer({ port: PORT });
+
+console.info(`Listening on port ${PORT}...`);
 
 wss.on('connection', async (ws) => {
   const sendMessage = getSendMessage(ws);

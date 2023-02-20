@@ -15,10 +15,11 @@ buildDaemon() {
 
   rm -rf $DAEMON_DIRECTORY
   rm -rf $DAEMON_VENDOR_TARGET
-  mkdir -p $DAEMON_DIRECTORY
+  mkdir -p $DAEMON_VENDOR_TARGET/exiftool
   
+  ls $DAEMON_VENDOR_TARGET
   cp $DAEMON_VENDOR_DIRECTORY -r $DAEMON_VENDOR_TARGET
-  cp $VENDOR_CONFIG_PATH -r $DAEMON_DIRECTORY
+  cp $VENDOR_CONFIG_PATH  $DAEMON_DIRECTORY/vendor
 
   cp $DIST_PATH/$2 $DAEMON_FILEPATH
 
@@ -26,14 +27,26 @@ buildDaemon() {
   echo $NOW > $DIST_PATH/$1/date.txt
 }
 
-buildDaemon "linux" "daemon-linux" "Image-ExifTool-12.55"
-buildDaemon "macos" "daemon-macos" "Image-ExifTool-12.55"
-buildDaemon "windows" "daemon-win.exe" "exiftool-12.55"
+for file in $DIST_PATH/index-*; do
+  mv $file $(echo "$file" | sed s/index-/daemon-/)
+done
+
+echo "starting to build daemons"
+
+buildDaemon "linux-x64" "daemon-linux-x64" "Image-ExifTool-12.55"
+buildDaemon "linux-arm64" "daemon-linux-arm64" "Image-ExifTool-12.55"
+buildDaemon "macos-x64" "daemon-macos-x64" "Image-ExifTool-12.55"
+buildDaemon "windows-x64" "daemon-x64.exe" "exiftool-12.55"
+buildDaemon "windows-arm64" "daemon-x64.exe" "exiftool-12.55"
 
 rm -rf $WEB_DAEMON_PATH
 cp -r $DIST_PATH $WEB_DAEMON_PATH
 cp -r $LAUNCHERS_PATH $WEB_DAEMON_PATH
 
 rm $WEB_DAEMON_PATH/daemon*
+
+
+rm -rf /mnt/c/Users/chris/Downloads/daemon
+cp -r $WEB_DAEMON_PATH /mnt/c/Users/chris/Downloads/
 
 echo Distributed daemon to $WEB_DAEMON_PATH

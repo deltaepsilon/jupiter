@@ -6,7 +6,7 @@ export function getExif(filepath: string) {
   return new Promise((resolve, reject) => {
     execFile(EXIFTOOL_PATH, ['-j', filepath], (err: unknown, stdout: string, stderr: string) => {
       if (err) {
-        // console.error('get-exif.ts', err, stderr);
+        // console.info('get-exif.ts', { EXIFTOOL_PATH, err, stderr });
         reject(err);
       }
 

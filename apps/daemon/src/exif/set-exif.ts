@@ -1,6 +1,6 @@
 import { CONFIG_PATH, EXIFTOOL_PATH } from './data';
-import { Exif, exifSchema } from 'data/daemon';
 
+import { Exif } from 'data/daemon';
 import { execFile } from 'child_process';
 import fsPromises from 'fs/promises';
 import { getExif } from './get-exif';
@@ -34,6 +34,7 @@ export async function setExif(filepath: string, exif: Partial<Exif>) {
       [...args, '-overwrite_original', repairedFilepath],
       (err: unknown, stdout: string, stderr: string) => {
         if (err) {
+          console.info('set-exif.ts', { EXIFTOOL_PATH, stderr, err });
           reject({ error: stderr || err, filepath: repairedFilepath });
         }
 

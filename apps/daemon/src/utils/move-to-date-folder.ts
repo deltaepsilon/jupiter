@@ -2,6 +2,8 @@ import fsPromises from 'fs/promises';
 import { getFolderFromDate } from '../utils';
 import path from 'path';
 
+export const SEPARATOR = '_____';
+
 export async function moveToDateFolder({
   date,
   directoryPath,
@@ -32,8 +34,10 @@ export async function moveToDateFolder({
   return { isMoved, filename, folder, original: filepath, updated: yearMonthFilepath };
 }
 
+const LEADING_ID_REGEXP = new RegExp(`^.+${SEPARATOR}`);
+
 function stripLeadingId(filename: string) {
-  return filename.replace(/^.+\|/, '');
+  return filename.replace(LEADING_ID_REGEXP, '');
 }
 
 async function getDeDupedFilename(yearMonthDirectory: string, filename: string) {
