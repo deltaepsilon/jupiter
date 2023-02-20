@@ -45,7 +45,7 @@ jobs:
       - run: yarn install
         env:
           YARN_ENABLE_IMMUTABLE_INSTALLS: false
-      - run: yarn build && ls -al apps/web/public/daemon/linux
+      - run: yarn build
 
       #  See https://docs.github.com/en/actions/deployment/security-hardening-your-deployments/configuring-openid-connect-in-google-cloud-platform
       #
