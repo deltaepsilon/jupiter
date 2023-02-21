@@ -1,6 +1,6 @@
 ## In Progress
 
-- [ ] Daemon version check or launcher
+- [ ] Design https://photos.chrisesplin.com/downloads
 
 ## Next actions
 
@@ -36,6 +36,7 @@
 
 ## Archive
 
+- [x] Daemon version check or launcher
 - [x] Get daemon-win.exe working
 - [x] Exponential back-off 
 - [x] Deploy to Firebase + Firebase Hosting

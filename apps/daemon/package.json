@@ -3,7 +3,7 @@
   "main": "index.js",
   "bin": "index.js",
   "scripts": {
-    "dev": "yarn dev:watch:pkg",
+    "dev": "yarn dev:watch:bundle",
     "dev:watch:bundle": "yarn build:bundle && chokidar \"./src/**/*.ts\" -c \"yarn build:bundle\" & yarn dev:run",
     "dev:watch:pkg": "yarn build && chokidar \"./src/**/*.ts\" -c \"yarn build\" && echo Daemon is built, but not running",
     "dev:pkg": "chokidar \"./src/**/*.ts\" -c \"yarn build:bundle\"",

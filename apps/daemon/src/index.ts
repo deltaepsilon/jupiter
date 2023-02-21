@@ -7,6 +7,7 @@ import {
   decodeMessage,
   encodeMessage,
 } from 'data/daemon';
+import { WEB } from 'data/web';
 import { WebSocket, WebSocketServer } from 'ws';
 import { handleDirectory, requestDirectory } from './directory/handle-directory';
 import { versionCheck } from './version-check';
@@ -20,18 +21,21 @@ import { handleFolderMessage } from './folder';
 
 versionCheck().then((isFresh) => {
   if (isFresh) {
+    console.info('\n🤖 Control panel:', WEB.URLS.WEB);
     connect();
   } else {
-    console.log('Version check failed');
+    console.info('📛 Version check failed');
+    console.info('💾 Download latest:', WEB.URLS.DOWNLOADS);
+    console.info('\n Running old version of daemon. \n Behavior may be unpredictable. \n Expect bugs.');
 
-    setTimeout(() => console.log('Version check failed'), 1000 * 60);
+    connect();
   }
 });
 
 function connect() {
   const wss = new WebSocketServer({ port: PORT });
 
-  console.info(`Listening on port ${PORT}...`);
+  console.info(`\nListening on port ${PORT}...`);
 
   wss.on('connection', async (ws) => {
     const sendMessage = getSendMessage(ws);

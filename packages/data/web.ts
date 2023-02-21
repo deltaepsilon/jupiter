@@ -10,4 +10,9 @@ export const WEB = {
     LIBRARY: (libraryId: string) => `/photos/library/${libraryId}`,
     SYNC: '/photos/sync',
   },
+  URLS: {
+    GITHUB: 'https://github.com/deltaepsilon/jupiter',
+    WEB: 'https://photos.chrisesplin.com/',
+    DOWNLOADS: 'https://photos.chrisesplin.com/downloads',
+  }
 };

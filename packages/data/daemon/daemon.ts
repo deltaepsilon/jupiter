@@ -77,3 +77,6 @@ export function getSendMessage(ws: WebSocket) {
 export type SendMessage = ReturnType<typeof getSendMessage>;
 
 export const PORT = 8654;
+
+// @ts-ignore
+export const IS_DEVELOPMENT = !process.pkg;
