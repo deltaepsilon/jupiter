@@ -51,6 +51,25 @@ buildDaemon "macos-x64" "daemon-macos-x64" "Image-ExifTool-12.55"
 buildDaemon "windows-x64" "daemon-win-x64.exe" "exiftool-12.55"
 buildDaemon "windows-arm64" "daemon-win-x64.exe" "exiftool-12.55"
 
+
+echo "Zipping folders..."
+zipFolder() {
+  FOLDER=$1
+  ZIP_FILE=$FOLDER.zip
+  rm $ZIP_FILE
+
+  cd $FOLDER
+  pwd
+  zip -rq $ZIP_FILE *
+
+  cd $SCRIPT_PATH
+  pwd
+}
+LIST=$(find $DIST_PATH -mindepth 1 -maxdepth 1 -type d;)
+for FOLDER in $LIST; do
+  zipFolder $FOLDER
+done
+
 echo "Copying daemons..."
 rm -rf $WEB_DAEMON_PATH
 cp -r $DIST_PATH $WEB_DAEMON_PATH
@@ -61,5 +80,6 @@ rm $WEB_DAEMON_PATH/daemon*
 
 rm -rf /mnt/c/Users/chris/Downloads/daemon
 cp -r $WEB_DAEMON_PATH /mnt/c/Users/chris/Downloads/
+
 
 echo Distributed daemon to $WEB_DAEMON_PATH

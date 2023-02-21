@@ -23,7 +23,8 @@ versionCheck().then((isFresh) => {
     connect();
   } else {
     console.log('Version check failed');
-    process.exit(1);
+
+    setTimeout(() => console.log('Version check failed'), 1000 * 60);
   }
 });
 
