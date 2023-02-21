@@ -16,7 +16,7 @@ INDEX_FILEPATH=$DAEMON_PATH/index.js
 
 # Write the index.json file
 MD5=$(getMD5 $INDEX_FILEPATH)
-JSON="{ \"md5\": \"$MD5\", \"date\": \"$NOW\", \"url\": \"https://photos-tools-2022.web.app/daemon/$1/index.json\" }"
+JSON="{ \"md5\": \"$MD5\", \"date\": \"$NOW\", \"url\": \"https://photos-tools-2022.web.app/daemon/dist.json\" }"
 echo $DAEMON_PATH/dist.json
 echo $JSON > $DAEMON_PATH/dist.json
 
@@ -54,6 +54,7 @@ buildDaemon "windows-arm64" "daemon-win-x64.exe" "exiftool-12.55"
 echo "Copying daemons..."
 rm -rf $WEB_DAEMON_PATH
 cp -r $DIST_PATH $WEB_DAEMON_PATH
+cp $DAEMON_PATH/dist.json $WEB_DAEMON_PATH
 
 rm $WEB_DAEMON_PATH/daemon*
 
