@@ -1,15 +1,18 @@
 import { Button, ListItemIcon, ListItemText, MenuItem, MenuList, Typography } from '@mui/material';
-import { MenuTrigger, useMenuTrigger } from 'ui/components';
-
+import { Link, MenuTrigger, useMenuTrigger } from 'ui/components';
+import { DesktopAppDownloadsDrawer } from 'web/components/daemon';
+import { WEB } from 'data/web';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import LogoutIcon from '@mui/icons-material/Logout';
 import MenuIcon from '@mui/icons-material/Menu';
 import NextImage from 'next/image';
 import { useAuth } from 'ui/contexts';
+import CollectionsIcon from '@mui/icons-material/Collections';
+import DownloadIcon from '@mui/icons-material/Download';
+import { useRouter } from 'next/router';
 
 export function AppUserBubble() {
   const { user } = useAuth();
-  const photoUrl = user?.photoURL;
 
   return user ? (
     <MenuTrigger anchorOrigin={{ horizontal: 'right', vertical: 50 }} trigger={<UserBubbleButton />}>
@@ -21,9 +24,39 @@ export function AppUserBubble() {
 function UserBubbleList() {
   const { signOut } = useAuth();
   const { close } = useMenuTrigger();
+  const router = useRouter();
+  const isPhotosRoute = router.route === WEB.ROUTES.PHOTOS;
 
   return (
     <MenuList onClick={close} sx={{ padding: 0 }}>
+      {!isPhotosRoute && (
+        <Link button href={WEB.ROUTES.PHOTOS}>
+          <MenuItem>
+            <ListItemIcon>
+              <CollectionsIcon fontSize='small' />
+            </ListItemIcon>
+            <ListItemText>
+              <Typography sx={{ marginTop: -0.5 }} variant='body2'>
+                Connected Libraries
+              </Typography>
+            </ListItemText>
+          </MenuItem>
+        </Link>
+      )}
+
+      <DesktopAppDownloadsDrawer>
+        <MenuItem>
+          <ListItemIcon>
+            <DownloadIcon fontSize='small' />
+          </ListItemIcon>
+          <ListItemText>
+            <Typography sx={{ marginTop: -0.5 }} variant='body2'>
+              Desktop app
+            </Typography>
+          </ListItemText>
+        </MenuItem>
+      </DesktopAppDownloadsDrawer>
+
       <MenuItem onClick={signOut}>
         <ListItemIcon>
           <LogoutIcon fontSize='small' />

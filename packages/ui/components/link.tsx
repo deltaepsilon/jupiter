@@ -12,7 +12,7 @@ export interface LinkProps extends AnchorHTMLAttributes<HTMLAnchorElement> {
 
 export const Link = forwardRef(
   ({ button, children, disabled = false, href = '', sx, ...rest }: LinkProps, ref: Ref<HTMLAnchorElement>) => (
-    <Box sx={{ textDecoration: button ? 'none' : undefined, ...sx }}>
+    <Box data-link sx={{ display: 'inline', a: { textDecoration: button ? 'none' : undefined }, ...sx }}>
       <NextLink href={href} passHref ref={ref} {...rest}>
         {children}
       </NextLink>

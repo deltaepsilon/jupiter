@@ -3,6 +3,7 @@ import { Link } from 'ui/components';
 import { WEB } from 'data/web';
 import { useAuth } from 'ui/contexts';
 import { useRouter } from 'next/router';
+import LaunchIcon from '@mui/icons-material/Launch';
 
 export function LogInOrContinue() {
   const { signInWithGoogle, user } = useAuth();
@@ -12,7 +13,7 @@ export function LogInOrContinue() {
   return user ? (
     isRoot ? (
       <Link button href={WEB.ROUTES.PHOTOS}>
-        <Button>Go to app</Button>
+        <Button startIcon={<LaunchIcon />}>Web App</Button>
       </Link>
     ) : null
   ) : (

@@ -21,7 +21,7 @@ echo $DAEMON_PATH/dist.json
 echo $JSON > $DAEMON_PATH/dist.json
 
 buildDaemon() {
-  DAEMON_DIRECTORY=$DIST_PATH/$1 # /root/dev/jupiter/apps/daemon/dist/linux
+  DAEMON_DIRECTORY=$DIST_PATH/quiver-photos-$1 # /root/dev/jupiter/apps/daemon/dist/linux
   DAEMON_FILEPATH=$DAEMON_DIRECTORY/$2 # /root/dev/jupiter/apps/daemon/dist/linux/daemon-linux
   DAEMON_VENDOR_TARGET=$DAEMON_DIRECTORY/vendor # /root/dev/jupiter/apps/daemon/dist/linux/vendor
   DAEMON_VENDOR_DIRECTORY=$VENDOR_PATH/$3 # /root/dev/jupiter/apps/daemon/vendor/exiftool-12.55
@@ -33,6 +33,7 @@ buildDaemon() {
   ls $DAEMON_VENDOR_TARGET
   cp $DAEMON_VENDOR_DIRECTORY -r $DAEMON_VENDOR_TARGET
   cp $VENDOR_CONFIG_PATH  $DAEMON_DIRECTORY/vendor
+  cp $DAEMON_PATH/readme.txt  $DAEMON_DIRECTORY/readme.txt
 
   cp $DIST_PATH/$2 $DAEMON_FILEPATH
 

@@ -1,6 +1,8 @@
 ## In Progress
 
-- [ ] Design https://photos.chrisesplin.com/downloads
+- [ ] Enable library deletion
+- [ ] Alpha test with Melissa
+- [ ] Invite alpha testers from Reddit
 
 ## Next actions
 
@@ -36,6 +38,7 @@
 
 ## Archive
 
+- [x] Design https://photos.chrisesplin.com/downloads
 - [x] Daemon version check or launcher
 - [x] Get daemon-win.exe working
 - [x] Exponential back-off 

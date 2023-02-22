@@ -6,7 +6,7 @@ import fsPromises from 'fs/promises';
 import { isErrnoException } from './utils';
 import path from 'path';
 
-export const DB_FOLDER_NAME = '__f_stop_admin_data';
+export const DB_FOLDER_NAME = '__data';
 
 const SECONDS_MS = 1000;
 const CACHE_TTL = SECONDS_MS * 30;

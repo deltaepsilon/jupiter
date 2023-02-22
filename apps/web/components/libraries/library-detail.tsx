@@ -1,4 +1,4 @@
-import { Box, Typography } from '@mui/material';
+import { Button, Box, Typography } from '@mui/material';
 import { DaemonProvider, DirectoryProvider, useDaemon, useDirectory, useLibraries } from 'web/contexts';
 import { DownloadLibraryPanel, ImportLibraryPanel } from './panels';
 import { Library, LibraryTaskStatus } from 'data/library';
@@ -6,7 +6,7 @@ import { useDaemonRecord, useLibraryDownload, useLibraryImport } from 'web/hooks
 import { useEffect, useMemo } from 'react';
 
 import { Container } from 'ui/components';
-import { DaemonPanel } from 'web/components/daemon';
+import { DaemonPanel, DesktopAppDownloadsDrawer } from 'web/components/daemon';
 import { MessageType } from 'data/daemon';
 import { formatDate } from 'ui/utils';
 import { getDirectoryHandler } from 'web/components/daemon/handlers/directory-handler';
@@ -104,11 +104,16 @@ function LibraryDetailConnected({ library, libraryId }: { library: Library; libr
 
         <Box sx={{ pointerEvents: hasLibraryRecords ? 'all' : 'none', opacity: hasLibraryRecords ? 1 : 0.5 }}>
           <Step>
-            <Typography variant='h4'>Connect local app</Typography>
+            <Typography variant='h4'>Desktop app</Typography>
             <Typography sx={{ a: { textDecoration: 'underline' } }} variant='body1'>
-              The local app is a lightweight, open-source application that runs on your computer. We&apos;ll use it
+              The desktop app is a lightweight, open-source application that runs on your computer. We&apos;ll use it
               manage local files.
             </Typography>
+            <Box sx={{ paddingY: 2, textAlign: 'right' }}>
+              <DesktopAppDownloadsDrawer>
+                <Button variant={isDaemonConnected ? 'outlined' : 'contained'}>Get desktop app</Button>
+              </DesktopAppDownloadsDrawer>
+            </Box>
           </Step>
 
           <DaemonPanel />

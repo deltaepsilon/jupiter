@@ -35,8 +35,13 @@ body {
   margin: 0;
 }
 
+.firebase-emulator-warning {
+  display: none;
+}
+
 a {
-  text-decoration: none;
+  color: var(--color-gentian-blue-metallic);
+  text-decoration: underline;
 }
 
 a:visited {

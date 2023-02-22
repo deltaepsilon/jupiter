@@ -3,6 +3,7 @@ import { Image, PhoneBorder } from 'ui/components';
 
 import PhotoIcon from '@mui/icons-material/Photo';
 
+
 export function LandingPage() {
   return (
     <Box
@@ -20,7 +21,7 @@ export function LandingPage() {
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'center',
-          minHeight: 'calc(100vh - 20rem)',
+          paddingTop: 4,
         }}
       >
         <Typography
@@ -35,15 +36,13 @@ export function LandingPage() {
           <Image alt='google photos icon' height={30} src='/icons/google-photos-icon.png' width={30} />
         </Box>
 
-        <Typography sx={{ textAlign: 'center', padding: [1, 4] }} variant='h4'>
-          $12 / year
-        </Typography>
-
         <Box
           sx={{
             display: 'grid',
             gridTemplateColumns: ['1fr', '300px 200px 600px'],
             alignItems: 'center',
+            overflow: 'hidden',
+            maxWidth: 'calc(100vw - 2rem)',
           }}
         >
           <Box sx={{ display: 'flex', justifyContent: 'center' }}>
@@ -53,7 +52,6 @@ export function LandingPage() {
                   alt='transfer google photos'
                   ratio={419 / 698}
                   src='/images/google-photos-gallery.png'
-                  
                   sx={{ img: { borderRadius: 1 } }}
                 />
               </PhoneBorder>
@@ -108,6 +106,18 @@ export function LandingPage() {
 
       <Typography variant='body1'>Google Takeout mangles metadata</Typography>
       <Typography variant='body1'>-- Insert a video of me talking about my Google Photos travails --</Typography>
+      <Typography variant='body1'>
+        Own your media Google Photos is not archival If you don&apos;t store the bits yourself, you don&apos;t truly own
+        them
+        <br />
+        Keep using Google Photos, but archive to your hard disc
+        <br />
+        You searched &quot;how to download Google Photos&quot;, &quot;Why is my Google Photos metadata garbage&quot;, or
+        something like &quot;how to export all Google Photos&quot;
+        <br />
+        Surprise! Google has provided a lousy process via Google Takeout, but it wrecks image metadata and messes up all
+        of your dates, leading to a scrambled feed of images with untold duplicates.
+      </Typography>
     </Box>
   );
 }

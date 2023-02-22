@@ -6,13 +6,17 @@ import { Link } from 'ui/components';
 import { LogInOrContinue } from 'ui/components';
 import { WEB } from 'data/web';
 import { useAuth } from 'ui/contexts';
+import { useRouter } from 'next/router';
+import { useMemo } from 'react';
 
 export function AppHeader() {
   const { user } = useAuth();
+  const router = useRouter();
+  const linkToRoot = useMemo(() => !user || router.route === WEB.ROUTES.PHOTOS, [router, user]);
 
   return (
     <Box component='header' sx={{ display: 'flex', alignItems: 'center', gridGap: 8 }}>
-      <Link href={user ? WEB.ROUTES.PHOTOS : WEB.ROUTES.ROOT} sx={{ flex: 1 }}>
+      <Link button href={linkToRoot ? WEB.ROUTES.ROOT : WEB.ROUTES.PHOTOS} sx={{ flex: 1 }}>
         <Box sx={{ display: 'flex', alignItems: 'center', gridGap: 8 }}>
           <svg height='48' width='48' xmlns='http://www.w3.org/2000/svg'>
             <path
@@ -24,7 +28,7 @@ export function AppHeader() {
             sx={{ fontFamily: 'ff-brokenscript-bc-web, serif', fontWeight: 400, letterSpacing: 0.05, marginTop: 0.5 }}
             variant='h5'
           >
-            F-Stop Admin
+            Quiver Photos
           </Typography>
         </Box>
       </Link>

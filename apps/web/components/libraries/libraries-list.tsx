@@ -32,7 +32,7 @@ const CARD_SX: SxProps = {
 };
 
 export function LibrariesList({}: Props) {
-  const { libraries, refreshLibrary } = useLibraries();
+  const { libraries } = useLibraries();
 
   return (
     <Container sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: 660 }}>
@@ -73,8 +73,8 @@ function LibraryItem({ library, libraryKey }: { library: Library; libraryKey: st
   }, [baseUrl]);
 
   return (
-    <Link href={WEB.ROUTES.LIBRARY(libraryKey)} key={libraryKey}>
-      <Paper elevation={2} sx={{ ...CARD_SX }}>
+    <Paper elevation={1} sx={{ ...CARD_SX }}>
+      <Link href={WEB.ROUTES.LIBRARY(libraryKey)} key={libraryKey}>
         {isBrokenImage ? (
           <PhotoIcon sx={{ color: '', width: 100, height: 100 }} />
         ) : mediaItem ? (
@@ -91,28 +91,31 @@ function LibraryItem({ library, libraryKey }: { library: Library; libraryKey: st
         ) : (
           <PhotoLibraryIcon sx={{ color: '', width: 100, height: 100 }} />
         )}
-        <Box
-          sx={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
+      </Link>
 
-            position: 'absolute',
-            bottom: 0,
-            left: 0,
-            right: 0,
-            textTransform: 'capitalize',
-            backgroundColor: 'rgba(255, 255, 255, 0.9)',
-            paddingX: 1,
-            paddingY: '2px',
-          }}
-        >
-          <Typography sx={{}} variant='subtitle2'>
-            {library.name}
-          </Typography>
+      <Box
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+
+          position: 'absolute',
+          bottom: 0,
+          left: 0,
+          right: 0,
+          textTransform: 'capitalize',
+          backgroundColor: 'rgba(255, 255, 255, 0.9)',
+          paddingX: 1,
+          paddingY: '2px',
+        }}
+      >
+        <Typography sx={{}} variant='subtitle2'>
+          {library.name}
+        </Typography>
+        <Box sx={{ position: 'relative', top: 3 }}>
           <SettingsIcon />
         </Box>
-      </Paper>
-    </Link>
+      </Box>
+    </Paper>
   );
 }
