@@ -40,11 +40,6 @@ buildDaemon() {
   echo "Built $1"
 }
 
-echo "Moving index files..."
-for file in $DIST_PATH/index-*; do
-  mv $file $(echo "$file" | sed s/index-/daemon-/)
-done
-
 echo "Building daemons..."
 buildDaemon "linux-x64" "daemon-linux-x64" "Image-ExifTool-12.55"
 buildDaemon "linux-arm64" "daemon-linux-arm64" "Image-ExifTool-12.55"
@@ -78,9 +73,9 @@ cp $DAEMON_PATH/dist.json $WEB_DAEMON_PATH
 
 rm $WEB_DAEMON_PATH/daemon*
 
-
-rm -rf /mnt/c/Users/chris/Downloads/daemon
-cp -r $WEB_DAEMON_PATH /mnt/c/Users/chris/Downloads/
-
-
 echo Distributed daemon to $WEB_DAEMON_PATH
+
+echo "Copying to local windows Downloads folder for testing ease..."
+rm -rf /mnt/c/Users/chris/Downloads/daemon || echo "No /mnt/c/Users/chris/Downloads/daemon folder to delete"
+cp -r $WEB_DAEMON_PATH /mnt/c/Users/chris/Downloads/ || echo "No /mnt/c/Users/chris/Downloads/daemon folder to copy to"
+

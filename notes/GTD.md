@@ -1,5 +1,6 @@
 ## In Progress
 
+- [ ] Clean up dist.json issue
 - [ ] Enable library deletion
 - [ ] Alpha test with Melissa
 - [ ] Invite alpha testers from Reddit
