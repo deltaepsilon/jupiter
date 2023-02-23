@@ -30,7 +30,7 @@ buildDaemon "linux-x64" "daemon-linux-x64" "Image-ExifTool-12.55"
 buildDaemon "linux-arm64" "daemon-linux-arm64" "Image-ExifTool-12.55"
 buildDaemon "macos-x64" "daemon-macos-x64" "Image-ExifTool-12.55"
 buildDaemon "windows-x64" "daemon-win-x64.exe" "exiftool-12.55"
-buildDaemon "windows-arm64" "daemon-win-x64.exe" "exiftool-12.55"
+buildDaemon "windows-arm64" "daemon-win-arm64.exe" "exiftool-12.55"
 
 echo "Zipping folders..."
 zipFolder() {
