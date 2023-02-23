@@ -8,8 +8,9 @@
     "dev:watch:pkg": "yarn build && chokidar \"./src/**/*.ts\" -c \"yarn build\" && echo Daemon is built, but not running",
     "dev:pkg": "chokidar \"./src/**/*.ts\" -c \"yarn build:bundle\"",
     "dev:run": "nodemon index.js",
-    "build": "yarn build:bundle && yarn build:pkg && yarn build:distribute",
+    "build": "yarn build:bundle && yarn build:md5 && yarn build:pkg && yarn build:distribute",
     "build:bundle": "esbuild src/index.ts --bundle --platform=node --sourcemap --outfile=./index.js",
+    "build:md5": "sh bin/write-md5-dist.sh",
     "build:pkg": "pkg .",
     "build:distribute": "sh bin/distribute.sh"
   },
