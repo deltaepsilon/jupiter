@@ -1,16 +1,8 @@
-import {
-  MessageType,
-  SendMessage,
-  downloadMessageDataSchema,
-  exifDateToDate,
-  getStateFlags,
-  updateFolder,
-} from 'data/daemon';
-import { createGettersAndSetters, getFileTree, getFolderFromDate, moveToDateFolder } from '../utils';
+import { MessageType, SendMessage, downloadMessageDataSchema, exifDateToDate, updateFolder } from 'data/daemon';
+import { createGettersAndSetters, getFileTree, moveToDateFolder, removeDaemonFilepaths } from '../utils';
 import { getExif, getMd5 } from '../exif';
 
 import { FilesystemDatabase } from '../db';
-import fsPromises from 'fs/promises';
 import { multiplex } from 'ui/utils';
 import path from 'path';
 
@@ -63,7 +55,7 @@ export async function indexFilesystem(
     });
   }
   const allFilepaths = await getFileTree(directoryPath);
-  const filepaths = allFilepaths.filter((filepath) => !filepath.includes('__downloading'));
+  const filepaths = removeDaemonFilepaths(allFilepaths);
 
   if (!directory) {
     throw new Error('Directory not set');
