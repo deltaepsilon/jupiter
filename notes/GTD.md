@@ -1,15 +1,12 @@
 ## In Progress
 
-- [ ] Clean up dist.json issue
-- [ ] Enable library deletion
-- [ ] Alpha test with Melissa
-- [ ] Invite alpha testers from Reddit
+- [ ] Stripe integration
 
 ## Next actions
 
 - [ ] Logo and landing page
+- [ ] Alpha test with Melissa
 - [ ] `manifest.json`
-- [ ] Stripe integration
 
 ## Waiting for
 
@@ -39,6 +36,9 @@
 
 ## Archive
 
+- [x] Enable library deletion
+- [x] Invite alpha testers from Reddit
+- [x] Clean up dist.json issue
 - [x] Design https://photos.chrisesplin.com/downloads
 - [x] Daemon version check or launcher
 - [x] Get daemon-win.exe working

@@ -27,6 +27,7 @@ export const FIREBASE = {
   },
   DATABASE: {
     PATHS: {
+      LIBRARY: (userId: string, libraryId: string) => `user-owned/${userId}/library/${libraryId}`,
       LIBRARY_IMPORT: (userId: string, libraryId: string) => `user-owned/${userId}/library/${libraryId}/import`,
       LIBRARY_MEDIA_ITEMS: (userId: string, libraryId: string) =>
         `user-owned/${userId}/library/${libraryId}/media-items`,

@@ -77,30 +77,28 @@ export function ImportLibraryPanel({ actions, libraryId, libraryImport }: Props)
             </IconButton>
           }
         >
-          <MenuList>
-            {isComplete && (
-              <MenuItem>
-                <ListItemIcon onClick={() => actions.start}>
-                  <PlayCircleOutlineIcon />
-                </ListItemIcon>
-                <ListItemText>Import new media</ListItemText>
-              </MenuItem>
-            )}
-            <MediaItemsDrawer libraryId={libraryId}>
-              <MenuItem>
-                <ListItemIcon>
-                  <TableChartIcon />
-                </ListItemIcon>
-                <ListItemText>View Imports</ListItemText>
-              </MenuItem>
-            </MediaItemsDrawer>
-            <MenuItem onClick={() => actions.destroy()}>
-              <ListItemIcon>
-                <DeleteForeverIcon />
+          {isComplete && (
+            <MenuItem>
+              <ListItemIcon onClick={() => actions.start}>
+                <PlayCircleOutlineIcon />
               </ListItemIcon>
-              <ListItemText>Start over</ListItemText>
+              <ListItemText>Import new media</ListItemText>
             </MenuItem>
-          </MenuList>
+          )}
+          <MediaItemsDrawer libraryId={libraryId}>
+            <MenuItem>
+              <ListItemIcon>
+                <TableChartIcon />
+              </ListItemIcon>
+              <ListItemText>View Imports</ListItemText>
+            </MenuItem>
+          </MediaItemsDrawer>
+          <MenuItem onClick={() => actions.destroy()}>
+            <ListItemIcon>
+              <DeleteForeverIcon />
+            </ListItemIcon>
+            <ListItemText>Start over</ListItemText>
+          </MenuItem>
         </MenuTrigger>
       </Box>
     </Paper>

@@ -23,10 +23,8 @@ import {
 } from 'data/daemon';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
-import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import { DirectoryPicker } from 'web/components/daemon';
-import DownloadingIcon from '@mui/icons-material/Downloading';
 import { FolderDrawer } from '../drawers';
 import FolderIcon from '@mui/icons-material/Folder';
 import { MessageType } from 'data/daemon';
@@ -35,10 +33,8 @@ import PauseCircleOutlineIcon from '@mui/icons-material/PauseCircleOutline';
 import PlayCircleOutlineIcon from '@mui/icons-material/PlayCircleOutline';
 import ReplayIcon from '@mui/icons-material/Replay';
 import SoapIcon from '@mui/icons-material/Soap';
-import SyncIcon from '@mui/icons-material/Sync';
 import { UseDirectoryResult } from 'web/contexts';
 import { UseLibraryDownloadResult } from 'web/hooks/use-library-download';
-import { formatDate } from 'ui/utils';
 import { progressMessageDataSchema } from 'data/daemon';
 import { useDaemon } from 'web/contexts';
 
@@ -210,7 +206,6 @@ function DownloadMenu({
           </IconButton>
         }
       >
-        <MenuList>
           <MenuItem onClick={() => emptyFolderProgress()}>
             <ListItemIcon>
               <SoapIcon />
@@ -239,7 +234,6 @@ function DownloadMenu({
             </ListItemIcon>
             <ListItemText>Start over</ListItemText>
           </MenuItem>
-        </MenuList>
       </MenuTrigger>
     </Box>
   );

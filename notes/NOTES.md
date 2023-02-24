@@ -1,3 +1,11 @@
+## Feb 24, 2023
+
+I've send the link to the five people on Reddit who expressed interest in alpha testing.
+
+It was kinda hard to do.
+
+I'm at the fear stage of the project. I hate this part. I have this sick feeling that I've wasted my time and everything sucks. I'm not proud of it yet.
+
 ## Feb 17, 2023
 
 I spent all yesterday fighting with GitHub Actions and Docker to establish a continuous deployment pipeline.

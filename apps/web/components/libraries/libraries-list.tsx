@@ -1,7 +1,9 @@
-import { Box, Button, Paper, SxProps, Typography } from '@mui/material';
-import { Container, Link, MediaItemImage } from 'ui/components';
+import { Box, Button, Paper, SxProps, Typography, ListItemIcon, ListItemText, MenuItem, MenuList } from '@mui/material';
+import { Container, Link, MediaItemImage, MenuTrigger } from 'ui/components';
 import { useEffect, useState } from 'react';
 
+import LaunchIcon from '@mui/icons-material/Launch';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
 import { Library } from 'data/library';
 import { LibraryPickerTrigger } from './library-picker-trigger';
@@ -37,7 +39,7 @@ export function LibrariesList({}: Props) {
   return (
     <Container sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: 660 }}>
       <Typography sx={{ alignSelf: 'start', marginBottom: 4 }} variant='h4'>
-        Google Photos connected libraries
+        Connected libraries
       </Typography>
       <Box
         sx={{
@@ -93,12 +95,9 @@ function LibraryItem({ library, libraryKey }: { library: Library; libraryKey: st
         )}
       </Link>
 
-      <Box
+      <LibraryMenu
+        libraryKey={libraryKey}
         sx={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-
           position: 'absolute',
           bottom: 0,
           left: 0,
@@ -109,13 +108,54 @@ function LibraryItem({ library, libraryKey }: { library: Library; libraryKey: st
           paddingY: '2px',
         }}
       >
-        <Typography sx={{}} variant='subtitle2'>
-          {library.name}
-        </Typography>
-        <Box sx={{ position: 'relative', top: 3 }}>
-          <SettingsIcon />
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+          }}
+        >
+          <Typography sx={{}} variant='subtitle2'>
+            {library.name}
+          </Typography>
+          <Box sx={{ position: 'relative', top: 3 }}>
+            <SettingsIcon />
+          </Box>
         </Box>
-      </Box>
+      </LibraryMenu>
     </Paper>
+  );
+}
+
+function LibraryMenu({
+  children,
+  libraryKey,
+  sx = {},
+}: {
+  children: React.ReactNode;
+  libraryKey: string;
+  sx?: SxProps;
+}) {
+  const { removeLibrary } = useLibraries();
+
+  return (
+    <Box sx={{ position: 'relative', ...sx }}>
+      <MenuTrigger anchorOrigin={{ horizontal: 'left', vertical: 'bottom' }} trigger={children}>
+        <Link button href={WEB.ROUTES.LIBRARY(libraryKey)} key={libraryKey}>
+          <MenuItem>
+            <ListItemIcon>
+              <LaunchIcon />
+            </ListItemIcon>
+            <ListItemText>Open library</ListItemText>
+          </MenuItem>
+        </Link>
+        <MenuItem onClick={() => removeLibrary(libraryKey)}>
+          <ListItemIcon>
+            <DeleteForeverIcon />
+          </ListItemIcon>
+          <ListItemText>Delete library</ListItemText>
+        </MenuItem>
+      </MenuTrigger>
+    </Box>
   );
 }

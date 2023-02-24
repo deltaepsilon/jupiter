@@ -1,10 +1,12 @@
 import { Libraries, Library, librarySchema } from 'data/library';
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
+import { doc, deleteDoc } from 'firebase/firestore/lite';
+import { ref, remove } from 'firebase/database';
 
 import { FIREBASE } from 'data/firebase';
 import { MEDIA_ITEMS_TTL_MS } from 'data/media-items';
 import { getIsStaleAccessToken } from 'ui/utils';
-import { useFirestore } from 'ui/hooks';
+import { useFirestore, useRtdb } from 'ui/hooks';
 import { useGooglePhotos } from 'web/hooks';
 
 type Tokens = { accessToken: string; refreshToken: string };
@@ -16,6 +18,7 @@ interface LibrariesValue {
   library?: Library;
   libraries: Libraries;
   refreshLibrary: (libraryId: string, shouldRefreshRecords: boolean) => Promise<boolean>;
+  removeLibrary: (libraryId: string) => Promise<void>;
 }
 
 const LibrariesContext = createContext<LibrariesValue>({
@@ -24,6 +27,7 @@ const LibrariesContext = createContext<LibrariesValue>({
   isLoading: true,
   libraries: [],
   refreshLibrary: async () => false,
+  removeLibrary: async () => {},
 });
 
 export function useLibraries() {
@@ -39,7 +43,8 @@ interface Props {
 export function LibrariesProvider({ children, libraryId, userId }: Props) {
   const updateKeysRef = useRef<Set<string>>(new Set());
   const { getFirstPage } = useGooglePhotos();
-  const { isLoading: isFirestoreLoading, addDocs, getDocTuple, getDocTuples, updateDocs } = useFirestore();
+  const { isLoading: isFirestoreLoading, addDocs, db, getDocTuple, getDocTuples, updateDocs } = useFirestore();
+  const { database } = useRtdb();
   const [isLoading, setIsLoading] = useState<LibrariesValue['isLoading']>(true);
   const [libraries, setLibraries] = useState<LibrariesValue['libraries']>([]);
   const [, library] = useMemo(() => libraries.find(([key]) => key === libraryId) ?? [], [libraries, libraryId]);
@@ -86,6 +91,20 @@ export function LibrariesProvider({ children, libraryId, userId }: Props) {
       await updateDocs([[libraryPath, updates]]);
     },
     [updateDocs, userId]
+  );
+  const removeLibrary = useCallback(
+    async (libraryId: string) => {
+      if (database && db && libraryId && userId) {
+        const firestorePath = FIREBASE.FIRESTORE.COLLECTIONS.LIBRARY(userId, libraryId);
+        const databasePath = FIREBASE.DATABASE.PATHS.LIBRARY(userId, libraryId);
+
+        await remove(ref(database, databasePath));
+        await deleteDoc(doc(db, firestorePath));
+
+        await getLibraries();
+      }
+    },
+    [database, db, getLibraries, userId]
   );
   const refreshRecords = useCallback(() => {
     libraryId ? getLibrary(libraryId) : getLibraries();
@@ -149,7 +168,9 @@ export function LibrariesProvider({ children, libraryId, userId }: Props) {
   }, [isFirestoreLoading, refreshRecords]);
 
   return (
-    <LibrariesContext.Provider value={{ addLibrary, getLibraries, isLoading, library, libraries, refreshLibrary }}>
+    <LibrariesContext.Provider
+      value={{ addLibrary, getLibraries, isLoading, library, libraries, refreshLibrary, removeLibrary }}
+    >
       {children}
     </LibrariesContext.Provider>
   );
