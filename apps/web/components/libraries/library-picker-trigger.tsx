@@ -3,7 +3,7 @@ import { ModalDrawer, ModalDrawerFooter } from 'ui/components';
 import { useCallback, useEffect, useState } from 'react';
 
 import { Image } from 'ui/components';
-import { stopPropagation } from 'ui/utils';
+import { stopPropagation, wait } from 'ui/utils';
 import { useGooglePhotos } from 'web/hooks';
 import { useLibraries } from 'web/contexts/libraries-context';
 import { useModalState } from 'ui/hooks';
@@ -17,6 +17,7 @@ export function LibraryPickerTrigger({ children }: Props) {
   const { accessToken, refreshToken, firstPage, changeLibrary, clearLibrary, selectLibrary } = useGooglePhotos();
   const { isOpen, onOpen, onClose } = useModalState({ autoOpenHash: 'library-picker' });
   const { addLibrary, getLibraries } = useLibraries();
+  
   const onChildClick = useCallback(async () => {
     setIsLoading(true);
     onOpen();
@@ -32,15 +33,18 @@ export function LibraryPickerTrigger({ children }: Props) {
 
       await getLibraries();
 
-      setIsLoading(false);
       clearLibrary();
       onClose();
     }
   }, [accessToken, addLibrary, clearLibrary, getLibraries, onClose, refreshToken]);
 
   useEffect(() => {
-    selectLibrary?.();
-  }, [selectLibrary]);
+    !isLoading && isOpen && selectLibrary?.();
+  }, [isLoading, isOpen]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  useEffect(() => {
+    !isOpen && setIsLoading(false);
+  }, [setIsLoading, isOpen]);
 
   return (
     <>

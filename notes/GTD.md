@@ -1,19 +1,15 @@
 ## In Progress
 
-- [ ] Stripe integration
+- [ ] Logo and landing page
+- [ ] Once logged in, the landing page should have a big CTA to go to the web app
 
 ## Next actions
 
-- [ ] Logo and landing page
-- [ ] Alpha test with Melissa
-- [ ] `manifest.json`
+- [ ] Stripe integration
 
 ## Waiting for
 
-- [ ] Restart Blush Swallow import and downloads. Don't delete files. See how well it recovers.
-
-  - Test the restart-import functionality. Make sure that a `complete` import doesn't start from the beginning.
-
+- [ ] `manifest.json`
 - [ ] Download on a cron job
 - [ ] Debug `context.auth` problem: https://github.com/firebase/firebase-tools/issues/5210
 
