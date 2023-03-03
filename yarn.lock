@@ -3612,12 +3612,14 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "daemon@workspace:apps/daemon"
   dependencies:
+    "@types/lodash": ^4.14.191
     "@types/ws": ^8.5.4
     axios: ^1.3.3
     chokidar-cli: ^3.0.0
     esbuild: ^0.16.17
     exiftool.pl: ^10.53.0
     file-system-db: ^1.1.0
+    lodash: ^4.17.21
     md5-file: ^5.0.0
     nodemon: ^2.0.20
     pkg: ^5.8.0

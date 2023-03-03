@@ -13,6 +13,9 @@ export enum FolderAction {
   get = 'get',
 }
 
+export const corruptedIdsSchema = setOfStringsSchema;
+export type CorruptedIds = z.infer<typeof corruptedIdsSchema>;
+
 export const downloadedIdsSchema = setOfStringsSchema;
 export type DownloadedIds = z.infer<typeof downloadedIdsSchema>;
 
@@ -21,7 +24,7 @@ export type DownloadingIds = z.infer<typeof downloadingIdsSchema>;
 
 export const fileIndexSchema = z.object({
   md5: z.string(),
-  relativePaths: z.array(z.string()),
+  relativePaths: z.preprocess((val) => (Array.isArray(val) ? [...new Set(val)] : val), z.array(z.string())),
   mediaItemId: z.string().optional(),
 });
 export type FileIndex = z.infer<typeof fileIndexSchema>;
@@ -39,6 +42,7 @@ export type RelativeFilePaths = z.infer<typeof relativeFilePathsSchema>;
 
 export const folderDataSchema = z
   .object({
+    corruptedIds: corruptedIdsSchema.default(new Set()),
     downloadedIds: downloadedIdsSchema.default(new Set()),
     downloadingIds: downloadingIdsSchema.default(new Set()),
     files: z.record(z.string(), fileIndexSchema).default({}),

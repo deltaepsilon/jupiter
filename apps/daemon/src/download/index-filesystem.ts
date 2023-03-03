@@ -1,5 +1,5 @@
 import { MessageType, SendMessage, downloadMessageDataSchema, exifDateToDate, updateFolder } from 'data/daemon';
-import { createGettersAndSetters, getFileTree, moveToDateFolder, removeDaemonFilepaths } from '../utils';
+import { createGettersAndSetters, SEPARATOR, getFileTree, moveToDateFolder, removeDaemonFilepaths } from '../utils';
 import { getExif, getMd5 } from '../exif';
 
 import { FilesystemDatabase } from '../db';
@@ -81,7 +81,13 @@ export async function indexFilesystem(
 
         multiplexer.add(async () => {
           const relativePath = path.relative(directoryPath, initialFilepath);
+          if (initialFilepath.includes(SEPARATOR)) {
+            console.log({ initialFilepath });
+          }
           const exif = await getExif(initialFilepath);
+          if (initialFilepath.includes(SEPARATOR)) {
+            console.log({ initialFilepath, exif });
+          }
           const {
             isMoved,
             filename,
@@ -92,6 +98,9 @@ export async function indexFilesystem(
             directoryPath,
             filepath: initialFilepath,
           });
+          if (initialFilepath.includes(SEPARATOR)) {
+            console.log({ initialFilepath, isMoved, updatedFilepath });
+          }
           const existingFileIndex = getFileIndexByFilepath(folder, updatedFilepath);
           const downloadState = getDownloadState();
           const googleMediaItemId = exif.GoogleMediaItemId;
@@ -135,7 +144,7 @@ export async function indexFilesystem(
             return;
           }
 
-          const { hash, filepath, isRepaired } = await getMd5(updatedFilepath);
+          const { hash, filepath, isRepaired } = await getMd5(updatedFilepath, exif);
           const fileIndex = getFileIndex(folder, hash);
 
           if (isRepaired) {

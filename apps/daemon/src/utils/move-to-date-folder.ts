@@ -16,8 +16,8 @@ export async function moveToDateFolder({
   const folder = getFolderFromDate(date);
   const yearMonthDirectory = path.join(directoryPath, folder);
   const parsedPath = path.parse(filepath);
-  const isMoved = yearMonthDirectory !== parsedPath.dir;
   let filename = stripLeadingId(parsedPath.base);
+  const isMoved = yearMonthDirectory !== parsedPath.dir || filename !== parsedPath.base;
 
   if (isMoved) {
     await fsPromises.mkdir(yearMonthDirectory, { recursive: true });

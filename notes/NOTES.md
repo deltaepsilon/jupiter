@@ -1,3 +1,15 @@
+## March 3, 2023
+
+Melissa has been out of town, leaving me with the kids. It hasn't given me as much time for Photos work.
+
+I've also been a bit more engaged with BoomPop this week, so that's good... except for Photos progress.
+
+I'm through the bulk of the bugs. I just crushed a nasty one today. I'm currently downloading my entire library from scratch to see if it hangs. I need it to go smoothly for customers. I need to recover from any reasonably common errors that the user might face.
+
+In unrelated news, I got a small ($9k) raise at work and a large ($20k) tax refund from my accountant. The money hasn't hit my bank yet, but I can't wait to transfer that $20k to Robinhood and start earning that sweet 4.1% interest. We're hoping to buy property in the next few years, so stacking cash is paramount. Yesterday was a good day!
+
+I've got to keep cranking on Photos and not give up. It's tempting. I always want to give up just before I launch. It's all of the non-coding stuff that scares me. It's totally subconscious. I'd never think "wow, I'm scared, I'd better not do this". I just feel an underlying lack of enthusiasm, because I'm about to embark on something risky that I don't understand and don't necessarily want to understand?? I know it's a bad instinct. I'm fighting it.
+
 ## Feb 24, 2023
 
 I've send the link to the five people on Reddit who expressed interest in alpha testing.
@@ -5,6 +17,12 @@ I've send the link to the five people on Reddit who expressed interest in alpha 
 It was kinda hard to do.
 
 I'm at the fear stage of the project. I hate this part. I have this sick feeling that I've wasted my time and everything sucks. I'm not proud of it yet.
+
+Ok... my first alpha tester responded and dove right in. The dude went for it. He found bugs. I'm furiously fixing them and chatting with him on Reddit. He's a lifesaver. 
+
+The fixes took about an hour, but I think they're going to hold 🤞
+
+He asked if I could see his photos. I guess I can. Not cool, but encrypting his data would be... extraordinarily painful. I need to look into it. There may be an encryption-at-rest solution for firebase.
 
 ## Feb 17, 2023
 

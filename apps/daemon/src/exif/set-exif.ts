@@ -34,8 +34,10 @@ export async function setExif(filepath: string, exif: Partial<Exif>) {
       [...args, '-overwrite_original', repairedFilepath],
       (err: unknown, stdout: string, stderr: string) => {
         if (err) {
-          console.info('set-exif.ts', { EXIFTOOL_PATH, stderr, err });
-          reject({ error: stderr || err, filepath: repairedFilepath });
+          const error = stderr || err;
+          console.info('set exif error', error);
+
+          reject({ error, filepath: repairedFilepath });
         }
 
         resolve({ isRepaired, repairedFilepath, stdout });

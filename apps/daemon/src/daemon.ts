@@ -95,6 +95,8 @@ function sendPing(sendMessage: SendMessage, message?: DaemonMessage) {
   if (message) {
     const { isHeartbeat, uuid } = message;
 
+    !isHeartbeat && console.info('pong');
+
     sendMessage({ isHeartbeat, payload: { text: 'pong' }, type: MessageType.ping, uuid });
   } else {
     sendMessage({ payload: { text: 'ping' }, type: MessageType.ping });

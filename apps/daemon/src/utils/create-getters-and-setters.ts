@@ -10,9 +10,11 @@ import {
   FolderData,
   IngestedIds,
   RelativeFilePaths,
+  CorruptedIds,
   Tokens,
   Urls,
   directorySchema,
+  corruptedIdsSchema,
   downloadStateSchema,
   downloadedIdsSchema,
   downloadingIdsSchema,
@@ -41,6 +43,21 @@ export function createGettersAndSetters(db: FilesystemDatabase) {
     getDirectory: () => directorySchema.parse(metadataDb.get(DirectoryDbKeys.directory) || undefined),
     setDirectory: (directory: Directory) =>
       metadataDb.set<Directory>(DirectoryDbKeys.directory, directorySchema.parse(directory)),
+
+    // Corrupted Ids
+    getCorruptedIds: (folder: string) =>
+      corruptedIdsSchema.parse(getFolderDb(folder).get(DownloadDbKeys.corruptedIds) || []),
+    setCorruptedIds: (folder: string, corruptedIds: CorruptedIds) =>
+      getFolderDb(folder).set<string[]>(
+        DownloadDbKeys.corruptedIds,
+        Array.from(corruptedIdsSchema.parse(corruptedIds))
+      ),
+    updateCorruptedIds: (folder: string, callback: (corruptedIds: CorruptedIds) => CorruptedIds) => {
+      const corruptedIds = getters.getCorruptedIds(folder);
+      const newCorruptedIds = callback(corruptedIds);
+
+      return getters.setCorruptedIds(folder, newCorruptedIds);
+    },
 
     // Downloaded Ids
     getDownloadedIds: (folder: string) =>
@@ -172,6 +189,8 @@ export function createGettersAndSetters(db: FilesystemDatabase) {
       metadataDb.set<DownloadState>(DownloadDbKeys.state, downloadStateSchema.parse({ ...state, updated: new Date() })),
     updateDownloadState: (state: Partial<DownloadState>) => {
       const downloadState = getters.getDownloadState();
+
+      console.log('download state:', state);
 
       return metadataDb.set<DownloadState>(
         DownloadDbKeys.state,

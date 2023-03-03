@@ -1,8 +1,9 @@
 import fsPromises from 'fs/promises';
+import { Exif } from 'data/daemon';
 import { getExif } from './get-exif';
 
-export async function repairFilename(filepath: string) {
-  const exif = await getExif(filepath);
+export async function repairFilename(filepath: string, existingExif?: Exif) {
+  const exif = existingExif || (await getExif(filepath));
   const filenameParts = filepath.split('.').slice(0, -1);
   let repairedFilepath = [...filenameParts, exif.FileTypeExtension].join('.');
   const filepathNeedsRepair = repairedFilepath.toLowerCase() !== filepath.toLowerCase();

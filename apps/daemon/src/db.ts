@@ -10,7 +10,7 @@ export const DB_FOLDER_NAME = '__data';
 
 const SECONDS_MS = 1000;
 const CACHE_TTL = SECONDS_MS * 30;
-const CACHE_MAX_WRITE_MS = SECONDS_MS * 2;
+const CACHE_MAX_WRITE_MS = SECONDS_MS * 4;
 const DEBUG = false;
 
 export type FilesystemDatabase = Awaited<ReturnType<typeof createFilesystemDatabase>>;
@@ -73,7 +73,9 @@ function createDb<DataType>(path: string) {
   function resetCacheTimer() {
     cacheTimer && clearTimeout(cacheTimer);
 
-    cacheTimer = setTimeout(() => {
+    cacheTimer = setTimeout(async () => {
+      await writeDb(path, cache || {});
+      
       cache = undefined;
     }, CACHE_TTL);
   }

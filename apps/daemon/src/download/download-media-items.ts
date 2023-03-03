@@ -11,6 +11,7 @@ import {
   progressMessageDataSchema,
   updateFolder,
 } from 'data/daemon';
+import debounce from 'lodash/debounce';
 import { GettersAndSetters, createGettersAndSetters, moveToDateFolder, SEPARATOR } from '../utils';
 import { MediaItem, MediaItems, getMediaItemKeys } from 'data/media-items';
 import { SetExifError, getExif, getMd5, setExif } from '../exif';
@@ -103,6 +104,8 @@ async function writeFile({
   const { getDownloadState, getIngestedIds, removeIngestedIds, removeMediaItemsByIds, setDownloadState } =
     createGettersAndSetters(db);
   function onDownloadProgress(progressEvent: AxiosProgressEvent) {
+    console.info(mediaItem.filename, `${Math.round((progressEvent.progress ?? 0) * 100)}%`);
+
     sendMessage({
       type: MessageType.progress,
       payload: {
@@ -155,9 +158,10 @@ async function writeFile({
     }
   }
 
+  const onDownloadProgressDebounced = debounce(onDownloadProgress, 500);
   const response = await axios
     .get(getMediaItemDownloadUrl(mediaItem), {
-      onDownloadProgress,
+      onDownloadProgress: onDownloadProgressDebounced,
       responseType: 'stream',
     })
     .catch(async (err) => {
@@ -187,7 +191,10 @@ async function writeFile({
           return null;
         }
 
-        return axios.get(getMediaItemDownloadUrl(mediaItem), { onDownloadProgress, responseType: 'stream' });
+        return axios.get(getMediaItemDownloadUrl(mediaItem), {
+          onDownloadProgress: onDownloadProgressDebounced,
+          responseType: 'stream',
+        });
       } else {
         console.info('error downloading:', mediaItem.id, err.response.status, err.response.statusText);
         throw err.response.statusText;
@@ -199,6 +206,8 @@ async function writeFile({
   } else {
     let downloadingFilepath = path.join(downloadDirectory, `${mediaItem.id}${SEPARATOR}${mediaItem.filename}`);
     const writeStream = fs.createWriteStream(downloadingFilepath);
+
+    onDownloadProgress({ bytes: 0, loaded: 0, progress: 1 }); // Make sure that each file gets finished.
 
     response.data.pipe(writeStream);
 
@@ -230,6 +239,7 @@ async function writeFile({
             const setExifResult = await setExif(downloadingFilepath, setExifPayload).catch(
               getHandleSetExifError({
                 db,
+                folder,
                 mediaItem,
                 sendMessage,
               })
@@ -265,10 +275,12 @@ function getMediaItemDownloadUrl(mediaItem: MediaItem) {
 
 function getHandleSetExifError({
   db,
+  folder,
   mediaItem,
   sendMessage,
 }: {
   db: FilesystemDatabase;
+  folder: string;
   mediaItem: MediaItem;
   sendMessage: SendMessage;
 }) {
@@ -276,10 +288,12 @@ function getHandleSetExifError({
     getDirectory,
     getFileIndex,
     setFileIndex,
+    updateCorruptedIds,
     updateDownloadedIds,
     getDownloadState,
     getRelativeFilePaths,
     getDownloadedIds,
+    getCorruptedIds,
     setDownloadState,
   } = createGettersAndSetters(db);
   return async function handleSetExifError(e: SetExifError) {
@@ -288,6 +302,8 @@ function getHandleSetExifError({
     const directoryPath = path.join(getDirectory().path, CORRUPTED_FOLDER);
     const corruptFilepath = path.join(directoryPath, cleanBase);
     const { hash, filepath } = await getMd5(e.filepath);
+
+    console.info(`Sending corrupt file to ${CORRUPTED_FOLDER}: ${mediaItem.filename}`);
 
     await fsPromises.mkdir(directoryPath, { recursive: true });
     await fsPromises.rename(filepath, corruptFilepath);
@@ -302,10 +318,17 @@ function getHandleSetExifError({
       setFileIndex,
     });
 
+    updateCorruptedIds(folder, (corruptedIds) => corruptedIds.add(mediaItem.id));
     updateDownloadedIds(CORRUPTED_FOLDER, (downloadIds) => downloadIds.add(mediaItem.id));
 
-    const updatedDownloadState = updateFolder(
-      { folder: CORRUPTED_FOLDER, downloadState: getDownloadState() },
+    let updatedDownloadState = updateFolder({ folder, downloadState: getDownloadState() }, (folderSummary) => {
+      folderSummary.corruptedCount = getCorruptedIds(folder).size;
+
+      return folderSummary;
+    });
+
+    updatedDownloadState = updateFolder(
+      { folder: CORRUPTED_FOLDER, downloadState: updatedDownloadState },
       (folderSummary) => {
         folderSummary.state = 'downloading';
         folderSummary.downloadedCount = getDownloadedIds(CORRUPTED_FOLDER).size;

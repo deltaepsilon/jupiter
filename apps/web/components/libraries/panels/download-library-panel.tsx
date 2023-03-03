@@ -206,34 +206,34 @@ function DownloadMenu({
           </IconButton>
         }
       >
-          <MenuItem onClick={() => emptyFolderProgress()}>
-            <ListItemIcon>
-              <SoapIcon />
-            </ListItemIcon>
-            <ListItemText>Clean up progress</ListItemText>
-          </MenuItem>
-          <MenuItem
-            onClick={() => {
-              emptyFolderProgress();
-              actions.restartIngest();
-            }}
-          >
-            <ListItemIcon>
-              <ReplayIcon />
-            </ListItemIcon>
-            <ListItemText>Restart ingest</ListItemText>
-          </MenuItem>
-          <MenuItem
-            onClick={() => {
-              emptyFolderProgress();
-              actions.destroy();
-            }}
-          >
-            <ListItemIcon>
-              <DeleteForeverIcon />
-            </ListItemIcon>
-            <ListItemText>Start over</ListItemText>
-          </MenuItem>
+        <MenuItem onClick={() => emptyFolderProgress()}>
+          <ListItemIcon>
+            <SoapIcon />
+          </ListItemIcon>
+          <ListItemText>Clean up progress</ListItemText>
+        </MenuItem>
+        <MenuItem
+          onClick={() => {
+            emptyFolderProgress();
+            actions.restartIngest();
+          }}
+        >
+          <ListItemIcon>
+            <ReplayIcon />
+          </ListItemIcon>
+          <ListItemText>Restart ingest</ListItemText>
+        </MenuItem>
+        <MenuItem
+          onClick={() => {
+            emptyFolderProgress();
+            actions.destroy();
+          }}
+        >
+          <ListItemIcon>
+            <DeleteForeverIcon />
+          </ListItemIcon>
+          <ListItemText>Start over</ListItemText>
+        </MenuItem>
       </MenuTrigger>
     </Box>
   );

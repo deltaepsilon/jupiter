@@ -1,4 +1,5 @@
 import {
+  CORRUPTED_FOLDER,
   DaemonMessage,
   DownloadState,
   FolderSummary,
@@ -16,6 +17,7 @@ import { indexFilesystem } from './index-filesystem';
 import { wait } from 'ui/utils/wait';
 
 const BATCH_SIZE = 50;
+const IGNORED_FOLDERS = new Set([CORRUPTED_FOLDER]);
 
 interface Args {
   db: FilesystemDatabase;
@@ -48,7 +50,9 @@ export async function startDownload({ db, message, sendMessage }: Args) {
       let counter = 0;
 
       while (!stateFlags.allFoldersComplete && stateFlags.isRunning) {
-        const folderSummaries = downloadState.folderSummaries.sort((a, b) => (a.folder > b.folder ? 1 : -1));
+        const folderSummaries = downloadState.folderSummaries
+          .filter((f) => !IGNORED_FOLDERS.has(f.folder))
+          .sort((a, b) => (a.folder > b.folder ? 1 : -1));
 
         counter++;
 
@@ -68,7 +72,8 @@ export async function startDownload({ db, message, sendMessage }: Args) {
         let i = folderSummaries.length;
         while (i--) {
           const folderSummary = folderSummaries[i];
-          const folderNeedsDownload = folderSummary.mediaItemsCount < folderSummary.downloadedCount;
+          const folderNeedsDownload =
+            folderSummary.mediaItemsCount > folderSummary.downloadedCount + folderSummary.corruptedCount;
 
           if (folderNeedsDownload) {
             downloadState = setFolderState({ db, folder: folderSummary.folder, state: 'idle' });
@@ -82,7 +87,8 @@ export async function startDownload({ db, message, sendMessage }: Args) {
         let j = folderSummaries.length;
         while (j--) {
           const folderSummary = folderSummaries[j];
-          const folderNeedsDownload = folderSummary.mediaItemsCount !== folderSummary.downloadedCount;
+          const folderNeedsDownload =
+            folderSummary.mediaItemsCount !== folderSummary.downloadedCount + folderSummary.corruptedCount;
 
           stateFlags = getStateFlags(downloadState);
 
@@ -134,6 +140,8 @@ async function downloadFolder({ db, folder, sendMessage }: Args & { folder: stri
   const downloadingIds = getDownloadingIds(folder);
   const mediaItemIds = [...ingestedIds].filter((id) => !downloadedIds.has(id) && !downloadingIds.has(id));
   const text = `Downloading ${mediaItemIds.length} new media items to ${folder}`;
+
+  console.log('mediaItemIds.length', folder, mediaItemIds.length, ingestedIds.size);
 
   if (mediaItemIds.length) {
     updateDownloadState({ state: 'downloading', text });

@@ -3,6 +3,7 @@ import short from 'short-uuid';
 import { z } from 'zod';
 
 export enum DownloadDbKeys {
+  corruptedIds = 'corruptedIds',
   downloadingIds = 'downloadingIds',
   downloadedIds = 'downloadedIds',
   files = 'files',
@@ -55,6 +56,7 @@ const folderSummarySchema = z.object({
   description: z.string(),
   indexedCount: z.number().default(0),
   isPaused: z.boolean().default(false),
+  corruptedCount: z.number().default(0),
   downloadedCount: z.number().default(0),
   mediaItemsCount: z.number().default(0),
   state: z.enum(['idle', 'indexing', 'downloading', 'complete']).default('idle'),
@@ -177,7 +179,7 @@ export const progressMessageDataSchema = z.object({
     bytes: z.number(),
     rate: z.number().optional(),
     estimated: z.number().optional(),
-    download: z.boolean(),
+    download: z.boolean().optional(),
   }),
   created: z.number().default(() => Date.now()),
 });

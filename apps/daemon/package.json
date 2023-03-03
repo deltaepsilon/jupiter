@@ -7,9 +7,9 @@
     "dev:watch:bundle": "yarn build:bundle && chokidar \"./src/**/*.ts\" -c \"yarn build:bundle\" & yarn dev:run",
     "dev:watch:pkg": "yarn build && chokidar \"./src/**/*.ts\" -c \"yarn build\" && echo Daemon is built, but not running",
     "dev:pkg": "chokidar \"./src/**/*.ts\" -c \"yarn build:bundle\"",
-    "dev:run": "nodemon index.js",
+    "dev:run": "nodemon daemon.js",
     "build": "yarn build:bundle && yarn build:md5 && yarn build:pkg && yarn build:distribute",
-    "build:bundle": "esbuild src/index.ts --bundle --platform=node --sourcemap --outfile=./index.js",
+    "build:bundle": "esbuild src/daemon.ts --bundle --platform=node --sourcemap --outfile=./daemon.js",
     "build:md5": "sh bin/write-md5-dist.sh",
     "build:pkg": "pkg .",
     "build:distribute": "sh bin/distribute.sh"
@@ -17,6 +17,7 @@
   "pkg": {
     "scripts": "index.js",
     "assets": [
+      "./daemon.js",
       "./dist.json"
     ],
     "targets": [
@@ -40,5 +41,9 @@
     "pkg": "^5.8.0",
     "windows-network-drive": "^4.0.1",
     "ws": "^8.12.1"
+  },
+  "dependencies": {
+    "@types/lodash": "^4.14.191",
+    "lodash": "^4.17.21"
   }
 }

@@ -1,5 +1,6 @@
 ## In Progress
 
+- [ ] Debug file-level progress that's not being displayed correctly on the front end
 - [ ] Logo and landing page
 - [ ] Once logged in, the landing page should have a big CTA to go to the web app
 
@@ -32,6 +33,11 @@
 
 ## Archive
 
+- [x] Send a final progress event when the image is complete. Don't rely on axios's progress callback
+- [x] Remove `repair-filename.ts` logging
+- [x] Skip corrupted files when re-evaluating folders for download
+- [x] Add a % sign to the logs on `download-media-items.ts:107`
+- [x] Daemon should keep itself alive
 - [x] Enable library deletion
 - [x] Invite alpha testers from Reddit
 - [x] Clean up dist.json issue
