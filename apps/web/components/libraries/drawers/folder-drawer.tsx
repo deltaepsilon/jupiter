@@ -1,4 +1,4 @@
-import { Box, Button, IconButton, SxProps, Typography } from '@mui/material';
+import { Box, Button, SxProps, Typography } from '@mui/material';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { FolderDataProvider, FolderDataValue, useFolderData } from 'web/contexts';
 import { ModalDrawer, ModalDrawerFooter } from 'ui/components';
@@ -45,14 +45,7 @@ export function FolderDrawer({ children, disabled = false, folder, sx = {} }: Pr
 
 function FolderDrawerContents() {
   const folderDataValue = useFolderData();
-  const rows = useMemo(() => {
-    const mediaItemRows = Object.values(folderDataValue.folderData.mediaItems);
-    const fileRows = Object.values(folderDataValue.folderData.files)
-      .filter((f) => !f.mediaItemId)
-      .map((f) => ({ id: f.md5, filename: f.relativePaths[0].split('/').pop(), isFile: true }));
-
-    return [...mediaItemRows];
-  }, [folderDataValue]);
+  const rows = useMemo(() => Object.values(folderDataValue.folderData.mediaItems), [folderDataValue]);
   const columns = useMemo(() => getDataGridColumns(folderDataValue), [folderDataValue]);
 
   return (

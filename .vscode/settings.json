@@ -5,5 +5,12 @@
   ],
   "cSpell.words": [
     "EXIF"
-  ]
+  ],
+  "search.exclude": {
+    "**/node_modules": true,
+    "**/vendor": true,
+  },
+  "files.exclude": {
+    "**/vendor": true,
+  }
 }

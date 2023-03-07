@@ -1,4 +1,4 @@
 dist
 dist.json
-index.js
-index.js.map
+daemon.js
+daemon.js.map

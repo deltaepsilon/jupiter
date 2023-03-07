@@ -11,21 +11,21 @@ import {
   progressMessageDataSchema,
   updateFolder,
 } from 'data/daemon';
-import debounce from 'lodash/debounce';
-import { GettersAndSetters, createGettersAndSetters, moveToDateFolder, SEPARATOR } from '../utils';
+import { GettersAndSetters, SEPARATOR, createGettersAndSetters, moveToDateFolder } from '../utils';
 import { MediaItem, MediaItems, getMediaItemKeys } from 'data/media-items';
 import { SetExifError, getExif, getMd5, setExif } from '../exif';
 import axios, { AxiosProgressEvent } from 'axios';
 import { multiplex, retry } from 'ui/utils';
 
 import { FilesystemDatabase } from '../db';
+import debounce from 'lodash/debounce';
 import fs from 'fs';
 import fsPromises from 'fs/promises';
 import { getDownloadDirectory } from '../utils';
 import path from 'path';
 import { refreshMediaItems } from './refresh-media-items';
 
-const MULTIPLEX_THREADS = 10;
+const MULTIPLEX_THREADS = 1;
 
 interface Args {
   folder: string;
@@ -104,7 +104,7 @@ async function writeFile({
   const { getDownloadState, getIngestedIds, removeIngestedIds, removeMediaItemsByIds, setDownloadState } =
     createGettersAndSetters(db);
   function onDownloadProgress(progressEvent: AxiosProgressEvent) {
-    console.info(mediaItem.filename, `${Math.round((progressEvent.progress ?? 0) * 100)}%`);
+    console.info('download progress: ', mediaItem.filename, `${Math.round((progressEvent.progress ?? 0) * 100)}%`);
 
     sendMessage({
       type: MessageType.progress,
@@ -206,8 +206,6 @@ async function writeFile({
   } else {
     let downloadingFilepath = path.join(downloadDirectory, `${mediaItem.id}${SEPARATOR}${mediaItem.filename}`);
     const writeStream = fs.createWriteStream(downloadingFilepath);
-
-    onDownloadProgress({ bytes: 0, loaded: 0, progress: 1 }); // Make sure that each file gets finished.
 
     response.data.pipe(writeStream);
 

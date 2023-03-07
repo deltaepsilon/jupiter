@@ -1,6 +1,5 @@
 ## In Progress
 
-- [ ] Debug file-level progress that's not being displayed correctly on the front end
 - [ ] Logo and landing page
 - [ ] Once logged in, the landing page should have a big CTA to go to the web app
 
@@ -28,11 +27,13 @@
       Surprise! Google has provided a lousy process via Google Takeout,
       but it wrecks image metadata and messes up all of your dates,
       leading to a scrambled feed of images with untold duplicates.
+
 - [ ] Sync up metadata
 - [ ] Restore metadata to images already on disk
 
 ## Archive
 
+- [x] Debug file-level progress that's not being displayed correctly on the front end
 - [x] Send a final progress event when the image is complete. Don't rely on axios's progress callback
 - [x] Remove `repair-filename.ts` logging
 - [x] Skip corrupted files when re-evaluating folders for download
@@ -44,7 +45,7 @@
 - [x] Design https://photos.chrisesplin.com/downloads
 - [x] Daemon version check or launcher
 - [x] Get daemon-win.exe working
-- [x] Exponential back-off 
+- [x] Exponential back-off
 - [x] Deploy to Firebase + Firebase Hosting
 - [x] Github Actions
 - [x] Sort out Cloud Run deploy

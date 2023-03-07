@@ -52,9 +52,11 @@ export function ModalDrawer({ children, isOpen = false, onClose, title = '', ...
   return (
     <ModalDrawerContext.Provider value={value}>
       <Modal
-        BackdropProps={{ transitionDuration: 500, sx: { background: showBackdrop ? undefined : 'transparent' } }}
         onClose={onClose}
         open={isModalOpen}
+        slotProps={{
+          backdrop: { transitionDuration: 500, sx: { background: showBackdrop ? undefined : 'transparent' } },
+        }}
         {...rest}
       >
         <Box

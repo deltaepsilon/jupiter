@@ -6,37 +6,31 @@ import {
   ListItemIcon,
   ListItemText,
   MenuItem,
-  MenuList,
   Paper,
   SxProps,
   Typography,
 } from '@mui/material';
 import { ChildGraphic, HiddenScroll, LastChildGraphic, MenuTrigger, useScrollToBottom } from 'ui/components';
+import { DownloadState, FolderSummary, YearStats, getStateFlags, getTotals, yearStatsSchema } from 'data/daemon';
 import {
-  DownloadState,
-  FolderSummary,
-  ProgressMessageData,
-  YearStats,
-  getStateFlags,
-  getTotals,
-  yearStatsSchema,
-} from 'data/daemon';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+  FolderProgressProvider,
+  ProgressMap,
+  UseDirectoryResult,
+  getDefaultProgressMap,
+  useFolderProgress,
+} from 'web/contexts';
+import { useMemo, useRef, useState } from 'react';
 
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import { DirectoryPicker } from 'web/components/daemon';
 import { FolderDrawer } from '../drawers';
 import FolderIcon from '@mui/icons-material/Folder';
-import { MessageType } from 'data/daemon';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import PauseCircleOutlineIcon from '@mui/icons-material/PauseCircleOutline';
 import PlayCircleOutlineIcon from '@mui/icons-material/PlayCircleOutline';
 import ReplayIcon from '@mui/icons-material/Replay';
 import SoapIcon from '@mui/icons-material/Soap';
-import { UseDirectoryResult } from 'web/contexts';
 import { UseLibraryDownloadResult } from 'web/hooks/use-library-download';
-import { progressMessageDataSchema } from 'data/daemon';
-import { useDaemon } from 'web/contexts';
 
 const STATS_EMPHASIZED: SxProps = { fontWeight: '700 !important', textDecoration: 'underline' };
 
@@ -50,112 +44,87 @@ type Props = {
 export function DownloadLibraryPanel({ actions, directory, downloadState, libraryId }: Props) {
   const { isRunning } = getStateFlags(downloadState);
   const { downloadedCount, indexedCount, mediaItemsCount } = getTotals(downloadState);
-  const { emptyFolderProgress, progressMapsByFolder } = useFolderProgress();
   const isEmpty = mediaItemsCount === 0;
 
   return (
-    <Paper elevation={1} sx={{}}>
-      <Box
-        sx={{
-          display: 'grid',
-          alignItems: 'center',
-          gridTemplateColumns: '1fr  3rem 3rem',
-          gridGap: 8,
-          paddingBottom: 2,
-
-          '> p': {
-            textAlign: 'right',
-          },
-        }}
-      >
-        <Box>
-          <DirectoryPicker directory={directory} disabled={isRunning} libraryId={libraryId} sx={{ gridColumn: '3/5' }}>
-            <Button disabled={isRunning} variant={directory ? 'outlined' : 'contained'}>
-              Pick Folder
-            </Button>
-          </DirectoryPicker>
-        </Box>
-
-        <Box>
-          <ActionButton actions={actions} downloadState={downloadState} emptyFolderProgress={emptyFolderProgress} />
-        </Box>
-        <Box>
-          <DownloadMenu actions={actions} emptyFolderProgress={emptyFolderProgress} isEmpty={isEmpty} />
-        </Box>
-      </Box>
-
-      <Box sx={{ flex: 1, display: 'grid', gridTemplateColumns: '1fr 60px 60px 60px' }}>
-        <Box />
-        <Typography variant='body2'>Import</Typography>
-        <Typography variant='body2'>Index</Typography>
-        <Typography variant='body2'>Download</Typography>
-      </Box>
-
-      <Box sx={{ display: 'flex', alignItems: 'center' }}>
-        <FolderIcon />
-        <Typography sx={{ paddingLeft: 1 }}>{directory ?? 'No folder selected'}</Typography>
-
+    <FolderProgressProvider>
+      <Paper elevation={1} sx={{}}>
         <Box
           sx={{
-            flex: 1,
             display: 'grid',
+            alignItems: 'center',
+            gridTemplateColumns: '1fr  3rem 3rem',
             gridGap: 8,
-            gridTemplateColumns: '79px 66px 66px',
-            textAlign: 'right',
-            position: 'relative',
-            top: 2,
+            paddingBottom: 2,
+
+            '> p': {
+              textAlign: 'right',
+            },
           }}
         >
-          <Typography sx={STATS_EMPHASIZED} variant='body2'>
-            {mediaItemsCount}
-          </Typography>
-          <Typography sx={STATS_EMPHASIZED} variant='body2'>
-            {indexedCount}
-          </Typography>
-          <Typography sx={STATS_EMPHASIZED} variant='body2'>
-            {downloadedCount}
-          </Typography>
-        </Box>
-      </Box>
+          <Box>
+            <DirectoryPicker
+              directory={directory}
+              disabled={isRunning}
+              libraryId={libraryId}
+              sx={{ gridColumn: '3/5' }}
+            >
+              <Button disabled={isRunning} variant={directory ? 'outlined' : 'contained'}>
+                Pick Folder
+              </Button>
+            </DirectoryPicker>
+          </Box>
 
-      <FoldersProgressTree downloadState={downloadState} progressMapsByFolder={progressMapsByFolder} />
-    </Paper>
+          <Box>
+            <ActionButton actions={actions} downloadState={downloadState} />
+          </Box>
+          <Box>
+            <DownloadMenu actions={actions} isEmpty={isEmpty} />
+          </Box>
+        </Box>
+
+        <Box sx={{ flex: 1, display: 'grid', gridTemplateColumns: '1fr 60px 60px 60px' }}>
+          <Box />
+          <Typography variant='body2'>Import</Typography>
+          <Typography variant='body2'>Index</Typography>
+          <Typography variant='body2'>Download</Typography>
+        </Box>
+
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          <FolderIcon />
+          <Typography sx={{ paddingLeft: 1 }}>{directory ?? 'No folder selected'}</Typography>
+
+          <Box
+            sx={{
+              flex: 1,
+              display: 'grid',
+              gridGap: 8,
+              gridTemplateColumns: '79px 66px 66px',
+              textAlign: 'right',
+              position: 'relative',
+              top: 2,
+            }}
+          >
+            <Typography sx={STATS_EMPHASIZED} variant='body2'>
+              {mediaItemsCount}
+            </Typography>
+            <Typography sx={STATS_EMPHASIZED} variant='body2'>
+              {indexedCount}
+            </Typography>
+            <Typography sx={STATS_EMPHASIZED} variant='body2'>
+              {downloadedCount}
+            </Typography>
+          </Box>
+        </Box>
+
+        <FoldersProgressTree downloadState={downloadState} />
+      </Paper>
+    </FolderProgressProvider>
   );
 }
 
-type ProgressMap = Record<string, ProgressMessageData>;
-type ProgressMapByFolder = Record<string, ProgressMap>;
-function getDefaultProgressMap() {
-  return {} as ProgressMap;
-}
-
-function useFolderProgress() {
-  const [progressMapsByFolder, setProgressMapsByFolder] = useState<ProgressMapByFolder>({});
-  const { registerHandler } = useDaemon();
-  const emptyFolderProgress = useCallback(() => setProgressMapsByFolder({}), []);
-
-  useEffect(() => {
-    registerHandler({
-      type: MessageType.progress,
-      handler: (message) => {
-        const data = progressMessageDataSchema.parse(message.payload?.data);
-        const existing = progressMapsByFolder[data.folder] ?? getDefaultProgressMap();
-
-        existing[data.id] = data;
-
-        setProgressMapsByFolder((prev) => ({ ...prev, [data.folder]: existing }));
-      },
-    });
-  }, [progressMapsByFolder, registerHandler]);
-
-  return { emptyFolderProgress, progressMapsByFolder };
-}
-
-function ActionButton({
-  actions,
-  downloadState,
-  emptyFolderProgress,
-}: Pick<Props, 'actions' | 'downloadState'> & { emptyFolderProgress: () => void }) {
+function ActionButton({ actions, downloadState }: Pick<Props, 'actions' | 'downloadState'>) {
+  const { emptyFolderProgress } = useFolderProgress();
   const { isComplete, isRunning } = getStateFlags(downloadState);
 
   switch (true) {
@@ -187,15 +156,9 @@ function ActionButton({
   }
 }
 
-function DownloadMenu({
-  actions,
-  emptyFolderProgress,
-  isEmpty,
-}: {
-  actions: Props['actions'];
-  emptyFolderProgress: ReturnType<typeof useFolderProgress>['emptyFolderProgress'];
-  isEmpty: boolean;
-}) {
+function DownloadMenu({ actions, isEmpty }: { actions: Props['actions']; isEmpty: boolean }) {
+  const { emptyFolderProgress } = useFolderProgress();
+
   return (
     <Box sx={{ position: 'relative', pointerEvents: isEmpty ? 'none' : 'all', opacity: isEmpty ? 0.5 : 1 }}>
       <MenuTrigger
@@ -239,13 +202,7 @@ function DownloadMenu({
   );
 }
 
-function FoldersProgressTree({
-  downloadState,
-  progressMapsByFolder,
-}: {
-  downloadState: DownloadState;
-  progressMapsByFolder: ProgressMapByFolder;
-}) {
+function FoldersProgressTree({ downloadState }: { downloadState: DownloadState }) {
   const folderSummariesByYear = useMemo(() => {
     const summariesMap = downloadState.folderSummaries
       .filter((f) => f.indexedCount || f.mediaItemsCount)
@@ -273,7 +230,6 @@ function FoldersProgressTree({
           isFirst={i === 0}
           isLast={i === folderSummariesByYear.length - 1}
           key={year}
-          progressMapsByFolder={progressMapsByFolder}
           year={year}
         />
       ))}
@@ -285,16 +241,15 @@ function YearSummary({
   folderSummaries,
   isFirst,
   isLast,
-  progressMapsByFolder,
   year,
 }: {
   folderSummaries: FolderSummary[];
   isFirst: boolean;
   isLast: boolean;
-  progressMapsByFolder: ProgressMapByFolder;
   year: string;
 }) {
-  const yearStats = useYearStats({ folderSummaries, progressMapsByFolder });
+  const { progressMapsByFolder } = useFolderProgress();
+  const yearStats = useYearStats({ folderSummaries });
   const [isOpen, setIsOpen] = useState(false);
   const statsSx = useMemo(() => (isOpen ? STATS_EMPHASIZED : {}), [isOpen]);
   const isPadded = isOpen || isFirst;
@@ -356,9 +311,7 @@ function YearSummary({
             gridGap: 8,
             gridTemplateColumns: '1fr 1fr 1fr',
             paddingRight: 1,
-            p: {
-              textAlign: 'right',
-            },
+            p: { textAlign: 'right' },
           }}
         >
           <Typography sx={statsSx} variant='body2'>
@@ -373,13 +326,13 @@ function YearSummary({
         </Box>
         {isOpen && (
           <Box
+            onClick={(e) => e.stopPropagation()}
             sx={{
               gridColumn: '1/-1',
               paddingBottom: 4,
             }}
           >
             {folderSummaries.map((folderSummary, i) => {
-              const progressMap = progressMapsByFolder[folderSummary.folder] ?? getDefaultProgressMap();
               const isLast = i === folderSummaries.length - 1;
 
               return (
@@ -396,7 +349,7 @@ function YearSummary({
                     <ChildGraphic sx={{ height: '100%', '[data-child-graphic-horizontal]': { height: '16px' } }} />
                   )}
                   <Box>
-                    <FolderSummary folderSummary={folderSummary} progressMap={progressMap} />
+                    <FolderSummaryRow folderSummary={folderSummary} />
                   </Box>
                 </Box>
               );
@@ -408,13 +361,8 @@ function YearSummary({
   );
 }
 
-function useYearStats({
-  folderSummaries,
-  progressMapsByFolder,
-}: {
-  folderSummaries: FolderSummary[];
-  progressMapsByFolder: ProgressMapByFolder;
-}) {
+function useYearStats({ folderSummaries }: { folderSummaries: FolderSummary[] }) {
+  const { progressMapsByFolder } = useFolderProgress();
   return useMemo(
     () =>
       folderSummaries.reduce<YearStats>((acc, folderSummary) => {
@@ -437,13 +385,7 @@ function useYearStats({
   );
 }
 
-function FolderSummary({ folderSummary, progressMap }: { folderSummary: FolderSummary; progressMap: ProgressMap }) {
-  const progressMapFlat = useMemo(
-    () => Object.values(progressMap).filter((p) => p.progressEvent.progress !== 1),
-    [progressMap]
-  );
-  const hasProgress = !!progressMapFlat.length;
-
+function FolderSummaryRow({ folderSummary }: { folderSummary: FolderSummary }) {
   return (
     <FolderDrawer folder={folderSummary.folder} key={folderSummary.folder}>
       <Box
@@ -498,15 +440,19 @@ function FolderSummary({ folderSummary, progressMap }: { folderSummary: FolderSu
         </Box>
 
         <Box sx={{ gridColumn: '1/-1' }}>
-          <FolderProgress progressMapFlat={progressMapFlat} />
+          <FolderProgress folder={folderSummary.folder} />
         </Box>
       </Box>
     </FolderDrawer>
   );
 }
 
-function FolderProgress({ progressMapFlat }: { progressMapFlat: ProgressMap[0][] }) {
+function FolderProgress({ folder }: { folder: string }) {
   const scrollableRef = useRef<HTMLDivElement>(null);
+  const { progressMapsByFolder } = useFolderProgress();
+  const progressMap = progressMapsByFolder[folder];
+  const progressMapFlat = progressMap ? Object.values(progressMap).filter((p) => p.progressEvent.progress !== 1) : [];
+  const hasProgress = !!progressMapFlat.length;
 
   useScrollToBottom(scrollableRef, [progressMapFlat]);
 
