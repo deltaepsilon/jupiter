@@ -1,7 +1,6 @@
 ## In Progress
 
-- [ ] Debug download startup. It's in a weird state right now.
-- [ ] Carefully test import completion. Make sure that the `nextPageToken` isn't deleted.
+- [ ] Carefully test import completion. It appears that the last page is getting downloaded in a loop. Load a few hundred images into the chris@christopheresplin.com library and see if you can download all of them cleanly.
 - [ ] Logo
 - [ ] Content: How to use Google Takeout
 - [ ] Content: Export options compared (Takeout, Metadata Fixer, Reddit links)
@@ -39,6 +38,7 @@
 
 ## Archive
 
+- [x] The import drawer starts to machine-gun `batchGetMediaItems` as soon as you open a month folder
 - [x] Landing page
 - [x] Debug file-level progress that's not being displayed correctly on the front end
 - [x] Send a final progress event when the image is complete. Don't rely on axios's progress callback

@@ -1,3 +1,21 @@
+## March 10, 2023
+
+I've spent the last few days reworking the look and feel.
+
+I dumped my original font choices. I dumped most of my colors.
+
+I found a fun font named Gelica and matched it up with some 70's earth tones to create an attractive retro aesthetic. My body text is a blocky, old-school sans-serif that would look at home on a DOS terminal.
+
+I enjoy this cleanup phase!
+
+I'm actually kinda proud of how this thing looks. It feels designed. It feels intentional and well-thought-out.
+
+I took today of of BoomPop and so that Melissa and I can head off to St. George for the True Grit 50. It's probably going to be muddy again this year. I'm bummed. But Melissa will have a great time if she can dodge the mud.
+
+Things are going better at BoomPop. There's still a lot to improve, and I'm working toward that putting myself in a better place for the long term.
+
+Our snow situation is out of control. SnowCrest is getting pummeled again this morning. Poor Jordan Gibby is trying to dig out his entire house and outfit it with sandbags. The poor dude has been through the ringer. He's got drywall ripped out all over his house. He hired a disaster recovery team to come in and do most of the work, including a roof cleaning. Hopefully his insurance picks it up. He's inspired me to take a hammer to the ice dams on my back roof line. It's clear... for now. But the house gives off heat, which causes a constant melt. The ice dams are reforming every day.
+
 ## March 3, 2023
 
 Melissa has been out of town, leaving me with the kids. It hasn't given me as much time for Photos work.

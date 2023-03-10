@@ -96,6 +96,8 @@ export async function libraryImportOnWrite(
       const newKeys = sortedMediaItemKeys.filter((key) => !existingMediaItemKeys.includes(key));
       const isAllNewKeys = newKeys.length === sortedMediaItemKeys.length;
 
+      console.log({ existingMediaItemKeys, sortedMediaItemKeys, newKeys, isAllNewKeys });
+
       await libraryMediaItemsRef.update(mediaItemsUpdates);
       await libraryImportRef.update({
         count: admin.database.ServerValue.increment(newKeys.length),
@@ -108,6 +110,8 @@ export async function libraryImportOnWrite(
         updated: new Date(),
       };
 
+      console.log({ nextPageToken });
+
       if (!nextPageToken && beforeImport && beforeImport.nextPageToken) {
         /**
          * 2/14/23
@@ -115,6 +119,7 @@ export async function libraryImportOnWrite(
          * We don't usually want to start from the beginning. Instead we want to enable isReadingFromStart
          * to do its thing. The user can always "start over" the import from scratch to achieve a fresh import.
          */
+        libraryImportUpdates.status = LibraryTaskStatus.paused;
         libraryImportUpdates.nextPageToken = beforeImport.nextPageToken;
       }
 

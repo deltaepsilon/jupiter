@@ -37,7 +37,7 @@ async function refresh({ libraryId, timezoneOffset, userId }: RefreshMediaItemSt
   const statsMap = Object.entries(mediaItems).reduce(
     (acc, [key, value]) => {
       const mediaItem = mediaItemSchema.parse(value);
-      const createdDate = addMinutes(new Date(mediaItem.mediaMetadata.creationTime), -timezoneOffset);
+      const createdDate = addMinutes(new Date(mediaItem.mediaMetadata.creationTime), -(timezoneOffset ?? 0));
       const year = createdDate.getUTCFullYear();
       const month = createdDate.getUTCMonth() + 1;
       const date = createdDate.getUTCDate();

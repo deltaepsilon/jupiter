@@ -70,7 +70,7 @@ export const theme = responsiveFontSizes(
         styleOverrides: {
           root: {
             strong: {
-              color: 'var(--color-lava-orange)',
+              color: 'var(--color-orange)',
             },
           },
         },

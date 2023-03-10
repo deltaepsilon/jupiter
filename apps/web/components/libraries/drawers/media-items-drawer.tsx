@@ -127,7 +127,7 @@ function YearRow({ dates, year, yearMonths }: { dates: ItemDate[]; year: ItemYea
 
       <Box>
         {yearMonths.map((month) => {
-          const monthDates = dates.filter((date) => date.month === month.month);
+          const monthDates = dates.filter((date) => date.year === month.year && date.month === month.month);
 
           return <MonthRow key={month.id} month={month} monthDates={monthDates} />;
         })}
@@ -253,7 +253,10 @@ function CountText({ sticky = false, text, count }: { sticky?: boolean; text: st
       <Typography sx={{ textAlign: 'left' }}>
         <b>{text}</b>
       </Typography>
-      <Typography sx={{ color: 'var(--color-miami-blue)', textAlign: 'right' }}>({count})</Typography>
+      <Typography sx={{ color: 'var(--color-miami-blue)', textAlign: 'right' }} variant='body2'>
+        {' '}
+        /{count}
+      </Typography>
     </Box>
   );
 }
