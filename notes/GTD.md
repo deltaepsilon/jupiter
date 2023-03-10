@@ -1,6 +1,7 @@
 ## In Progress
 
-- [ ] Logo and landing page
+- [ ] Carefully test import completion. Make sure that the `nextPageToken` isn't deleted.
+- [ ] Logo
 - [ ] Once logged in, the landing page should have a big CTA to go to the web app
 
 ## Next actions
@@ -33,6 +34,7 @@
 
 ## Archive
 
+- [x] Landing page
 - [x] Debug file-level progress that's not being displayed correctly on the front end
 - [x] Send a final progress event when the image is complete. Don't rely on axios's progress callback
 - [x] Remove `repair-filename.ts` logging

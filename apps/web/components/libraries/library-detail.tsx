@@ -1,12 +1,12 @@
-import { Button, Box, Typography } from '@mui/material';
+import { Box, Button, Typography } from '@mui/material';
+import { Container, Link } from 'ui/components';
+import { DaemonPanel, DesktopAppDownloadsDrawer } from 'web/components/daemon';
 import { DaemonProvider, DirectoryProvider, useDaemon, useDirectory, useLibraries } from 'web/contexts';
 import { DownloadLibraryPanel, ImportLibraryPanel } from './panels';
 import { Library, LibraryTaskStatus } from 'data/library';
 import { useDaemonRecord, useLibraryDownload, useLibraryImport } from 'web/hooks';
 import { useEffect, useMemo } from 'react';
 
-import { Container } from 'ui/components';
-import { DaemonPanel, DesktopAppDownloadsDrawer } from 'web/components/daemon';
 import { MessageType } from 'data/daemon';
 import { formatDate } from 'ui/utils';
 import { getDirectoryHandler } from 'web/components/daemon/handlers/directory-handler';
@@ -59,9 +59,15 @@ function LibraryDetailConnected({ library, libraryId }: { library: Library; libr
         paddingTop: 0,
       }}
     >
-      <Typography sx={{ textTransform: 'capitalize' }} variant='h2'>
-        {library.name}
-      </Typography>
+      <Box>
+        <Typography
+          sx={{ textTransform: 'capitalize' }}
+          title={`"${library.name}" is your library's codename.`}
+          variant='h2'
+        >
+          {library.name}
+        </Typography>
+      </Box>
 
       <Box
         sx={{
@@ -88,7 +94,9 @@ function LibraryDetailConnected({ library, libraryId }: { library: Library; libr
                 <Typography variant='h4'>Import paused</Typography>
               )}
 
-              <Typography variant='body1'>You can start processing at any time.</Typography>
+              <Typography variant='body1'>
+                You&apos;ve imported enough media to start downloading your files!
+              </Typography>
             </Step>
           ) : (
             <Step>
@@ -106,12 +114,12 @@ function LibraryDetailConnected({ library, libraryId }: { library: Library; libr
           <Step>
             <Typography variant='h4'>Desktop app</Typography>
             <Typography sx={{ a: { textDecoration: 'underline' } }} variant='body1'>
-              The desktop app is a lightweight, open-source application that runs on your computer. We&apos;ll use it
-              manage local files.
+              The Desktop App is a lightweight, open-source application that runs on your computer. We&apos;ll use it
+              manage local files. Click the button below to get started.
             </Typography>
             <Box sx={{ paddingY: 2, textAlign: 'right' }}>
               <DesktopAppDownloadsDrawer>
-                <Button variant={isDaemonConnected ? 'outlined' : 'contained'}>Get desktop app</Button>
+                <Button variant={isDaemonConnected ? 'outlined' : 'contained'}>Get Desktop App</Button>
               </DesktopAppDownloadsDrawer>
             </Box>
           </Step>
@@ -123,16 +131,14 @@ function LibraryDetailConnected({ library, libraryId }: { library: Library; libr
           <Step>
             <Typography variant='h4'>Download to your hard drive</Typography>
             <Typography sx={{ a: { textDecoration: 'underline' } }} variant='body1'>
-              Large libraries should be backed up to a dedicated hard drive or NAS. We recommend Synology because of the
-              excellent{' '}
-              <a
-                href='https://www.synology.com/en-global/DSM70/SynologyPhotos'
-                rel='noopener noreferrer'
-                target='_blank'
-              >
+              Large libraries should be backed up to a dedicated hard drive or NAS. We recommend purchasing a{' '}
+              <Link blank href='https://amzn.to/3J20oty'>
+                Synology NAS
+              </Link>{' '}
+              because of the excellent{' '}
+              <Link blank href='https://www.synology.com/en-global/DSM70/SynologyPhotos'>
                 Synology Photos
-              </a>
-              .
+              </Link>.
             </Typography>
           </Step>
 

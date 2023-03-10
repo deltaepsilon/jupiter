@@ -10,3 +10,4 @@ export * from './media-item-image';
 export * from './menu-trigger';
 export * from './modal-drawer';
 export * from './phone-border';
+export * from './video';

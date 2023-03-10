@@ -7,3 +7,4 @@ export * from './use-modal-hash';
 export * from './use-modal-state';
 export * from './use-rtdb';
 export * from './use-value';
+export * from './use-wait-for-ref';

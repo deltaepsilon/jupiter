@@ -109,7 +109,7 @@ export function DirectoryPicker({ children, disabled = false, directory = '', li
                 <NavigateNextIcon />
               </IconButton>
               {childDirectory.isDirectory ? <FolderIcon /> : <FileIcon />}
-              <Typography>{childDirectory.name}</Typography>
+              <Typography>&nbsp;{childDirectory.name}</Typography>
             </ListItem>
           ))}
         </List>

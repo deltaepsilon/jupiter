@@ -1,18 +1,18 @@
 import { createTheme, responsiveFontSizes } from '@mui/material';
 
 const FONT_BOLD = {
-  fontFamily: 'ff-brokenscript-bc-web, sans-serif', // TODO: remove filicudi-solid
-  fontWeight: 700,
+  fontFamily: 'gelica, sans-serif',
+  fontWeight: 600,
 };
 
 const FONT_SEMIBOLD = {
-  fontFamily: 'skolar-sans-latin-condensed, sans-serif', // TODO: remove filicudi-solid
-  fontWeight: 700,
+  fontFamily: 'gelica, sans-serif',
+  fontWeight: 600,
 };
 
 const FONT_BLACK = {
-  fontFamily: 'skolar-sans-latin-condensed, sans-serif', // TODO: remove filicudi-solid
-  fontWeight: 900,
+  fontFamily: 'gelica, sans-serif',
+  fontWeight: 600,
 };
 
 export const theme = responsiveFontSizes(
@@ -22,14 +22,28 @@ export const theme = responsiveFontSizes(
         styleOverrides: {
           root: {
             textDecoration: 'none',
-            fontWeight: 600,
+            fontWeight: 500,
             textTransform: 'inherit',
+          },
+          contained: {
+            '&:hover': {
+              backgroundColor: 'var(--color-orange)',
+            },
+          },
+          outlined: {
+            // borderColor: 'white',
+            // borderWidth: 2,
+            // // background: 'white',
+            // '&:hover': {
+            //   background: 'white',
+            // },
           },
         },
       },
       MuiPaper: {
         styleOverrides: {
           root: {
+            color: 'var(--color-gentian-blue-metallic)',
             padding: '1rem',
           },
         },
@@ -74,13 +88,15 @@ export const theme = responsiveFontSizes(
       },
     },
     typography: {
-      fontFamily: 'skolar-sans-latin-condensed, serif',
-      h1: FONT_BOLD,
-      h2: FONT_BOLD,
-      h3: FONT_BLACK,
-      h4: FONT_BLACK,
-      h5: FONT_BLACK,
-      h6: FONT_BLACK,
+      fontFamily: 'aglet-mono, sans-serif',
+      fontWeightRegular: 400,
+
+      h1: FONT_BLACK,
+      h2: FONT_BLACK,
+      h3: FONT_BOLD,
+      h4: FONT_BOLD,
+      h5: FONT_SEMIBOLD,
+      h6: FONT_SEMIBOLD,
     },
   })
 );

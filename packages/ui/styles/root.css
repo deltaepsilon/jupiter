@@ -6,30 +6,45 @@
   --color-miami-blue: #00b5c8;
   --color-pastel-blue: #a0d8fb;
   --color-rubystone-red: #f3037e;
+
+  /* https://www.color-hex.com/color-palette/23525 */
+  --color-white: white;
+  --color-purple: #41354d;
+  --color-blue: #007291;
+  --color-yellow: #f5c600;
+  --color-orange: #d8460b;
+  --color-desert: #e6dfd5;
+
   --color-extralight-gray: rgba(0, 0, 0, 0.03);
   --color-light-gray: #eeeeee;
   --color-mid-gray: #666666;
   --color-dark-gray: #222222;
 
-  --font-body-family: skolar-sans-latin-condensed, serif;
-  --font-body-weight: 600;
+  --font-body-family: aglet-mono, sans-serif;
+  --font-body-weight: 400;
   --font-body-style: normal;
+  --font-body-letter-spacing: -0.25px;
 
-  --font-secondary-family: ff-brokenscript-bc-web, sans-serif;
-  --font-secondary-weight: 700;
+  --font-secondary-family: gelica, serif;
+  --font-secondary-weight: 600;
+  --font-secondary-letter-spacing: 0;
 
-  --font-light-weight: 400;
-  --font-regular-weight: 400;
-  --font-bold-weight: 700;
-  --font-extrabold-weight: 900;
+  --font-light-weight: 300;
+  --font-regular-weight: 500;
+  --font-bold-weight: 600;
+  --font-extrabold-weight: 600;
+
+  --border-radius: 4px;
 }
 
 body {
   font-family: var(--font-body-family);
   font-weight: var(--font-body-weight);
   font-style: var(--font-body-style);
+  letter-spacing: var(--font-body-letter-spacing);
 
   color: var(--color-gentian-blue-metallic);
+  background-color: var(--color-desert);
 
   padding: 0;
   margin: 0;
@@ -65,6 +80,7 @@ strong {
 .secondary {
   font-family: var(--font-secondary-family);
   font-weight: var(--font-secondary-weight);
+  letter-spacing: var(--font-secondary-letter-spacing);
 }
 
 h1,
@@ -75,4 +91,9 @@ h5,
 h6 {
   font-family: var(--font-secondary-family);
   font-weight: var(--font-secondary-weight);
+  letter-spacing: var(--font-secondary-letter-spacing);
+}
+
+p {
+  word-spacing: -4px;
 }

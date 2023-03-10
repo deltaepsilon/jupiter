@@ -1,6 +1,7 @@
 /* eslint-disable import/no-anonymous-default-export */
 export const WEB = {
   IS_DEVELOPMENT: process.env.NODE_ENV === 'development',
+  IS_SERVER: typeof window === 'undefined',
   API: {
     OAUTH2: '/api/oauth2',
   },

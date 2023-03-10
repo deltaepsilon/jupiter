@@ -20,7 +20,7 @@ export function DaemonPanel() {
   return (
     <Paper elevation={1}>
       <Box sx={{ display: 'flex', alignItems: 'center', gridTemplateColumns: '1fr 5rem', paddingBottom: 1 }}>
-        <Typography sx={{ flex: 1 }} variant='h6'>
+        <Typography sx={{ flex: 1 }} variant='h5'>
           Daemon {isConnected ? 'connected' : 'disconnected'}
         </Typography>
         <Box sx={{ svg: { position: 'relative', top: 5 } }}>
@@ -43,7 +43,7 @@ export function DaemonPanel() {
                   gridGap: 8,
                   paddingY: '1px',
                   p: {
-                    color: message.isClient ? 'var(--color-miami-blue)' : isError ? 'var(--color-lava-orange)' : null,
+                    color: message.isClient ? 'var(--color-blue)' : isError ? 'var(--color-lava-orange)' : null,
                   },
                 }}
               >

@@ -83,23 +83,26 @@ export function DownloadLibraryPanel({ actions, directory, downloadState, librar
           </Box>
         </Box>
 
-        <Box sx={{ flex: 1, display: 'grid', gridTemplateColumns: '1fr 60px 60px 60px' }}>
+        <Box sx={{ flex: 1, display: 'grid', gridTemplateColumns: '1fr 75px 43px 64px' }}>
           <Box />
-          <Typography variant='body2'>Import</Typography>
-          <Typography variant='body2'>Index</Typography>
-          <Typography variant='body2'>Download</Typography>
+          <Typography variant='caption'>Import</Typography>
+          <Typography variant='caption'>Index</Typography>
+          <Typography variant='caption'>Download</Typography>
         </Box>
 
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
           <FolderIcon />
-          <Typography sx={{ paddingLeft: 1 }}>{directory ?? 'No folder selected'}</Typography>
+          <Typography sx={{ paddingLeft: 1, flex: 2 }} variant='caption'>
+            {directory ?? 'No folder selected'}
+          </Typography>
 
           <Box
             sx={{
               flex: 1,
               display: 'grid',
               gridGap: 8,
-              gridTemplateColumns: '79px 66px 66px',
+              gridTemplateColumns: '60px 60px 57px',
+              paddingRight: 1,
               textAlign: 'right',
               position: 'relative',
               top: 2,
@@ -283,7 +286,7 @@ function YearSummary({
         sx={{
           display: 'grid',
           columnGap: 1,
-          gridTemplateColumns: '2rem 1fr 222px',
+          gridTemplateColumns: '5rem 1fr 200px',
           paddingTop: isPadded ? 4 : 1,
         }}
       >
@@ -293,6 +296,7 @@ function YearSummary({
             whiteSpace: 'nowrap',
             overflow: 'hidden',
             textOverflow: 'ellipsis',
+            paddingTop: '2px',
           }}
           title={year}
           variant='body2'
@@ -389,6 +393,7 @@ function FolderSummaryRow({ folderSummary }: { folderSummary: FolderSummary }) {
   return (
     <FolderDrawer folder={folderSummary.folder} key={folderSummary.folder}>
       <Box
+        data-folder-summary-row
         sx={{
           cursor: 'pointer',
           userSelect: 'none',
@@ -402,13 +407,18 @@ function FolderSummaryRow({ folderSummary }: { folderSummary: FolderSummary }) {
             position: 'relative',
             display: 'grid',
 
-            gridTemplateColumns: '3.5rem 1fr 230px',
+            gridTemplateColumns: '4rem 1fr 208px',
             alignItems: 'center',
             paddingTop: '5px',
           }}
         >
           <Typography
-            sx={{ lineHeight: '12px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}
+            sx={{
+              lineHeight: '12px',
+              whiteSpace: 'nowrap',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+            }}
             title={folderSummary.folder}
             variant='body2'
           >

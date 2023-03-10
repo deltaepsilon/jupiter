@@ -112,7 +112,7 @@ export async function libraryImportOnWrite(
         /**
          * 2/14/23
          * Unsure if this is right, but destroying the nextPageToken forces the import to start from the beginning.
-         * We don't usually want to start from the beginning. Instread we want to enable isReadingFromStart
+         * We don't usually want to start from the beginning. Instead we want to enable isReadingFromStart
          * to do its thing. The user can always "start over" the import from scratch to achieve a fresh import.
          */
         libraryImportUpdates.nextPageToken = beforeImport.nextPageToken;

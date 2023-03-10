@@ -1,10 +1,10 @@
-import { Box, Button, Paper, SxProps, Typography, ListItemIcon, ListItemText, MenuItem, MenuList } from '@mui/material';
+import { Box, Button, ListItemIcon, ListItemText, MenuItem, MenuList, Paper, SxProps, Typography } from '@mui/material';
 import { Container, Link, MediaItemImage, MenuTrigger } from 'ui/components';
 import { useEffect, useState } from 'react';
 
-import LaunchIcon from '@mui/icons-material/Launch';
-import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import LaunchIcon from '@mui/icons-material/Launch';
 import { Library } from 'data/library';
 import { LibraryPickerTrigger } from './library-picker-trigger';
 import PhotoIcon from '@mui/icons-material/Photo';
@@ -27,8 +27,8 @@ const CARD_SX: SxProps = {
   overflow: 'hidden',
   marginRight: '7px',
   '&:hover': {
-    borderColor: 'var(--color-acid-green)',
-    boxShadow: '4px 4px 0px 2px var(--color-acid-green)',
+    borderColor: 'var(--color-orange)',
+    boxShadow: '4px 4px 0px 2px var(--color-orange)',
     cursor: 'pointer',
   },
 };

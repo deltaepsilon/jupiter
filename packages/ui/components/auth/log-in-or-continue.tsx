@@ -1,9 +1,9 @@
 import { Button } from '@mui/material';
+import LaunchIcon from '@mui/icons-material/Launch';
 import { Link } from 'ui/components';
 import { WEB } from 'data/web';
 import { useAuth } from 'ui/contexts';
 import { useRouter } from 'next/router';
-import LaunchIcon from '@mui/icons-material/Launch';
 
 export function LogInOrContinue() {
   const { signInWithGoogle, user } = useAuth();
@@ -12,11 +12,15 @@ export function LogInOrContinue() {
 
   return user ? (
     isRoot ? (
-      <Link button href={WEB.ROUTES.PHOTOS}>
-        <Button startIcon={<LaunchIcon />}>Web App</Button>
+      <Link button href={WEB.ROUTES.PHOTOS} sx={{ paddingRight: 2 }}>
+        <Button startIcon={<LaunchIcon />} variant='outlined'>
+          Web App
+        </Button>
       </Link>
     ) : null
   ) : (
-    <Button onClick={signInWithGoogle}>Log in with Google</Button>
+    <Button onClick={signInWithGoogle} variant='contained'>
+      Log in with Google
+    </Button>
   );
 }
