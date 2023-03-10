@@ -52,6 +52,7 @@ export function ModalDrawer({ children, isOpen = false, onClose, title = '', ...
   return (
     <ModalDrawerContext.Provider value={value}>
       <Modal
+        data-material-modal
         onClose={onClose}
         open={isModalOpen}
         slotProps={{

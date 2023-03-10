@@ -1,14 +1,15 @@
 import { Button, ListItemIcon, ListItemText, MenuItem, MenuList, Typography } from '@mui/material';
-import { Link, MenuTrigger, useMenuTrigger } from 'ui/components';
-import { DesktopAppDownloadsDrawer } from 'web/components/daemon';
-import { WEB } from 'data/web';
+import { Image, Link, MenuTrigger, useMenuTrigger } from 'ui/components';
+
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import CollectionsIcon from '@mui/icons-material/Collections';
+import { DesktopAppDownloadsDrawer } from 'web/components/daemon';
+import DownloadIcon from '@mui/icons-material/Download';
 import LogoutIcon from '@mui/icons-material/Logout';
 import MenuIcon from '@mui/icons-material/Menu';
 import NextImage from 'next/image';
+import { WEB } from 'data/web';
 import { useAuth } from 'ui/contexts';
-import CollectionsIcon from '@mui/icons-material/Collections';
-import DownloadIcon from '@mui/icons-material/Download';
 import { useRouter } from 'next/router';
 
 export function AppUserBubble() {
@@ -51,7 +52,7 @@ function UserBubbleList() {
           </ListItemIcon>
           <ListItemText>
             <Typography sx={{ marginTop: -0.5 }} variant='body2'>
-              Desktop app
+              Desktop App
             </Typography>
           </ListItemText>
         </MenuItem>
@@ -83,7 +84,7 @@ function UserBubbleButton() {
       variant='contained'
     >
       {photoUrl ? (
-        <NextImage alt='user icon' height='35' src={user.photoURL} width='35' />
+        <Image alt='user icon' ratio={1} src={user.photoURL} sx={{ width: 35, img: { objectFit: 'cover' } }} />
       ) : (
         <AccountCircleIcon fontSize='large' />
       )}

@@ -37,7 +37,7 @@ export function LandingPage() {
             color: 'var(--color-gentian-blue-metallic)',
             padding: 1,
           }}
-          variant='h2'
+          variant='h3'
         >
           Greetings!
         </Typography>
@@ -266,8 +266,6 @@ export function LandingPage() {
           </Typography>
         </Box>
       </TwoColumn>
-
-      <Footer />
     </Box>
   );
 }

@@ -112,7 +112,7 @@ function LibraryDetailConnected({ library, libraryId }: { library: Library; libr
 
         <Box sx={{ pointerEvents: hasLibraryRecords ? 'all' : 'none', opacity: hasLibraryRecords ? 1 : 0.5 }}>
           <Step>
-            <Typography variant='h4'>Desktop app</Typography>
+            <Typography variant='h4'>Desktop App</Typography>
             <Typography sx={{ a: { textDecoration: 'underline' } }} variant='body1'>
               The Desktop App is a lightweight, open-source application that runs on your computer. We&apos;ll use it
               manage local files. Click the button below to get started.

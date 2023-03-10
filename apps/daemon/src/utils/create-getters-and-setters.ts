@@ -1,4 +1,5 @@
 import {
+  CorruptedIds,
   Directory,
   DirectoryDbKeys,
   DownloadDbKeys,
@@ -10,11 +11,10 @@ import {
   FolderData,
   IngestedIds,
   RelativeFilePaths,
-  CorruptedIds,
   Tokens,
   Urls,
-  directorySchema,
   corruptedIdsSchema,
+  directorySchema,
   downloadStateSchema,
   downloadedIdsSchema,
   downloadingIdsSchema,
@@ -189,8 +189,6 @@ export function createGettersAndSetters(db: FilesystemDatabase) {
       metadataDb.set<DownloadState>(DownloadDbKeys.state, downloadStateSchema.parse({ ...state, updated: new Date() })),
     updateDownloadState: (state: Partial<DownloadState>) => {
       const downloadState = getters.getDownloadState();
-
-      console.log('download state:', state);
 
       return metadataDb.set<DownloadState>(
         DownloadDbKeys.state,

@@ -11,9 +11,18 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
       <AppHead />
       <ThemeProvider theme={theme}>
         <AppFooterPortalProvider>
-          <Box sx={{ paddingX: [1, 1, 2], paddingY: [1, 1, 2] }}>
+          <Box sx={{ flex: 1, paddingX: [1, 1, 2], paddingY: [1, 1, 2] }}>
             <AppHeader />
-            <Box sx={{ display: 'flex', alignItems: 'center', flexDirection: 'column', gridGap: 4 }}>{children}</Box>
+            <Box
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                flexDirection: 'column',
+                gridGap: 4,
+              }}
+            >
+              {children}
+            </Box>
           </Box>
         </AppFooterPortalProvider>
       </ThemeProvider>

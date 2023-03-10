@@ -1,9 +1,8 @@
 import { Box, Button, IconButton, SxProps, Typography } from '@mui/material';
-
 import { Link, ModalDrawer, ModalDrawerFooter } from 'ui/components';
-import { WEB } from 'data/web';
-import NextImage from 'next/image';
 
+import NextImage from 'next/image';
+import { WEB } from 'data/web';
 import { useModalState } from 'ui/hooks';
 
 interface Props {
@@ -22,7 +21,7 @@ export function DesktopAppDownloadsDrawer({ children, disabled = false, sx = {} 
         aria-labelledby='desktop app downloads'
         isOpen={isOpen}
         onClose={onClose}
-        title='Desktop app downloads'
+        title='Desktop App downloads'
       >
         <Box
           sx={{
@@ -61,7 +60,7 @@ export function DesktopAppDownloadsDrawer({ children, disabled = false, sx = {} 
             </Typography>
 
             <Typography component='li' variant='body1'>
-              The desktop app runs in the background.
+              The Desktop App runs in the background.
             </Typography>
           </Box>
 

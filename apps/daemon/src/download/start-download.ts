@@ -141,8 +141,6 @@ async function downloadFolder({ db, folder, sendMessage }: Args & { folder: stri
   const mediaItemIds = [...ingestedIds].filter((id) => !downloadedIds.has(id) && !downloadingIds.has(id));
   const text = `Downloading ${mediaItemIds.length} new media items to ${folder}`;
 
-  console.log('mediaItemIds.length', folder, mediaItemIds.length, ingestedIds.size);
-
   if (mediaItemIds.length) {
     updateDownloadState({ state: 'downloading', text });
 

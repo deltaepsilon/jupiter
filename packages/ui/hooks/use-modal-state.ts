@@ -1,4 +1,4 @@
-import React, { SyntheticEvent, useCallback, useState } from 'react';
+import React, { SyntheticEvent, useCallback, useEffect, useState } from 'react';
 import { isClient, stopClick } from 'ui/utils';
 import { useKeydown, useModalHash, useValue } from 'ui/hooks';
 
@@ -79,6 +79,12 @@ export function useModalState(
   );
 
   useKeydown({ isActive: !!isOpen && closeOnEscape, callback: onKeydown });
+
+  useEffect(() => {
+    if (isOpen && !isMatchingHash && autoOpenHash) {
+      setIsOpen(false);
+    }
+  }, [autoOpenHash, isOpen, isMatchingHash, setIsOpen]);
 
   return useValue({ isOpen: !!isOpen, setIsOpen, onClose, onOpen, toggle });
 }

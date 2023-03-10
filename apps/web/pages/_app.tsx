@@ -5,6 +5,7 @@ import { AuthProvider, FirebaseProvider } from 'ui/contexts';
 import { AppLayout } from 'ui/components/app';
 import { AppProps } from 'next/app';
 import { FIREBASE } from 'data/firebase';
+import { Footer } from 'web/components/footer';
 import { ServiceWorkerProvider } from 'web/contexts/service-worker-context';
 
 export default function MyApp({ Component, pageProps }: AppProps): JSX.Element {
@@ -15,6 +16,7 @@ export default function MyApp({ Component, pageProps }: AppProps): JSX.Element {
           <ServiceWorkerProvider>
             <AppLayout>
               <Component {...pageProps} />
+              <Footer />
             </AppLayout>
           </ServiceWorkerProvider>
         </AuthProvider>

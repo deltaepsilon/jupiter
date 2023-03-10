@@ -1,7 +1,12 @@
 ## In Progress
 
+- [ ] Debug download startup. It's in a weird state right now.
 - [ ] Carefully test import completion. Make sure that the `nextPageToken` isn't deleted.
 - [ ] Logo
+- [ ] Content: How to use Google Takeout
+- [ ] Content: Export options compared (Takeout, Metadata Fixer, Reddit links)
+- [ ] Sitemap
+- [ ] Robots.txt
 - [ ] Once logged in, the landing page should have a big CTA to go to the web app
 
 ## Next actions

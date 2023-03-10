@@ -11,9 +11,6 @@ export function multiplex(max = 1) {
     if (callback) {
       runningCount++;
 
-      console.log('startQueue', runningCount);
-
-
       await callback();
 
       runningCount--;
