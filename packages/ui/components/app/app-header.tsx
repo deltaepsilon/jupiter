@@ -25,7 +25,7 @@ export function AppHeader() {
             />
           </svg>
           <Typography
-            sx={{ fontFamily: 'gelica, serif', fontWeight: 600, letterSpacing: 0.05, marginTop: 0.5 }}
+            sx={{ fontFamily: 'gelica, serif', fontWeight: 600, letterSpacing: 0.05 }}
             variant='h5'
           >
             Quiver Photos

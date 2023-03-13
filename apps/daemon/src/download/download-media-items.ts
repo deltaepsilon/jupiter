@@ -197,7 +197,7 @@ async function writeFile({
         });
       } else {
         console.info('error downloading:', mediaItem.id, err.response.status, err.response.statusText);
-        throw err.response.statusText;
+        // throw err.response.statusText;
       }
     });
 

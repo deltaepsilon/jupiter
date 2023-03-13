@@ -26,7 +26,7 @@ export async function getPage({ library, librarySnapshot, pageSize, nextPageToke
         nextPageToken: nextPageToken ?? undefined,
       });
 
-      await librarySnapshot.ref.update({ accessToken: data.accessToken, updated: new Date() });
+      await librarySnapshot.ref.update({ accessToken: result.accessToken, updated: new Date() });
 
       return result;
     } else {

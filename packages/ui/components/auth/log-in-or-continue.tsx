@@ -20,7 +20,7 @@ export function LogInOrContinue() {
     ) : null
   ) : (
     <Button onClick={signInWithGoogle} variant='contained'>
-      Log in with Google
+      Log in
     </Button>
   );
 }
