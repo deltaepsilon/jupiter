@@ -13,16 +13,17 @@ export function Footer() {
     <AppFooter
       sx={{
         position: 'relative',
-        padding: 1,
+        // padding: 1,
         backgroundColor: 'var(--color-gentian-blue-metallic)',
         color: 'var(--color-white)',
       }}
     >
-      <Box sx={{ display: 'grid', gridTemplateColumns: ['1fr', '1fr 1fr', '1fr 1fr 1fr'] }}>
+      <Box sx={{ display: 'grid', gridTemplateColumns: ['1fr', '1fr 1fr', '1fr 1fr 1fr'], paddingBottom: [2, 0] }}>
         <Box
           component='ul'
           sx={{
-            width: '100%',
+            // padding: 0,
+            // width: '100%',
             listStyleType: 'none',
             '&> *': {
               display: 'block',

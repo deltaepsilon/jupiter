@@ -11,9 +11,11 @@ export function LandingPage() {
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        gridGap: 64,
+        gridGap: [32, 64],
         paddingY: 4,
         maxWidth: '50rem',
+
+        h3: { paddingBottom: 0 },
         img: {
           borderRadius: 'var(--border-radius)',
         },
@@ -46,7 +48,7 @@ export function LandingPage() {
 
         <Typography>You likely searched</Typography>
 
-        <Box component='ul' sx={{ marginTop: -1, marginBottom: 0, paddingLeft: 8 }}>
+        <Box component='ul' sx={{ marginTop: -1, marginBottom: 0, paddingLeft: [3, 8] }}>
           <Typography component='li'>&quot;how to download google photos&quot;,</Typography>
           <Typography component='li'>&quot;why is google photos metadata garbage&quot;,</Typography>
           <Typography component='li'>or &quot;how to export google photos&quot;.</Typography>
@@ -172,6 +174,7 @@ export function LandingPage() {
           loop
           muted
           src='https://firebasestorage.googleapis.com/v0/b/photos-tools-2022.appspot.com/o/public%2Fweb-downloader.mp4?alt=media&token=3cb0152f-fb0b-4a54-9cc6-2b9e3cfea3ec'
+          sx={{ maxWidth: ['calc(100vw - 1rem)', 'calc(100vw - 2rem)'] }}
         />
       </TwoColumn>
 
@@ -185,6 +188,7 @@ export function LandingPage() {
           loop
           muted
           src='https://firebasestorage.googleapis.com/v0/b/photos-tools-2022.appspot.com/o/public%2Fdaemon.mp4?alt=media&token=f3930859-dbc2-4d1c-bf59-bcb8e5853c5b'
+          sx={{ maxWidth: ['calc(100vw - 1rem)', 'calc(100vw - 2rem)'] }}
           width={486}
         />
       </TwoColumn>
@@ -284,12 +288,13 @@ function PhoneAnimation() {
         flexDirection: 'column',
         justifyContent: 'center',
         paddingTop: 4,
+        width: ['calc(100vw - 2rem)', 'inherit'],
       }}
     >
       <Box
         sx={{
           display: 'grid',
-          gridTemplateColumns: ['1fr', '200px 100px 350px'],
+          gridTemplateColumns: ['1fr', '150px 100px 250px', '200px 100px 350px'],
           alignItems: 'center',
           overflow: 'hidden',
           maxWidth: 'calc(100vw - 2rem)',

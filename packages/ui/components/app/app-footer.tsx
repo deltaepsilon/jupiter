@@ -19,7 +19,7 @@ export function AppFooterPortalProvider({ children }: { children: React.ReactNod
   return (
     <FooterPortalContext.Provider value={el}>
       {children}
-      <Box data-footer-portal ref={footerRef} />
+      <Box data-footer-portal ref={footerRef} sx={{ }} />
     </FooterPortalContext.Provider>
   );
 }
