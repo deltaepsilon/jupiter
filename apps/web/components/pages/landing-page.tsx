@@ -77,7 +77,7 @@ export function LandingPage() {
           alt='markus winkler unsplash film canisters'
           height={328}
           src='/images/unsplash/markus-winkler-CiA0uLEKeUI-unsplash.jpg'
-          style={{ objectFit: 'cover' }}
+          style={{ objectFit: 'cover', maxWidth: 'calc(100vw - 1rem)' }}
           width={800}
         />
         <Typography
@@ -272,7 +272,8 @@ export function LandingPage() {
             over on Twitter:{' '}
             <Link blank href='https://twitter.com/chrisesplin'>
               @ChrisEsplin
-            </Link>, or by email:{' '}
+            </Link>
+            , or by email:{' '}
             <Link
               blank
               href={`mailto:${WEB.EMAIL}?subject=Quiver%20Photos&body=Chris!%0D%0A%0D%0AI%20have%20questions%20%3A)`}
