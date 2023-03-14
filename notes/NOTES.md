@@ -1,3 +1,21 @@
+## March 14, 2023
+
+Yesterday afternoon I YOLOed $3000 on First Republic Bank and Pacific Western Bank. 
+
+This is against my character, but the news coverage of the SVB bank run was so abhorrent that I wanted to profit from it. This SVB stuff is so specific to them. There's no reason that FRB and PACW should get lumped in with SVB.
+
+I was down $500 for a while yesterday afternoon, but at open this morning both stocks ripped. I have limit orders in to sell when they hit a certain point. I'm hoping to 1.5X my money. I could probably hold on for a full recovery... but my other thesis is that the entire market is getting ready to tank, because inflation is not going away and JPow will stay on the warpath for another year.
+
+In even cooler news, I just got an email from someone who's been following my r/google-photos posts and discovered photos.chrisesplin.com. He ran into a bug that I'd hoped was just in dev... but clearly it's a real issue. So I'll have to get on that ASAP. I'm on the cusp of providing real value!
+
+I've been on a real upswing the last couple of weeks. 
+
+True Grit went great over the weekend. It started out pouring rain. Absolutely pouring. But then it dried out and back 2/3's of the course ran fast. 
+
+Melissa finished under 6:30 and I finished at 5:00. I know I could have done it faster if I weren't so out-of-practice with the rock riding. I was getting as sendy as I could, but those cliffs are collarbone assassins. I do not want to join the Collarbone Club, and with my iffy handling skills, I got close a couple of times. 
+
+I also got our shower panel replaced. The dented, scratched panel has been bothering me for years. The new one is very similar, but it's black and it's not dented or scratched!!
+
 ## March 10, 2023
 
 I've spent the last few days reworking the look and feel.

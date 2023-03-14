@@ -1,18 +1,13 @@
-import {
-  GoogleAuthProvider,
-  OAuthCredential,
-  User,
-  connectAuthEmulator,
-  getAuth,
-  signInWithPopup,
-} from 'firebase/auth';
+import { GoogleAuthProvider, OAuthCredential, User, signInWithPopup } from 'firebase/auth';
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 
 import { FIREBASE } from 'data/firebase';
 import { NOOP } from 'ui/utils';
 import { WEB } from 'data/web';
+import { doc, setDoc } from 'firebase/firestore/lite';
 import { useFirebase } from 'ui/contexts';
 import { useRouter } from 'next/router';
+import { userSchema } from 'data/user';
 
 type Credential = OAuthCredential | null;
 export interface AuthValue {
@@ -41,7 +36,7 @@ export function useAuth({ forceRedirect }: { forceRedirect: boolean } = { forceR
 }
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const { auth } = useFirebase();
+  const { auth, db } = useFirebase();
   const [user, setUser] = useState<User | null | undefined>();
   const [credential, setCredential] = useState<Credential>(null);
 
@@ -70,13 +65,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     if (auth) {
-      const unsubscribe = auth.onAuthStateChanged(async (user) => {
-        setUser(user);
-      });
+      const unsubscribe = auth.onAuthStateChanged(async (user) => setUser(user));
 
       return () => unsubscribe();
     }
   }, [auth]);
+
+  useEffect(() => {
+    if (db && user) {
+      setDoc(doc(db, FIREBASE.FIRESTORE.COLLECTIONS.USER(user.uid)), userSchema.parse(user));
+    }
+  }, [db, user]);
 
   return (
     <AuthContext.Provider value={{ credential, signInWithGoogle, signOut, user, userId: user?.uid }}>

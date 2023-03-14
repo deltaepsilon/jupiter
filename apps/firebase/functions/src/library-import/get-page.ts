@@ -18,7 +18,7 @@ export async function getPage({ library, librarySnapshot, pageSize, nextPageToke
     pageSize: String(pageSize),
     nextPageToken: nextPageToken ?? undefined,
   }).catch(async (e) => {
-    if (e.response.status === 401) {
+    if (e?.response?.status === 401) {
       // Try again with no accessToken and reset accessToken
       const result = await listMediaItems({
         refreshToken,

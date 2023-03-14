@@ -52,7 +52,7 @@ export async function libraryImportOnWrite(
       nextPageToken,
     });
     const mediaItemsUpdates = getMediaItemUpdates(mediaItems);
-    const priorNextPageToken = beforeImport.nextPageToken;
+    const priorNextPageToken = beforeImport && beforeImport.nextPageToken;
     const isLastPage = !maybeNextPageToken || priorNextPageToken === maybeNextPageToken;
 
     if (isLastPage) await setStatus({ libraryId, status: LibraryTaskStatus.complete, userId });
@@ -74,7 +74,7 @@ export async function libraryImportOnWrite(
      *
      * Refreshing the import stats will always reset the count, so maybe we just force that to happen whenever the
      * import is complete??? I'll do that from the front-end. I'll force a call to refreshStats.
-     * 
+     *
      * Note: I've forced a refresh of the stats. It's great. A little janky... but reliable.
      */
 
@@ -99,8 +99,6 @@ export async function libraryImportOnWrite(
       const newKeys = sortedMediaItemKeys.filter((key) => !existingMediaItemKeys.includes(key));
       const isAllNewKeys = newKeys.length === sortedMediaItemKeys.length;
 
-      console.log({ existingMediaItemKeys, sortedMediaItemKeys, newKeys, isAllNewKeys });
-
       await libraryMediaItemsRef.update(mediaItemsUpdates);
       await libraryImportRef.update({
         count: admin.database.ServerValue.increment(newKeys.length),
@@ -110,9 +108,13 @@ export async function libraryImportOnWrite(
     } else {
       const libraryImportUpdates: Partial<LibraryImport> = {
         // Don't drop the nextPageToken if we're on the last page. Any future restart would begin from the first image.
-        nextPageToken: nextPageToken || priorNextPageToken, 
+        nextPageToken: nextPageToken || priorNextPageToken || null,
         updated: new Date(),
       };
+
+      if (libraryImportUpdates.nextPageToken === null) { // Attempting to preserver nextPageToken if possible
+        delete libraryImportUpdates.nextPageToken;
+      }
 
       await libraryMediaItemsRef.update(mediaItemsUpdates);
       await libraryImportRef.update({

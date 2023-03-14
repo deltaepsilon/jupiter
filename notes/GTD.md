@@ -7,6 +7,7 @@
 
 ## Next actions
 
+- [ ] Debug import hang??
 - [ ] Stripe integration
 
 ## Waiting for
@@ -35,6 +36,7 @@
 
 ## Archive
 
+- [x] Track user logins
 - [x] Content: How to use Google Takeout
 - [x] Logo
 - [x] Carefully test import completion. It appears that the last page is getting downloaded in a loop. Load a few hundred images into the chris@christopheresplin.com library and see if you can download all of them cleanly.
