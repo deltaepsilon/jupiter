@@ -1,7 +1,7 @@
 import { Box, SxProps, Typography } from '@mui/material';
 import { Image, Link, LogInOrContinue, PhoneBorder, Video } from 'ui/components';
+import { WEB } from 'data/web';
 
-import { Footer } from 'web/components/footer';
 import PhotoIcon from '@mui/icons-material/Photo';
 
 export function LandingPage() {
@@ -235,8 +235,18 @@ export function LandingPage() {
       </Typography>
 
       <Typography>
-        If you&apos;re not satisfied with Quiver Photos, we&apos;ll happily issue a full refund. We don&apos;t want
-        unhappy customers. If we can&apos;t make you happy... that&apos;s on us.
+        We&apos;ll happily issue a full refund if you&apos;re not satisfied with Quiver Photos. We learned long ago that
+        nobody likes being an unhappy customer! We hate being unhappy customers. You hate being unhappy customers.
+        EVERYONE HATES IT!!!! ARG!!!
+        <br />
+        Shoot us an email at{' '}
+        <Link
+          blank
+          href={`mailto:${WEB.EMAIL}?subject=Quiver%20Photos&body=Chris!%0D%0A%0D%0AI%20have%20questions%20%3A)`}
+        >
+          {WEB.EMAIL}
+        </Link>{' '}
+        . We&apos;ll take care of it ASAP.
       </Typography>
 
       <TwoColumn>
@@ -262,6 +272,12 @@ export function LandingPage() {
             over on Twitter:{' '}
             <Link blank href='https://twitter.com/chrisesplin'>
               @ChrisEsplin
+            </Link>, or by email:{' '}
+            <Link
+              blank
+              href={`mailto:${WEB.EMAIL}?subject=Quiver%20Photos&body=Chris!%0D%0A%0D%0AI%20have%20questions%20%3A)`}
+            >
+              {WEB.EMAIL}
             </Link>
             <br />
             Check out my other projects at{' '}
