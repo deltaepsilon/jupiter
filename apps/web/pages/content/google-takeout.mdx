@@ -1,0 +1,99 @@
+import { MdxLayout, TwoColumn } from 'ui/components/app/mdx-layout';
+
+export default MdxLayout;
+
+# Google Takeout with EXIF Merge
+
+Google Takeout is the official export method for Google Photos.
+
+Of course, we prefer Quiver Photos as our export tool, but one could be forgiven for attempting the official route first. We certainly tried it... twice.
+
+### Takeout Pros
+
+- It's "Official".
+- This guide streamlines the process significantly.
+
+### Takeout Cons
+
+- Takeout drops metadata
+
+You may need to try this process to fully understand the issue. Read the [Reddit thread](https://www.reddit.com/r/googlephotos/comments/10blavi/google_takeout_for_photos_metadata_json_hell/) for yourself.
+
+In our tests, Google Takeout failed to export date metadata for 20% of our photos. When we imported our media into [Synology photos](https://www.synology.com/en-us/dsm/feature/photos) to create a personal archive, those photos—over 3,000 files for our 15,000-item library—all sorted to the top. They all looked like they'd been photographed on **the same day**!
+
+### Credit
+
+We initially used [Synology's Google Takeout instructions](https://kb.synology.com/en-in/DSM/tutorial/How_do_I_migrate_photos_from_Google_Photos) for our photo rescue attempt. It's a good read.
+
+We're relying heavily on the work of [The Last Gimbus' Google Photos Takeout Helper](https://github.com/TheLastGimbus/GooglePhotosTakeoutHelper). 
+
+## Generate the Google Takeout downloads
+
+1. If you use Storage Saver, make sure your Google Account is in English.
+1. Sign into [Google Takeout](https://takeout.google.com/) and the the following:
+   - Click **Deselect all**.
+   - Select only **Google Photos**.
+   - Click **Next step**.
+   - Choose **Export once**, **.zip** and **50 GB** as your export options.
+   - Wait anywhere from minute to days while Google Takeout compiles your files.
+
+> You may be tempted to select **2GB** files instead of **50GB**. That's fine, but you could end up having to **manage hundreds of downloads**. It can get extremely tedious for large libraries
+
+  ![Deselect all](/images/content/google-takeout/deselect-all.png) 
+  
+  ![Select
+  photos](/images/content/google-takeout/select-photos.png) 
+  
+  ![Next step](/images/content/google-takeout/next-step.png)
+  
+  ![Export selections](/images/content/google-takeout/export-selections.png) 
+
+## Download the files
+
+Export creation can take days. Keep checking the [Google Takeout page](https://takeout.google.com/) to make sure your files are exporting. 
+
+Be patient. You'll still be alive in a week. You're creating an archive of your life history!
+
+When the files are ready, you'll click `Manage exports` and then you'll download each individual file.
+  
+  ![Manage exports](/images/content/google-takeout/manage-exports.png) 
+  
+  ![Download files](/images/content/google-takeout/download-files.png)
+
+## Google Photos Takeout Helper by The Last Gimbus
+
+Visit the [Google Photos Takeout Helper's releases tab](https://github.com/TheLastGimbus/GooglePhotosTakeoutHelper/releases) and download the appropriate executable.
+
+Drop that executable in a folder with all of your `*.zip` files.
+
+Double-click to execute the file, ignore the warnings and run it anyway.
+
+Follow the prompts and let it run!
+
+Make sure to [donate to The Last Gimbus](https://github.com/TheLastGimbus/GooglePhotosTakeoutHelper#if-i-helped-you-you-can-consider-donating-me-). These scripts are a lot of work!
+
+![Google Photos Takeout Helper](/images/content/google-takeout/google-photos-takeout-helper.png) 
+
+### date-unknown
+
+Some of your images will likely get filtered into a `date-unknown` folder.
+
+Google Takeout exports EXIF metadata (the date and geo metadata that we're trying to preserve) into "sidecar files". These are files ending in `*.json` that sit next to the media files.
+
+Unfortunately, Google Takeout sometimes **fails** to export the sidecar files.
+
+You are now responsible for manually editing the EXIF data for each file, which involves finding the file in your Google Photos library and using an EXIF tool to edit the data.
+
+### ExifToolGUI
+
+Our preferred tool for editing EXIF data is [ExifTool](https://exiftool.org/) or [ExifToolGUI](https://exiftool.org/gui/)
+
+They're both power-user tools. One is command-line only. The other layers a GUI on top of the command line tool for ease-of-use.
+
+## Good Luck!
+
+You can certainly recover all of your data using [Google Photos Takeout Helper](https://github.com/TheLastGimbus/GooglePhotosTakeoutHelper/releases) and [ExifTool](https://exiftool.org/). 
+
+If you get fed up, please give Quiver Photos a chance!
+
+

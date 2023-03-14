@@ -4,6 +4,7 @@ import { Image, Link } from 'ui/components';
 import { AppFooter } from 'ui/components/app';
 import EmailIcon from '@mui/icons-material/Email';
 import GitHubIcon from '@mui/icons-material/GitHub';
+import React from 'react';
 import TwitterIcon from '@mui/icons-material/Twitter';
 import { WEB } from 'data/web';
 import WebAssetIcon from '@mui/icons-material/WebAsset';
@@ -19,52 +20,72 @@ export function Footer() {
       }}
     >
       <Box sx={{ display: 'grid', gridTemplateColumns: ['1fr', '1fr 1fr', '1fr 1fr 1fr'], paddingBottom: [2, 0] }}>
-        <Box
-          component='ul'
-          sx={{
-            // padding: 0,
-            // width: '100%',
-            listStyleType: 'none',
-            '&> *': {
-              display: 'block',
-            },
-            button: { color: 'var(--color-white)' },
-            a: { color: 'var(--color-white)', textDecoration: 'none' },
-            'a:visited': {
-              color: 'var(--color-white)',
-            },
-          }}
-        >
-          <Typography component='li' variant='body2'>
-            <Link blank href='https://github.com/deltaepsilon/jupiter'>
-              <Button startIcon={<GitHubIcon />}>deltaepsilon/jupiter</Button>
-            </Link>
-          </Typography>
+        <List>
+          <ListItem
+            blank
+            href={'https://github.com/deltaepsilon/jupiter'}
+            startIcon={<GitHubIcon />}
+            text='deltaepsilon/jupiter'
+          />
 
-          <Typography component='li' variant='body2'>
-            <Link blank href='https://twitter.com/chrisesplin'>
-              <Button startIcon={<TwitterIcon />}>@ChrisEsplin</Button>
-            </Link>
-          </Typography>
+          <ListItem blank href={'https://twitter.com/chrisesplin'} startIcon={<TwitterIcon />} text='@ChrisEsplin' />
 
-          <Typography component='li' variant='body2'>
-            <Link blank href='https://www.chrisesplin.com'>
-              <Button startIcon={<WebAssetIcon />}>ChrisEsplin.com</Button>
-            </Link>
-          </Typography>
+          <ListItem blank href={'https://www.chrisesplin.com'} startIcon={<WebAssetIcon />} text='ChrisEsplin.com' />
 
-          <Typography component='li' variant='body2'>
-            <Link
-              blank
-              href={`mailto:${WEB.EMAIL}?subject=Quiver%20Photos&body=Chris!%0D%0A%0D%0AI%20have%20questions%20%3A)`}
-            >
-              <Button startIcon={<EmailIcon />}>{WEB.EMAIL}</Button>
-            </Link>
-          </Typography>
-        </Box>
+          <ListItem
+            blank
+            href={`mailto:${WEB.EMAIL}?subject=Quiver%20Photos&body=Chris!%0D%0A%0D%0AI%20have%20questions%20%3A)`}
+            startIcon={<EmailIcon />}
+            text={WEB.EMAIL}
+          />
+        </List>
+        <List>
+          <ListItem href='/content/google-takeout' text='Google Takeout Guide' />
+        </List>
       </Box>
       <WorksWithGooglePhotos />
     </AppFooter>
+  );
+}
+
+function List({ children }: { children: React.ReactNode }) {
+  return (
+    <Box
+      component='ul'
+      sx={{
+        listStyleType: 'none',
+        '&> *': {
+          display: 'block',
+        },
+        button: { color: 'var(--color-white)' },
+        a: { color: 'var(--color-white)', textDecoration: 'none' },
+        'a:visited': {
+          color: 'var(--color-white)',
+        },
+      }}
+    >
+      {children}
+    </Box>
+  );
+}
+
+function ListItem({
+  blank = false,
+  href,
+  startIcon = null,
+  text,
+}: {
+  blank?: boolean;
+  href: string;
+  startIcon?: React.ReactNode;
+  text: string;
+}) {
+  return (
+    <Typography component='li' variant='body2'>
+      <Link blank={blank} href={href}>
+        <Button startIcon={startIcon}>{text}</Button>
+      </Link>
+    </Typography>
   );
 }
 

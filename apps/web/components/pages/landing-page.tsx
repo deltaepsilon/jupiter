@@ -75,9 +75,10 @@ export function LandingPage() {
       >
         <Image
           alt='markus winkler unsplash film canisters'
-          fill
+          height={328}
           src='/images/unsplash/markus-winkler-CiA0uLEKeUI-unsplash.jpg'
           style={{ objectFit: 'cover' }}
+          width={800}
         />
         <Typography
           sx={{

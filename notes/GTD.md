@@ -1,7 +1,5 @@
 ## In Progress
 
-- [ ] Logo
-- [ ] Content: How to use Google Takeout
 - [ ] Content: Export options compared (Takeout, Metadata Fixer, Reddit links)
 - [ ] Sitemap
 - [ ] Robots.txt
@@ -37,6 +35,8 @@
 
 ## Archive
 
+- [x] Content: How to use Google Takeout
+- [x] Logo
 - [x] Carefully test import completion. It appears that the last page is getting downloaded in a loop. Load a few hundred images into the chris@christopheresplin.com library and see if you can download all of them cleanly.
 - [x] The import drawer starts to machine-gun `batchGetMediaItems` as soon as you open a month folder
 - [x] Landing page
