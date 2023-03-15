@@ -43,7 +43,7 @@ export function Footer() {
           <ListItem href='/content/google-takeout' text='Google Takeout Guide' />
         </List>
         <List>
-          <ListItem href='/content/privacy-policy' text='Privacy Policy' />
+          <ListItem href='/content/policies' text='Policies' />
         </List>
       </Box>
       <WorksWithGooglePhotos />

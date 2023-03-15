@@ -1,16 +1,24 @@
 ## In Progress
 
-- [ ] Content: Export options compared (Takeout, Metadata Fixer, Reddit links)
+- [ ] Content: Takeout transfer to third-party service
+- [ ] Content: Metadata Fixer
+- [ ] Content: Reddit Links
+- [ ] Content: Export service comparison
 
 ## Next actions
 
 - [ ] Sitemap
-- [ ] Once logged in, the landing page should have a big CTA to go to the web app
-- [ ] `manifest.json`
-- [ ] Stripe integration
+- [ ] Once logged in, the Web App CTA should shake to call attention to itself
+
 
 ## Waiting for
 
+- [ ] `manifest.json`
+- [ ] Lighthouse
+- [ ] Stripe integration
+- [ ] Google Search Console
+- [ ] Improve landing page images, possibly animate a line drawing of a hard drive
+- [ ] Restore **geo** metadata from Google Takeout
 
 ## Someday
 
