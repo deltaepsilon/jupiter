@@ -19,8 +19,8 @@ export const mediaItemSchema = z.object({
   filename: z.string(),
   mediaMetadata: z.object({
     creationTime: z.string(),
-    width: z.string(),
-    height: z.string(),
+    width: z.string().optional(),
+    height: z.string().optional(),
     video: z
       .object({
         cameraMake: z.string().optional(),

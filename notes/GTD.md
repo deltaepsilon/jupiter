@@ -1,5 +1,6 @@
 ## In Progress
 
+- [ ] Privacy policy
 - [ ] Content: Export options compared (Takeout, Metadata Fixer, Reddit links)
 - [ ] Sitemap
 - [ ] Robots.txt
@@ -7,7 +8,6 @@
 
 ## Next actions
 
-- [ ] Debug import hang??
 - [ ] Stripe integration
 
 ## Waiting for
@@ -36,6 +36,7 @@
 
 ## Archive
 
+- [x] Debug import hang
 - [x] Track user logins
 - [x] Content: How to use Google Takeout
 - [x] Logo
