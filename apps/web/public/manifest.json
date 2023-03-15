@@ -1,18 +1,33 @@
 {
-  "short_name": "Google Photos",
-  "name": "Master your Google Photos library",
+  "short_name": "Quiver Photos",
+  "name": "Quiver Photos",
   "icons": [
     {
-      "src": "/icons/app-filled.svg",
-      "type": "image/svg+xml",
+      "src": "/logos/quiver-photos-icon-400x400.png",
+      "type": "image/png",
+      "sizes": "400x400"
+    },
+    {
+      "src": "/logos/quiver-photos-icon-144x144.png",
+      "type": "image/png",
       "sizes": "144x144"
+    },
+    {
+      "src": "/logos/quiver-photos-icon-96x96.png",
+      "type": "image/png",
+      "sizes": "96x96"
+    },
+    {
+      "src": "/logos/quiver-photos-icon-48x48.png",
+      "type": "image/png",
+      "sizes": "48x48"
     }
   ],
   "id": "/?source=pwa",
   "start_url": "/?source=pwa",
-  "background_color": "#00bc96",
+  "background_color": "#e6dfd5",
   "display": "standalone",
   "scope": "/",
   "theme_color": "#09203f",
-  "description": "Sync your Google Photos library down to your computer. Master your data."
+  "description": "Sync your Google Photos library down to your computer. Archive your history."
 }

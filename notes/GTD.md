@@ -13,7 +13,6 @@
 
 ## Waiting for
 
-- [ ] `manifest.json`
 - [ ] Lighthouse
 - [ ] Stripe integration
 - [ ] Google Search Console
@@ -28,6 +27,7 @@
 
 ## Archive
 
+- [x] `manifest.json`
 - [x] Robots.txt
 - [x] Debug `context.auth` problem: https://github.com/firebase/firebase-tools/issues/5210
 - [x] Privacy policy
