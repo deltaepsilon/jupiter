@@ -42,6 +42,9 @@ export function Footer() {
         <List>
           <ListItem href='/content/google-takeout' text='Google Takeout Guide' />
         </List>
+        <List>
+          <ListItem href='/content/privacy-policy' text='Privacy Policy' />
+        </List>
       </Box>
       <WorksWithGooglePhotos />
     </AppFooter>

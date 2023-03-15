@@ -1,41 +1,28 @@
 ## In Progress
 
-- [ ] Privacy policy
 - [ ] Content: Export options compared (Takeout, Metadata Fixer, Reddit links)
-- [ ] Sitemap
-- [ ] Robots.txt
-- [ ] Once logged in, the landing page should have a big CTA to go to the web app
 
 ## Next actions
 
+- [ ] Sitemap
+- [ ] Once logged in, the landing page should have a big CTA to go to the web app
+- [ ] `manifest.json`
 - [ ] Stripe integration
 
 ## Waiting for
 
-- [ ] `manifest.json`
-- [ ] Download on a cron job
-- [ ] Debug `context.auth` problem: https://github.com/firebase/firebase-tools/issues/5210
 
 ## Someday
 
-- [ ] Copy
-      Own your media
-      Google Photos is not archival
-      If you don't store the bits yourself, you don't truly own them
-      Keep using Google Photos, but archive to your hard disc
-
-      You searched "how to download Google Photos"
-      "Why is my Google Photos metadata garbage"
-      or something like "how to export all Google Photos"
-      Surprise! Google has provided a lousy process via Google Takeout,
-      but it wrecks image metadata and messes up all of your dates,
-      leading to a scrambled feed of images with untold duplicates.
-
+- [ ] Download on a cron job
 - [ ] Sync up metadata
 - [ ] Restore metadata to images already on disk
 
 ## Archive
 
+- [x] Robots.txt
+- [x] Debug `context.auth` problem: https://github.com/firebase/firebase-tools/issues/5210
+- [x] Privacy policy
 - [x] Debug import hang
 - [x] Track user logins
 - [x] Content: How to use Google Takeout
