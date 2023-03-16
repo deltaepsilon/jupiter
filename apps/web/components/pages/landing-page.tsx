@@ -1,8 +1,8 @@
 import { Box, SxProps, Typography } from '@mui/material';
 import { Image, Link, LogInOrContinue, PhoneBorder, Video } from 'ui/components';
-import { WEB } from 'data/web';
 
 import PhotoIcon from '@mui/icons-material/Photo';
+import { WEB } from 'data/web';
 
 export function LandingPage() {
   return (
@@ -288,6 +288,17 @@ export function LandingPage() {
           </Typography>
         </Box>
       </TwoColumn>
+
+      <iframe
+        allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share'
+        allowFullScreen
+        frameBorder='0'
+        height='450'
+        src='https://www.youtube.com/embed/wx59PfjTcMo'
+        style={{ maxWidth: 'calc(100vw - 1rem)' }}
+        title='Quiver Photos video walkthrough'
+        width='800'
+      ></iframe>
     </Box>
   );
 }

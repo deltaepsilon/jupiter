@@ -41,6 +41,7 @@ export function Footer() {
         </List>
         <List>
           <ListItem href='/content/google-takeout' text='Google Takeout Guide' />
+          <ListItem href='/content/video-walkthrough' text='Video Walkthrough' />
         </List>
         <List>
           <ListItem href='/content/policies' text='Policies' />
