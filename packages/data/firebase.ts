@@ -1,3 +1,4 @@
+import { WEB } from './web';
 import firebaseJson from '../../apps/firebase/firebase.json';
 
 const CONFIG = {
@@ -11,7 +12,9 @@ const CONFIG = {
   measurementId: 'G-5M5ME2ZH0R',
 };
 
-const FUNCTIONS_BASE_URL = `http://localhost:${firebaseJson.emulators.functions.port}/${CONFIG.projectId}/us-central1`;
+const FUNCTIONS_BASE_URL_DEV = WEB.IS_DEVELOPMENT
+  ? `http://localhost:${firebaseJson.emulators.functions.port}/${CONFIG.projectId}/us-central1`
+  : `https://us-central1-photos-tools-2022.cloudfunctions.net`;
 
 export const FIREBASE = {
   CONFIG,
@@ -46,7 +49,7 @@ export const FIREBASE = {
     },
   },
   FUNCTIONS: {
-    REFRESH_ACCESS_TOKEN: `${FUNCTIONS_BASE_URL}/refreshAccessToken`,
-    BATCH_GET_MEDIA_ITEMS: `${FUNCTIONS_BASE_URL}/batchGetMediaItemsOnRequest`,
+    REFRESH_ACCESS_TOKEN: `${FUNCTIONS_BASE_URL_DEV}/refreshAccessToken`,
+    BATCH_GET_MEDIA_ITEMS: `${FUNCTIONS_BASE_URL_DEV}/batchGetMediaItemsOnRequest`,
   },
 };
