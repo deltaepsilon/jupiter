@@ -211,7 +211,7 @@ function FoldersProgressTree({ downloadState }: { downloadState: DownloadState }
       .filter((f) => f.indexedCount || f.mediaItemsCount)
       .sort((a, b) => (a.folder < b.folder ? 1 : -1))
       .reduce((acc, folderSummary) => {
-        const year = folderSummary.folder.split('/').shift() || 'missing';
+        const year = folderSummary.folder.slice(0, 4) || 'missing';
 
         if (!acc[year]) {
           acc[year] = [];
