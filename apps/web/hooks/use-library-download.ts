@@ -112,6 +112,7 @@ export function useLibraryDownload(libraryId: string, library: Library) {
 
   useEffect(() => {
     if (shouldIngest) {
+      console.info('Ingesting media items.');
       const lastKey = downloadState?.lastKey;
       const mediaItemsRef = ref(database, FIREBASE.DATABASE.PATHS.LIBRARY_MEDIA_ITEMS(userId, libraryId));
       const mediaItemsQuery = lastKey
@@ -127,6 +128,8 @@ export function useLibraryDownload(libraryId: string, library: Library) {
         addToQueue.empty();
         unsubscribe();
       };
+    } else {
+      console.info('Not ingesting media items.');
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [shouldIngest]);

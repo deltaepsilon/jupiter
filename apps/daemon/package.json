@@ -8,8 +8,9 @@
     "dev:watch:pkg": "yarn build && chokidar \"./src/**/*.ts\" -c \"yarn build\" && echo Daemon is built, but not running",
     "dev:pkg": "chokidar \"./src/**/*.ts\" -c \"yarn build:bundle\"",
     "dev:run": "nodemon daemon.js",
+    "dev:ts": "nodemon src/daemon.ts",
     "build": "yarn build:bundle && yarn build:md5 && yarn build:pkg && yarn build:distribute",
-    "build:bundle": "esbuild src/daemon.ts --bundle --platform=node --sourcemap --outfile=./daemon.js",
+    "build:bundle": "esbuild src/daemon.ts --bundle --platform=node --sourcemap --outfile=./daemon.js --external:classic-level",
     "build:md5": "sh bin/write-md5-dist.sh",
     "build:pkg": "pkg .",
     "build:distribute": "sh bin/distribute.sh"
@@ -18,7 +19,8 @@
     "scripts": "index.js",
     "assets": [
       "./daemon.js",
-      "./dist.json"
+      "./dist.json",
+      "../../node_modules/classic-level/prebuilds"
     ],
     "targets": [
       "node16-linux-x64",
@@ -39,11 +41,13 @@
     "md5-file": "^5.0.0",
     "nodemon": "^2.0.20",
     "pkg": "^5.8.0",
+    "ts-node": "^10.9.1",
     "windows-network-drive": "^4.0.1",
     "ws": "^8.12.1"
   },
   "dependencies": {
     "@types/lodash": "^4.14.191",
+    "level": "^8.0.0",
     "lodash": "^4.17.21"
   }
 }

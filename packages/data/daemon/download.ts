@@ -113,13 +113,17 @@ export function getIsRunning(state: DownloadState) {
   return !state.isPaused && RUNNING_STATES.has(state.state);
 }
 
+function getIsComplete(state: DownloadState) {
+  return state.state === 'complete';
+}
+
 export function getShouldIngest(downloadState: DownloadState) {
-  return getIsRunning(downloadState);
+  return getIsRunning(downloadState) || getIsComplete(downloadState);
 }
 
 export function getStateFlags(downloadState: DownloadState = DEFAULT_DOWNLOAD_STATE) {
   return {
-    isComplete: downloadState.state === 'complete',
+    isComplete: getIsComplete(downloadState),
     allFoldersComplete:
       !!downloadState.folderSummaries.length &&
       downloadState.folderSummaries.every(
@@ -142,17 +146,17 @@ export function getTotals(downloadState: DownloadState = DEFAULT_DOWNLOAD_STATE)
   );
 }
 
-export function updateFolder(
+export async function updateFolder(
   { folder, downloadState }: { folder: string; downloadState: DownloadState },
-  updateFunction: (folderSummary: FolderSummary) => FolderSummary
+  updateFunction: (folderSummary: FolderSummary) => Promise<FolderSummary>
 ) {
   const state = downloadStateSchema.parse(downloadState);
   const folderIndex = state.folderSummaries.findIndex((f) => f.folder === folder);
 
   if (folderIndex === -1) {
-    state.folderSummaries.push(updateFunction(folderSummarySchema.parse({ folder, description: folder })));
+    state.folderSummaries.push(await updateFunction(folderSummarySchema.parse({ folder, description: folder })));
   } else {
-    state.folderSummaries[folderIndex] = updateFunction(state.folderSummaries[folderIndex]);
+    state.folderSummaries[folderIndex] = await updateFunction(state.folderSummaries[folderIndex]);
   }
 
   return state;

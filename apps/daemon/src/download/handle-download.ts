@@ -11,7 +11,7 @@ import {
 } from 'data/daemon';
 import { createGettersAndSetters, getFolderFromDate } from '../utils';
 
-import { FilesystemDatabase } from 'daemon/src/db';
+import { LevelDatabase } from 'daemon/src/level';
 import { startDownload } from './start-download';
 
 export async function handleDownload({
@@ -19,7 +19,7 @@ export async function handleDownload({
   message,
   sendMessage,
 }: {
-  db: FilesystemDatabase;
+  db: LevelDatabase;
   message: DaemonMessage;
   sendMessage: SendMessage;
 }) {
@@ -31,7 +31,7 @@ export async function handleDownload({
     uuid,
   });
   const { getDownloadState, setTokens, setUrls } = createGettersAndSetters(db);
-  const downloadState = getDownloadState();
+  const downloadState = await getDownloadState();
   const isRunning = getIsRunning(downloadState);
 
   switch (message.payload.action) {
@@ -39,22 +39,22 @@ export async function handleDownload({
       if (!urls) {
         throw new Error('No URLs provided');
       } else {
-        tokens && setTokens(tokens);
-        setUrls(urls);
+        tokens && (await setTokens(tokens));
+        await setUrls(urls);
       }
 
-      isRunning && startDownload({ db, message, sendMessage });
+      isRunning && (await startDownload({ db, message, sendMessage }));
 
       break;
 
     case DownloadAction.start:
-      start({ db, response });
+      await start({ db, response });
 
-      startDownload({ db, message, sendMessage });
+      await startDownload({ db, message, sendMessage });
       break;
 
     case DownloadAction.pause:
-      pause({ db });
+      await pause({ db });
 
       break;
 
@@ -62,20 +62,20 @@ export async function handleDownload({
       break;
 
     case DownloadAction.destroy:
-      destroy({ db });
+      await destroy({ db });
       response.payload.text = 'Download destroyed.';
 
       break;
 
     case DownloadAction.addMediaItem: {
-      addMediaItem({ db, message, response });
+      await addMediaItem({ db, message, response });
       break;
     }
 
     case DownloadAction.restartIngest: {
-      restartIngest({ db, sendMessage });
+      await restartIngest({ db, sendMessage });
 
-      startDownload({ db, message, sendMessage });
+      await startDownload({ db, message, sendMessage });
       break;
     }
 
@@ -83,39 +83,41 @@ export async function handleDownload({
       break;
   }
 
-  response.payload.data = downloadMessageDataSchema.parse({ libraryId, state: getDownloadState() });
+  response.payload.data = downloadMessageDataSchema.parse({ libraryId, state: await getDownloadState() });
 
   return sendMessage(response);
 }
 
-function start({ db, response }: { db: FilesystemDatabase; response: DaemonMessage }) {
+async function start({ db, response }: { db: LevelDatabase; response: DaemonMessage }) {
   const { getDownloadState, getIngestedIds, getTokens, setDownloadedIds, setTokens, updateDownloadState } =
     createGettersAndSetters(db);
-  const downloadState = getDownloadState();
-  const tokens = getTokens();
+  const downloadState = await getDownloadState();
+  const tokens = await getTokens();
 
   if (downloadState.state === 'idle') {
     response.payload.text = 'Starting download...';
-    updateDownloadState({
+    await updateDownloadState({
       isPaused: false,
       state: 'ingesting',
       text: 'Transferring media items to daemon',
     });
   } else if (downloadState.state === 'complete') {
     response.payload.text = 'Restarting download...';
-    updateDownloadState({
-      folderSummaries: downloadState.folderSummaries.map((folderSummary) => {
-        const folderName = folderSummary.folder;
+    await updateDownloadState({
+      folderSummaries: await Promise.all(
+        downloadState.folderSummaries.map(async (folderSummary) => {
+          const folderName = folderSummary.folder;
 
-        setDownloadedIds(folderName, new Set([]));
+          await setDownloadedIds(folderName, new Set([]));
 
-        return {
-          ...folderSummary,
-          state: 'downloading',
-          downloadedCount: 0,
-          mediaItemsCount: getIngestedIds(folderName).size,
-        };
-      }),
+          return {
+            ...folderSummary,
+            state: 'downloading',
+            downloadedCount: 0,
+            mediaItemsCount: (await getIngestedIds(folderName)).size,
+          };
+        })
+      ),
       isPaused: false,
       state: 'ingesting',
       text: 'Downloading media items',
@@ -123,22 +125,22 @@ function start({ db, response }: { db: FilesystemDatabase; response: DaemonMessa
   } else {
     response.payload.text = 'Resuming download...';
 
-    updateDownloadState({ isPaused: false, text: 'Resuming download...' });
+    await updateDownloadState({ isPaused: false, text: 'Resuming download...' });
   }
 
-  tokens && setTokens(tokens);
+  tokens && (await setTokens(tokens));
 }
 
-function pause({ db }: { db: FilesystemDatabase }) {
+async function pause({ db }: { db: LevelDatabase }) {
   const { updateDownloadState } = createGettersAndSetters(db);
 
-  updateDownloadState({
+  await updateDownloadState({
     isPaused: true,
     text: 'Paused',
   });
 }
 
-function destroy({ db }: { db: FilesystemDatabase }) {
+async function destroy({ db }: { db: LevelDatabase }) {
   const {
     clearDownloadingIds,
     setRelativeFilePaths,
@@ -149,59 +151,61 @@ function destroy({ db }: { db: FilesystemDatabase }) {
     setDownloadedIds,
     getDownloadState,
   } = createGettersAndSetters(db);
-  const downloadState = getDownloadState();
+  const downloadState = await getDownloadState();
 
-  downloadState.folderSummaries.forEach(({ folder }) => {
-    removeMediaItems(folder);
-    resetFileIndices(folder);
-    setIngestedIds(folder, new Set([]));
-    setRelativeFilePaths(folder, new Set());
-    setDownloadedIds(folder, new Set([]));
-  });
+  await Promise.all(
+    downloadState.folderSummaries.map(async ({ folder }) => {
+      await removeMediaItems(folder);
+      await resetFileIndices(folder);
+      await setIngestedIds(folder, new Set([]));
+      await setRelativeFilePaths(folder, new Set());
+      await setDownloadedIds(folder, new Set([]));
+    })
+  );
 
-  clearDownloadingIds();
+  await clearDownloadingIds();
 
-  setDownloadState(DEFAULT_DOWNLOAD_STATE);
+  await setDownloadState(DEFAULT_DOWNLOAD_STATE);
 }
 
-function addMediaItem({
+async function addMediaItem({
   db,
   message,
   response,
 }: {
-  db: FilesystemDatabase;
+  db: LevelDatabase;
   message: DaemonMessage;
   response: DaemonMessage;
 }) {
   const { getIngestedIds, getDownloadState, setIngestedIds, setMediaItem, setDownloadState } =
     createGettersAndSetters(db);
-  const downloadState = getDownloadState();
+  const downloadState = await getDownloadState();
   const mediaItem = message.payload.data.mediaItem;
   const folder = getFolderFromDate(mediaItem.mediaMetadata.creationTime);
 
   if (!mediaItem) {
     response.payload.error = 'No media item provided';
   } else {
-    const ingestedIds = getIngestedIds(folder);
+    const ingestedIds = await getIngestedIds(folder);
 
     ingestedIds.add(mediaItem.id);
 
-    const updatedDownloadState = updateFolder({ folder, downloadState }, (folderSummary) => {
+    const updatedDownloadState = await updateFolder({ folder, downloadState }, async (folderSummary) => {
       folderSummary.mediaItemsCount = ingestedIds.size;
       folderSummary.updated = new Date();
 
       return folderSummary;
     });
 
-    setIngestedIds(folder, ingestedIds);
-    setMediaItem(folder, mediaItem);
-    setDownloadState({ ...updatedDownloadState, lastKey: mediaItem.key });
+    await setIngestedIds(folder, ingestedIds);
+    await setMediaItem(folder, mediaItem);
+    await setDownloadState({ ...updatedDownloadState, lastKey: mediaItem.key });
   }
 }
 
-function restartIngest({ db, sendMessage }: { db: FilesystemDatabase; sendMessage: SendMessage }) {
+async function restartIngest({ db, sendMessage }: { db: LevelDatabase; sendMessage: SendMessage }) {
   const { updateDownloadState } = createGettersAndSetters(db);
-  const state = updateDownloadState({ lastKey: undefined, isPaused: false, state: 'ingesting' });
+  const state = await updateDownloadState({ lastKey: undefined, isPaused: false, state: 'ingesting' });
 
   sendMessage({
     type: MessageType.download,

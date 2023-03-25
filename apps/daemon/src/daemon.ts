@@ -7,14 +7,14 @@ import {
   decodeMessage,
   encodeMessage,
 } from 'data/daemon';
-import { WEB } from 'data/web';
 import { WebSocket, WebSocketServer } from 'ws';
 import { handleDirectory, requestDirectory } from './directory/handle-directory';
-import { versionCheck } from './version-check';
 
-import { FilesystemDatabase } from 'daemon/src/db';
+import { LevelDatabase } from 'daemon/src/level';
+import { WEB } from 'data/web';
 import { handleDownload } from './download/handle-download';
 import { handleFolderMessage } from './folder';
+import { versionCheck } from './version-check';
 
 // import { debug } from './debug';
 // debug();
@@ -39,7 +39,7 @@ function connect() {
 
   wss.on('connection', async (ws) => {
     const sendMessage = getSendMessage(ws);
-    let db: FilesystemDatabase | null = null;
+    let db: LevelDatabase | null = null;
 
     ws.on('message', async (m) => {
       const message = decodeMessage(m);

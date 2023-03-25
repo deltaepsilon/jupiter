@@ -8,8 +8,8 @@ export async function refreshTokens({
   getUrls,
   setTokens,
 }: Pick<GettersAndSetters, 'getTokens' | 'getUrls' | 'setTokens'>) {
-  const urls = getUrls();
-  const { refreshToken } = getTokens();
+  const urls = await getUrls();
+  const { refreshToken } = await getTokens();
   const res = await axios.post(urls.refreshAccessToken, { refreshToken: refreshToken });
   const { access_token, expires_in } = refreshAccessTokenResponse.parse(res.data);
 

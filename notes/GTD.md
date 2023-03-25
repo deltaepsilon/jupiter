@@ -1,11 +1,14 @@
 ## In Progress
 
+- [ ] Repair handleFolderMessage
+
+## Next actions
+
+- [ ] Update Google Login button. Complete verification.
 - [ ] Content: Takeout transfer to third-party service
 - [ ] Content: Metadata Fixer
 - [ ] Content: Reddit Links
 - [ ] Content: Export service comparison
-
-## Next actions
 
 - [ ] Sitemap
 - [ ] Once logged in, the Web App CTA should shake to call attention to itself
@@ -27,6 +30,7 @@
 
 ## Archive
 
+- [x] Convert to LevelDb
 - [x] `manifest.json`
 - [x] Robots.txt
 - [x] Debug `context.auth` problem: https://github.com/firebase/firebase-tools/issues/5210

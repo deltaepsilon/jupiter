@@ -12,7 +12,9 @@ export async function repairFilename(filepath: string, existingExif?: Exif) {
     repairedFilepath = `${filepath}.${exif.FileTypeExtension}`; // Looks like is-bad-extension.png.jpg
 
     await fsPromises.rename(filepath, repairedFilepath);
-  }
 
-  return { filepath: repairedFilepath, isRepaired: filepathNeedsRepair };
+    return { filepath: repairedFilepath, isRepaired: true };
+  } else {
+    return { filepath, isRepaired: false };
+  }
 }

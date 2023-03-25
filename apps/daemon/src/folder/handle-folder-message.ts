@@ -7,7 +7,7 @@ import {
   getFolderDataMessage,
 } from 'data/daemon';
 
-import { FilesystemDatabase } from 'daemon/src/db';
+import { LevelDatabase } from 'daemon/src/level';
 import { createGettersAndSetters } from '../utils';
 
 export async function handleFolderMessage({
@@ -15,7 +15,7 @@ export async function handleFolderMessage({
   message,
   sendMessage,
 }: {
-  db: FilesystemDatabase;
+  db: LevelDatabase;
   message: DaemonMessage;
   sendMessage: SendMessage;
 }) {
@@ -25,7 +25,9 @@ export async function handleFolderMessage({
   switch (message.payload.action) {
     case FolderAction.get:
       {
-        const folderData = getFolderData(folder);
+        const folderData = await getFolderData(folder);
+
+        console.log({ folder, folderData });
 
         sendMessage({
           type: MessageType.folder,

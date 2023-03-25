@@ -1,13 +1,15 @@
 import { mediaItemSchema } from 'data/media-items';
 import { z } from 'zod';
 
-const setOfStringsSchema = z.preprocess((val) => {
-  if (Array.isArray(val)) {
-    return new Set(val);
-  }
+const setOfStringsSchema = z
+  .preprocess((val) => {
+    if (Array.isArray(val)) {
+      return new Set(val);
+    }
 
-  return val;
-}, z.set(z.string()));
+    return val;
+  }, z.set(z.string()))
+  .default(new Set());
 
 export enum FolderAction {
   get = 'get',
@@ -29,9 +31,11 @@ export const fileIndexSchema = z.object({
 });
 export type FileIndex = z.infer<typeof fileIndexSchema>;
 
-export const fileIndexByFilepathSchema = z.object({
-  fileIndexKey: z.string(),
-});
+export const fileIndexByFilepathSchema = z
+  .object({
+    fileIndexKey: z.string(),
+  })
+  .default({ fileIndexKey: '' });
 export type FileIndexByFilepath = z.infer<typeof fileIndexByFilepathSchema>;
 
 export const ingestedIdsSchema = setOfStringsSchema;

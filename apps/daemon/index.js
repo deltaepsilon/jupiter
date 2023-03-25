@@ -5,6 +5,8 @@ const DAEMON_PATH = path.join(__dirname, 'daemon.js');
 function launch() {
   const forked = fork(DAEMON_PATH);
 
+  console.info('🤖 Launching daemon...');
+
   forked.on('exit', (code) => {
     if (code === 0) {
       setTimeout(() => {

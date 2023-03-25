@@ -36,6 +36,7 @@ export async function setExif(filepath: string, exif: Partial<Exif>) {
         if (err) {
           const error = stderr || err;
           console.info('set exif error', error);
+          console.info({ filepath, repairedFilepath });
 
           reject({ error, filepath: repairedFilepath });
         }

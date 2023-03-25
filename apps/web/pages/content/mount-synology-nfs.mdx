@@ -1,0 +1,44 @@
+import { MdxLayout, TwoColumn } from 'ui/components/app/mdx-layout';
+
+export default MdxLayout;
+
+# Synology NFS Mount
+
+Quiver Photos can mount over NFS to a Synology NAS.
+
+## Synology Guides
+
+1. Follow **[Synology NFS Guide](https://kb.synology.com/en-br/DSM/tutorial/How_to_access_files_on_Synology_NAS_within_the_local_network_NFS)**.
+
+2. Next, read the  **[Synology NFS Permissions Guide](https://kb.synology.com/en-br/DSM/help/DSM/AdminCenter/file_share_privilege_nfs?version=7)**.
+
+It'll look something like this.
+
+![Synology Enable NFS](/images/content/mount-synology-nfs/synology-enable-nfs.png)
+![Synology NFS Permissions Entry](/images/content/mount-synology-nfs/synology-nfs-permissions-entry.png)
+![Synology Edit NFS](/images/content/mount-synology-nfs/synology-edit-nfs.png)
+
+3. In Ubuntu, run a command like the following:
+
+```
+mkdir /home/synology/homes
+mount -t nfs 192.168.86.50:/volume1/homes /home/synology/homes
+```
+
+- `/home/synology/homes` is a local directory that we'd like to mount to. We have to create it with `mkdir` if it doesn't exist.
+- `192.168.86.50` is the local IP address for our NAS.
+- `/volume1/homes` is the path to the directory we want to mount.
+
+## Check the logs
+
+Debug with the logs available at `/var/log/messages`.
+
+We first need to SSH into the NAS.
+
+`ssh quiver@192.168.86.50 -p 22`
+
+Next, tail out the logs.
+
+`sudo tail -f /var/log/messages`
+
+![Synology Errors](/images/content/mount-synology-nfs/synology-errors.png)

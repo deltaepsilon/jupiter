@@ -1,24 +1,16 @@
-import {
-  DaemonMessage,
-  DirectoryDbKeys,
-  MessageType,
-  SendMessage,
-  decodeMessage,
-  encodeMessage,
-  setDirectoryData,
-} from 'data/daemon';
+import { DaemonMessage, MessageType, SendMessage, setDirectoryData } from 'data/daemon';
 
-import { createFilesystemDatabase } from '../db';
 import { createGettersAndSetters } from '../utils';
+import { createLevelDatabase } from '../level';
 
 export async function setDirectory(sendMessage: SendMessage, message: DaemonMessage) {
   try {
     const { directory, libraryId } = setDirectoryData.parse(message.payload.data);
     const data = setDirectoryData.parse({ directory, libraryId });
-    const db = await createFilesystemDatabase({ directory, libraryId });
+    const db = await createLevelDatabase({ directory, libraryId });
     const { setDirectory } = createGettersAndSetters(db);
 
-    setDirectory({ path: directory, name: directory });
+    await setDirectory({ path: directory, name: directory });
 
     sendMessage({
       uuid: message.uuid,

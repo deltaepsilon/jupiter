@@ -1,8 +1,8 @@
 import { MessageType, SendMessage, downloadMessageDataSchema, exifDateToDate, updateFolder } from 'data/daemon';
-import { SEPARATOR, createGettersAndSetters, getFileTree, moveToDateFolder, removeDaemonFilepaths } from '../utils';
+import { createGettersAndSetters, getFileTree, moveToDateFolder, removeIrrelevantFilepaths } from '../utils';
 import { getExif, getMd5 } from '../exif';
 
-import { FilesystemDatabase } from '../db';
+import { LevelDatabase } from '../level';
 import { multiplex } from 'ui/utils';
 import path from 'path';
 
@@ -15,7 +15,7 @@ interface OnProgressArgs {
 }
 
 export async function indexFilesystem(
-  { db, sendMessage }: { db: FilesystemDatabase; sendMessage: SendMessage },
+  { db, sendMessage, subFolder = '' }: { db: LevelDatabase; sendMessage: SendMessage; subFolder?: string },
   incomingPath = ''
 ) {
   const {
@@ -30,21 +30,21 @@ export async function indexFilesystem(
     setDownloadState,
     updateDownloadedIds,
   } = createGettersAndSetters(db);
-  const directory = getDirectory();
-  const directoryPath = incomingPath || directory.path;
-  function onProgress({ folder, filesystemProgress, isDownloaded }: OnProgressArgs) {
-    const downloadState = getDownloadState();
-    const updatedDownloadState = updateFolder({ folder, downloadState }, (folderSummary) => {
+  const directory = await getDirectory();
+  const directoryPath = path.join(incomingPath || directory.path, subFolder);
+  async function onProgress({ folder, filesystemProgress, isDownloaded }: OnProgressArgs) {
+    const downloadState = await getDownloadState();
+    const updatedDownloadState = await updateFolder({ folder, downloadState }, async (folderSummary) => {
       folderSummary.state = 'indexing';
-      folderSummary.downloadedCount = getDownloadedIds(folderSummary.folder).size;
-      folderSummary.indexedCount = getRelativeFilePaths(folderSummary.folder).size;
+      folderSummary.downloadedCount = (await getDownloadedIds(folderSummary.folder)).size;
+      folderSummary.indexedCount = (await getRelativeFilePaths(folderSummary.folder)).size;
 
       return folderSummary;
     });
 
     updatedDownloadState.filesystemProgress = filesystemProgress;
 
-    setDownloadState(updatedDownloadState);
+    await setDownloadState(updatedDownloadState);
 
     sendMessage({
       type: MessageType.download,
@@ -55,7 +55,7 @@ export async function indexFilesystem(
     });
   }
   const allFilepaths = await getFileTree(directoryPath);
-  const filepaths = removeDaemonFilepaths(allFilepaths);
+  const filepaths = removeIrrelevantFilepaths(allFilepaths);
 
   if (!directory) {
     throw new Error('Directory not set');
@@ -64,7 +64,7 @@ export async function indexFilesystem(
   sendMessage({
     type: MessageType.download,
     payload: {
-      data: downloadMessageDataSchema.parse({ libraryId: db.libraryId, state: getDownloadState() }),
+      data: downloadMessageDataSchema.parse({ libraryId: db.libraryId, state: await getDownloadState() }),
       text: `Found ${filepaths.length} files in filesystem. Indexing...`,
     },
   });
@@ -75,6 +75,8 @@ export async function indexFilesystem(
     try {
       let i = filepaths.length;
       let hasMessagedPause = false;
+
+      console.info(`Indexing ${i} files`);
 
       while (i--) {
         const initialFilepath = filepaths[i];
@@ -92,13 +94,13 @@ export async function indexFilesystem(
             directoryPath,
             filepath: initialFilepath,
           });
-          const existingFileIndex = getFileIndexByFilepath(folder, updatedFilepath);
-          const downloadState = getDownloadState();
+          const existingFileIndex = await getFileIndexByFilepath(folder, updatedFilepath);
+          const downloadState = await getDownloadState();
           const googleMediaItemId = exif.GoogleMediaItemId;
           const isDownloaded = !!googleMediaItemId;
 
           if (googleMediaItemId) {
-            updateDownloadedIds(folder, (downloadIds) => downloadIds.add(googleMediaItemId));
+            await updateDownloadedIds(folder, (downloadIds) => downloadIds.add(googleMediaItemId));
           }
 
           if (downloadState.isPaused) {
@@ -124,19 +126,19 @@ export async function indexFilesystem(
               },
             });
           } else if (existingFileIndex) {
-            updateProgress({
+            await updateProgress({
               filepaths,
               folder,
               isDownloaded,
               onProgress,
-              relativeFilePathsSize: getAllRelativeFilePaths().size,
+              relativeFilePathsSize: (await getAllRelativeFilePaths()).size,
             });
 
             return;
           }
 
           const { hash, filepath, isRepaired } = await getMd5(updatedFilepath, exif);
-          const fileIndex = getFileIndex(folder, hash);
+          const fileIndex = await getFileIndex(folder, hash);
 
           if (isRepaired) {
             sendMessage({
@@ -154,17 +156,19 @@ export async function indexFilesystem(
 
           fileIndex.relativePaths.push(relativePath);
 
-          setFileIndex(folder, fileIndex);
+          await setFileIndex(folder, fileIndex);
 
-          updateProgress({
+          await updateProgress({
             filepaths,
             folder,
             isDownloaded,
             onProgress,
-            relativeFilePathsSize: getAllRelativeFilePaths().size,
+            relativeFilePathsSize: (await getAllRelativeFilePaths()).size,
           });
         });
       }
+
+      console.info(`Index complete`);
 
       await multiplexer.getPromise();
 
@@ -175,7 +179,7 @@ export async function indexFilesystem(
   });
 }
 
-function updateProgress({
+async function updateProgress({
   filepaths,
   folder,
   isDownloaded,
@@ -190,7 +194,7 @@ function updateProgress({
 }) {
   const filesystemProgress = Math.round((100 * relativeFilePathsSize) / filepaths.length) / 100;
 
-  onProgress({ folder, filesystemProgress, isDownloaded });
+  await onProgress({ folder, filesystemProgress, isDownloaded });
 
   return filesystemProgress;
 }

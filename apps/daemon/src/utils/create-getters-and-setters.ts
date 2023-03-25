@@ -8,7 +8,6 @@ import {
   DownloadingIds,
   FileIndex,
   FileIndexByFilepath,
-  FolderData,
   IngestedIds,
   RelativeFilePaths,
   Tokens,
@@ -28,115 +27,134 @@ import {
 } from 'data/daemon';
 import { MediaItem, mediaItemSchema } from 'data/media-items';
 
-import { FilesystemDatabase } from 'daemon/src/db';
+import { LevelDatabase } from 'daemon/src/level';
 
 export type GettersAndSetters = ReturnType<typeof createGettersAndSetters>;
 
-export function createGettersAndSetters(db: FilesystemDatabase) {
+export function createGettersAndSetters(db: LevelDatabase) {
   const { metadataDb, getFolderDb } = db;
 
   const getters = {
     // META
-    getFolderData: (folder: string) => folderDataSchema.parse(getFolderDb(folder).all()),
+    getFolderData: async (folder: string) => {
+      const [ingestedIds, mediaItems, downloadingIds, relativeFilePaths, filesIndexByFilename, files, downloadedIds] =
+        await getFolderDb(folder).getMany([
+          'ingestedIds',
+          'mediaItems',
+          'downloadingIds',
+          'relativeFilePaths',
+          'filesIndexByFilename',
+          'files',
+          'downloadedIds',
+        ]);
+
+      return folderDataSchema.parse({
+        ingestedIds,
+        mediaItems,
+        downloadingIds,
+        relativeFilePaths,
+        filesIndexByFilename,
+        files,
+        downloadedIds,
+      });
+    },
 
     // Directory
-    getDirectory: () => directorySchema.parse(metadataDb.get(DirectoryDbKeys.directory) || undefined),
-    setDirectory: (directory: Directory) =>
-      metadataDb.set<Directory>(DirectoryDbKeys.directory, directorySchema.parse(directory)),
+    getDirectory: async () => metadataDb.get<Directory>(DirectoryDbKeys.directory, directorySchema),
+    setDirectory: async (directory: Directory) =>
+      metadataDb.put(DirectoryDbKeys.directory, directorySchema.parse(directory)),
 
     // Corrupted Ids
-    getCorruptedIds: (folder: string) =>
-      corruptedIdsSchema.parse(getFolderDb(folder).get(DownloadDbKeys.corruptedIds) || []),
-    setCorruptedIds: (folder: string, corruptedIds: CorruptedIds) =>
-      getFolderDb(folder).set<string[]>(
-        DownloadDbKeys.corruptedIds,
-        Array.from(corruptedIdsSchema.parse(corruptedIds))
-      ),
-    updateCorruptedIds: (folder: string, callback: (corruptedIds: CorruptedIds) => CorruptedIds) => {
-      const corruptedIds = getters.getCorruptedIds(folder);
+    getCorruptedIds: async (folder: string) =>
+      getFolderDb(folder).get<CorruptedIds>(DownloadDbKeys.corruptedIds, corruptedIdsSchema),
+    setCorruptedIds: async (folder: string, corruptedIds: CorruptedIds) =>
+      getFolderDb(folder).put(DownloadDbKeys.corruptedIds, Array.from(corruptedIdsSchema.parse(corruptedIds))),
+    updateCorruptedIds: async (folder: string, callback: (corruptedIds: CorruptedIds) => CorruptedIds) => {
+      const corruptedIds = await getters.getCorruptedIds(folder);
       const newCorruptedIds = callback(corruptedIds);
 
       return getters.setCorruptedIds(folder, newCorruptedIds);
     },
 
     // Downloaded Ids
-    getDownloadedIds: (folder: string) =>
-      downloadedIdsSchema.parse(getFolderDb(folder).get(DownloadDbKeys.downloadedIds) || []),
-    setDownloadedIds: (folder: string, downloadedIds: DownloadedIds) =>
-      getFolderDb(folder).set<string[]>(
-        DownloadDbKeys.downloadedIds,
-        Array.from(downloadedIdsSchema.parse(downloadedIds))
-      ),
-    updateDownloadedIds: (folder: string, callback: (downloadedIds: DownloadedIds) => DownloadedIds) => {
-      const downloadedIds = getters.getDownloadedIds(folder);
+    getDownloadedIds: async (folder: string) =>
+      getFolderDb(folder).get<DownloadedIds>(DownloadDbKeys.downloadedIds, downloadedIdsSchema),
+    setDownloadedIds: async (folder: string, downloadedIds: DownloadedIds) =>
+      getFolderDb(folder).put(DownloadDbKeys.downloadedIds, Array.from(downloadedIdsSchema.parse(downloadedIds))),
+    updateDownloadedIds: async (folder: string, callback: (downloadedIds: DownloadedIds) => DownloadedIds) => {
+      const downloadedIds = await getters.getDownloadedIds(folder);
       const newDownloadedIds = callback(downloadedIds);
 
       return getters.setDownloadedIds(folder, newDownloadedIds);
     },
 
     // Downloading Ids
-    getDownloadingIds: (folder: string) =>
-      downloadingIdsSchema.parse(getFolderDb(folder).get(DownloadDbKeys.downloadingIds) || []),
-    setDownloadingIds: (folder: string, downloadingIds: DownloadingIds) =>
-      getFolderDb(folder).set<string[]>(
-        DownloadDbKeys.downloadingIds,
-        Array.from(downloadingIdsSchema.parse(downloadingIds))
-      ),
-    clearDownloadingIds: () =>
-      getters.getDownloadState().folderSummaries.forEach((f) => getters.setDownloadingIds(f.folder, new Set())),
-    updateDownloadingIds: (folder: string, callback: (downloadingIds: DownloadingIds) => DownloadingIds) => {
-      const downloadingIds = getters.getDownloadingIds(folder);
+    getDownloadingIds: async (folder: string) =>
+      getFolderDb(folder).get<DownloadingIds>(DownloadDbKeys.downloadingIds, downloadingIdsSchema),
+    setDownloadingIds: async (folder: string, downloadingIds: DownloadingIds) =>
+      getFolderDb(folder).put(DownloadDbKeys.downloadingIds, Array.from(downloadingIdsSchema.parse(downloadingIds))),
+    clearDownloadingIds: async () => {
+      const downloadState = await getters.getDownloadState();
+
+      return Promise.all(
+        downloadState.folderSummaries.map(async (f) => getters.setDownloadingIds(f.folder, new Set()))
+      );
+    },
+    updateDownloadingIds: async (folder: string, callback: (downloadingIds: DownloadingIds) => DownloadingIds) => {
+      const downloadingIds = await getters.getDownloadingIds(folder);
       const newDownloadingIds = callback(downloadingIds);
 
       return getters.setDownloadingIds(folder, newDownloadingIds);
     },
 
     // File Indices
-    getFileIndex: (folder: string, md5: string) =>
-      fileIndexSchema.parse(getFolderDb(folder).get(`${DownloadDbKeys.files}.${md5}`) || { md5, relativePaths: [] }),
-    setFileIndex: (folder: string, file: FileIndex) => {
+    getFileIndex: async (folder: string, md5: string) =>
+      getFolderDb(folder).get<FileIndex>(`${DownloadDbKeys.files}.${md5}`, fileIndexSchema, { md5, relativePaths: [] }),
+    setFileIndex: async (folder: string, file: FileIndex) => {
       const folderDb = getFolderDb(folder);
       const fileIndex = fileIndexSchema.parse(file);
       const key = fileIndex.md5;
 
-      fileIndex.relativePaths.forEach((relativePath) => {
-        getters.addRelativeFilePath(folder, relativePath);
+      await Promise.all(
+        fileIndex.relativePaths.map(async (relativePath) => {
+          await getters.addRelativeFilePath(folder, relativePath);
 
-        folderDb.set<FileIndexByFilepath>(
-          `${DownloadDbKeys.filesIndexByFilename}.${relativePath.replace(/\./g, '|')}`,
-          {
+          await folderDb.put(`${DownloadDbKeys.filesIndexByFilename}.${relativePath.replace(/\./g, '|')}`, {
             fileIndexKey: key,
-          }
-        );
+          });
+        })
+      );
+
+      return folderDb.put(`${DownloadDbKeys.files}.${key}`, fileIndex);
+    },
+    getFileIndexByFilepath: async (folder: string, filename: string) => {
+      const folderDb = getFolderDb(folder);
+      const { fileIndexKey } = await folderDb.get<FileIndexByFilepath>(
+        `${DownloadDbKeys.filesIndexByFilename}.${filename.replace(/\./g, '|')}`,
+        fileIndexByFilepathSchema
+      );
+
+      if (!fileIndexKey) return undefined;
+
+      return folderDb.get<FileIndex>(`${DownloadDbKeys.files}.${fileIndexKey}`, fileIndexSchema, {
+        md5: fileIndexKey,
+        relativePaths: [],
       });
-
-      return folderDb.set<FileIndex>(`${DownloadDbKeys.files}.${key}`, fileIndex);
     },
-    getFileIndexByFilepath: (folder: string, filename: string) => {
-      const folderDb = getFolderDb(folder);
-      const fileIndexRecord = folderDb.get(`${DownloadDbKeys.filesIndexByFilename}.${filename.replace(/\./g, '|')}`);
-
-      if (!fileIndexRecord) return undefined;
-
-      const { fileIndexKey } = fileIndexByFilepathSchema.parse(fileIndexRecord);
-      const fileIndex = folderDb.get(`${DownloadDbKeys.files}.${fileIndexKey}`);
-
-      return fileIndex ? fileIndexSchema.parse(fileIndex) : undefined;
-    },
-    resetFileIndices: (folder: string) => {
+    resetFileIndices: async (folder: string) => {
       const folderDb = getFolderDb(folder);
 
-      folderDb.remove(DownloadDbKeys.files);
-      folderDb.remove(DownloadDbKeys.filesIndexByFilename);
+      await folderDb.del(DownloadDbKeys.files);
+      await folderDb.del(DownloadDbKeys.filesIndexByFilename);
     },
 
     // Ingested Ids
-    getIngestedIds: (folder: string) =>
-      ingestedIdsSchema.parse(getFolderDb(folder).get(DownloadDbKeys.ingestedIds) || []),
-    setIngestedIds: (folder: string, ingestedIds: IngestedIds) =>
-      getFolderDb(folder).set<string[]>(DownloadDbKeys.ingestedIds, Array.from(ingestedIdsSchema.parse(ingestedIds))),
-    removeIngestedIds: (folder: string, ingestedIds: string[]) => {
-      const ids = getters.getIngestedIds(folder);
+    getIngestedIds: async (folder: string) =>
+      getFolderDb(folder).get<IngestedIds>(DownloadDbKeys.ingestedIds, ingestedIdsSchema),
+    setIngestedIds: async (folder: string, ingestedIds: IngestedIds) =>
+      getFolderDb(folder).put(DownloadDbKeys.ingestedIds, Array.from(ingestedIdsSchema.parse(ingestedIds))),
+    removeIngestedIds: async (folder: string, ingestedIds: string[]) => {
+      const ids = await getters.getIngestedIds(folder);
 
       ingestedIds.forEach((id) => ids.delete(id));
 
@@ -144,66 +162,69 @@ export function createGettersAndSetters(db: FilesystemDatabase) {
     },
 
     // Media Items
-    getMediaItem: (folder: string, id: string) =>
-      mediaItemSchema.parse(getFolderDb(folder).get(`${DownloadDbKeys.mediaItems}.${id}`) || undefined),
-    setMediaItem: (folder: string, mediaItem: MediaItem) => {
+    getMediaItem: async (folder: string, id: string) =>
+      getFolderDb(folder).get<MediaItem>(`${DownloadDbKeys.mediaItems}.${id}`, mediaItemSchema),
+    setMediaItem: async (folder: string, mediaItem: MediaItem) => {
       const parsed = mediaItemSchema.parse(mediaItem);
 
-      return getFolderDb(folder).set<MediaItem>(`${DownloadDbKeys.mediaItems}.${parsed.id}`, parsed);
+      return getFolderDb(folder).put(`${DownloadDbKeys.mediaItems}.${parsed.id}`, parsed);
     },
-    removeMediaItemsByIds: (folder: string, ids: string[]) => {
+    removeMediaItemsByIds: async (folder: string, ids: string[]) => {
       const folderDb = getFolderDb(folder);
 
-      return ids.map((id) => folderDb.remove(`${DownloadDbKeys.mediaItems}.${id}`));
+      return Promise.all(ids.map(async (id) => folderDb.del(`${DownloadDbKeys.mediaItems}.${id}`)));
     },
-    removeMediaItems: (folder: string) => getFolderDb(folder).remove(DownloadDbKeys.mediaItems),
+    removeMediaItems: async (folder: string) => getFolderDb(folder).del(DownloadDbKeys.mediaItems),
 
     // Relative File Paths
-    getRelativeFilePaths: (folder: string) =>
-      relativeFilePathsSchema.parse(getFolderDb(folder).get(DownloadDbKeys.relativeFilePaths) || []),
-    setRelativeFilePaths: (folder: string, relativeFilePaths: RelativeFilePaths) =>
-      getFolderDb(folder).set<string[]>(
+    getRelativeFilePaths: async (folder: string) =>
+      getFolderDb(folder).get<RelativeFilePaths>(DownloadDbKeys.relativeFilePaths, relativeFilePathsSchema),
+    setRelativeFilePaths: async (folder: string, relativeFilePaths: RelativeFilePaths) =>
+      getFolderDb(folder).put(
         DownloadDbKeys.relativeFilePaths,
         Array.from(relativeFilePathsSchema.parse(relativeFilePaths))
       ),
-    addRelativeFilePath: (folder: string, relativePath: string) => {
-      const relativeFilePaths = getters.getRelativeFilePaths(folder);
+    addRelativeFilePath: async (folder: string, relativePath: string) => {
+      const relativeFilePaths = await getters.getRelativeFilePaths(folder);
 
       relativeFilePaths.add(relativePath);
 
-      return getters.setRelativeFilePaths(folder, relativeFilePaths);
+      await getters.setRelativeFilePaths(folder, relativeFilePaths);
     },
-    getAllRelativeFilePaths: () => {
-      return getters.getDownloadState().folderSummaries.reduce<RelativeFilePaths>((acc, f) => {
-        const relativeFilePaths = getters.getRelativeFilePaths(f.folder);
+    getAllRelativeFilePaths: async () => {
+      const downloadState = await getters.getDownloadState();
+      const result = new Set();
 
-        relativeFilePaths.forEach((p) => acc.add(p));
+      downloadState.folderSummaries.map(async (f) => {
+        const relativeFilePaths = await getters.getRelativeFilePaths(f.folder);
 
-        return acc;
-      }, new Set());
+        relativeFilePaths.forEach((p) => result.add(p));
+      });
+
+      return result;
     },
 
     // State
-    getDownloadState: () => downloadStateSchema.parse(metadataDb.get(DownloadDbKeys.state) || undefined),
-    setDownloadState: (state: Omit<DownloadState, 'updated'>) =>
-      metadataDb.set<DownloadState>(DownloadDbKeys.state, downloadStateSchema.parse({ ...state, updated: new Date() })),
-    updateDownloadState: (state: Partial<DownloadState>) => {
-      const downloadState = getters.getDownloadState();
+    getDownloadState: async () => metadataDb.get<DownloadState>(DownloadDbKeys.state, downloadStateSchema),
+    setDownloadState: async (state: Omit<DownloadState, 'updated'>) =>
+      metadataDb.put(DownloadDbKeys.state, downloadStateSchema.parse({ ...state, updated: new Date() })),
+    updateDownloadState: async (state: Partial<DownloadState>) => {
+      const downloadState = await getters.getDownloadState();
+      const parsed = downloadStateSchema.parse({ ...downloadState, ...state, updated: new Date() });
 
-      return metadataDb.set<DownloadState>(
-        DownloadDbKeys.state,
-        downloadStateSchema.parse({ ...downloadState, ...state, updated: new Date() })
-      );
+      await metadataDb.put(DownloadDbKeys.state, parsed);
+
+      return parsed;
     },
 
     // Tokens
-    getTokens: () => tokensSchema.parse(metadataDb.get(DownloadDbKeys.tokens) || { refreshToken: '' }),
-    setTokens: (tokens: Omit<Tokens, 'updated'>) =>
-      metadataDb.set<Tokens>(DownloadDbKeys.tokens, tokensSchema.parse(tokens)),
+    getTokens: async () => metadataDb.get<Tokens>(DownloadDbKeys.tokens, tokensSchema, { refreshToken: '' }),
+    setTokens: async (tokens: Omit<Tokens, 'updated'>) =>
+      metadataDb.put(DownloadDbKeys.tokens, tokensSchema.parse(tokens)),
 
     // Urls
-    getUrls: () => urlsSchema.parse(metadataDb.get(DownloadDbKeys.urls) || []),
-    setUrls: (urls: Urls) => metadataDb.set<Urls>(DownloadDbKeys.urls, urlsSchema.parse(urls)),
+    getUrls: async () => metadataDb.get<Urls>(DownloadDbKeys.urls, urlsSchema),
+    setUrls: async (urls: Urls) => metadataDb.put(DownloadDbKeys.urls, urlsSchema.parse(urls)),
   };
 
   return getters;

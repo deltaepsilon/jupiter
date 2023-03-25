@@ -9,11 +9,22 @@ export function MdxLayout({ children }: Props) {
     <Box
       sx={{
         maxWidth: '50rem',
-        img: { marginY: 1, borderRadius: 'var(--border-radius)' },
+        img: { marginY: 1, borderRadius: 'var(--border-radius)', maxWidth: '100%' },
         blockquote: {
           borderLeft: '4px solid var(--color-white)',
           paddingX: 2,
-          paddingY: 1
+          paddingY: 1,
+        },
+        pre: {
+          backgroundColor: 'var(--color-light-gray)',
+          padding: 1,
+          code: {
+            paddingX: 0
+          }
+        },
+        code: {
+          backgroundColor: 'var(--color-light-gray)',
+          paddingX: 1,
         },
       }}
     >

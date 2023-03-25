@@ -11,14 +11,15 @@ import {
   progressMessageDataSchema,
   updateFolder,
 } from 'data/daemon';
-import { GettersAndSetters, SEPARATOR, createGettersAndSetters, moveToDateFolder } from '../utils';
+import { GettersAndSetters, SEPARATOR, createGettersAndSetters, moveToDateFolder, getFolderFromDate } from '../utils';
 import { MediaItem, MediaItems, getMediaItemKeys } from 'data/media-items';
 import { SetExifError, getExif, getMd5, setExif } from '../exif';
 import axios, { AxiosProgressEvent } from 'axios';
 import { multiplex, retry } from 'ui/utils';
 
-import { FilesystemDatabase } from '../db';
+import { LevelDatabase } from '../level';
 import debounce from 'lodash/debounce';
+
 import fs from 'fs';
 import fsPromises from 'fs/promises';
 import { getDownloadDirectory } from '../utils';
@@ -30,22 +31,22 @@ const MULTIPLEX_THREADS = 1;
 interface Args {
   folder: string;
   mediaItemIds: string[];
-  db: FilesystemDatabase;
+  db: LevelDatabase;
   sendMessage: SendMessage;
 }
 
 export async function downloadMediaItems({ folder, mediaItemIds, db, sendMessage }: Args) {
   const { getDownloadedIds, getDownloadState, getMediaItem, updateDownloadingIds } = createGettersAndSetters(db);
-  const { directoryPath, downloadDirectory } = getDownloadDirectory(db);
-  const downloadState = getDownloadState();
+  const { directoryPath, downloadDirectory } = await getDownloadDirectory(db);
+  const downloadState = await getDownloadState();
   const multiplexer = multiplex(MULTIPLEX_THREADS);
-  let mediaItems = mediaItemIds.map((mediaItemId) => getMediaItem(folder, mediaItemId));
+  let mediaItems = await Promise.all(mediaItemIds.map(async (mediaItemId) => getMediaItem(folder, mediaItemId)));
   let i = mediaItems.length;
   let stateFlags = getStateFlags(downloadState);
 
   while (i-- && stateFlags.isRunning) {
     const mediaItem = mediaItems[i];
-    const downloadedIds = getDownloadedIds(folder);
+    const downloadedIds = await getDownloadedIds(folder);
 
     if (mediaItem.isInvalid || downloadedIds.has(mediaItem.id)) {
       continue;
@@ -61,10 +62,10 @@ export async function downloadMediaItems({ folder, mediaItemIds, db, sendMessage
       sendMessage,
     });
     mediaItems = updatedMediaItems;
-    stateFlags = getStateFlags(getDownloadState());
+    stateFlags = getStateFlags(await getDownloadState());
 
     multiplexer.add(async () => {
-      updateDownloadingIds(folder, (downloadingIds) => downloadingIds.add(mediaItem.id));
+      await updateDownloadingIds(folder, (downloadingIds) => downloadingIds.add(mediaItem.id));
 
       const updatedDownloadState = await handleFilePromise({
         db,
@@ -75,7 +76,7 @@ export async function downloadMediaItems({ folder, mediaItemIds, db, sendMessage
         sendMessage,
       });
 
-      updateDownloadingIds(folder, (downloadingIds) => (downloadingIds.delete(mediaItem.id), downloadingIds));
+      await updateDownloadingIds(folder, (downloadingIds) => (downloadingIds.delete(mediaItem.id), downloadingIds));
 
       stateFlags = getStateFlags(updatedDownloadState);
     });
@@ -93,7 +94,7 @@ async function writeFile({
   mediaItemIds,
   sendMessage,
 }: {
-  db: FilesystemDatabase;
+  db: LevelDatabase;
   downloadDirectory: string;
   folder: string;
   mediaItem: MediaItem;
@@ -104,7 +105,14 @@ async function writeFile({
   const { getDownloadState, getIngestedIds, removeIngestedIds, removeMediaItemsByIds, setDownloadState } =
     createGettersAndSetters(db);
   function onDownloadProgress(progressEvent: AxiosProgressEvent) {
-    console.info('download progress: ', mediaItem.filename, `${Math.round((progressEvent.progress ?? 0) * 100)}%`);
+    const folder = getFolderFromDate(mediaItem.mediaMetadata.creationTime);
+
+    console.info(
+      'download progress: ',
+      folder,
+      mediaItem.filename,
+      `${Math.round((progressEvent.progress ?? 0) * 100)}%`
+    );
 
     sendMessage({
       type: MessageType.progress,
@@ -119,7 +127,7 @@ async function writeFile({
     });
   }
 
-  function invalidateMediaIds(invalidMediaIds: string[], mediaItems: MediaItems) {
+  async function invalidateMediaIds(invalidMediaIds: string[], mediaItems: MediaItems) {
     if (invalidMediaIds.length) {
       const invalidMediaItems = mediaItems.filter((m) => invalidMediaIds.includes(m.id));
       const invalidMediaKeys = getMediaItemKeys(invalidMediaItems);
@@ -127,15 +135,18 @@ async function writeFile({
       removeMediaItemsByIds(folder, invalidMediaIds);
       removeIngestedIds(folder, invalidMediaIds);
 
-      const updatedDownloadState = updateFolder({ folder, downloadState: getDownloadState() }, (folderSummary) => {
-        const ingestedIds = getIngestedIds(folder);
-        folderSummary.mediaItemsCount = ingestedIds.size;
-        folderSummary.updated = new Date();
+      const updatedDownloadState = await updateFolder(
+        { folder, downloadState: await getDownloadState() },
+        async (folderSummary) => {
+          const ingestedIds = await getIngestedIds(folder);
+          folderSummary.mediaItemsCount = ingestedIds.size;
+          folderSummary.updated = new Date();
 
-        return folderSummary;
-      });
+          return folderSummary;
+        }
+      );
 
-      setDownloadState(updatedDownloadState);
+      await setDownloadState(updatedDownloadState);
 
       sendMessage({
         type: MessageType.download,
@@ -171,7 +182,7 @@ async function writeFile({
         const refreshed = await refreshMediaItems({ db, folder, mediaItemIds });
         const updatedMediaItem = refreshed.mediaItems.find((m) => m.id === mediaItem.id);
 
-        invalidateMediaIds(refreshed.invalidMediaIds, mediaItems);
+        await invalidateMediaIds(refreshed.invalidMediaIds, mediaItems);
 
         mediaItems = mediaItems.map((mediaItem) => {
           const refreshedMediaItem = refreshed.mediaItems.find((m) => m.id === mediaItem.id);
@@ -277,7 +288,7 @@ function getHandleSetExifError({
   mediaItem,
   sendMessage,
 }: {
-  db: FilesystemDatabase;
+  db: LevelDatabase;
   folder: string;
   mediaItem: MediaItem;
   sendMessage: SendMessage;
@@ -297,7 +308,7 @@ function getHandleSetExifError({
   return async function handleSetExifError(e: SetExifError) {
     const { base } = path.parse(e.filepath);
     const cleanBase = base.split(SEPARATOR).pop() ?? base;
-    const directoryPath = path.join(getDirectory().path, CORRUPTED_FOLDER);
+    const directoryPath = path.join((await getDirectory()).path, CORRUPTED_FOLDER);
     const corruptFilepath = path.join(directoryPath, cleanBase);
     const { hash, filepath } = await getMd5(e.filepath);
 
@@ -306,7 +317,7 @@ function getHandleSetExifError({
     await fsPromises.mkdir(directoryPath, { recursive: true });
     await fsPromises.rename(filepath, corruptFilepath);
 
-    updateFileIndex({
+    await updateFileIndex({
       directoryPath,
       filepath: base,
       folder: CORRUPTED_FOLDER,
@@ -316,27 +327,30 @@ function getHandleSetExifError({
       setFileIndex,
     });
 
-    updateCorruptedIds(folder, (corruptedIds) => corruptedIds.add(mediaItem.id));
-    updateDownloadedIds(CORRUPTED_FOLDER, (downloadIds) => downloadIds.add(mediaItem.id));
+    await updateCorruptedIds(folder, (corruptedIds) => corruptedIds.add(mediaItem.id));
+    await updateDownloadedIds(CORRUPTED_FOLDER, (downloadIds) => downloadIds.add(mediaItem.id));
 
-    let updatedDownloadState = updateFolder({ folder, downloadState: getDownloadState() }, (folderSummary) => {
-      folderSummary.corruptedCount = getCorruptedIds(folder).size;
-
-      return folderSummary;
-    });
-
-    updatedDownloadState = updateFolder(
-      { folder: CORRUPTED_FOLDER, downloadState: updatedDownloadState },
-      (folderSummary) => {
-        folderSummary.state = 'downloading';
-        folderSummary.downloadedCount = getDownloadedIds(CORRUPTED_FOLDER).size;
-        folderSummary.indexedCount = getRelativeFilePaths(CORRUPTED_FOLDER).size;
+    let updatedDownloadState = await updateFolder(
+      { folder, downloadState: await getDownloadState() },
+      async (folderSummary) => {
+        folderSummary.corruptedCount = (await getCorruptedIds(folder)).size;
 
         return folderSummary;
       }
     );
 
-    setDownloadState(updatedDownloadState);
+    updatedDownloadState = await updateFolder(
+      { folder: CORRUPTED_FOLDER, downloadState: updatedDownloadState },
+      async (folderSummary) => {
+        folderSummary.state = 'downloading';
+        folderSummary.downloadedCount = (await getDownloadedIds(CORRUPTED_FOLDER)).size;
+        folderSummary.indexedCount = (await getRelativeFilePaths(CORRUPTED_FOLDER)).size;
+
+        return folderSummary;
+      }
+    );
+
+    await setDownloadState(updatedDownloadState);
 
     sendMessage({
       type: MessageType.download,
@@ -360,7 +374,7 @@ async function handleFilePromise({
   mediaItem,
   sendMessage,
 }: {
-  db: FilesystemDatabase;
+  db: LevelDatabase;
   directoryPath: string;
   filePromise: Promise<{ exif: Exif; hash: string; filepath: string } | null>;
   folder: string;
@@ -390,7 +404,7 @@ async function handleFilePromise({
       filepath,
     });
 
-    updateFileIndex({
+    await updateFileIndex({
       directoryPath,
       filepath: yearMonthFilepath,
       folder: yearMonthFolder,
@@ -400,20 +414,20 @@ async function handleFilePromise({
       setFileIndex,
     });
 
-    updateDownloadedIds(folder, (downloadIds) => downloadIds.add(mediaItem.id));
+    await updateDownloadedIds(folder, (downloadIds) => downloadIds.add(mediaItem.id));
 
-    const updatedDownloadState = updateFolder(
-      { folder: yearMonthFolder, downloadState: getDownloadState() },
-      (folderSummary) => {
+    const updatedDownloadState = await updateFolder(
+      { folder: yearMonthFolder, downloadState: await getDownloadState() },
+      async (folderSummary) => {
         folderSummary.state = 'downloading';
-        folderSummary.downloadedCount = getDownloadedIds(yearMonthFolder).size;
-        folderSummary.indexedCount = getRelativeFilePaths(yearMonthFolder).size;
+        folderSummary.downloadedCount = (await getDownloadedIds(yearMonthFolder)).size;
+        folderSummary.indexedCount = (await getRelativeFilePaths(yearMonthFolder)).size;
 
         return folderSummary;
       }
     );
 
-    setDownloadState(updatedDownloadState);
+    await setDownloadState(updatedDownloadState);
 
     sendMessage({
       type: MessageType.download,
@@ -430,7 +444,7 @@ async function handleFilePromise({
   }
 }
 
-function updateFileIndex({
+async function updateFileIndex({
   directoryPath,
   filepath,
   folder,
@@ -448,10 +462,10 @@ function updateFileIndex({
   setFileIndex: GettersAndSetters['setFileIndex'];
 }) {
   const relativeFilepath = path.relative(directoryPath, filepath);
-  const fileIndex = getFileIndex(folder, hash);
+  const fileIndex = await getFileIndex(folder, hash);
 
   fileIndex.mediaItemId = mediaItemId;
   fileIndex.relativePaths.push(relativeFilepath);
 
-  setFileIndex(folder, fileIndex);
+  await setFileIndex(folder, fileIndex);
 }

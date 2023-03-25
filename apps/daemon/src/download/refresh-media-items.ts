@@ -1,4 +1,4 @@
-import { FilesystemDatabase } from '../db';
+import { LevelDatabase } from '../level';
 import axios from 'axios';
 import { batchGetMediaItemsResponseSchema } from 'data/media-items';
 import { createGettersAndSetters } from '../utils';
@@ -8,13 +8,13 @@ export async function refreshMediaItems({
   folder,
   mediaItemIds,
 }: {
-  db: FilesystemDatabase;
+  db: LevelDatabase;
   folder: string;
   mediaItemIds: string[];
 }) {
   const { getTokens, getUrls, setTokens, setMediaItem } = createGettersAndSetters(db);
-  const tokens = getTokens();
-  const urls = getUrls();
+  const tokens = await getTokens();
+  const urls = await getUrls();
 
   const result = await axios.post(urls.batchGetMediaItems, {
     accessToken: tokens.accessToken,
@@ -24,7 +24,16 @@ export async function refreshMediaItems({
   const { accessToken, refreshToken, expiresAt, invalidMediaIds, mediaItemResults } =
     batchGetMediaItemsResponseSchema.parse(result.data);
 
-  setTokens({ accessToken, refreshToken, expiresAt: new Date(expiresAt) });
+  await setTokens({ accessToken, refreshToken, expiresAt: new Date(expiresAt) });
 
-  return { invalidMediaIds, mediaItems: mediaItemResults.map(({ mediaItem }) => setMediaItem(folder, mediaItem)) };
+  return {
+    invalidMediaIds,
+    mediaItems: await Promise.all(
+      mediaItemResults.map(async ({ mediaItem }) => {
+        await setMediaItem(folder, mediaItem);
+
+        return mediaItem;
+      })
+    ),
+  };
 }

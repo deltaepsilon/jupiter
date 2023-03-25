@@ -11,7 +11,7 @@ import {
 } from 'data/daemon';
 import { createAndEmptyFolder, createGettersAndSetters, getDownloadDirectory } from '../utils';
 
-import { FilesystemDatabase } from '../db';
+import { LevelDatabase } from '../level';
 import { downloadMediaItems } from './download-media-items';
 import { indexFilesystem } from './index-filesystem';
 import { wait } from 'ui/utils/wait';
@@ -20,34 +20,46 @@ const BATCH_SIZE = 50;
 const IGNORED_FOLDERS = new Set([CORRUPTED_FOLDER]);
 
 interface Args {
-  db: FilesystemDatabase;
+  db: LevelDatabase;
   message: DaemonMessage;
   sendMessage: SendMessage;
 }
 
 export async function startDownload({ db, message, sendMessage }: Args) {
   const { clearDownloadingIds, getDownloadState, updateDownloadState } = createGettersAndSetters(db);
-  const { downloadDirectory } = getDownloadDirectory(db);
-  let downloadState = getDownloadState();
+  const { downloadDirectory } = await getDownloadDirectory(db);
+  let downloadState = await getDownloadState();
   const { isRunning } = getStateFlags(downloadState);
+
+  console.log(`[startDownload] isRunning: ${isRunning}`);
 
   if (isRunning) {
     try {
       if (downloadState.state === 'ingesting' || downloadState.state === 'indexing') {
+        console.log(`[indexFilesystem] started`);
+        console.time('indexFilesystem');
         const indexingComplete = await indexFilesystem({ db, sendMessage });
+        console.timeEnd('indexFilesystem');
 
         if (indexingComplete) {
-          updateDownloadState({ state: 'downloading', text: 'Local file index complete' });
+          await updateDownloadState({ state: 'downloading', text: 'Local file index complete' });
         }
       }
 
+      console.info('creating download directory');
       await createAndEmptyFolder(downloadDirectory);
-      clearDownloadingIds();
-      downloadState = updateDownloadState({ text: '' });
-      sendDownloadStateMessage({ db, downloadState, sendMessage });
+      await clearDownloadingIds();
+
+      downloadState = await updateDownloadState({ text: '' });
+      await sendDownloadStateMessage({ db, downloadState, sendMessage });
 
       let stateFlags = getStateFlags(downloadState);
       let counter = 0;
+
+      console.info('starting...', {
+        allFoldersComplete: stateFlags.allFoldersComplete,
+        isRunning: stateFlags.isRunning,
+      });
 
       while (!stateFlags.allFoldersComplete && stateFlags.isRunning) {
         const folderSummaries = downloadState.folderSummaries
@@ -57,12 +69,12 @@ export async function startDownload({ db, message, sendMessage }: Args) {
         counter++;
 
         if (counter > 5) {
-          const downloadState = updateDownloadState({
+          const downloadState = await updateDownloadState({
             isPaused: true,
             text: 'Too many retries. Pausing download for now.',
           });
 
-          sendDownloadStateMessage({ db, downloadState, sendMessage });
+          await sendDownloadStateMessage({ db, downloadState, sendMessage });
 
           break;
         } else {
@@ -70,50 +82,57 @@ export async function startDownload({ db, message, sendMessage }: Args) {
         }
 
         let i = folderSummaries.length;
+
+        console.info(`[startDownload] folderSummaries.length: ${folderSummaries.length}`);
         while (i--) {
           const folderSummary = folderSummaries[i];
           const folderNeedsDownload =
             folderSummary.mediaItemsCount > folderSummary.downloadedCount + folderSummary.corruptedCount;
 
           if (folderNeedsDownload) {
-            downloadState = setFolderState({ db, folder: folderSummary.folder, state: 'idle' });
+            downloadState = await setFolderState({ db, folder: folderSummary.folder, state: 'idle' });
           } else {
-            downloadState = setFolderState({ db, folder: folderSummary.folder, state: 'complete' });
+            downloadState = await setFolderState({ db, folder: folderSummary.folder, state: 'complete' });
           }
         }
 
-        sendDownloadStateMessage({ db, downloadState, sendMessage });
+        await sendDownloadStateMessage({ db, downloadState, sendMessage });
 
         let j = folderSummaries.length;
         while (j--) {
           const folderSummary = folderSummaries[j];
           const folderNeedsDownload =
-            folderSummary.mediaItemsCount !== folderSummary.downloadedCount + folderSummary.corruptedCount;
+            folderSummary.mediaItemsCount > folderSummary.downloadedCount + folderSummary.corruptedCount;
 
           stateFlags = getStateFlags(downloadState);
 
           if (folderNeedsDownload && stateFlags.isRunning) {
-            downloadState = setFolderState({ db, folder: folderSummary.folder, state: 'downloading' });
-            sendDownloadStateMessage({ db, downloadState, sendMessage });
+            console.info(`[startDownload] Folder needs download: ${folderSummary.folder}`);
+
+            downloadState = await setFolderState({ db, folder: folderSummary.folder, state: 'downloading' });
+
+            await sendDownloadStateMessage({ db, downloadState, sendMessage });
 
             await downloadFolder({ db, folder: folderSummary.folder, message, sendMessage });
           }
 
-          downloadState = setFolderState({ db, folder: folderSummary.folder, state: 'complete' });
-          sendDownloadStateMessage({ db, downloadState, sendMessage });
+          downloadState = await setFolderState({ db, folder: folderSummary.folder, state: 'complete' });
+          await sendDownloadStateMessage({ db, downloadState, sendMessage });
         }
 
-        downloadState = getDownloadState();
+        downloadState = await getDownloadState();
         stateFlags = getStateFlags(downloadState);
       }
 
+      console.info(`[startDownload] allFoldersComplete: ${stateFlags.allFoldersComplete}`);
+
       if (stateFlags.allFoldersComplete) {
-        downloadState = updateDownloadState({ state: 'complete', text: 'Media item download complete' });
-        sendDownloadStateMessage({ db, downloadState, sendMessage });
+        downloadState = await updateDownloadState({ state: 'complete', text: 'Media item download complete' });
+        await sendDownloadStateMessage({ db, downloadState, sendMessage });
       }
     } catch (error) {
       console.error(error);
-      updateDownloadState({ isPaused: true, text: 'Pausing due to error' });
+      await updateDownloadState({ isPaused: true, text: 'Pausing due to error' });
 
       if (typeof error === 'string') {
         sendMessage({ type: MessageType.download, payload: { error }, uuid: message.uuid });
@@ -135,14 +154,14 @@ export async function startDownload({ db, message, sendMessage }: Args) {
 
 async function downloadFolder({ db, folder, sendMessage }: Args & { folder: string }) {
   const { getIngestedIds, getDownloadedIds, getDownloadingIds, updateDownloadState } = createGettersAndSetters(db);
-  const ingestedIds = getIngestedIds(folder);
-  const downloadedIds = getDownloadedIds(folder);
-  const downloadingIds = getDownloadingIds(folder);
+  const ingestedIds = await getIngestedIds(folder);
+  const downloadedIds = await getDownloadedIds(folder);
+  const downloadingIds = await getDownloadingIds(folder);
   const mediaItemIds = [...ingestedIds].filter((id) => !downloadedIds.has(id) && !downloadingIds.has(id));
   const text = `Downloading ${mediaItemIds.length} new media items to ${folder}`;
 
   if (mediaItemIds.length) {
-    updateDownloadState({ state: 'downloading', text });
+    await updateDownloadState({ state: 'downloading', text });
 
     sendMessage({ type: MessageType.download, payload: { text } });
 
@@ -151,41 +170,49 @@ async function downloadFolder({ db, folder, sendMessage }: Args & { folder: stri
         downloadMediaItems({ folder, mediaItemIds, db, sendMessage })
       )
     );
+  } else {
+    console.info(`No media items to download. Re-indexing ${folder}`);
+    const indexingComplete = await indexFilesystem({ db, sendMessage, subFolder: folder });
+
+    console.info(`Re-indexing complete: ${folder} -> ${indexingComplete}`);
   }
 }
 
-function setFolderState({
+async function setFolderState({
   db,
   folder,
   state,
 }: {
-  db: FilesystemDatabase;
+  db: LevelDatabase;
   folder: FolderSummary['folder'];
   state: FolderSummary['state'];
 }) {
   const { getDownloadState, setDownloadState } = createGettersAndSetters(db);
-  const downloadState = updateFolder({ folder, downloadState: getDownloadState() }, (folderSummary: FolderSummary) => {
-    folderSummary.state = state;
+  const downloadState = await updateFolder(
+    { folder, downloadState: await getDownloadState() },
+    async (folderSummary: FolderSummary) => {
+      folderSummary.state = state;
 
-    return folderSummary;
-  });
+      return folderSummary;
+    }
+  );
 
-  setDownloadState(downloadState);
+  await setDownloadState(downloadState);
 
   return downloadState;
 }
 
-function sendDownloadStateMessage({
+async function sendDownloadStateMessage({
   db,
   downloadState,
   sendMessage,
 }: {
-  db: FilesystemDatabase;
+  db: LevelDatabase;
   downloadState?: DownloadState;
   sendMessage: SendMessage;
 }) {
   const { getDownloadState } = createGettersAndSetters(db);
-  const state = downloadState ?? getDownloadState();
+  const state = downloadState ?? (await getDownloadState());
 
   sendMessage({
     type: MessageType.download,
