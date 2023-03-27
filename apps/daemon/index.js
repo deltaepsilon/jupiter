@@ -7,7 +7,7 @@ function launch() {
 
   console.info('🤖 Launching daemon...');
 
-  forked.on('exit', (code) => {
+  forked.on('uncaughtError', (code) => {
     if (code === 0) {
       setTimeout(() => {
         console.info('🤖 Restarting daemon after a crash...');

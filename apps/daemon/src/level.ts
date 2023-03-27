@@ -57,17 +57,36 @@ export async function createLevelDatabase({ directory, libraryId }: { libraryId:
     }
   }
 
+  let isClosing = false;
   async function openDatabase() {
+    if (isClosing) {
+      return Promise.reject(new Error('Database is closing.'));
+    }
+
     return new Promise<LevelDatabase>((resolve, reject) => {
       metadataDb.open((error) => {
-        console.info('Database status:', metadataDb.status);
+        console.info('🤖 Database status:', metadataDb.status);
 
-        process.on('exit', () => {
-          console.info(`Process exiting. Database is ${metadataDb.status}.`);
-          metadataDb.close(() => {
-            console.info(`Database status: ${metadataDb.status}`);
-          });
-        });
+        async function handleClose(signal: string) {
+          const isCleanExit = new Set(['SIGTERM', 'SIGINT', 'SIGHUP', 'SIGUSR1', 'SIGUSR2']).has(signal);
+
+          console.info('🤖 Closing database...');
+          await metadataDb.close();
+          console.info('🤖 Database status:', metadataDb.status);
+
+          if (isCleanExit) {
+            process.exit(0);
+          } else {
+            console.error(signal);
+            process.exit(1);
+          }
+        }
+
+        process.on('SIGTERM', handleClose);
+        process.on('SIGINT', handleClose);
+        process.on('exit', handleClose);
+        process.on('restart', handleClose);
+        process.on('uncaughtException', handleClose);
 
         if (error) {
           console.log('error opening db', Object.keys(error), error);

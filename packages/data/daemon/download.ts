@@ -39,7 +39,9 @@ export enum DownloadAction {
   restartIngest = 'restart-ingest',
 }
 
-export const urlsSchema = z.object({ refreshAccessToken: z.string(), batchGetMediaItems: z.string() });
+export const urlsSchema = z
+  .object({ refreshAccessToken: z.string(), batchGetMediaItems: z.string() })
+  .default({ refreshAccessToken: '', batchGetMediaItems: '' });
 export type Urls = z.infer<typeof urlsSchema>;
 
 export const tokensSchema = z.object({

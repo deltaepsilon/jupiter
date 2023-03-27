@@ -15,7 +15,7 @@
     "service-account:decode": "echo $SERVICE_ACCOUNT_BASE64 | base64 -di > ./service-account.json"
   },
   "devDependencies": {
-    "dotenv-cli": "^7.0.0",
-    "firebase-tools": "^11.23.0"
+    "dotenv-cli": "^7.1.0",
+    "firebase-tools": "^11.25.1"
   }
 }

@@ -95,7 +95,7 @@ async function start({ db, response }: { db: LevelDatabase; response: DaemonMess
   const tokens = await getTokens();
 
   if (downloadState.state === 'idle') {
-    response.payload.text = 'Starting download...';
+    response.payload.text = 'Download idle.';
     await updateDownloadState({
       isPaused: false,
       state: 'ingesting',

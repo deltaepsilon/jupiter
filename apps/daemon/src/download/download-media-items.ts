@@ -11,7 +11,7 @@ import {
   progressMessageDataSchema,
   updateFolder,
 } from 'data/daemon';
-import { GettersAndSetters, SEPARATOR, createGettersAndSetters, moveToDateFolder, getFolderFromDate } from '../utils';
+import { GettersAndSetters, SEPARATOR, createGettersAndSetters, getFolderFromDate, moveToDateFolder } from '../utils';
 import { MediaItem, MediaItems, getMediaItemKeys } from 'data/media-items';
 import { SetExifError, getExif, getMd5, setExif } from '../exif';
 import axios, { AxiosProgressEvent } from 'axios';
@@ -19,14 +19,13 @@ import { multiplex, retry } from 'ui/utils';
 
 import { LevelDatabase } from '../level';
 import debounce from 'lodash/debounce';
-
 import fs from 'fs';
 import fsPromises from 'fs/promises';
 import { getDownloadDirectory } from '../utils';
 import path from 'path';
 import { refreshMediaItems } from './refresh-media-items';
 
-const MULTIPLEX_THREADS = 1;
+const MULTIPLEX_THREADS = 5;
 
 interface Args {
   folder: string;
@@ -43,6 +42,8 @@ export async function downloadMediaItems({ folder, mediaItemIds, db, sendMessage
   let mediaItems = await Promise.all(mediaItemIds.map(async (mediaItemId) => getMediaItem(folder, mediaItemId)));
   let i = mediaItems.length;
   let stateFlags = getStateFlags(downloadState);
+
+  console.info(`🤖 Downloading with ${MULTIPLEX_THREADS} threads.`);
 
   while (i-- && stateFlags.isRunning) {
     const mediaItem = mediaItems[i];

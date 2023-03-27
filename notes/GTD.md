@@ -5,6 +5,7 @@
 ## Next actions
 
 - [ ] Update Google Login button. Complete verification.
+- [ ] Sign binaries
 - [ ] Content: Takeout transfer to third-party service
 - [ ] Content: Metadata Fixer
 - [ ] Content: Reddit Links
