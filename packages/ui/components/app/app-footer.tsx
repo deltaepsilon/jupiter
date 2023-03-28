@@ -4,7 +4,7 @@ import { createContext, useContext, useRef } from 'react';
 import ReactDOM from 'react-dom';
 import { useWaitForRef } from 'ui/hooks';
 
-export function AppFooter({ children, sx = {} }: { children: React.ReactNode; sx: SxProps }) {
+export function AppFooter({ children, sx = {} }: { children: React.ReactNode; sx: SxProps }): React.ReactPortal | null {
   const el = useContext(FooterPortalContext);
 
   return el ? ReactDOM.createPortal(<Box sx={sx}>{children}</Box>, el) : null;
@@ -19,7 +19,7 @@ export function AppFooterPortalProvider({ children }: { children: React.ReactNod
   return (
     <FooterPortalContext.Provider value={el}>
       {children}
-      <Box data-footer-portal ref={footerRef} sx={{ }} />
+      <Box data-footer-portal ref={footerRef} sx={{}} />
     </FooterPortalContext.Provider>
   );
 }
