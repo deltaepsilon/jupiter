@@ -3,16 +3,27 @@ import { getFolderFromDate } from '../utils';
 import path from 'path';
 
 export const SEPARATOR = '_____';
+const MAX_RETRIES = 3;
+
+interface ReturnValue {
+  isMoved: boolean;
+  filename: string;
+  folder: string;
+  original: string;
+  updated: string;
+}
 
 export async function moveToDateFolder({
   date,
   directoryPath,
   filepath,
+  tries = 0,
 }: {
   date?: Date;
   directoryPath: string;
   filepath: string;
-}) {
+  tries?: number;
+}): Promise<ReturnValue> {
   const folder = getFolderFromDate(date);
   const yearMonthDirectory = path.join(directoryPath, folder);
   const parsedPath = path.parse(filepath);
@@ -28,7 +39,16 @@ export async function moveToDateFolder({
   const yearMonthFilepath = path.join(yearMonthDirectory, filename);
 
   if (isMoved) {
-    await fsPromises.rename(filepath, yearMonthFilepath);
+    try {
+      await fsPromises.rename(filepath, yearMonthFilepath);
+    } catch (error) {
+      if (tries < MAX_RETRIES) {
+        console.info('Retrying moveToDateFolder', { error, filepath, yearMonthFilepath, tries });
+        return moveToDateFolder({ date, directoryPath, filepath, tries: tries + 1 });
+      } else {
+        throw error;
+      }
+    }
   }
 
   return { isMoved, filename, folder, original: filepath, updated: yearMonthFilepath };

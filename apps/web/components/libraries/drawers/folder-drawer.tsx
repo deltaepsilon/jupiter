@@ -15,7 +15,7 @@ interface Props {
 }
 
 export function FolderDrawer({ children, disabled = false, folder, sx = {} }: Props) {
-  const { isOpen, onOpen, onClose } = useModalState({ autoOpenHash: `folder-${folder}` });
+  const { isOpen, onOpen, onClose } = useModalState({ autoOpenHash: `folder-${folder.replace(/[\/|\\]/g, '-')}` });
 
   return (
     <>

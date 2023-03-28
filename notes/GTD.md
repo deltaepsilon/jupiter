@@ -1,10 +1,9 @@
 ## In Progress
 
-- [ ] Repair handleFolderMessage
+- [ ] Update Google Login button. Complete verification.
 
 ## Next actions
 
-- [ ] Update Google Login button. Complete verification.
 - [ ] Sign binaries
 - [ ] Content: Takeout transfer to third-party service
 - [ ] Content: Metadata Fixer
@@ -31,6 +30,8 @@
 
 ## Archive
 
+- [x] win-test is throwing a rename error
+- [x] Repair handleFolderMessage
 - [x] Debug `setToken` call. It doesn't appear to be working in prod. `refreshToken` is empty.
 - [x] Convert to LevelDb
 - [x] `manifest.json`
