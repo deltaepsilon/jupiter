@@ -36,11 +36,20 @@ export type LevelDatabase = {
 
 type FolderSublevel = AbstractSublevel<Level<string, MetadataData>, string | Buffer | Uint8Array, string, any>;
 
+let existingDb: Level<string, any> | null = null;
+
 export async function createLevelDatabase({ directory, libraryId }: { libraryId: string; directory: string }) {
   const libraryPath = path.join(directory, DB_FOLDER_NAME, libraryId);
-  // const libraryPath = path.join(__dirname, 'db');
-  const metadataDb = new Level<string, any>(libraryPath, { valueEncoding: 'json' });
   const folderDbs: Map<string, Db> = new Map();
+
+  if (existingDb) {
+    console.info('🤖 Closing existing database...');
+    await existingDb.close();
+  }
+
+  const metadataDb = new Level<string, any>(libraryPath, { valueEncoding: 'json' });
+
+  existingDb = metadataDb;
 
   function getFolderDb(folder: string) {
     const folderSlug = folder.replace(/[\\|\/]/g, '-');

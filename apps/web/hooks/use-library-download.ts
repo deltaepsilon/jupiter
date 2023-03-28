@@ -35,13 +35,6 @@ export function useLibraryDownload(libraryId: string, library: Library) {
           throw new Error('mediaItem is required for addMediaItem action');
         }
 
-        if (action === DownloadAction.init) {
-          urls = {
-            refreshAccessToken: FIREBASE.FUNCTIONS.REFRESH_ACCESS_TOKEN,
-            batchGetMediaItems: FIREBASE.FUNCTIONS.BATCH_GET_MEDIA_ITEMS,
-          };
-        }
-
         return send({
           type: MessageType.download,
           payload: {
@@ -50,7 +43,10 @@ export function useLibraryDownload(libraryId: string, library: Library) {
               libraryId,
               tokens: { refreshToken: library.refreshToken },
               mediaItem,
-              urls,
+              urls: {
+                refreshAccessToken: FIREBASE.FUNCTIONS.REFRESH_ACCESS_TOKEN,
+                batchGetMediaItems: FIREBASE.FUNCTIONS.BATCH_GET_MEDIA_ITEMS,
+              },
             }),
           },
         }).then((result) => {
@@ -76,7 +72,11 @@ export function useLibraryDownload(libraryId: string, library: Library) {
     isDbReady && downloadState && getShouldIngest(downloadState) && !!database && !!userId && !!libraryId;
 
   useEffect(() => {
-    userId && isDbReady && init();
+    if (userId && isDbReady) {
+      console.log('useLibraryDownload: init', { userId, isDbReady });
+
+      init();
+    }
   }, [init, isDbReady, userId]);
 
   useEffect(() => {

@@ -1,3 +1,4 @@
+import { FIREBASE } from '../firebase';
 import { mediaItemSchema } from '../media-items';
 import short from 'short-uuid';
 import { z } from 'zod';
@@ -41,7 +42,10 @@ export enum DownloadAction {
 
 export const urlsSchema = z
   .object({ refreshAccessToken: z.string(), batchGetMediaItems: z.string() })
-  .default({ refreshAccessToken: '', batchGetMediaItems: '' });
+  .default({
+    refreshAccessToken: FIREBASE.FUNCTIONS.REFRESH_ACCESS_TOKEN,
+    batchGetMediaItems: FIREBASE.FUNCTIONS.BATCH_GET_MEDIA_ITEMS,
+  });
 export type Urls = z.infer<typeof urlsSchema>;
 
 export const tokensSchema = z.object({

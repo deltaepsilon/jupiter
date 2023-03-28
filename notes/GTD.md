@@ -31,6 +31,7 @@
 
 ## Archive
 
+- [x] Debug `setToken` call. It doesn't appear to be working in prod. `refreshToken` is empty.
 - [x] Convert to LevelDb
 - [x] `manifest.json`
 - [x] Robots.txt

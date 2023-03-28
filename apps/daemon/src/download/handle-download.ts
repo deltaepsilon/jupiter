@@ -34,13 +34,17 @@ export async function handleDownload({
   const downloadState = await getDownloadState();
   const isRunning = getIsRunning(downloadState);
 
+  async function setTokensAndUrls() {
+    tokens && (await setTokens(tokens));
+    urls && (await setUrls(urls));
+  }
+
   switch (message.payload.action) {
     case DownloadAction.init:
       if (!urls) {
         throw new Error('No URLs provided');
       } else {
-        tokens && (await setTokens(tokens));
-        await setUrls(urls);
+        await setTokensAndUrls();
       }
 
       isRunning && (await startDownload({ db, message, sendMessage }));
@@ -48,8 +52,8 @@ export async function handleDownload({
       break;
 
     case DownloadAction.start:
+      await setTokensAndUrls();
       await start({ db, response });
-
       await startDownload({ db, message, sendMessage });
       break;
 
