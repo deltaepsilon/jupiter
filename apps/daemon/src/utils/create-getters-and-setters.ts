@@ -37,10 +37,11 @@ export function createGettersAndSetters(db: LevelDatabase) {
   const getters = {
     // META
     getFolderData: async (folder: string) => {
-      const [ingestedIds, mediaItems, downloadingIds, relativeFilePaths, filesIndexByFilename, files, downloadedIds] =
+      const folderMediaItemsDb = getFolderDb(folder, DownloadDbKeys.mediaItems);
+      const mediaItems = await folderMediaItemsDb.values().all();
+      const [ingestedIds, downloadingIds, relativeFilePaths, filesIndexByFilename, files, downloadedIds] =
         await getFolderDb(folder).getMany([
           'ingestedIds',
-          'mediaItems',
           'downloadingIds',
           'relativeFilePaths',
           'filesIndexByFilename',
@@ -163,16 +164,16 @@ export function createGettersAndSetters(db: LevelDatabase) {
 
     // Media Items
     getMediaItem: async (folder: string, id: string) =>
-      getFolderDb(folder).get<MediaItem>(`${DownloadDbKeys.mediaItems}.${id}`, mediaItemSchema),
+      getFolderDb(folder, DownloadDbKeys.mediaItems).get<MediaItem>(id, mediaItemSchema),
     setMediaItem: async (folder: string, mediaItem: MediaItem) => {
       const parsed = mediaItemSchema.parse(mediaItem);
 
-      return getFolderDb(folder).put(`${DownloadDbKeys.mediaItems}.${parsed.id}`, parsed);
+      return getFolderDb(folder, DownloadDbKeys.mediaItems).put(parsed.id, parsed);
     },
     removeMediaItemsByIds: async (folder: string, ids: string[]) => {
-      const folderDb = getFolderDb(folder);
+      const folderMediaItemsDb = getFolderDb(folder, DownloadDbKeys.mediaItems);
 
-      return Promise.all(ids.map(async (id) => folderDb.del(`${DownloadDbKeys.mediaItems}.${id}`)));
+      return Promise.all(ids.map(async (id) => folderMediaItemsDb.del(id)));
     },
     removeMediaItems: async (folder: string) => getFolderDb(folder).del(DownloadDbKeys.mediaItems),
 

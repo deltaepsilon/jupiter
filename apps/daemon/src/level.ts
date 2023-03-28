@@ -1,7 +1,7 @@
 import { Directory, DownloadState, FileIndex, FileIndexByFilepath, Tokens, Urls } from 'data/daemon';
+import { Level, ValueIterator, ValueIteratorOptions } from 'level';
 
 import { AbstractSublevel } from 'abstract-level';
-import { Level } from 'level';
 import { MediaItem } from 'data/media-items';
 import path from 'path';
 import { z } from 'zod';
@@ -31,7 +31,7 @@ export type LevelDatabase = {
   isDb: boolean;
   libraryId: string;
   metadataDb: Db;
-  getFolderDb: (folder: string) => Db;
+  getFolderDb: (folder: string, suffix?: string) => Db;
 };
 
 type FolderSublevel = AbstractSublevel<Level<string, MetadataData>, string | Buffer | Uint8Array, string, any>;
@@ -51,14 +51,15 @@ export async function createLevelDatabase({ directory, libraryId }: { libraryId:
 
   existingDb = metadataDb;
 
-  function getFolderDb(folder: string) {
+  function getFolderDb(folder: string, suffix: string = '') {
     const folderSlug = folder.replace(/[\\|\/]/g, '-');
-    const cachedDb = folderDbs.get(folderSlug);
+    const combinedSlug = suffix ? `${folderSlug}_${suffix}` : folderSlug;
+    const cachedDb = folderDbs.get(combinedSlug);
 
     if (!cachedDb) {
-      const folderDb = wrapDb(metadataDb.sublevel<string, any>(folderSlug, { valueEncoding: 'json' }));
+      const folderDb = wrapDb(metadataDb.sublevel<string, any>(combinedSlug, { valueEncoding: 'json' }));
 
-      folderDbs.set(folderSlug, folderDb);
+      folderDbs.set(combinedSlug, folderDb);
 
       return folderDb;
     } else {
@@ -98,8 +99,6 @@ export async function createLevelDatabase({ directory, libraryId }: { libraryId:
         process.on('uncaughtException', handleClose);
 
         if (error) {
-          console.log('error opening db', Object.keys(error), error);
-
           // @ts-ignore
           if (error.code === 'LEVEL_LOCKED') {
             console.info('Database locked!');
@@ -137,7 +136,7 @@ function wrapDb(level: Level<string, any> | FolderSublevel) {
     },
     put: async (key: string, value: any) => {
       try {
-        return await level.put(key, value);
+        return level.put(key, value);
       } catch (error) {
         console.error('level.put error', key, value, error);
 
@@ -146,21 +145,15 @@ function wrapDb(level: Level<string, any> | FolderSublevel) {
     },
     del: async (key: string) => {
       try {
-        return await level.del(key);
+        return level.del(key);
       } catch (error) {
         console.error('level.del error', key, error);
 
         return null;
       }
     },
-    getMany: async (keys: string[]) => {
-      try {
-        return await level.getMany(keys);
-      } catch (error) {
-        console.error('level.getMany error', keys, error);
-
-        return [];
-      }
-    },
+    getMany: level.getMany.bind(level),
+    values: level.values.bind(level),
+    iterator: level.iterator.bind(level),
   };
 }

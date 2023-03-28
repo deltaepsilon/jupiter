@@ -31,12 +31,12 @@ export async function startDownload({ db, message, sendMessage }: Args) {
   let downloadState = await getDownloadState();
   const { isRunning } = getStateFlags(downloadState);
 
-  console.log(`[startDownload] isRunning: ${isRunning}`);
+  console.info(`[startDownload] isRunning: ${isRunning}`);
 
   if (isRunning) {
     try {
       if (downloadState.state === 'ingesting' || downloadState.state === 'indexing') {
-        console.log(`[indexFilesystem] started`);
+        console.info(`[indexFilesystem] started`);
         console.time('indexFilesystem');
         const indexingComplete = await indexFilesystem({ db, sendMessage });
         console.timeEnd('indexFilesystem');

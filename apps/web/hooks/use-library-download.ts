@@ -73,8 +73,6 @@ export function useLibraryDownload(libraryId: string, library: Library) {
 
   useEffect(() => {
     if (userId && isDbReady) {
-      console.log('useLibraryDownload: init', { userId, isDbReady });
-
       init();
     }
   }, [init, isDbReady, userId]);

@@ -52,7 +52,7 @@ export const folderDataSchema = z
     files: z.record(z.string(), fileIndexSchema).default({}),
     filesIndexByFilename: z.record(z.string(), fileIndexByFilepathSchema).default({}),
     ingestedIds: ingestedIdsSchema.default(new Set()),
-    mediaItems: z.record(z.string(), mediaItemSchema).default({}),
+    mediaItems: z.array(mediaItemSchema).default([]),
     relativeFilePaths: relativeFilePathsSchema.default(new Set()),
   })
   .default({
@@ -61,7 +61,7 @@ export const folderDataSchema = z
     files: {},
     filesIndexByFilename: {},
     ingestedIds: new Set(),
-    mediaItems: {},
+    mediaItems: [],
     relativeFilePaths: new Set(),
   });
 export type FolderData = z.infer<typeof folderDataSchema>;

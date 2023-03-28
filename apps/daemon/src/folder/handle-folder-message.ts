@@ -27,8 +27,6 @@ export async function handleFolderMessage({
       {
         const folderData = await getFolderData(folder);
 
-        console.log({ folder, folderData });
-
         sendMessage({
           type: MessageType.folder,
           payload: { action: FolderAction.get, data: { folder, folderData: getFolderDataMessage(folderData) } },
