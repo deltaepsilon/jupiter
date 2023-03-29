@@ -37,21 +37,26 @@ jobs:
     steps:
       - name: ⬇️ Checkout repo
         uses: actions/checkout@v3
+
       - name: ⎔ Setup node
         uses: actions/setup-node@v3
         with:
           node-version: 16.18.1
           cache: yarn
+
       - run: yarn install
         env:
           YARN_ENABLE_IMMUTABLE_INSTALLS: false
 
-      - run: echo $WINDOWS_CERT > apps/daemon/bin/sign/certs/bundle.crt
-      - run: echo $WINDOWS_KEY > apps/daemon/bin/sign/certs/codesign.key
-      - run: yarn build
+      - name: Copy certs for signing binaries
+        run: |
+          echo $WINDOWS_CERT > apps/daemon/bin/sign/certs/bundle.crt
+          echo $WINDOWS_KEY > apps/daemon/bin/sign/certs/codesign.key
+        env:
+          WINDOWS_CERT: ${{ secrets.WINDOWS_CERT }}
+          WINDOWS_KEY: ${{ secrets.WINDOWS_KEY }}
 
-      # https://github.com/jonfriesen/windows-signer-action
-      
+      - run: yarn build     
 
       #  See https://docs.github.com/en/actions/deployment/security-hardening-your-deployments/configuring-openid-connect-in-google-cloud-platform
       #
@@ -60,6 +65,7 @@ jobs:
         uses: google-github-actions/setup-gcloud@v1
         with:
           version: '>= 417.0.0'
+      
       - id: auth
         name: Authenticate to Google Cloud
         uses: google-github-actions/auth@v1

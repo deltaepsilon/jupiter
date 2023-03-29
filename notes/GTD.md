@@ -1,6 +1,6 @@
 ## In Progress
 
-- [ ] Sign binaries
+- [ ] Sign Mac binaries
 
 ## Next actions
 
@@ -29,6 +29,7 @@
 
 ## Archive
 
+- [x] Sign Windows binaries
 - [x] Update Google Login button. Complete verification.
 - [x] win-test is throwing a rename error
 - [x] Repair handleFolderMessage
