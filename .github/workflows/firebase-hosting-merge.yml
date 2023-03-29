@@ -50,6 +50,7 @@ jobs:
 
       - name: Copy certs for signing binaries
         run: |
+          mkdir -p apps/daemon/bin/sign/certs/
           echo $WINDOWS_CERT > apps/daemon/bin/sign/certs/bundle.crt
           echo $WINDOWS_KEY > apps/daemon/bin/sign/certs/codesign.key
         env:

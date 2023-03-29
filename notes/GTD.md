@@ -1,5 +1,7 @@
 ## In Progress
 
+- [ ] Get Mac daemon to copy files to the correct folders
+- [ ] Debug Mac network share issues
 - [ ] Sign Mac binaries
 
 ## Next actions

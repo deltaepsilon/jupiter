@@ -61,7 +61,7 @@ function connect() {
           if (!db) {
             return sendMessage({
               type: MessageType.download,
-              payload: { error: 'Filesystem database not initialized' },
+              payload: { error: 'Filesystem database not initialized. Try re-selecting your folder.' },
             });
           } else {
             return handleDownload({ db, message, sendMessage });

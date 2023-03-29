@@ -78,3 +78,6 @@ echo "Copying to local windows Downloads folder for testing ease..."
 rm -rf /mnt/c/Users/chris/Downloads/daemon || true
 cp -r $WEB_DAEMON_PATH /mnt/c/Users/chris/Downloads/ || true
 
+rm -rf /synology/stego/homes/quiver/Photos/mac-test/daemon || true
+cp -r $WEB_DAEMON_PATH /synology/stego/homes/quiver/Photos/mac-test/ || true
+
