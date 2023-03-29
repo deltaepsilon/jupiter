@@ -2,6 +2,7 @@ import { Button, SxProps } from '@mui/material';
 
 import LaunchIcon from '@mui/icons-material/Launch';
 import { Link } from 'ui/components';
+import NextImage from 'next/image';
 import { WEB } from 'data/web';
 import { useAuth } from 'ui/contexts';
 import { useRouter } from 'next/router';
@@ -20,8 +21,13 @@ export function LogInOrContinue({ sx = {} }: { sx?: SxProps }) {
       </Link>
     ) : null
   ) : (
-    <Button onClick={signInWithGoogle} variant='contained'>
-      Log in
+    <Button onClick={signInWithGoogle} variant='text'>
+      <NextImage
+        alt='sign in with google'
+        height={46}
+        src='/icons/btn_google_signin_dark_normal_web@2x.png'
+        width={191}
+      />
     </Button>
   );
 }

@@ -129,6 +129,8 @@ export async function startDownload({ db, message, sendMessage }: Args) {
       if (stateFlags.allFoldersComplete) {
         downloadState = await updateDownloadState({ state: 'complete', text: 'Media item download complete' });
         await sendDownloadStateMessage({ db, downloadState, sendMessage });
+
+        console.info('🎉🎉🎉  Great success. Your journey is complete!!! 🎉🎉🎉');
       }
     } catch (error) {
       console.error(error);

@@ -4,7 +4,7 @@ import firebaseJson from '../../apps/firebase/firebase.json';
 const CONFIG = {
   APP_NAME: 'google-photos',
   apiKey: 'AIzaSyCwCbnCcsSyqLdpMGygRFGp-xMfdZDVSEA',
-  authDomain: 'photos-tools-2022.firebaseapp.com',
+  authDomain: 'photos.chrisesplin.com',
   projectId: 'photos-tools-2022',
   storageBucket: 'photos-tools-2022.appspot.com',
   messagingSenderId: '550579950350',
