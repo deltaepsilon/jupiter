@@ -1,10 +1,9 @@
 ## In Progress
 
-- [ ] Update Google Login button. Complete verification.
+- [ ] Sign binaries
 
 ## Next actions
 
-- [ ] Sign binaries
 - [ ] Content: Takeout transfer to third-party service
 - [ ] Content: Metadata Fixer
 - [ ] Content: Reddit Links
@@ -30,6 +29,7 @@
 
 ## Archive
 
+- [x] Update Google Login button. Complete verification.
 - [x] win-test is throwing a rename error
 - [x] Repair handleFolderMessage
 - [x] Debug `setToken` call. It doesn't appear to be working in prod. `refreshToken` is empty.

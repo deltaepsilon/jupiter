@@ -47,6 +47,24 @@ jobs:
           YARN_ENABLE_IMMUTABLE_INSTALLS: false
       - run: yarn build
 
+      # https://github.com/jonfriesen/windows-signer-action
+      - name: Sign Windows x64 binary
+        uses: jonfriesen/windows-signer-action@v1.0.0
+        env:
+          NAME: "Chris Esplin"
+          DOMAIN: https://photos.chrisesplin.com
+          BINARY: apps/web/public/daemon/quiver-photos-windows-x64/daemon-win-x64.exe
+          WINDOWS_CERT: ${{ secrets.WINDOWS_CERT }}
+          WINDOWS_KEY: ${{ secrets.WINDOWS_KEY }}
+      - name: Sign Windows arm64 binary
+        uses: jonfriesen/windows-signer-action@v1.0.0
+        env:
+          NAME: "Chris Esplin"
+          DOMAIN: https://chrisesplin.com
+          BINARY: apps/web/public/daemon/quiver-photos-windows-arm64/daemon-win-arm64.exe
+          WINDOWS_CERT: ${{ secrets.WINDOWS_CERT }}
+          WINDOWS_KEY: ${{ secrets.WINDOWS_KEY }}
+
       #  See https://docs.github.com/en/actions/deployment/security-hardening-your-deployments/configuring-openid-connect-in-google-cloud-platform
       #
       # Also see notes/artifact-registry.md
