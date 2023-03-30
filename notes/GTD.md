@@ -1,7 +1,6 @@
 ## In Progress
 
-- [ ] Get Mac daemon to copy files to the correct folders
-- [ ] Debug Mac network share issues
+- [ ] Add Mac NFS instructions to guide. See screenshots in /apps/web/public/images/content/mount-synology-nfs
 - [ ] Sign Mac binaries
 
 ## Next actions
@@ -31,6 +30,7 @@
 
 ## Archive
 
+- [x] Get Mac daemon to copy files to the correct folders
 - [x] Sign Windows binaries
 - [x] Update Google Login button. Complete verification.
 - [x] win-test is throwing a rename error

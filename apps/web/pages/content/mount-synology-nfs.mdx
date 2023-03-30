@@ -18,16 +18,19 @@ It'll look something like this.
 ![Synology NFS Permissions Entry](/images/content/mount-synology-nfs/synology-nfs-permissions-entry.png)
 ![Synology Edit NFS](/images/content/mount-synology-nfs/synology-edit-nfs.png)
 
-3. In Ubuntu, run a command like the following:
+### Linux
+
+In Ubuntu, run a command like the following:
 
 ```
 mkdir -p /home/synology/homes
 mount -t nfs 192.168.86.50:/volume1/homes /home/synology/homes
 ```
 
-- `/home/synology/homes` is a local directory that we'd like to mount to. We have to create it with `mkdir` if it doesn't exist.
-- `192.168.86.50` is the local IP address for our NAS.
-- `/volume1/homes` is the path to the directory we want to mount.
+## MacOS
+
+- Connect to a server
+- Add the nfs server with a path like `nfs://192.168.86.50/volume1/homes`
 
 ## Check the logs
 

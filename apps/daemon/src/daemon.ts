@@ -1,10 +1,13 @@
 import {
   DaemonMessage,
+  DownloadAction,
   GetMessageArgs,
   MessageType,
   PORT,
   SendMessage,
   decodeMessage,
+  downloadMessageDataSchema,
+  downloadStateSchema,
   encodeMessage,
 } from 'data/daemon';
 import { WebSocket, WebSocketServer } from 'ws';
@@ -15,6 +18,14 @@ import { WEB } from 'data/web';
 import { handleDownload } from './download/handle-download';
 import { handleFolderMessage } from './folder';
 import { versionCheck } from './version-check';
+
+process.on('uncaughtException', function (error) {
+  if (process.send) {
+    process.send({ error });
+  }
+
+  process.exit(1);
+});
 
 // import { debug } from './debug';
 // debug();
@@ -27,9 +38,9 @@ versionCheck().then((isFresh) => {
     console.info('📛 Version check failed');
     console.info('💾 Download latest:', WEB.URLS.DOWNLOADS);
     console.info('\n Running old version of daemon. \n Behavior may be unpredictable. \n Expect bugs.');
-
-    connect();
   }
+
+  connect();
 });
 
 function connect() {
@@ -59,9 +70,21 @@ function connect() {
 
         case MessageType.download:
           if (!db) {
+            const { libraryId } = downloadMessageDataSchema.parse(message.payload.data);
+            requestDirectory(sendMessage);
+
             return sendMessage({
               type: MessageType.download,
-              payload: { error: 'Filesystem database not initialized. Try re-selecting your folder.' },
+              payload: {
+                data: downloadMessageDataSchema.parse({
+                  libraryId,
+                  state: downloadStateSchema.parse({
+                    isPaused: true,
+                    text: 'Filesystem database not initialized. Pausing.',
+                  }),
+                }),
+                error: 'Filesystem database not initialized. Try re-selecting your folder.',
+              },
             });
           } else {
             return handleDownload({ db, message, sendMessage });
