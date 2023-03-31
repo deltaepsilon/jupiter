@@ -20,6 +20,7 @@ import { handleFolderMessage } from './folder';
 import { versionCheck } from './version-check';
 
 process.on('uncaughtException', function (error) {
+  console.error(error);
   if (process.send) {
     process.send({ error });
   }
@@ -38,9 +39,9 @@ versionCheck().then((isFresh) => {
     console.info('📛 Version check failed');
     console.info('💾 Download latest:', WEB.URLS.DOWNLOADS);
     console.info('\n Running old version of daemon. \n Behavior may be unpredictable. \n Expect bugs.');
-  }
 
-  connect();
+    connect();
+  }
 });
 
 function connect() {
