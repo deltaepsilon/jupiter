@@ -1,0 +1,38 @@
+import { MdxLayout, TwoColumn } from 'ui/components/app/mdx-layout';
+
+export default MdxLayout;
+
+# Mount NFS
+
+**NFS is compatible across Windows, MacOS and Linux.**
+
+NFS stands for **Network File System**.
+
+Microsoft has a [handy overview of NFS](https://learn.microsoft.com/en-us/windows-server/storage/nfs/nfs-overview) that will teach you the basics.
+
+## Enable NFS on your NAS
+
+Check out our [Synology NFS guide](/content/enable-synology-nfs) for instructions on how to enable NFS on your Synology NAS.
+
+## Linux
+
+In Ubuntu, run a command like the following:
+
+```
+mkdir -p /home/synology/homes
+mount -t nfs 192.168.86.50:/volume1/homes /home/synology/homes
+```
+
+#### Troubleshooting
+
+1. Make sure that the folder you're trying to mount already exists. That's what `mkdir -p /home/synology/homes` does. It makes a directory (`mkdir`) at `/home/synology/homes`. The `-p` flag creates any parent directories that don't already exist.
+2. Make sure that you're mounting the right volume path. Synology likes `/volume1/homes`. If you're on a different system, experiment with different paths. Also make sure that your NFS share allows read/write access to your client. Permissions can be tricky to debug and require some persistence.
+
+## MacOS
+
+- Connect to a server
+- Add the nfs server with a path like `nfs://192.168.86.50/volume1/homes`
+
+![MacOS: Connect to server](/images/content/mount-synology-nfs/macos-connect-to-server.png)
+![MacOS: NFS path](/images/content/mount-synology-nfs/macos-nfs-path.png)
+![MacOS: Volums example](/images/content/mount-synology-nfs/macos-volumes-example.png)

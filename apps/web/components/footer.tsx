@@ -42,7 +42,8 @@ export function Footer() {
         <List>
           <ListItem href='/content/google-takeout' text='Google Takeout Guide' />
           <ListItem href='/content/video-walkthrough' text='Video Walkthrough' />
-          <ListItem href='/content/mount-synology-nfs' text='Mount Synology NFS' />
+          <ListItem href='/content/enable-synology-nfs' text='Enable Synology NFS' />
+          <ListItem href='/content/mount-nfs' text='Mount NFS' />
         </List>
         <List>
           <ListItem href='/content/policies' text='Policies' />
