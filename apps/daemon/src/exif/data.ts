@@ -1,8 +1,11 @@
 import path from 'path';
 
-// MacOS file launch writes __filename to _ and drops cwd
-const CWD = process.env._ ? path.dirname(process.env._) : process.cwd(); 
 const isWindows = process.platform === 'win32';
+const isMacOS = process.platform === 'darwin';
+// MacOS file launch writes __filename to _ and drops cwd
+const CWD = isMacOS && process.env._ ? path.dirname(process.env._) : process.cwd();
+
+console.log('CWD', CWD, process.env._, process.platform, isWindows, process.cwd());
 
 export const EXIFTOOL_PATH = isWindows
   ? path.join(CWD, 'vendor', 'exiftool-12.55', 'exiftool.exe')

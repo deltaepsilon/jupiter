@@ -167,11 +167,14 @@ async function downloadFolder({ db, folder, sendMessage }: Args & { folder: stri
 
     sendMessage({ type: MessageType.download, payload: { text } });
 
-    await Promise.all(
-      batchMediaItemIds(mediaItemIds).map((mediaItemIds) =>
-        downloadMediaItems({ folder, mediaItemIds, db, sendMessage })
-      )
-    );
+    const batches = batchMediaItemIds(mediaItemIds);
+    let i = batches.length;
+
+    while (i--) {
+      const mediaItemIds = batches[i];
+
+      await downloadMediaItems({ folder, mediaItemIds, db, sendMessage });
+    }
   } else {
     console.info(`No media items to download. Re-indexing ${folder}`);
     const indexingComplete = await indexFilesystem({ db, sendMessage, subFolder: folder });

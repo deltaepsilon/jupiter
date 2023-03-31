@@ -25,7 +25,7 @@ import { getDownloadDirectory } from '../utils';
 import path from 'path';
 import { refreshMediaItems } from './refresh-media-items';
 
-const MULTIPLEX_THREADS = 3;
+const MULTIPLEX_THREADS = 5;
 
 interface Args {
   folder: string;

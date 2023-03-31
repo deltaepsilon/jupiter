@@ -1,12 +1,11 @@
 ## In Progress
 
-- [ ] Debug that darned multiplexer. It's running wild on MacOS.
-
-## Next actions
-
 - [ ] Landing page links, big and bold, to walkthrough video and "Web App ->"
 - [ ] Once logged in, the Web App CTA should shake to call attention to itself
 - [ ] Number the steps in the Library Detail page
+
+## Next actions
+
 - [ ] Content: Takeout transfer to third-party service
 - [ ] Content: Metadata Fixer
 - [ ] Content: Reddit Links
@@ -32,6 +31,7 @@
 
 ## Archive
 
+- [x] Debug that darned multiplexer. It's running wild on MacOS.
 - [x] Add Mac NFS instructions to guide. See screenshots in /apps/web/public/images/content/mount-synology-nfs
 - [x] Get Mac daemon to copy files to the correct folders
 - [x] Sign Windows binaries

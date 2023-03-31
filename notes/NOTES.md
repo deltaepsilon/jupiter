@@ -1,6 +1,32 @@
+## March 31, 2023
+
+It's been an eventful few days.
+
+I got two job offers, one from Highlight and another from Royal.
+
+Each job represented a very different career direction for me. I'm going with Highlight, because I get to do a mix of front- and back-end dev, I get to learn Go, and I'll be doing a bit of DevRel-style work like I used to do with Firebase.
+
+Royal would've been fun just because I'd be working with Dan Neighman and Sonny Scroggins again. The rest of the team was great too. But I couldn't get my head around the Royal business model. They raised boatloads of cash during the NFT craze, had to pivot away from NFTs as the hype died off, and now they're searching for their market again. I've been dealing with a foreign business model at BoomPop for the last 9 months, and I need a break from working on business models that I can't understand.
+
+Highlight will be a big, hairy transition for me. But it'll stretch me in new directions and force me to learn and grow again in a way that I haven't these last two years.
+
+It's been snowing like crazy, so I bought a motorcycle. I got a Yamaha Blue, 2023 XSR 900. I've been ogling it since the press launch in late 2021, and I put a deposit down and got on a waitlist at MotoUnited on a bit of a whim. Then, after driving home with Melissa, I figured I'd check web inventory at Karl Malone Powersports SLC. And sure enough! Karl Malone had TWO 900's in stock. One was built on the floor. I messaged them, confirmed that it was there—on the floor!!!—and went down the next day to buy it.
+
+Melissa would have preferred that I'd purchased the CB650R that was sitting across the floor from the XSR. The CB is a pretty little thing, but it's only 90HP, and I wanted the bigger step up in power to 117HP with the XSR. Melissa can buy the CB when she's done with my XSR 700.
+
+I held firm on the price! I got a $200 discount for writing a full check and letting them book the sale for March. It was a very slow month with all of the snow. I also insisted that they take the ETCH fee off, so I saved another $200. The total was ~$12,850. It's a big check to write, but Melissa and I will both love it. We'll sell the CB300R ASAP and offset that around $4k??
+
+Quiver Photos (this project's new name) is finally working on MacOS. It was so depressing when I booted it up on Melissa's iMac and it barfed all over the screen. I had to run back to my computer and write a ton of new error-handling logic. Once I had a handle on the error, I had to figure out that MacOS treats `process.cwd()` differently depending on how you launch the process. Long-story-short... I figured it out in about an hour.
+
+The app's getting much more stable. I figured out how to sign the Windows binary. I don't think I'll sign the Linux binary, because Linux users are already used to running weird scripts on their machines. I'll need to sign the MacOS binary as soon as it's stable. Apple's signing process appears to be unwieldy, although I'll have to dig deeper once I'm ready.
+
+All in all... it's been a great couple of weeks. Interviewing sucks. It distracts from all of the actual work that I want to get done. It makes keeping up with BoomPop that much harder. But I'm excited to turn the page, let BoomPop ride off into the sunset in capable hands, and plot my next moves.
+
+My intention is to put a bow on Quiver Photos in the next month or two. I'd like to get it pay-walled, write some juicy SEO content, get basic paid marketing in place, sit back and see if it hits. It probably won't hit. And I'll probably be dreaming up another side hustle this fall. But there's only one way to find out!
+
 ## March 14, 2023
 
-Yesterday afternoon I YOLOed $3000 on First Republic Bank and Pacific Western Bank. 
+Yesterday afternoon I YOLOed $3000 on First Republic Bank and Pacific Western Bank.
 
 This is against my character, but the news coverage of the SVB bank run was so abhorrent that I wanted to profit from it. This SVB stuff is so specific to them. There's no reason that FRB and PACW should get lumped in with SVB.
 
@@ -8,11 +34,11 @@ I was down $500 for a while yesterday afternoon, but at open this morning both s
 
 In even cooler news, I just got an email from someone who's been following my r/google-photos posts and discovered photos.chrisesplin.com. He ran into a bug that I'd hoped was just in dev... but clearly it's a real issue. So I'll have to get on that ASAP. I'm on the cusp of providing real value!
 
-I've been on a real upswing the last couple of weeks. 
+I've been on a real upswing the last couple of weeks.
 
-True Grit went great over the weekend. It started out pouring rain. Absolutely pouring. But then it dried out and back 2/3's of the course ran fast. 
+True Grit went great over the weekend. It started out pouring rain. Absolutely pouring. But then it dried out and back 2/3's of the course ran fast.
 
-Melissa finished under 6:30 and I finished at 5:00. I know I could have done it faster if I weren't so out-of-practice with the rock riding. I was getting as sendy as I could, but those cliffs are collarbone assassins. I do not want to join the Collarbone Club, and with my iffy handling skills, I got close a couple of times. 
+Melissa finished under 6:30 and I finished at 5:00. I know I could have done it faster if I weren't so out-of-practice with the rock riding. I was getting as sendy as I could, but those cliffs are collarbone assassins. I do not want to join the Collarbone Club, and with my iffy handling skills, I got close a couple of times.
 
 I also got our shower panel replaced. The dented, scratched panel has been bothering me for years. The new one is very similar, but it's black and it's not dented or scratched!!
 
@@ -54,7 +80,7 @@ It was kinda hard to do.
 
 I'm at the fear stage of the project. I hate this part. I have this sick feeling that I've wasted my time and everything sucks. I'm not proud of it yet.
 
-Ok... my first alpha tester responded and dove right in. The dude went for it. He found bugs. I'm furiously fixing them and chatting with him on Reddit. He's a lifesaver. 
+Ok... my first alpha tester responded and dove right in. The dude went for it. He found bugs. I'm furiously fixing them and chatting with him on Reddit. He's a lifesaver.
 
 The fixes took about an hour, but I think they're going to hold 🤞
 
@@ -128,11 +154,10 @@ It's ok. This is a complex bit of software, so everything about it is bound to b
 
 This project is challenging in so many ways. I'm terrified of marketing it.
 
-##  Jan 27, 2023
+## Jan 27, 2023
 
 Indexing is multiplexed.
 
 Download counts are not accurate and a moved `.HEIC` file is causing a bug.
 
 ![Jan 27](./images/2023-01-27-bugs.png)
-
