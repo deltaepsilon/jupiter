@@ -69,4 +69,4 @@ node_modules/
 firebase-export*
 .runtimeconfig.json
 
-extensions/*
+extensions/*.secret.local
