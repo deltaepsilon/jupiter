@@ -176,7 +176,7 @@ function DownloadMenu({ actions, isEmpty }: { actions: Props['actions']; isEmpty
           <ListItemIcon>
             <SoapIcon />
           </ListItemIcon>
-          <ListItemText>Clean up progress</ListItemText>
+          <ListItemText>Clean up progress (non-destructive)</ListItemText>
         </MenuItem>
         <MenuItem
           onClick={() => {
@@ -187,7 +187,7 @@ function DownloadMenu({ actions, isEmpty }: { actions: Props['actions']; isEmpty
           <ListItemIcon>
             <ReplayIcon />
           </ListItemIcon>
-          <ListItemText>Restart ingest</ListItemText>
+          <ListItemText>Restart import</ListItemText>
         </MenuItem>
         <MenuItem
           onClick={() => {
@@ -198,7 +198,7 @@ function DownloadMenu({ actions, isEmpty }: { actions: Props['actions']; isEmpty
           <ListItemIcon>
             <DeleteForeverIcon />
           </ListItemIcon>
-          <ListItemText>Start over</ListItemText>
+          <ListItemText>Start over: restarts import and index</ListItemText>
         </MenuItem>
       </MenuTrigger>
     </Box>

@@ -7,10 +7,11 @@ import { DesktopAppDownloadsDrawer } from 'web/components/daemon';
 import DownloadIcon from '@mui/icons-material/Download';
 import LogoutIcon from '@mui/icons-material/Logout';
 import MenuIcon from '@mui/icons-material/Menu';
-import NextImage from 'next/image';
+import SubscriptionsIcon from '@mui/icons-material/Subscriptions';
 import { WEB } from 'data/web';
 import { useAuth } from 'ui/contexts';
 import { useRouter } from 'next/router';
+import { useStripe } from 'web/hooks';
 
 export function AppUserBubble() {
   const { user } = useAuth();
@@ -23,10 +24,11 @@ export function AppUserBubble() {
 }
 
 function UserBubbleList() {
-  const { signOut } = useAuth();
+  const { isSubscriber, signOut } = useAuth();
   const { close } = useMenuTrigger();
   const router = useRouter();
   const isPhotosRoute = router.route === WEB.ROUTES.PHOTOS;
+  const { redirectToSubscription } = useStripe();
 
   return (
     <MenuList onClick={close} sx={{ padding: 0 }}>
@@ -58,6 +60,31 @@ function UserBubbleList() {
         </MenuItem>
       </DesktopAppDownloadsDrawer>
 
+      {isSubscriber ? (
+        <Link blank button href={WEB.STRIPE.CUSTOMER_PORTAL}>
+          <MenuItem>
+            <ListItemIcon>
+              <SubscriptionsIcon fontSize='small' />
+            </ListItemIcon>
+            <ListItemText>
+              <Typography sx={{ marginTop: -0.5 }} variant='body2'>
+                Manage Subscription
+              </Typography>
+            </ListItemText>
+          </MenuItem>
+        </Link>
+      ) : (
+        <MenuItem onClick={redirectToSubscription}>
+          <ListItemIcon>
+            <SubscriptionsIcon fontSize='small' />
+          </ListItemIcon>
+          <ListItemText>
+            <Typography sx={{ marginTop: -0.5 }} variant='body2'>
+              Subscribe
+            </Typography>
+          </ListItemText>
+        </MenuItem>
+      )}
       <MenuItem onClick={signOut}>
         <ListItemIcon>
           <LogoutIcon fontSize='small' />

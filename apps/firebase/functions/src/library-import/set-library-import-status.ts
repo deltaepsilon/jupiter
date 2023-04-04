@@ -1,8 +1,9 @@
 import * as functions from 'firebase-functions';
 
+import { getApp, getContextAuth } from '../utils';
 import { libraryTaskStatusRequest, libraryTaskStatusResponse } from 'data/library';
 
-import { getContextAuth } from '../utils';
+import { getIsSubscribed } from 'data/user';
 import { https } from 'firebase-functions';
 import { setStatus } from './set-status';
 import { z } from 'zod';
@@ -14,6 +15,9 @@ type Data = z.infer<typeof dataSchema>;
 export async function setLibraryImportStatus(data: Data, context: https.CallableContext) {
   const { libraryId, status } = libraryTaskStatusRequest.parse(data);
   const { userId } = getContextAuth(context);
+
+  const userRecord = await getApp().auth().getUser(userId);
+  const isSubscribed = getIsSubscribed(userRecord.customClaims?.stripeRole);
   let success = false;
 
   if (!userId) {
@@ -21,7 +25,7 @@ export async function setLibraryImportStatus(data: Data, context: https.Callable
   }
 
   try {
-    await setStatus({ libraryId, status, userId });
+    await setStatus({ libraryId, isSubscribed, status, userId });
 
     success = true;
   } catch (error) {

@@ -63,5 +63,8 @@
   },
   "remoteconfig": {
     "template": "remoteconfig.template.json"
+  },
+  "extensions": {
+    "firestore-stripe-payments": "stripe/firestore-stripe-payments@0.3.3"
   }
 }

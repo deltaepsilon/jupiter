@@ -1,8 +1,37 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    match /users/{userId}/{document=**} {
+    match /users/{userId} {
       allow read, write: if request.auth.uid == userId ;
+
+      match /libraries/{libraryId} {
+        allow read, write: if request.auth.uid == userId;
+      }
+      match /metadata/user {
+        allow read, write: if request.auth.uid == userId;
+      }
+
+      match /checkout_sessions/{id} {
+        allow read, write: if request.auth.uid == userId;
+      }
+      match /subscriptions/{id} {
+        allow read: if request.auth.uid == userId;
+      }
+      match /payments/{id} {
+        allow read: if request.auth.uid == userId;
+      }
+    }
+
+    match /products/{id} {
+      allow read: if true;
+
+      match /prices/{id} {
+        allow read: if true;
+      }
+
+      match /tax_rates/{id} {
+        allow read: if true;
+      }
     }
   }
 }

@@ -10,6 +10,7 @@ import {
   Paper,
   Typography,
 } from '@mui/material';
+import { MAX_UNSUBCRIBED_COUNT } from 'data/library';
 
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
@@ -22,6 +23,7 @@ import PlayCircleOutlineIcon from '@mui/icons-material/PlayCircleOutline';
 import TableChartIcon from '@mui/icons-material/TableChart';
 import { UseLibraryImportResult } from 'web/hooks/use-library-import';
 import { formatDate } from 'ui/utils';
+import { useAuth } from 'ui/contexts';
 
 interface Props {
   actions: UseLibraryImportResult['actions'];
@@ -30,6 +32,7 @@ interface Props {
 }
 
 export function ImportLibraryPanel({ actions, libraryId, libraryImport }: Props) {
+  const { isSubscriber } = useAuth();
   const isRunning = libraryImport?.status === LibraryTaskStatus.running;
   const isComplete = libraryImport?.status === LibraryTaskStatus.complete;
   const isEmpty = !libraryImport;
@@ -39,6 +42,12 @@ export function ImportLibraryPanel({ actions, libraryId, libraryImport }: Props)
       elevation={1}
       sx={{ display: 'grid', gridGap: 4, gridTemplateColumns: '1fr 3.5rem 51px 51px', alignItems: 'center' }}
     >
+      {!isSubscriber && (
+        <Box sx={{ gridColumn: '1/-1' }}>
+          You are utilizing the Free Tier, which is limited to ~{MAX_UNSUBCRIBED_COUNT} media items. <br /> Subscribe to
+          unlock your unlimited library.
+        </Box>
+      )}
       <Box sx={{ position: 'relative' }}>
         <LinearProgress
           value={isComplete ? 100 : Math.max(5, Math.min(50, (libraryImport?.count ?? 0) / 10000))}

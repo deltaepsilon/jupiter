@@ -68,3 +68,5 @@ node_modules/
 .emulator-data
 firebase-export*
 .runtimeconfig.json
+
+extensions/*

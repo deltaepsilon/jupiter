@@ -5,13 +5,14 @@ import { getApp } from '../utils';
 
 interface Args {
   libraryId: string;
+  isSubscribed: boolean;
   status: LibraryTaskStatus;
   userId: string;
 }
 
-export async function setStatus({ libraryId, status, userId }: Args) {
+export async function setStatus({ libraryId, isSubscribed, status, userId }: Args) {
   const { libraryImport, libraryImportRef } = await getLibraryImport({ libraryId, userId });
-  const updates = libraryImportSchema.parse({ ...libraryImport, status, updated: new Date() });
+  const updates = libraryImportSchema.parse({ ...libraryImport, isSubscribed, status, updated: new Date() });
 
   await libraryImportRef.update(updates);
 

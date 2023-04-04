@@ -46,6 +46,7 @@ export const FIREBASE = {
       LIBRARIES: (userId: string) => `users/${userId}/libraries`,
       LIBRARY: (userId: string, libraryId: string) => `users/${userId}/libraries/${libraryId}`,
       USER: (userId: string) => `users/${userId}/metadata/user`,
+      CHECKOUT_SESSIONS: (userId: string) => `users/${userId}/checkout_sessions`,
     },
   },
   FUNCTIONS: {

@@ -1,6 +1,8 @@
 /* eslint-disable import/no-anonymous-default-export */
+const IS_DEVELOPMENT = process.env.NODE_ENV === 'development';
+
 export const WEB = {
-  IS_DEVELOPMENT: process.env.NODE_ENV === 'development',
+  IS_DEVELOPMENT,
   IS_SERVER: typeof window === 'undefined',
   API: {
     OAUTH2: '/api/oauth2',
@@ -11,6 +13,14 @@ export const WEB = {
     PHOTOS: '/photos',
     LIBRARY: (libraryId: string) => `/photos/library/${libraryId}`,
     SYNC: '/photos/sync',
+  },
+  STRIPE: {
+    CUSTOMER_PORTAL: IS_DEVELOPMENT
+      ? 'https://billing.stripe.com/p/login/test_bIY4k83VV6eQ8KI5kk'
+      : 'https://billing.stripe.com/p/login/eVa6s83UE8ns6mA8ww',
+    SUCCESS: '/subscription/confirmation',
+    CANCEL: '/',
+    PRICE: IS_DEVELOPMENT ? 'price_0MsnI9yBv2ELWtBDc2q2Gx6a' : 'price_0Msn29yBv2ELWtBDK4SYr9Dd',
   },
   URLS: {
     GITHUB: 'https://github.com/deltaepsilon/jupiter',

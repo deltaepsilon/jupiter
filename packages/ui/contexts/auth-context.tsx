@@ -1,24 +1,25 @@
 import { GoogleAuthProvider, OAuthCredential, User, signInWithPopup } from 'firebase/auth';
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import { doc, setDoc } from 'firebase/firestore/lite';
+import { getIsSubscribed, userSchema } from 'data/user';
 
 import { FIREBASE } from 'data/firebase';
 import { NOOP } from 'ui/utils';
 import { WEB } from 'data/web';
-import { doc, setDoc } from 'firebase/firestore/lite';
 import { useFirebase } from 'ui/contexts';
 import { useRouter } from 'next/router';
-import { userSchema } from 'data/user';
 
 type Credential = OAuthCredential | null;
 export interface AuthValue {
   credential?: Credential;
+  isSubscriber: boolean;
   signInWithGoogle: () => Promise<Credential>;
   signOut: () => void;
   user?: User | null;
   userId?: string;
 }
 
-const DEFAULT_AUTH: AuthValue = { signInWithGoogle: async () => null, signOut: NOOP, user: null };
+const DEFAULT_AUTH: AuthValue = { isSubscriber: false, signInWithGoogle: async () => null, signOut: NOOP, user: null };
 
 export const AuthContext = createContext<AuthValue>(DEFAULT_AUTH);
 
@@ -39,6 +40,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const { auth, db } = useFirebase();
   const [user, setUser] = useState<User | null | undefined>();
   const [credential, setCredential] = useState<Credential>(null);
+  const [customClaimRole, setCustomClaimRole] = useState<string>();
+  const isSubscriber = useMemo(() => getIsSubscribed(customClaimRole), [customClaimRole]);
 
   const signInWithGoogle = useCallback(async (): Promise<Credential> => {
     if (auth) {
@@ -77,8 +80,28 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }, [db, user]);
 
+  useEffect(() => {
+    if (auth?.currentUser) {
+      const currentUser = auth.currentUser;
+
+      currentUser
+        .getIdToken(true)
+        .then(() => currentUser.getIdTokenResult())
+        .then((decodedToken) => setCustomClaimRole(decodedToken.claims.stripeRole));
+    }
+  }, [auth?.currentUser]);
+
   return (
-    <AuthContext.Provider value={{ credential, signInWithGoogle, signOut, user, userId: user?.uid }}>
+    <AuthContext.Provider
+      value={{
+        credential,
+        isSubscriber,
+        signInWithGoogle,
+        signOut,
+        user,
+        userId: user?.uid,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );

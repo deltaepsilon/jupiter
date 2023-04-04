@@ -5,13 +5,15 @@ import { DaemonProvider, DirectoryProvider, useDaemon, useDirectory, useLibrarie
 import { DownloadLibraryPanel, ImportLibraryPanel } from './panels';
 import { Library, LibraryTaskStatus } from 'data/library';
 import { useDaemonRecord, useLibraryDownload, useLibraryImport } from 'web/hooks';
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
+import { MAX_UNSUBCRIBED_COUNT } from 'data/library';
 import { MessageType } from 'data/daemon';
 import { formatDate } from 'ui/utils';
 import { getDirectoryHandler } from 'web/components/daemon/handlers/directory-handler';
 import { useAuth } from 'ui/contexts';
 import { useFunctions } from 'ui/hooks';
+import { useStripe } from 'web/hooks';
 
 export function LibraryDetail() {
   const { libraries } = useLibraries();
@@ -33,12 +35,13 @@ export function LibraryDetail() {
 }
 
 function LibraryDetailConnected({ library, libraryId }: { library: Library; libraryId: string }) {
-  const { userId } = useAuth();
+  const { isSubscriber, userId } = useAuth();
   const { actions: importActions, libraryImport } = useLibraryImport(libraryId);
   const { actions: downloadActions, downloadState } = useLibraryDownload(libraryId, library);
   const { directory } = useDirectory();
   const { refreshMediaItemStats } = useFunctions();
   const { isConnected: isDaemonConnected } = useDaemon();
+  const { isRedirecting, redirectToSubscription } = useStripe();
   const isComplete = libraryImport?.status === LibraryTaskStatus.complete;
   const isRunning = libraryImport?.status === LibraryTaskStatus.running;
   const hasLibraryRecords = !!libraryImport?.count;
@@ -76,6 +79,27 @@ function LibraryDetailConnected({ library, libraryId }: { library: Library; libr
         }}
       >
         <Box>
+          {!isSubscriber && (
+            <Step>
+              <Typography sx={{ color: 'var(--color-orange)' }} variant='h4'>
+                Free Tier
+              </Typography>
+
+              <Typography variant='body1'>
+                You can download <strong>~{MAX_UNSUBCRIBED_COUNT}</strong> media items for free. After that,
+                you&apos;ll need to subscribe to continue.
+              </Typography>
+
+              <Button
+                disabled={isRedirecting}
+                onClick={redirectToSubscription}
+                sx={{ marginTop: 4 }}
+                variant='contained'
+              >
+                Subscribe
+              </Button>
+            </Step>
+          )}
           {isComplete ? (
             <Step>
               <Typography sx={{ paddingBottom: 1 }} variant='h4'>
@@ -138,7 +162,8 @@ function LibraryDetailConnected({ library, libraryId }: { library: Library; libr
               because of the excellent{' '}
               <Link blank href='https://www.synology.com/en-global/DSM70/SynologyPhotos'>
                 Synology Photos
-              </Link>.
+              </Link>
+              .
             </Typography>
           </Step>
 

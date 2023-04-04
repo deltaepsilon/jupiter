@@ -1,7 +1,7 @@
 import * as admin from 'firebase-admin';
 import * as functions from 'firebase-functions';
 
-import { LibraryImport, LibraryTaskStatus, libraryImportSchema } from 'data/library';
+import { LibraryImport, LibraryTaskStatus, MAX_UNSUBCRIBED_COUNT, libraryImportSchema } from 'data/library';
 import { getApp, getLibrary } from '../utils';
 
 import { FIREBASE } from 'data/firebase';
@@ -26,6 +26,8 @@ export async function libraryImportOnWrite(
   const afterParsed = libraryImportSchema.safeParse(snapshot.after.val());
   const isRunning = afterParsed.success && afterParsed.data.status === LibraryTaskStatus.running;
   const isDestroyed = afterParsed.success && afterParsed.data.status === LibraryTaskStatus.destroyed;
+  const isSubscribeBlocked =
+    afterParsed.success && !afterParsed.data.isSubscribed && afterParsed.data.count > MAX_UNSUBCRIBED_COUNT;
 
   if (isDestroyed) {
     await libraryImportRef.update({
@@ -35,10 +37,14 @@ export async function libraryImportOnWrite(
       updated: new Date(),
     });
     await libraryMediaItemsRef.remove();
+  } else if (isRunning && isSubscribeBlocked) {
+    console.info('isSubscribeBlocked', { libraryId, userId });
+
+    await setStatus({ libraryId, isSubscribed: afterParsed.data.isSubscribed, status: LibraryTaskStatus.idle, userId });
   } else if (isRunning) {
     const beforeImport = beforeParsed.success && beforeParsed.data;
     const libraryImport = afterParsed.data;
-    const { pageSize } = libraryImport;
+    const { isSubscribed, pageSize } = libraryImport;
     const isStale =
       beforeImport && libraryImport.updated.getTime() - beforeImport.updated.getTime() > REFRESH_FROM_TODAY_MS;
     const isReadingFromStart = isStale || !!libraryImport.startNextPageToken;
@@ -55,7 +61,7 @@ export async function libraryImportOnWrite(
     const priorNextPageToken = beforeImport && beforeImport.nextPageToken;
     const isLastPage = !maybeNextPageToken || priorNextPageToken === maybeNextPageToken;
 
-    if (isLastPage) await setStatus({ libraryId, status: LibraryTaskStatus.complete, userId });
+    if (isLastPage) await setStatus({ libraryId, isSubscribed, status: LibraryTaskStatus.complete, userId });
     nextPageToken = maybeNextPageToken;
 
     /**
@@ -112,7 +118,8 @@ export async function libraryImportOnWrite(
         updated: new Date(),
       };
 
-      if (libraryImportUpdates.nextPageToken === null) { // Attempting to preserver nextPageToken if possible
+      if (libraryImportUpdates.nextPageToken === null) {
+        // Attempting to preserver nextPageToken if possible
         delete libraryImportUpdates.nextPageToken;
       }
 

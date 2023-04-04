@@ -31,6 +31,7 @@
 
 ## Archive
 
+- [x] Stripe Billing + Firebase Extension
 - [x] Debug that darned multiplexer. It's running wild on MacOS.
 - [x] Add Mac NFS instructions to guide. See screenshots in /apps/web/public/images/content/mount-synology-nfs
 - [x] Get Mac daemon to copy files to the correct folders

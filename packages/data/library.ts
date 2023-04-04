@@ -43,6 +43,7 @@ export type LibraryTaskStatusResponse = z.infer<typeof libraryTaskStatusResponse
 export const libraryImportSchema = z.object({
   status: z.nativeEnum(LibraryTaskStatus).default(LibraryTaskStatus.idle),
   count: z.number().default(0),
+  isSubscribed: z.boolean().default(false),
   created: firestoreDate.default(() => new Date()),
   updated: firestoreDate.default(() => new Date()),
   startNextPageToken: z.string().optional(),
@@ -90,3 +91,5 @@ export type LibraryImportStatsMap = {
   months: Record<string, ItemMonth>;
   dates: Record<string, ItemDate>;
 };
+
+export const MAX_UNSUBCRIBED_COUNT = 1000;

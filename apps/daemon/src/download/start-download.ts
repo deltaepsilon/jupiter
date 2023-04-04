@@ -165,6 +165,8 @@ async function downloadFolder({ db, folder, sendMessage }: Args & { folder: stri
   if (mediaItemIds.length) {
     await updateDownloadState({ state: 'downloading', text });
 
+    await indexFilesystem({ db, sendMessage, subFolder: folder });
+
     sendMessage({ type: MessageType.download, payload: { text } });
 
     const batches = batchMediaItemIds(mediaItemIds);
