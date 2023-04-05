@@ -22,11 +22,16 @@ jobs:
         run: |
           cd ./functions && pwd && npm install && npm run build && cd ..
           echo $SERVICE_ACCOUNT_BASE64 | base64 -di > $GOOGLE_APPLICATION_CREDENTIALS
-          yarn deploy || rm $GOOGLE_APPLICATION_CREDENTIALS
-          rm $GOOGLE_APPLICATION_CREDENTIALS
+          echo $STRIPE_API_KEY >> $STRIPE_SECRETS_LOCAL
+          echo $STRIPE_WEBHOOK_SECRET >> $STRIPE_SECRETS_LOCAL
+          yarn deploy || true
+          rm $GOOGLE_APPLICATION_CREDENTIALS && rm $STRIPE_SECRETS_LOCAL
         env:
           SERVICE_ACCOUNT_BASE64: ${{ secrets.SERVICE_ACCOUNT_BASE64 }}
           GOOGLE_APPLICATION_CREDENTIALS: ${{ github.workspace }}/apps/firebase/service-account.json
+          STRIPE_SECRETS_LOCAL: ${{ github.workspace }}/apps/firebase/extensions/firestore-stripe-payments.secret.local
+          STRIPE_API_KEY: ${{ secrets.STRIPE_API_KEY }}
+          STRIPE_WEBHOOK_SECRET: ${{ secrets.STRIPE_WEBHOOK_SECRET }}
 
   deploy_web:
     runs-on: ubuntu-latest
@@ -57,7 +62,7 @@ jobs:
           WINDOWS_CERT: ${{ secrets.WINDOWS_CERT }}
           WINDOWS_KEY: ${{ secrets.WINDOWS_KEY }}
 
-      - run: yarn build     
+      - run: yarn build
 
       #  See https://docs.github.com/en/actions/deployment/security-hardening-your-deployments/configuring-openid-connect-in-google-cloud-platform
       #
@@ -66,7 +71,7 @@ jobs:
         uses: google-github-actions/setup-gcloud@v1
         with:
           version: '>= 417.0.0'
-      
+
       - id: auth
         name: Authenticate to Google Cloud
         uses: google-github-actions/auth@v1
