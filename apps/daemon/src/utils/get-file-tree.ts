@@ -6,7 +6,7 @@ export async function getFileTree(
   dir: string,
   blacklist = new Set([DB_FOLDER_NAME, 'Thumbs.db', '.DS_Store', 'desktop.ini'])
 ): Promise<string[]> {
-  const filesOrDirectories = await fsPromises.readdir(dir, { withFileTypes: true });
+  const filesOrDirectories = await fsPromises.readdir(dir, { withFileTypes: true }).catch(() => []);
   const files = filesOrDirectories.filter((file) => !blacklist.has(file.name) && !file.isDirectory());
   const directories = filesOrDirectories.filter((file) => !blacklist.has(file.name) && file.isDirectory());
 

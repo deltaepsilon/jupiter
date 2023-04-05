@@ -1,7 +1,6 @@
 ## In Progress
 
-
-- [ ] Should a grandma-friendly YT walkthrough
+- [ ] Shoot a grandma-friendly YT walkthrough
 
 ## Next actions
 
@@ -9,8 +8,8 @@
 - [ ] Content: Metadata Fixer
 - [ ] Content: Reddit Links
 - [ ] Content: Export service comparison
+- [ ] Update sitemap.txt with new content pages
 
-- [ ] Sitemap
 - [ ] Sign Mac binaries
 
 
@@ -30,6 +29,7 @@
 
 ## Archive
 
+- [x] Sitemap
 - [x] Once logged in, the Web App CTA should shake to call attention to itself
 - [x] Number the steps in the Library Detail page
 - [x] Landing page links, big and bold, to walkthrough video and "Web App ->"
