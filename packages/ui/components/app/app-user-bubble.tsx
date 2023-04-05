@@ -1,4 +1,4 @@
-import { Button, ListItemIcon, ListItemText, MenuItem, MenuList, Typography } from '@mui/material';
+import { Button, CircularProgress, ListItemIcon, ListItemText, MenuItem, MenuList, Typography } from '@mui/material';
 import { Image, Link, MenuTrigger, useMenuTrigger } from 'ui/components';
 
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
@@ -11,24 +11,31 @@ import SubscriptionsIcon from '@mui/icons-material/Subscriptions';
 import { WEB } from 'data/web';
 import { useAuth } from 'ui/contexts';
 import { useRouter } from 'next/router';
-import { useStripe } from 'web/hooks';
+import { useStripe, StripeReturnValue } from 'web/hooks';
 
 export function AppUserBubble() {
   const { user } = useAuth();
+  const { isRedirecting, redirectToSubscription } = useStripe();
 
   return user ? (
-    <MenuTrigger anchorOrigin={{ horizontal: 'right', vertical: 50 }} trigger={<UserBubbleButton />}>
-      <UserBubbleList />
+    <MenuTrigger
+      anchorOrigin={{ horizontal: 'right', vertical: 50 }}
+      trigger={<UserBubbleButton isLoading={isRedirecting} />}
+    >
+      <UserBubbleList redirectToSubscription={redirectToSubscription} />
     </MenuTrigger>
   ) : null;
 }
 
-function UserBubbleList() {
+function UserBubbleList({
+  redirectToSubscription,
+}: {
+  redirectToSubscription: StripeReturnValue['redirectToSubscription'];
+}) {
   const { isSubscriber, signOut } = useAuth();
   const { close } = useMenuTrigger();
   const router = useRouter();
   const isPhotosRoute = router.route === WEB.ROUTES.PHOTOS;
-  const { redirectToSubscription } = useStripe();
 
   return (
     <MenuList onClick={close} sx={{ padding: 0 }}>
@@ -99,7 +106,7 @@ function UserBubbleList() {
   );
 }
 
-function UserBubbleButton() {
+function UserBubbleButton({ isLoading }: { isLoading: boolean }) {
   const { user } = useAuth();
   const photoUrl = user?.photoURL;
 
@@ -110,7 +117,9 @@ function UserBubbleButton() {
       sx={{ borderRadius: 6, paddingRight: '6px', img: { borderRadius: '100%' } }}
       variant='contained'
     >
-      {photoUrl ? (
+      {isLoading ? (
+        <CircularProgress color='success' size={35} />
+      ) : photoUrl ? (
         <Image alt='user icon' ratio={1} src={user.photoURL} sx={{ width: 35, img: { objectFit: 'cover' } }} />
       ) : (
         <AccountCircleIcon fontSize='large' />

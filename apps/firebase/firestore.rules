@@ -4,10 +4,10 @@ service cloud.firestore {
     match /users/{userId} {
       allow read, write: if request.auth.uid == userId ;
 
-      match /libraries/{libraryId} {
+      match /libraries/{documents=**} {
         allow read, write: if request.auth.uid == userId;
       }
-      match /metadata/user {
+      match /metadata/{documents=**} {
         allow read, write: if request.auth.uid == userId;
       }
 

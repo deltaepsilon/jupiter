@@ -1,5 +1,5 @@
 import { Box, SxProps, Typography } from '@mui/material';
-import { Image, Link, LogInOrContinue, PhoneBorder, Video } from 'ui/components';
+import { Image, Link, LogInOrContinue, GetStarted, PhoneBorder, Video } from 'ui/components';
 
 import PhotoIcon from '@mui/icons-material/Photo';
 import { WEB } from 'data/web';
@@ -64,6 +64,8 @@ export function LandingPage() {
         </Typography>
       </Box>
 
+      <GetStarted />
+
       <Box
         sx={{
           position: 'relative',
@@ -117,6 +119,17 @@ export function LandingPage() {
           ...all of your &quot;image creation dates&quot; are <b>today!</b>
         </Typography>
       </TwoColumn>
+
+      <iframe
+        allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share'
+        allowFullScreen
+        frameBorder='0'
+        height='450'
+        src='https://www.youtube.com/embed/wx59PfjTcMo'
+        style={{ maxWidth: 'calc(100vw - 1rem)' }}
+        title='Quiver Photos video walkthrough'
+        width='800'
+      ></iframe>
 
       <PhoneAnimation />
 
@@ -288,17 +301,6 @@ export function LandingPage() {
           </Typography>
         </Box>
       </TwoColumn>
-
-      <iframe
-        allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share'
-        allowFullScreen
-        frameBorder='0'
-        height='450'
-        src='https://www.youtube.com/embed/wx59PfjTcMo'
-        style={{ maxWidth: 'calc(100vw - 1rem)' }}
-        title='Quiver Photos video walkthrough'
-        width='800'
-      ></iframe>
     </Box>
   );
 }

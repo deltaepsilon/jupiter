@@ -1,8 +1,7 @@
 ## In Progress
 
-- [ ] Landing page links, big and bold, to walkthrough video and "Web App ->"
-- [ ] Once logged in, the Web App CTA should shake to call attention to itself
-- [ ] Number the steps in the Library Detail page
+
+- [ ] Should a grandma-friendly YT walkthrough
 
 ## Next actions
 
@@ -31,6 +30,9 @@
 
 ## Archive
 
+- [x] Once logged in, the Web App CTA should shake to call attention to itself
+- [x] Number the steps in the Library Detail page
+- [x] Landing page links, big and bold, to walkthrough video and "Web App ->"
 - [x] Stripe Billing + Firebase Extension
 - [x] Debug that darned multiplexer. It's running wild on MacOS.
 - [x] Add Mac NFS instructions to guide. See screenshots in /apps/web/public/images/content/mount-synology-nfs

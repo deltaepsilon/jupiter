@@ -17,15 +17,15 @@ export function getIsSubscribed(customClaimRoleString?: string): boolean {
 }
 
 export const userSchema = z.object({
-  displayName: z.string().optional(),
-  email: z.string().optional(),
+  displayName: z.string().nullish(),
+  email: z.string().nullish(),
   metadata: z.object({
     createdAt: z.string(),
     creationTime: z.string(),
     lastLoginAt: z.string(),
     lastSignInTime: z.string(),
   }),
-  photoURL: z.string().optional(),
+  photoURL: z.string().nullish(),
   uid: z.string(),
 });
 

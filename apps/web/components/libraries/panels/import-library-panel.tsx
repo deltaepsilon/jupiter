@@ -44,8 +44,7 @@ export function ImportLibraryPanel({ actions, libraryId, libraryImport }: Props)
     >
       {!isSubscriber && (
         <Box sx={{ gridColumn: '1/-1' }}>
-          You are utilizing the Free Tier, which is limited to ~{MAX_UNSUBCRIBED_COUNT} media items. <br /> Subscribe to
-          unlock your unlimited library.
+          The Free Tier is limited to ~{MAX_UNSUBCRIBED_COUNT} imported items.
         </Box>
       )}
       <Box sx={{ position: 'relative' }}>

@@ -20,11 +20,15 @@ export function DaemonPanel() {
   return (
     <Paper elevation={1}>
       <Box sx={{ display: 'flex', alignItems: 'center', gridTemplateColumns: '1fr 5rem', paddingBottom: 1 }}>
-        <Typography sx={{ flex: 1 }} variant='h5'>
-          Daemon {isConnected ? 'connected' : 'disconnected'}
+        <Typography sx={{ flex: 1 }} variant='h6'>
+          {isConnected ? 'Connected' : 'Disconnected'}
         </Typography>
         <Box sx={{ svg: { position: 'relative', top: 5 } }}>
-          {isConnected ? <CheckCircleOutlineIcon /> : <SyncProblemIcon sx={{ color: 'var(--color-rubystone-red)' }} />}
+          {isConnected ? (
+            <CheckCircleOutlineIcon fontSize='large' sx={{ color: 'var(--color-jade-green)' }} />
+          ) : (
+            <SyncProblemIcon sx={{ color: 'var(--color-rubystone-red)' }} />
+          )}
         </Box>
       </Box>
 

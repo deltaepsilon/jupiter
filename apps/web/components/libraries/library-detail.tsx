@@ -1,10 +1,13 @@
 import { Box, Button, Typography } from '@mui/material';
+import { LoadingButton } from '@mui/lab';
 import { Container, Link } from 'ui/components';
 import { DaemonPanel, DesktopAppDownloadsDrawer } from 'web/components/daemon';
 import { DaemonProvider, DirectoryProvider, useDaemon, useDirectory, useLibraries } from 'web/contexts';
 import { DownloadLibraryPanel, ImportLibraryPanel } from './panels';
 import { Library, LibraryTaskStatus } from 'data/library';
 import { useDaemonRecord, useLibraryDownload, useLibraryImport } from 'web/hooks';
+import { WEB } from 'data/web';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useEffect, useMemo, useState } from 'react';
 
 import { MAX_UNSUBCRIBED_COUNT } from 'data/library';
@@ -62,6 +65,9 @@ function LibraryDetailConnected({ library, libraryId }: { library: Library; libr
         paddingTop: 0,
       }}
     >
+      <Link button href={WEB.ROUTES.PHOTOS}>
+        <Button startIcon={<ArrowBackIcon />}>Back</Button>
+      </Link>
       <Box>
         <Typography
           sx={{ textTransform: 'capitalize' }}
@@ -81,29 +87,34 @@ function LibraryDetailConnected({ library, libraryId }: { library: Library; libr
         <Box>
           {!isSubscriber && (
             <Step>
-              <Typography sx={{ color: 'var(--color-orange)' }} variant='h4'>
-                Free Tier
-              </Typography>
-
-              <Typography variant='body1'>
-                You can download <strong>~{MAX_UNSUBCRIBED_COUNT}</strong> media items for free. After that,
-                you&apos;ll need to subscribe to continue.
-              </Typography>
-
-              <Button
-                disabled={isRedirecting}
-                onClick={redirectToSubscription}
-                sx={{ marginTop: 4 }}
-                variant='contained'
+              <Box
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  flexWrap: 'wrap',
+                  gridGap: 16,
+                  marginBottom: [2, 0],
+                }}
               >
-                Subscribe
-              </Button>
+                <Typography sx={{ color: 'var(--color-blue)' }} variant='h4'>
+                  Free Tier
+                </Typography>
+
+                <LoadingButton loading={isRedirecting} onClick={redirectToSubscription} variant='contained'>
+                  Subscribe
+                </LoadingButton>
+              </Box>
+
+              <Typography sx={{ strong: { color: 'var(--color-blue)' } }} variant='body1'>
+                Your first <strong>{MAX_UNSUBCRIBED_COUNT}</strong> media items are free!
+              </Typography>
             </Step>
           )}
           {isComplete ? (
             <Step>
               <Typography sx={{ paddingBottom: 1 }} variant='h4'>
-                Import complete
+                1. Import records: complete
               </Typography>
               <Typography variant='body1'>
                 Congratulations! Your records are current as of{' '}
@@ -113,9 +124,9 @@ function LibraryDetailConnected({ library, libraryId }: { library: Library; libr
           ) : hasLibraryRecords ? (
             <Step>
               {isRunning ? (
-                <Typography variant='h4'>Import in progress</Typography>
+                <Typography variant='h4'>1. Import records: in progress</Typography>
               ) : (
-                <Typography variant='h4'>Import paused</Typography>
+                <Typography variant='h4'>1. Import records: paused</Typography>
               )}
 
               <Typography variant='body1'>
@@ -136,10 +147,9 @@ function LibraryDetailConnected({ library, libraryId }: { library: Library; libr
 
         <Box sx={{ pointerEvents: hasLibraryRecords ? 'all' : 'none', opacity: hasLibraryRecords ? 1 : 0.5 }}>
           <Step>
-            <Typography variant='h4'>Desktop App</Typography>
+            <Typography variant='h4'>2. Run the Desktop App</Typography>
             <Typography sx={{ a: { textDecoration: 'underline' } }} variant='body1'>
-              The Desktop App is a lightweight, open-source application that runs on your computer. We&apos;ll use it
-              manage local files. Click the button below to get started.
+              The Desktop App manages local files on your hard drive.
             </Typography>
             <Box sx={{ paddingY: 2, textAlign: 'right' }}>
               <DesktopAppDownloadsDrawer>
@@ -153,13 +163,15 @@ function LibraryDetailConnected({ library, libraryId }: { library: Library; libr
 
         <Box sx={{ pointerEvents: isDownloadActive ? 'all' : 'none', opacity: isDownloadActive ? 1 : 0.5 }}>
           <Step>
-            <Typography variant='h4'>Download to your hard drive</Typography>
+            <Typography variant='h4'>3. Download to your hard drive</Typography>
             <Typography sx={{ a: { textDecoration: 'underline' } }} variant='body1'>
-              Large libraries should be backed up to a dedicated hard drive or NAS. We recommend purchasing a{' '}
+              Back up large libraries to a dedicated hard drive or NAS. <br />
+              <br />
+              We recommend using a{' '}
               <Link blank href='https://amzn.to/3J20oty'>
                 Synology NAS
               </Link>{' '}
-              because of the excellent{' '}
+              with{' '}
               <Link blank href='https://www.synology.com/en-global/DSM70/SynologyPhotos'>
                 Synology Photos
               </Link>
@@ -188,12 +200,13 @@ function Step({ children }: { children: React.ReactNode }) {
         alignItems: 'flex-start',
         justifyContent: 'center',
         paddingBottom: 4,
+
         h4: {
           paddingBottom: 1,
         },
       }}
     >
-      <Box>{children}</Box>
+      <Box sx={{ width: '100%' }}>{children}</Box>
     </Box>
   );
 }
