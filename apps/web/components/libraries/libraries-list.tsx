@@ -87,6 +87,7 @@ function LibraryItem({ library, libraryKey }: { library: Library; libraryKey: st
               setIsBrokenImage(true);
               refreshLibrary(libraryKey, true);
             }}
+            priority
             sx={{ position: 'absolute', inset: 0 }}
             width={200}
           />

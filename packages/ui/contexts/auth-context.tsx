@@ -1,3 +1,4 @@
+import { CustomEvent, useAnalytics } from 'web/hooks';
 import { GoogleAuthProvider, OAuthCredential, User, signInWithPopup } from 'firebase/auth';
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { doc, setDoc } from 'firebase/firestore/lite';
@@ -38,6 +39,7 @@ export function useAuth({ forceRedirect }: { forceRedirect: boolean } = { forceR
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const { auth, db } = useFirebase();
+  const { push } = useAnalytics();
   const [user, setUser] = useState<User | null | undefined>();
   const [credential, setCredential] = useState<Credential>(null);
   const [customClaimRole, setCustomClaimRole] = useState<string>();
@@ -90,6 +92,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         .then((decodedToken) => setCustomClaimRole(decodedToken.claims.stripeRole));
     }
   }, [auth?.currentUser]);
+
+  useEffect(() => {
+    if (user) {
+      push({ event: CustomEvent.login, userId: user.uid });
+    }
+  }, [push, user]);
 
   return (
     <AuthContext.Provider

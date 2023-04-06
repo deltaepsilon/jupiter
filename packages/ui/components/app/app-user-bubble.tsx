@@ -1,5 +1,6 @@
 import { Button, CircularProgress, ListItemIcon, ListItemText, MenuItem, MenuList, Typography } from '@mui/material';
 import { Image, Link, MenuTrigger, useMenuTrigger } from 'ui/components';
+import { StripeReturnValue, useStripe } from 'web/hooks';
 
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import CollectionsIcon from '@mui/icons-material/Collections';
@@ -11,7 +12,6 @@ import SubscriptionsIcon from '@mui/icons-material/Subscriptions';
 import { WEB } from 'data/web';
 import { useAuth } from 'ui/contexts';
 import { useRouter } from 'next/router';
-import { useStripe, StripeReturnValue } from 'web/hooks';
 
 export function AppUserBubble() {
   const { user } = useAuth();
@@ -120,7 +120,14 @@ function UserBubbleButton({ isLoading }: { isLoading: boolean }) {
       {isLoading ? (
         <CircularProgress color='success' size={35} />
       ) : photoUrl ? (
-        <Image alt='user icon' ratio={1} src={user.photoURL} sx={{ width: 35, img: { objectFit: 'cover' } }} />
+        <Image
+          alt='user icon'
+          priority
+          ratio={1}
+          sizes='35px'
+          src={user.photoURL}
+          sx={{ width: 35, img: { objectFit: 'cover' } }}
+        />
       ) : (
         <AccountCircleIcon fontSize='large' />
       )}

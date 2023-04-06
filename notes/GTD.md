@@ -23,6 +23,7 @@
 
 ## Archive
 
+- [x] Conversion tracking in GTM
 - [x] Google Search Console
 - [x] Lighthouse
 - [x] Sitemap

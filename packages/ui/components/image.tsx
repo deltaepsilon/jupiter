@@ -1,15 +1,15 @@
 import { AspectRatio, AspectRatioProps } from 'ui/components/aspect-ratio';
-import NextImage, { ImageProps } from 'next/image';
+import NextImage, { ImageProps as NextImageProps } from 'next/image';
 
 import { Box } from '@mui/material';
 import { BoxProps } from '@mui/system';
 
-interface Props extends ImageProps {
+export interface ImageProps extends NextImageProps {
   ratio?: AspectRatioProps['ratio'];
   sx?: AspectRatioProps['sx'];
 }
 
-export function Image({ ratio, sx = {}, ...imageProps }: Props) {
+export function Image({ ratio, sx = {}, ...imageProps }: ImageProps) {
   return ratio ? (
     <Box sx={sx}>
       <AspectRatio ratio={ratio}>
