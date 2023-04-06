@@ -1,3 +1,18 @@
+## April 6, 2023
+
+Today is Thursday, and I put my two weeks in on Monday.
+
+Healey and Steve both expressed great surprise.
+
+Healey should've known. I put up a good front for Steve, so I guess it makes sense that he'd be surprised??? 
+
+Months of dealing with Steve just put me over the edge. I can't do this any longer. And the insane dilution from Healey's fundraising sure doesn't help!
+
+I'm setting up my A/V for Highlight. I need to get a clean YT screencast setup. I bought an old Lumix G7 camera from Jordan Gibby. He hooked me up. He has too many cameras. Now I need to build a wall-mounted rig to suspend the camera, a mic and a light just above the edge of my computer monitor.
+
+The snow kept falling until yesterday afternoon when we had a merciful melt-off. The sheer volume of snow in our yard is making shoveling and snow blowing pretty difficult. The mounds on each side of the driveway are 10ft tall. I can barely throw snow over them.
+
+
 ## March 31, 2023
 
 It's been an eventful few days.

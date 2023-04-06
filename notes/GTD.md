@@ -1,20 +1,19 @@
 ## In Progress
 
-- [ ] Content: Export service comparison
+- [ ] Favicon
+- [ ] Content: Metadata Fixer
+- [ ] Content: Export service comparison (Metadata Fixer / Takeout / Quiver Photos)
 
 ## Next actions
 
 - [ ] Shoot a grandma-friendly YT walkthrough
 - [ ] Content: Takeout transfer to third-party service
-- [ ] Content: Metadata Fixer
 - [ ] Content: Reddit Links
 - [ ] Update sitemap.txt with new content pages
 
-- [ ] Sign Mac binaries
-
-
 ## Waiting for
 
+- [ ] Sign Mac binaries
 
 ## Someday
 

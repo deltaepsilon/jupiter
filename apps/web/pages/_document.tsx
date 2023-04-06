@@ -5,6 +5,7 @@ export default function Document() {
     <Html>
       <Head>
         <link href='https://use.typekit.net/axl0ilp.css' rel='stylesheet' />
+        <link href='/logos/quiver-photos-icon.png' rel='icon' type='image/x-icon'></link>
       </Head>
       <body>
         <noscript>
