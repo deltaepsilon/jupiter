@@ -1,13 +1,14 @@
 ## In Progress
 
-- [ ] Shoot a grandma-friendly YT walkthrough
+- [ ] Google Search Console
+- [ ] Content: Export service comparison
 
 ## Next actions
 
+- [ ] Shoot a grandma-friendly YT walkthrough
 - [ ] Content: Takeout transfer to third-party service
 - [ ] Content: Metadata Fixer
 - [ ] Content: Reddit Links
-- [ ] Content: Export service comparison
 - [ ] Update sitemap.txt with new content pages
 
 - [ ] Sign Mac binaries
@@ -16,9 +17,6 @@
 ## Waiting for
 
 - [ ] Lighthouse
-- [ ] Stripe integration
-- [ ] Google Search Console
-- [ ] Improve landing page images, possibly animate a line drawing of a hard drive
 - [ ] Restore **geo** metadata from Google Takeout
 
 ## Someday

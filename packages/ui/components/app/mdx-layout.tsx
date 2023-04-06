@@ -1,4 +1,5 @@
 import { Box } from '@mui/material';
+import Head from 'next/head';
 
 interface Props {
   children: React.ReactNode;
@@ -19,8 +20,8 @@ export function MdxLayout({ children }: Props) {
           backgroundColor: 'var(--color-light-gray)',
           padding: 1,
           code: {
-            paddingX: 0
-          }
+            paddingX: 0,
+          },
         },
         code: {
           backgroundColor: 'var(--color-light-gray)',
@@ -35,4 +36,12 @@ export function MdxLayout({ children }: Props) {
 
 export function TwoColumn({ children }: Props) {
   return <Box sx={{ display: 'grid', gridTemplateColumns: ['1fr', '1fr', '1fr 1fr'], gridGap: 16 }}>{children}</Box>;
+}
+
+export function MetaDescription({ content }: { content: string }) {
+  return (
+    <Head>
+      <meta content={content} name='description' />
+    </Head>
+  );
 }
