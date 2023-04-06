@@ -1,6 +1,5 @@
 ## In Progress
 
-- [ ] Google Search Console
 - [ ] Content: Export service comparison
 
 ## Next actions
@@ -16,17 +15,16 @@
 
 ## Waiting for
 
-- [ ] Lighthouse
-- [ ] Restore **geo** metadata from Google Takeout
 
 ## Someday
 
+- [ ] Restore **geo** metadata from Google Takeout
 - [ ] Download on a cron job
-- [ ] Sync up metadata
-- [ ] Restore metadata to images already on disk
 
 ## Archive
 
+- [x] Google Search Console
+- [x] Lighthouse
 - [x] Sitemap
 - [x] Once logged in, the Web App CTA should shake to call attention to itself
 - [x] Number the steps in the Library Detail page

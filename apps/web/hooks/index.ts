@@ -1,3 +1,4 @@
+export * from './use-analytics';
 export * from './use-google-photos';
 export * from './use-daemon-record';
 export * from './use-library-download';
