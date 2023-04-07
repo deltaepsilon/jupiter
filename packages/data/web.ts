@@ -13,6 +13,7 @@ export const WEB = {
     PHOTOS: '/photos',
     LIBRARY: (libraryId: string) => `/photos/library/${libraryId}`,
     SYNC: '/photos/sync',
+    ARTICLES: '/content/articles',
   },
   STRIPE: {
     CUSTOMER_PORTAL: IS_DEVELOPMENT

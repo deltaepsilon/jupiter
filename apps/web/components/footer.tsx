@@ -14,7 +14,6 @@ export function Footer() {
     <AppFooter
       sx={{
         position: 'relative',
-        // padding: 1,
         backgroundColor: 'var(--color-gentian-blue-metallic)',
         color: 'var(--color-white)',
       }}
@@ -40,12 +39,13 @@ export function Footer() {
           />
         </List>
         <List>
-          <ListItem href='/content/google-takeout' text='Google Takeout Guide' />
-          <ListItem href='/content/video-walkthrough' text='Video Walkthrough' />
-          <ListItem href='/content/enable-synology-nfs' text='Enable Synology NFS' />
-          <ListItem href='/content/mount-nfs' text='Mount NFS' />
+          <ListItem href='/content/quiver-photos-guide' text='Quiver Photos Guide' />
+          <ListItem href='/content/quiver-photos-vs-google-takeout' text='Quiver Photos vs Google Takeout' />
+          <ListItem href='/content/google-takeout-guide' text='Google Takeout Guide' />
+          <ListItem href='/content/mount-nfs' text='Mount an NFS network share' />
         </List>
         <List>
+          <ListItem href='/content/articles' text='Articles' />
           <ListItem href='/content/policies' text='Policies' />
         </List>
       </Box>

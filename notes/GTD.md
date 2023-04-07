@@ -1,6 +1,5 @@
 ## In Progress
 
-- [ ] Favicon
 - [ ] Content: Metadata Fixer
 - [ ] Content: Export service comparison (Metadata Fixer / Takeout / Quiver Photos)
 
@@ -22,6 +21,7 @@
 
 ## Archive
 
+- [x] Favicon
 - [x] Conversion tracking in GTM
 - [x] Google Search Console
 - [x] Lighthouse

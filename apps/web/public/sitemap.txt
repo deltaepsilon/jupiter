@@ -1,7 +1,10 @@
 https://photos.chrisesplin.com/
-https://photos.chrisesplin.com/content/policies
 
-https://photos.chrisesplin.com/content/google-takeout
-https://photos.chrisesplin.com/content/video-walkthrough
 https://photos.chrisesplin.com/content/enable-synology-nfs
+https://photos.chrisesplin.com/content/google-takeout-guide
+https://photos.chrisesplin.com/content/metadata-fixer
 https://photos.chrisesplin.com/content/mount-nfs
+https://photos.chrisesplin.com/content/quiver-photos-vs-google-takeout
+https://photos.chrisesplin.com/content/video-walkthrough
+
+https://photos.chrisesplin.com/content/policies

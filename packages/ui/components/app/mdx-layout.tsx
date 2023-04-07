@@ -27,6 +27,17 @@ export function MdxLayout({ children }: Props) {
           backgroundColor: 'var(--color-light-gray)',
           paddingX: 1,
         },
+        'h1, h2, h3, h4, h5, h6': { position: 'relative', marginTop: 5 },
+        '.icon-link': {
+          position: 'absolute',
+          top: 'calc(50% - 12px)',
+          right: '-2rem',
+          display: 'block',
+          width: 24,
+          height: 24,
+          transform: 'scale(90%)',
+          backgroundImage: 'url(/icons/material-design/link_black_24dp.svg)',
+        },
       }}
     >
       {children}

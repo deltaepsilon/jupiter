@@ -3,6 +3,7 @@ import { Image, Link, MenuTrigger, useMenuTrigger } from 'ui/components';
 import { StripeReturnValue, useStripe } from 'web/hooks';
 
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import ArticleIcon from '@mui/icons-material/Article';
 import CollectionsIcon from '@mui/icons-material/Collections';
 import { DesktopAppDownloadsDrawer } from 'web/components/daemon';
 import DownloadIcon from '@mui/icons-material/Download';
@@ -38,7 +39,7 @@ function UserBubbleList({
   const isPhotosRoute = router.route === WEB.ROUTES.PHOTOS;
 
   return (
-    <MenuList onClick={close} sx={{ padding: 0 }}>
+    <MenuList onClick={close} sx={{ padding: 0, 'li p': { marginTop: 0 } }}>
       {!isPhotosRoute && (
         <Link button href={WEB.ROUTES.PHOTOS}>
           <MenuItem>
@@ -92,6 +93,20 @@ function UserBubbleList({
           </ListItemText>
         </MenuItem>
       )}
+
+      <Link button href={WEB.ROUTES.ARTICLES}>
+        <MenuItem>
+          <ListItemIcon>
+            <ArticleIcon fontSize='small' />
+          </ListItemIcon>
+          <ListItemText>
+            <Typography sx={{ marginTop: -0.5 }} variant='body2'>
+              Articles
+            </Typography>
+          </ListItemText>
+        </MenuItem>
+      </Link>
+
       <MenuItem onClick={signOut}>
         <ListItemIcon>
           <LogoutIcon fontSize='small' />

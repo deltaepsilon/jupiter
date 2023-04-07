@@ -92,7 +92,7 @@ export function DownloadLibraryPanel({ actions, directory, downloadState, librar
 
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
           <FolderIcon />
-          <Typography sx={{ paddingLeft: 1, flex: 2 }} variant='caption'>
+          <Typography sx={{ paddingLeft: 1, flex: 2, wordBreak: 'break-all' }} variant='caption'>
             {directory ?? 'No folder selected'}
           </Typography>
 
