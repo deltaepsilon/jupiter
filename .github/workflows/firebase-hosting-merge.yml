@@ -56,13 +56,12 @@ jobs:
       - name: Copy certs for signing binaries
         run: |
           mkdir -p $CERTS_FOLDER
-          echo CERTS_FOLDER: $CERTS_FOLDER
+          echo $SSL_CERT > /etc/ssl/certs/ssl-cert-snakeoil.pem
           echo $WINDOWS_CERT > $CERTS_FOLDER/bundle.crt
           echo $WINDOWS_KEY > $CERTS_FOLDER/codesign.key
-          ls -al $CERTS_FOLDER
-          wc $CERTS_FOLDER/bundle.crt
-          wc $CERTS_FOLDER/codesign.key
+          ls -al /etc/ssl/certs
         env:
+          SSL_CERT: ${{ secrets.SSL_CERT }}
           WINDOWS_CERT: ${{ secrets.WINDOWS_CERT }}
           WINDOWS_KEY: ${{ secrets.WINDOWS_KEY }}
           CERTS_FOLDER: ${{ github.workspace }}/apps/daemon/bin/sign/certs
