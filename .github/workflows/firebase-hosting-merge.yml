@@ -60,6 +60,8 @@ jobs:
           echo $WINDOWS_CERT > $CERTS_FOLDER/bundle.crt
           echo $WINDOWS_KEY > $CERTS_FOLDER/codesign.key
           ls -al $CERTS_FOLDER
+          wc $CERTS_FOLDER/bundle.crt
+          wc $CERTS_FOLDER/codesign.key
         env:
           WINDOWS_CERT: ${{ secrets.WINDOWS_CERT }}
           WINDOWS_KEY: ${{ secrets.WINDOWS_KEY }}
