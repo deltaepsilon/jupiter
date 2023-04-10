@@ -35,19 +35,27 @@ buildDaemon "windows-arm64" "daemon-win-arm64.exe" "exiftool-12.55"
 
 signWindows() {
   rm $DIST_PATH/$1/$2-signed.exe || true
+
+  CERTS_PATH=$SIGN_PATH/certs/bundle.crt
+  KEY_PATH=$SIGN_PATH/certs/codesign.key
   
   echo "File sizes:"
-  echo $SIGN_PATH/certs/bundle.crt
-  ec $SIGN_PATH/certs/bundle.crt
+  echo $CERTS_PATH
+  wc $CERTS_PATH
   
-  echo $SIGN_PATH/certs/codesign.key
-  ec $SIGN_PATH/certs/codesign.key
+  echo $KEY_PATH
+  wc $KEY_PATH
   
-  $SIGN_PATH/osslsigncode sign -certs $SIGN_PATH/certs/bundle.crt -key $SIGN_PATH/certs/codesign.key -h sha256 -n "Chris Esplin" -i "https://photos.chrisesplin.com" -t "http://timestamp.sectigo.com" -in  $DIST_PATH/$1/$2.exe -out $DIST_PATH/$1/$2-signed.exe
+  $SIGN_PATH/osslsigncode sign -certs $CERTS_PATH -key $KEY_PATH -h sha256 -n "Chris Esplin" -i "https://photos.chrisesplin.com" -t "http://timestamp.sectigo.com" -in  $DIST_PATH/$1/$2.exe -out $DIST_PATH/$1/$2-signed.exe
+
+  ls -al $DIST_PATH/$1
 
   mv $DIST_PATH/$1/$2.exe $DIST_PATH/$1/$2-unsigned.exe
   mv $DIST_PATH/$1/$2-signed.exe $DIST_PATH/$1/$2.exe
   rm $DIST_PATH/$1/$2-unsigned.exe
+
+  echo "Signed $1"
+  ls -al $DIST_PATH/$1
 }
 
 echo SIGN_PATH: $SIGN_PATH
