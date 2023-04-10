@@ -55,12 +55,15 @@ jobs:
 
       - name: Copy certs for signing binaries
         run: |
-          mkdir -p apps/daemon/bin/sign/certs/
-          echo $WINDOWS_CERT > apps/daemon/bin/sign/certs/bundle.crt
-          echo $WINDOWS_KEY > apps/daemon/bin/sign/certs/codesign.key
+          mkdir -p $CERTS_FOLDER
+          echo CERTS_FOLDER: $CERTS_FOLDER
+          echo $WINDOWS_CERT > $CERTS_FOLDER/bundle.crt
+          echo $WINDOWS_KEY > $CERTS_FOLDER/codesign.key
+          ls -al $CERTS_FOLDER
         env:
           WINDOWS_CERT: ${{ secrets.WINDOWS_CERT }}
           WINDOWS_KEY: ${{ secrets.WINDOWS_KEY }}
+          CERTS_FOLDER: ${{ github.workspace }}/apps/daemon/bin/sign/certs
 
       - run: yarn build
 

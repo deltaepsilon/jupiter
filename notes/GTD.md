@@ -1,12 +1,10 @@
 ## In Progress
 
-- [ ] Content: Metadata Fixer
-- [ ] Content: Export service comparison (Metadata Fixer / Takeout / Quiver Photos)
 
 ## Next actions
 
 - [ ] Shoot a grandma-friendly YT walkthrough
-- [ ] Content: Takeout transfer to third-party service
+- [ ] quiver-photos-guide.mdx
 - [ ] Content: Reddit Links
 - [ ] Update sitemap.txt with new content pages
 
@@ -21,6 +19,7 @@
 
 ## Archive
 
+- [x] Content: Export service comparison (Metadata Fixer / Takeout / Quiver Photos)
 - [x] Favicon
 - [x] Conversion tracking in GTM
 - [x] Google Search Console

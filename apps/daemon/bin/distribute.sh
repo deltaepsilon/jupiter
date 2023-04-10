@@ -43,6 +43,7 @@ signWindows() {
   rm $DIST_PATH/$1/$2-unsigned.exe
 }
 
+echo SIGN_PATH: $SIGN_PATH
 signWindows quiver-photos-windows-x64 daemon-win-x64
 signWindows quiver-photos-windows-arm64 daemon-win-arm64
 
