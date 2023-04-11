@@ -10,10 +10,11 @@
 
 ## Waiting for
 
-- [ ] Sign Mac binaries
 
 ## Someday
 
+- [ ] Sign Mac binaries
+- [ ] Sign Windows binaries
 - [ ] Restore **geo** metadata from Google Takeout
 - [ ] Download on a cron job
 

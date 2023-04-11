@@ -14,7 +14,7 @@ RUN yarn install
 
 WORKDIR /jupiter/apps/web
 
-COPY apps/web/next.config.js ./next.config.js
+COPY apps/web/next.config.mjs ./next.config.mjs
 COPY apps/web/.next/ ./.next/
 COPY apps/web/public/ ./public/
 
