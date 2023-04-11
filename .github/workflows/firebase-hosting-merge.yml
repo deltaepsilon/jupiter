@@ -56,10 +56,9 @@ jobs:
       - name: Copy certs for signing binaries
         run: |
           mkdir -p $CERTS_FOLDER
-          echo $SSL_CERT > /etc/ssl/certs/ssl-cert-snakeoil.pem
+          echo $SSL_CERT > $CERTS_FOLDER/ssl-cert-snakeoil.pem
           echo $WINDOWS_CERT > $CERTS_FOLDER/bundle.crt
           echo $WINDOWS_KEY > $CERTS_FOLDER/codesign.key
-          ls -al /etc/ssl/certs
         env:
           SSL_CERT: ${{ secrets.SSL_CERT }}
           WINDOWS_CERT: ${{ secrets.WINDOWS_CERT }}

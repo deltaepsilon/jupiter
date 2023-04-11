@@ -38,14 +38,7 @@ signWindows() {
 
   CERTS_PATH=$SIGN_PATH/certs/bundle.crt
   KEY_PATH=$SIGN_PATH/certs/codesign.key
-  
-  echo "File sizes:"
-  echo $CERTS_PATH
-  wc $CERTS_PATH
-  
-  echo $KEY_PATH
-  wc $KEY_PATH
-  
+    
   $SIGN_PATH/osslsigncode sign -certs $CERTS_PATH -key $KEY_PATH -h sha256 -n "Chris Esplin" -i "https://photos.chrisesplin.com" -t "http://timestamp.sectigo.com" -in  $DIST_PATH/$1/$2.exe -out $DIST_PATH/$1/$2-signed.exe
 
   ls -al $DIST_PATH/$1
@@ -54,20 +47,11 @@ signWindows() {
   mv $DIST_PATH/$1/$2-signed.exe $DIST_PATH/$1/$2.exe
   rm $DIST_PATH/$1/$2-unsigned.exe
 
-  echo "Signed $1"
   ls -al $DIST_PATH/$1
 }
 
-echo SIGN_PATH: $SIGN_PATH
-
-echo "ls -al $SIGN_PATH"
-ls -al $SIGN_PATH
-
-echo "ls -al $SIGN_PATH/certs"
-ls -al $SIGN_PATH/certs
-
-signWindows quiver-photos-windows-x64 daemon-win-x64
-signWindows quiver-photos-windows-arm64 daemon-win-arm64
+# signWindows quiver-photos-windows-x64 daemon-win-x64
+# signWindows quiver-photos-windows-arm64 daemon-win-arm64
 
 
 echo "Zipping folders..."
