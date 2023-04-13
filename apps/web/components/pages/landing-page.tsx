@@ -134,7 +134,7 @@ export function LandingPage() {
           allowFullScreen
           frameBorder='0'
           height='450'
-          src='https://www.youtube.com/embed/wx59PfjTcMo'
+          src='https://www.youtube.com/embed/3ui5PS7nP-Q'
           style={{ maxWidth: 'calc(100vw - 1rem)' }}
           title='Quiver Photos video walkthrough'
           width='800'

@@ -1,0 +1,84 @@
+How do I use Quiver Photos?
+
+Well, my name is Chris Esplin, and I'm developing Quiver Photos...
+
+...and I'll be tour guide for this quick tutorial.
+
+First log in with your primary Google account.
+
+Then navigate to the Web App with either the Get Started button...
+
+...or the Web App button at the top right of the screen.
+
+Add a Google Photos library.
+
+You can add as many libraries as you like.
+
+You may need to click through some warnings to grant Google Photos access to your library.
+
+Once you've granted access, you'll see a preview of the Google Photos library that you added.
+
+You can change the library or click "Save" in the bottom-right corner.
+
+We'll click save and select our library.
+
+Our library is a small test library, so we can stick to the free tier.
+
+If you have more than one thousand photos, you may need to subscribe to a paid plan.
+
+We'll click the "play" button to import records from our library.
+
+This process can take over an hour for large libraries.
+
+The import process is handled by our servers.
+
+You DO NOT need to leave the web app open while the library imports.
+
+You'll need to download the Desktop App to download records to your hard drive.
+
+Click the "Desktop App" button and download the ZIP file that matches your computer.
+
+Most folks have x64 computers.
+
+If you're unsure, try x64 first.
+
+Download and extract the ZIP file.
+
+Double-click to launch the Desktop App or daemon.
+
+You'll notice that that the Web App can now communicate with the Desktop App.
+
+Click the "ping" button to confirm. 
+
+You should see a "pong" response from the Desktop App.
+
+Now that the Desktop App is connected, we can choose a download folder.
+
+You'll need to create your folder on your computer.
+
+Navigate to your destination folder and select it in the Web App.
+
+Now click the "play" button to start downloading.
+
+The Desktop App will index your folder, searching for any recognized downloads.
+
+You can stop and restart the download process as much as you like.
+
+The Desktop App is smart and won't download files twice.
+
+Notice that the Desktop App needs to import records from the Web App.
+
+You'll need to leave the Web App and the Desktop App open at the same time...
+
+...until that import is complete.
+
+Once the Desktop App has all of your Google Photos library records...
+
+...you can safely close the Web App and let the Desktop App run.
+
+You can restart the Desktop App later and it will continue to download.
+
+Be patient with large libraries...
+
+...and please email me at chris@chrisesplin.com with any questions.
+

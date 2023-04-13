@@ -1,12 +1,12 @@
 ## In Progress
 
+- [ ] quiver-photos-guide.mdx
+- [ ] Content: Reddit Links
 
 ## Next actions
 
-- [ ] Shoot a grandma-friendly YT walkthrough
-- [ ] quiver-photos-guide.mdx
-- [ ] Content: Reddit Links
-- [ ] Update sitemap.txt with new content pages
+- [ ] Reddit Alpha Launch
+- [ ] AdWords campaign
 
 ## Waiting for
 
@@ -20,6 +20,8 @@
 
 ## Archive
 
+- [x] Shoot a grandma-friendly YT walkthrough
+- [x] Update sitemap.txt with new content pages
 - [x] Content: Export service comparison (Metadata Fixer / Takeout / Quiver Photos)
 - [x] Favicon
 - [x] Conversion tracking in GTM
