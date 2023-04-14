@@ -45,9 +45,10 @@ versionCheck().then((isFresh) => {
 });
 
 function connect() {
-  const wss = new WebSocketServer({ port: PORT });
+  const host = '127.0.0.1';
+  const wss = new WebSocketServer({ host, port: PORT });
 
-  console.info(`\nListening on port ${PORT}...`);
+  console.info(`\nListening on  ${host}:${PORT}...`);
 
   wss.on('connection', async (ws) => {
     const sendMessage = getSendMessage(ws);
