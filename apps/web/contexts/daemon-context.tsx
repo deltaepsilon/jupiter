@@ -148,7 +148,7 @@ function useWebsocket(onMessageHandler: OnMessageHandler) {
   const [ws, setWs] = useState<WebSocket | null>(null);
   const { isConnected, setIsConnected } = useOnMessage(ws, onMessageHandler);
   const connect = useCallback(() => {
-    const ws = new WebSocket(`ws://localhost:${PORT}`);
+    const ws = new WebSocket(`ws://${window.location.hostname}:${PORT}`);
 
     setWs(ws);
   }, []);
