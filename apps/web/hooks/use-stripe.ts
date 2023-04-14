@@ -1,10 +1,10 @@
 import { addDoc, collection, doc, getDoc } from 'firebase/firestore/lite';
 import { useAuth, useFirebase } from 'ui/contexts';
+import { useCallback, useState } from 'react';
 
 import { FIREBASE } from 'data/firebase';
 import { WEB } from 'data/web';
 import { retry } from 'ui/utils';
-import { useCallback, useState } from 'react';
 import { useRouter } from 'next/router';
 
 export type StripeReturnValue = ReturnType<typeof useStripe>;
@@ -23,6 +23,7 @@ export function useStripe() {
           price: WEB.STRIPE.PRICE,
           success_url: `${location.origin}${WEB.STRIPE.SUCCESS}`,
           cancel_url: `${location.origin}${WEB.STRIPE.CANCEL}`,
+          allow_promotion_codes: true,
         };
         const checkoutSessionsCollection = collection(db, FIREBASE.FIRESTORE.COLLECTIONS.CHECKOUT_SESSIONS(user.uid));
         const docRef = await addDoc(checkoutSessionsCollection, payload);
