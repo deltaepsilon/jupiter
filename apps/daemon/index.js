@@ -6,10 +6,11 @@ const CWD = process.env._ ? path.dirname(process.env._) : process.cwd();
 const LOG_PATH = path.join(CWD, 'logs.txt');
 
 const MAX_TRIES = 10;
+const HOSTS = ['localhost', '127.0.0.1'];
 let tries = 0;
 
 function launch() {
-  const forked = fork(DAEMON_PATH, [], { cwd: process.cwd() });
+  const forked = fork(DAEMON_PATH, [`--host=${HOSTS[tries % 2]}`], { cwd: process.cwd() });
 
   forked.on('message', async (message) => {
     if (message.error) {

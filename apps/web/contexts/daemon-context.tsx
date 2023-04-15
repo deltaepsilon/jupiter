@@ -143,12 +143,16 @@ export function DaemonProvider({ children, handlers }: Props) {
 }
 
 type OnMessageHandler = (message: DaemonMessage, ws: WebSocket) => void;
+const HOSTS = ['localhost', '127.0.0.1'];
 
 function useWebsocket(onMessageHandler: OnMessageHandler) {
   const [ws, setWs] = useState<WebSocket | null>(null);
+  const triesRef = useRef(0);
   const { isConnected, setIsConnected } = useOnMessage(ws, onMessageHandler);
   const connect = useCallback(() => {
-    const ws = new WebSocket(`ws://127.0.0.1:${PORT}`);
+    const ws = new WebSocket(`ws://${HOSTS[triesRef.current % 2]}:${PORT}`);
+
+    triesRef.current += 1;
 
     setWs(ws);
   }, []);

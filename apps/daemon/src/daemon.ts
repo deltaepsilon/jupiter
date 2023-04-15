@@ -32,20 +32,22 @@ process.on('uncaughtException', function (error) {
 // debug();
 
 versionCheck().then((isFresh) => {
+  const hostArg = process.argv.find((arg) => arg.includes('--host'));
+  const host = hostArg?.split('=')[1];
+
   if (isFresh) {
     console.info('\n🤖 Control panel:', WEB.URLS.WEB);
-    connect();
+    connect(host);
   } else {
     console.info('📛 Version check failed');
     console.info('💾 Download latest:', WEB.URLS.DOWNLOADS);
     console.info('\n Running old version of daemon. \n Behavior may be unpredictable. \n Expect bugs.');
 
-    connect();
+    connect(host);
   }
 });
 
-function connect() {
-  const host = '127.0.0.1';
+function connect(host = 'localhost') {
   const wss = new WebSocketServer({ host, port: PORT });
 
   console.info(`\nListening on  ${host}:${PORT}...`);

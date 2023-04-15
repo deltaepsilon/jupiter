@@ -1,6 +1,6 @@
 ## In Progress
 
-- [ ] Handle Live Photos from an iPhone
+- [ ] Handle Live Photos from an iPhone. Save the HEIC to the month folder.
 - [ ] quiver-photos-guide.mdx
 - [ ] Content: Reddit Links
 
@@ -21,6 +21,7 @@
 
 ## Archive
 
+- [x] Alternate the daemon between 127.0.0.1 and localhost
 - [x] Shoot a grandma-friendly YT walkthrough
 - [x] Update sitemap.txt with new content pages
 - [x] Content: Export service comparison (Metadata Fixer / Takeout / Quiver Photos)
