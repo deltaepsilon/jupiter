@@ -93,7 +93,7 @@ function LibraryDetailConnected({ library, libraryId }: { library: Library; libr
               allowFullScreen
               frameBorder='0'
               height='315'
-              src='https://www.youtube.com/embed/3ui5PS7nP-Q'
+              src='https://www.youtube.com/embed/yofsVVKFuKc'
               title='YouTube video player'
               width='500'
             ></iframe>
