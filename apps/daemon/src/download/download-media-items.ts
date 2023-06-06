@@ -177,7 +177,7 @@ async function writeFile({
       responseType: 'stream',
     })
     .catch(async (err) => {
-      const isBaseUrlExpired = err.response.status === 403;
+      const isBaseUrlExpired = !err.response || err.response.status === 403;
 
       if (isBaseUrlExpired) {
         const refreshed = await refreshMediaItems({ db, folder, mediaItemIds });
@@ -208,7 +208,7 @@ async function writeFile({
           responseType: 'stream',
         });
       } else {
-        console.info('error downloading:', mediaItem.id, err.response.status, err.response.statusText);
+        console.info('error downloading:', mediaItem.id, err.response?.status, err.response?.statusText);
         // throw err.response.statusText;
       }
     });
