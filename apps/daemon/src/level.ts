@@ -32,6 +32,7 @@ export type LevelDatabase = {
   libraryId: string;
   metadataDb: Db;
   getFolderDb: (folder: string, suffix?: string) => Db;
+  restartDb: () => Promise<void>;
 };
 
 type FolderSublevel = AbstractSublevel<Level<string, MetadataData>, string | Buffer | Uint8Array, string, any>;
@@ -105,11 +106,26 @@ export async function createLevelDatabase({ directory, libraryId }: { libraryId:
           }
           reject(error);
         } else {
+          folderDbs.clear();
+
+          let wrappedDb = wrapDb(metadataDb, openDatabase);
+
           resolve({
             isDb: true,
             libraryId,
-            metadataDb: wrapDb(metadataDb),
+            metadataDb: wrappedDb,
             getFolderDb,
+            restartDb: async () => {
+              console.info('🤖 Restarting database. This is experimental and has not been tested.');
+              try {
+                await metadataDb.close();
+              } catch (error) {
+                console.info('Database status:', metadataDb.status);
+                console.info('[restartDB error]:', error);
+              }
+
+              await openDatabase();
+            },
           });
         }
       });
@@ -119,7 +135,14 @@ export async function createLevelDatabase({ directory, libraryId }: { libraryId:
   return openDatabase();
 }
 
-function wrapDb(level: Level<string, any> | FolderSublevel) {
+function wrapDb(level: Level<string, any> | FolderSublevel, openDatabase?: () => Promise<LevelDatabase>) {
+  async function checkOpen() {
+    if (level.status === 'closed' && openDatabase) {
+      console.log('🤖 Database closed. Reopening...');
+      await openDatabase();
+    }
+  }
+
   return {
     get: async function get<ReturnValue>(
       key: string,
@@ -127,6 +150,8 @@ function wrapDb(level: Level<string, any> | FolderSublevel) {
       defaultValue: any = undefined
     ): Promise<ReturnValue> {
       try {
+        await checkOpen();
+
         const value = await level.get(key);
 
         return schema.parse(value);
@@ -136,6 +161,8 @@ function wrapDb(level: Level<string, any> | FolderSublevel) {
     },
     put: async (key: string, value: any) => {
       try {
+        await checkOpen();
+
         return level.put(key, value);
       } catch (error) {
         console.error('level.put error', key, value, error);
@@ -145,6 +172,8 @@ function wrapDb(level: Level<string, any> | FolderSublevel) {
     },
     del: async (key: string) => {
       try {
+        await checkOpen();
+
         return level.del(key);
       } catch (error) {
         console.error('level.del error', key, error);

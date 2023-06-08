@@ -69,6 +69,9 @@ export async function startDownload({ db, message, sendMessage }: Args) {
         counter++;
 
         if (counter > 5) {
+          console.info(`[startDownload] restarting db: attempt: ${5 - counter + 1}`);
+          await db.restartDb();
+        } else if (counter > 10) {
           const downloadState = await updateDownloadState({
             isPaused: true,
             text: 'Too many retries. Pausing download for now.',
