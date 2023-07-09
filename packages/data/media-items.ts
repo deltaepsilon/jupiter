@@ -16,7 +16,7 @@ export const mediaItemSchema = z.object({
   productUrl: z.string(),
   baseUrl: z.string(),
   mimeType: z.string(),
-  filename: z.string(),
+  filename: z.string().default('missing-filename'),
   mediaMetadata: z.object({
     creationTime: z.string(),
     width: z.string().optional(),
