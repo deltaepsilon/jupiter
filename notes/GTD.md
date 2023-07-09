@@ -1,11 +1,8 @@
 ## In Progress
 
-- [ ] quiver-photos-guide.mdx
-- [ ] Content: Reddit Links
 
 ## Next actions
 
-- [ ] Reddit Alpha Launch
 - [ ] AdWords campaign
 
 ## Waiting for
@@ -20,6 +17,9 @@
 
 ## Archive
 
+- [x] quiver-photos-guide.mdx
+- [x] Content: Reddit Links
+- [x] Reddit Alpha Launch
 - [x] Handle Live Photos from an iPhone. Save the HEIC to the month folder.
 - [x] Alternate the daemon between 127.0.0.1 and localhost
 - [x] Shoot a grandma-friendly YT walkthrough
