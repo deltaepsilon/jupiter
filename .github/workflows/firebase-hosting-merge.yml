@@ -12,7 +12,7 @@ jobs:
       - name: ⎔ Setup node
         uses: actions/setup-node@v3
         with:
-          node-version: 8.19.2
+          node-version: 18
           cache: yarn
       - run: yarn install
         env:
@@ -46,7 +46,7 @@ jobs:
       - name: ⎔ Setup node
         uses: actions/setup-node@v3
         with:
-          node-version: 8.19.2
+          node-version: 18
           cache: yarn
 
       - run: yarn install
