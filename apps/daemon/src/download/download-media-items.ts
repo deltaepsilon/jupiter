@@ -39,7 +39,17 @@ export async function downloadMediaItems({ folder, mediaItemIds, db, sendMessage
   const { directoryPath, downloadDirectory } = await getDownloadDirectory(db);
   const downloadState = await getDownloadState();
   const multiplexer = multiplex(MULTIPLEX_THREADS);
-  let mediaItems = await Promise.all(mediaItemIds.map(async (mediaItemId) => getMediaItem(folder, mediaItemId)));
+  let mediaItems = (
+    await Promise.all(
+      mediaItemIds.map(async (mediaItemId) =>
+        getMediaItem(folder, mediaItemId).catch(() => {
+          console.error(`[downloadMediaItems] mediaItem not found: ${folder}/${mediaItemId}`);
+
+          return null;
+        })
+      )
+    )
+  ).filter((mediaItem) => mediaItem !== null) as MediaItems;
   let i = mediaItems.length;
   let stateFlags = getStateFlags(downloadState);
 
