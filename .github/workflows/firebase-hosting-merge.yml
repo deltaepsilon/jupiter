@@ -20,7 +20,7 @@ jobs:
       - name: 🚀 Deploy Firebase
         working-directory: apps/firebase
         run: |
-          cd ./functions && pwd && npm install && npm run build && cd ..
+          cd ./functions && pwd && npm install && npm run bundle && cd ..
           echo $SERVICE_ACCOUNT_BASE64 | base64 -di > $GOOGLE_APPLICATION_CREDENTIALS
           echo $STRIPE_API_KEY >> $STRIPE_SECRETS_LOCAL
           echo $STRIPE_WEBHOOK_SECRET >> $STRIPE_SECRETS_LOCAL

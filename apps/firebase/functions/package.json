@@ -2,10 +2,11 @@
   "name": "functions",
   "scripts": {
     "lint": "eslint --ext .js,.ts .",
-    "dev": "npm run build && chokidar \"./src/**/*.ts\" -c \"npm run build\"",
-    "build": "esbuild src/index.ts --bundle --sourcemap --platform=node --outfile=./lib/index.js",
-    "serve": "npm run build && firebase emulators:start --only functions",
-    "shell": "npm run build && firebase functions:shell",
+    "dev": "npm run bundle && chokidar \"./src/**/*.ts\" -c \"npm run bundle\"",
+    "build": "echo building...",
+    "bundle": "esbundle src/index.ts --bundle --sourcemap --platform=node --outfile=./lib/index.js",
+    "serve": "npm run bundle && firebase emulators:start --only functions",
+    "shell": "npm run bundle && firebase functions:shell",
     "start": "npm run shell",
     "deploy": "firebase deploy --only functions",
     "logs": "firebase functions:log"
