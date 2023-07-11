@@ -17,6 +17,7 @@ import { indexFilesystem } from './index-filesystem';
 import { wait } from 'ui/utils/wait';
 
 const BATCH_SIZE = 50;
+const MAX_TRIES = 20;
 const IGNORED_FOLDERS = new Set([CORRUPTED_FOLDER]);
 
 interface Args {
@@ -68,10 +69,13 @@ export async function startDownload({ db, message, sendMessage }: Args) {
 
         counter++;
 
-        if (counter > 5) {
+        if (counter < MAX_TRIES) {
           console.info(`[startDownload] restarting db: attempt: ${5 - counter + 1}`);
+
+          const msWait = Math.pow(2, counter) * 1000;
+          await wait(msWait);
           await db.restartDb();
-        } else if (counter > 10) {
+        } else {
           const downloadState = await updateDownloadState({
             isPaused: true,
             text: 'Too many retries. Pausing download for now.',
@@ -80,8 +84,6 @@ export async function startDownload({ db, message, sendMessage }: Args) {
           await sendDownloadStateMessage({ db, downloadState, sendMessage });
 
           break;
-        } else {
-          await wait(2000);
         }
 
         let i = folderSummaries.length;
