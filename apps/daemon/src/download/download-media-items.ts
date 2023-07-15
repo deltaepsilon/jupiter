@@ -187,7 +187,7 @@ async function writeFile({
       responseType: 'stream',
     })
     .catch(async (err) => {
-      const isBaseUrlExpired = !err.response || err.response.status === 403;
+      const isBaseUrlExpired = !err.response || err.response.status !== 200;
 
       if (isBaseUrlExpired) {
         const refreshed = await refreshMediaItems({ db, folder, mediaItemIds });
