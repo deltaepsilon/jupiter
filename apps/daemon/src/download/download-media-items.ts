@@ -2,6 +2,7 @@ import {
   CORRUPTED_FOLDER,
   DownloadAction,
   Exif,
+  MISSING_MEDIA_FILE,
   MessageType,
   SendMessage,
   dateToExifDate,
@@ -35,25 +36,48 @@ interface Args {
 }
 
 export async function downloadMediaItems({ folder, mediaItemIds, db, sendMessage }: Args) {
-  const { getDownloadedIds, getDownloadState, getMediaItem, updateDownloadingIds } = createGettersAndSetters(db);
+  const { getDownloadedIds, getDownloadState, getMediaItem, getMissingIds, updateDownloadingIds } =
+    createGettersAndSetters(db);
   const { directoryPath, downloadDirectory } = await getDownloadDirectory(db);
   const downloadState = await getDownloadState();
   const multiplexer = multiplex(MULTIPLEX_THREADS);
+  const missingIds = await getMissingIds(folder);
   let mediaItems = (
     await Promise.all(
-      mediaItemIds.map(async (mediaItemId) =>
-        getMediaItem(folder, mediaItemId).catch(() => {
-          console.error(`[downloadMediaItems] mediaItem not found: ${folder}/${mediaItemId}`);
+      mediaItemIds
+        .filter((mediaItemId) => {
+          const isMissing = missingIds.has(mediaItemId);
 
-          return null;
+          if (isMissing) {
+            console.info(
+              `[downloadMediaItems] mediaItem missing and will be skipped. folder: ${folder}; mediaItemId: ${mediaItemId}`
+            );
+          }
+
+          return !isMissing;
         })
-      )
+        .map(async (mediaItemId) =>
+          getMediaItem(folder, mediaItemId).catch(() => {
+            console.error(`[downloadMediaItems] mediaItem not found. ${folder}/${mediaItemId}`);
+
+            return null;
+          })
+        )
     )
   ).filter((mediaItem) => mediaItem !== null) as MediaItems;
   let i = mediaItems.length;
   let stateFlags = getStateFlags(downloadState);
 
-  console.info(`🤖 Downloading with ${MULTIPLEX_THREADS} threads.`);
+  if (missingIds.size) {
+    sendMessage({
+      type: MessageType.download,
+      payload: {
+        text: `Skipping ${missingIds.size} missing media items in ${folder}`,
+      },
+    });
+  }
+
+  console.info(`🤖 Downloading with ${i} media items with ${MULTIPLEX_THREADS} threads.`);
 
   while (i-- && stateFlags.isRunning) {
     const mediaItem = mediaItems[i];
@@ -113,7 +137,7 @@ async function writeFile({
   mediaItemIds: string[];
   sendMessage: SendMessage;
 }) {
-  const { getDownloadState, getIngestedIds, removeIngestedIds, removeMediaItemsByIds, setDownloadState } =
+  const { getDirectory, getDownloadState, getIngestedIds, removeIngestedIds, removeMediaItemsByIds, setDownloadState } =
     createGettersAndSetters(db);
   function onDownloadProgress(progressEvent: AxiosProgressEvent) {
     const folder = getFolderFromDate(mediaItem.mediaMetadata.creationTime);
@@ -187,7 +211,7 @@ async function writeFile({
       responseType: 'stream',
     })
     .catch(async (err) => {
-      const isBaseUrlExpired = !err.response || err.response.status !== 200;
+      const isBaseUrlExpired = !err.response || err.response.status === 403;
 
       if (isBaseUrlExpired) {
         const refreshed = await refreshMediaItems({ db, folder, mediaItemIds });
@@ -219,7 +243,20 @@ async function writeFile({
         });
       } else {
         console.info('error downloading:', mediaItem.id, err.response?.status, err.response?.statusText);
-        // throw err.response.statusText;
+
+        throw err;
+      }
+    })
+    .catch(async (err) => {
+      if (err.response.status === 404) {
+        const directoryPath = (await getDirectory()).path;
+        const missingMediaPath = path.join(directoryPath, MISSING_MEDIA_FILE);
+        console.info(`[downloadMediaItems] ${mediaItem.filename} marked missing. See logs: ${missingMediaPath}`);
+        await logMissingMedia({ db, folder, mediaItem });
+
+        return null;
+      } else {
+        throw err;
       }
     });
 
@@ -289,8 +326,9 @@ async function writeFile({
 
 function getMediaItemDownloadUrl(mediaItem: MediaItem) {
   const isVideo = mediaItem.mimeType.startsWith('video');
+  const url = `${mediaItem.baseUrl}=${isVideo ? 'dv' : 'd'}`;
 
-  return `${mediaItem.baseUrl}=${isVideo ? 'dv' : 'd'}`;
+  return url;
 }
 
 function getHandleSetExifError({
@@ -479,4 +517,32 @@ async function updateFileIndex({
   fileIndex.relativePaths.push(relativeFilepath);
 
   await setFileIndex(folder, fileIndex);
+}
+
+async function logMissingMedia({ db, folder, mediaItem }: { db: LevelDatabase; folder: string; mediaItem: MediaItem }) {
+  const { getDirectory, getDownloadState, setDownloadState, updateMissingIds } = createGettersAndSetters(db);
+  const directoryPath = (await getDirectory()).path;
+  const missingMediaPath = path.join(directoryPath, MISSING_MEDIA_FILE);
+  let missingIdsSize = 0;
+
+  await fsPromises.appendFile(missingMediaPath, `${mediaItem.filename}\n`);
+
+  await updateMissingIds(folder, (missingIds) => {
+    const updatedMissingIds = missingIds.add(mediaItem.id);
+
+    missingIdsSize = updatedMissingIds.size;
+
+    return updatedMissingIds;
+  });
+
+  const downloadState = await updateFolder(
+    { folder, downloadState: await getDownloadState() },
+    async (folderSummary) => {
+      folderSummary.missingCount = missingIdsSize;
+
+      return folderSummary;
+    }
+  );
+
+  await setDownloadState(downloadState);
 }

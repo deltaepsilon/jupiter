@@ -18,6 +18,9 @@ export enum FolderAction {
 export const corruptedIdsSchema = setOfStringsSchema;
 export type CorruptedIds = z.infer<typeof corruptedIdsSchema>;
 
+export const missingIdsSchema = setOfStringsSchema;
+export type MissingIds = z.infer<typeof missingIdsSchema>;
+
 export const downloadedIdsSchema = setOfStringsSchema;
 export type DownloadedIds = z.infer<typeof downloadedIdsSchema>;
 

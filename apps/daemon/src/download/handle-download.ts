@@ -2,6 +2,7 @@ import {
   DEFAULT_DOWNLOAD_STATE,
   DaemonMessage,
   DownloadAction,
+  MISSING_MEDIA_FILE,
   MessageType,
   SendMessage,
   daemonMessage,
@@ -12,6 +13,8 @@ import {
 import { createGettersAndSetters, getFolderFromDate } from '../utils';
 
 import { LevelDatabase } from 'daemon/src/level';
+import fsPromises from 'fs/promises';
+import path from 'path';
 import { startDownload } from './start-download';
 
 export async function handleDownload({
@@ -146,24 +149,31 @@ async function pause({ db }: { db: LevelDatabase }) {
 
 async function destroy({ db }: { db: LevelDatabase }) {
   const {
+    getDirectory,
     clearDownloadingIds,
     setRelativeFilePaths,
     removeMediaItems,
     resetFileIndices,
     setIngestedIds,
+    setCorruptedIds,
+    setMissingIds,
     setDownloadState,
     setDownloadedIds,
     getDownloadState,
   } = createGettersAndSetters(db);
   const downloadState = await getDownloadState();
+  const directoryPath = (await getDirectory()).path;
 
   await Promise.all(
     downloadState.folderSummaries.map(async ({ folder }) => {
       await removeMediaItems(folder);
       await resetFileIndices(folder);
       await setIngestedIds(folder, new Set([]));
+      await setCorruptedIds(folder, new Set([]));
+      await setMissingIds(folder, new Set([]));
       await setRelativeFilePaths(folder, new Set());
       await setDownloadedIds(folder, new Set([]));
+      await fsPromises.unlink(path.join(directoryPath, MISSING_MEDIA_FILE)).catch(() => {});
     })
   );
 

@@ -9,6 +9,7 @@ import {
   FileIndex,
   FileIndexByFilepath,
   IngestedIds,
+  MissingIds,
   RelativeFilePaths,
   Tokens,
   Urls,
@@ -21,6 +22,7 @@ import {
   fileIndexSchema,
   folderDataSchema,
   ingestedIdsSchema,
+  missingIdsSchema,
   relativeFilePathsSchema,
   tokensSchema,
   urlsSchema,
@@ -75,6 +77,18 @@ export function createGettersAndSetters(db: LevelDatabase) {
       const newCorruptedIds = callback(corruptedIds);
 
       return getters.setCorruptedIds(folder, newCorruptedIds);
+    },
+    
+    // Missing Ids
+    getMissingIds: async (folder: string) =>
+      getFolderDb(folder).get<MissingIds>(DownloadDbKeys.missingIds, missingIdsSchema),
+    setMissingIds: async (folder: string, missingIds: MissingIds) =>
+      getFolderDb(folder).put(DownloadDbKeys.missingIds, Array.from(missingIdsSchema.parse(missingIds))),
+    updateMissingIds: async (folder: string, callback: (missingIds: MissingIds) => MissingIds) => {
+      const missingIds = await getters.getMissingIds(folder);
+      const newMissingIds = callback(missingIds);
+
+      return getters.setMissingIds(folder, newMissingIds);
     },
 
     // Downloaded Ids

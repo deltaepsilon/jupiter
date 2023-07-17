@@ -116,7 +116,7 @@ export async function createLevelDatabase({ directory, libraryId }: { libraryId:
             metadataDb: wrappedDb,
             getFolderDb,
             restartDb: async () => {
-              console.info('🤖 Restarting database. This is experimental and has not been tested.');
+              console.info('🤖 Restarting database.');
               try {
                 await metadataDb.close();
               } catch (error) {
@@ -138,7 +138,7 @@ export async function createLevelDatabase({ directory, libraryId }: { libraryId:
 function wrapDb(level: Level<string, any> | FolderSublevel, openDatabase?: () => Promise<LevelDatabase>) {
   async function checkOpen() {
     if (level.status === 'closed' && openDatabase) {
-      console.log('🤖 Database closed. Reopening...');
+      console.info('🤖 Database closed. Reopening...');
       await openDatabase();
     }
   }

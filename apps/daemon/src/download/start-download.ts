@@ -31,6 +31,7 @@ export async function startDownload({ db, message, sendMessage }: Args) {
   const { downloadDirectory } = await getDownloadDirectory(db);
   let downloadState = await getDownloadState();
   const { isRunning } = getStateFlags(downloadState);
+  let counter = 0;
 
   console.info(`[startDownload] isRunning: ${isRunning}`);
 
@@ -55,7 +56,6 @@ export async function startDownload({ db, message, sendMessage }: Args) {
       await sendDownloadStateMessage({ db, downloadState, sendMessage });
 
       let stateFlags = getStateFlags(downloadState);
-      let counter = 0;
 
       console.info('starting...', {
         allFoldersComplete: stateFlags.allFoldersComplete,
@@ -69,11 +69,11 @@ export async function startDownload({ db, message, sendMessage }: Args) {
 
         counter++;
 
-        if (counter < MAX_TRIES) {
-          console.info(`[startDownload] restarting db: attempt: ${5 - counter + 1}`);
+        if (counter === 0) {
+        } else if (counter < MAX_TRIES) {
+          console.info(`[startDownload] restarting db: attempt #${counter}`);
 
-          const msWait = Math.pow(2, counter) * 1000;
-          await wait(msWait);
+          await wait(Math.pow(2, counter) * 1000);
           await db.restartDb();
         } else {
           const downloadState = await updateDownloadState({
@@ -92,7 +92,8 @@ export async function startDownload({ db, message, sendMessage }: Args) {
         while (i--) {
           const folderSummary = folderSummaries[i];
           const folderNeedsDownload =
-            folderSummary.mediaItemsCount > folderSummary.downloadedCount + folderSummary.corruptedCount;
+            folderSummary.mediaItemsCount >
+            folderSummary.downloadedCount + folderSummary.corruptedCount + folderSummary.missingCount;
 
           if (folderNeedsDownload) {
             downloadState = await setFolderState({ db, folder: folderSummary.folder, state: 'idle' });
@@ -107,7 +108,8 @@ export async function startDownload({ db, message, sendMessage }: Args) {
         while (j--) {
           const folderSummary = folderSummaries[j];
           const folderNeedsDownload =
-            folderSummary.mediaItemsCount > folderSummary.downloadedCount + folderSummary.corruptedCount;
+            folderSummary.mediaItemsCount >
+            folderSummary.downloadedCount + folderSummary.corruptedCount + folderSummary.missingCount;
 
           stateFlags = getStateFlags(downloadState);
 
@@ -160,12 +162,16 @@ export async function startDownload({ db, message, sendMessage }: Args) {
 }
 
 async function downloadFolder({ db, folder, sendMessage }: Args & { folder: string }) {
-  const { getIngestedIds, getDownloadedIds, getDownloadingIds, updateDownloadState } = createGettersAndSetters(db);
+  const { getIngestedIds, getDownloadedIds, getDownloadingIds, getMissingIds, updateDownloadState } =
+    createGettersAndSetters(db);
   const ingestedIds = await getIngestedIds(folder);
   const downloadedIds = await getDownloadedIds(folder);
   const downloadingIds = await getDownloadingIds(folder);
-  const mediaItemIds = [...ingestedIds].filter((id) => !downloadedIds.has(id) && !downloadingIds.has(id));
-  const text = `Downloading ${mediaItemIds.length} new media items to ${folder}`;
+  const missingIds = await getMissingIds(folder);
+  const mediaItemIds = [...ingestedIds].filter(
+    (id) => !downloadedIds.has(id) && !downloadingIds.has(id) && !missingIds.has(id)
+  );
+  const text = `Downloading ${mediaItemIds.length} items to ${folder}. Missing: ${missingIds.size}.`;
 
   if (mediaItemIds.length) {
     await updateDownloadState({ state: 'downloading', text });

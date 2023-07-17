@@ -5,6 +5,7 @@ import { z } from 'zod';
 
 export enum DownloadDbKeys {
   corruptedIds = 'corruptedIds',
+  missingIds = 'missingIds',
   downloadingIds = 'downloadingIds',
   downloadedIds = 'downloadedIds',
   files = 'files',
@@ -40,12 +41,10 @@ export enum DownloadAction {
   restartIngest = 'restart-ingest',
 }
 
-export const urlsSchema = z
-  .object({ refreshAccessToken: z.string(), batchGetMediaItems: z.string() })
-  .default({
-    refreshAccessToken: FIREBASE.FUNCTIONS.REFRESH_ACCESS_TOKEN,
-    batchGetMediaItems: FIREBASE.FUNCTIONS.BATCH_GET_MEDIA_ITEMS,
-  });
+export const urlsSchema = z.object({ refreshAccessToken: z.string(), batchGetMediaItems: z.string() }).default({
+  refreshAccessToken: FIREBASE.FUNCTIONS.REFRESH_ACCESS_TOKEN,
+  batchGetMediaItems: FIREBASE.FUNCTIONS.BATCH_GET_MEDIA_ITEMS,
+});
 export type Urls = z.infer<typeof urlsSchema>;
 
 export const tokensSchema = z.object({
@@ -63,6 +62,7 @@ const folderSummarySchema = z.object({
   indexedCount: z.number().default(0),
   isPaused: z.boolean().default(false),
   corruptedCount: z.number().default(0),
+  missingCount: z.number().default(0),
   downloadedCount: z.number().default(0),
   mediaItemsCount: z.number().default(0),
   state: z.enum(['idle', 'indexing', 'downloading', 'complete']).default('idle'),
@@ -110,6 +110,7 @@ export type YearStats = z.infer<typeof yearStatsSchema>;
 
 export const MISSING_DATE_FOLDER = 'missing-date';
 export const INVALID_DATE_FOLDER = 'invalid-date';
+export const MISSING_MEDIA_FILE = 'missing-media-file.txt';
 export const CORRUPTED_FOLDER = 'corrupted';
 export const DOWNLOADING_FOLDER = '__downloading';
 export const DEFAULT_DOWNLOAD_STATE = downloadStateSchema.parse(undefined);
@@ -134,7 +135,7 @@ export function getStateFlags(downloadState: DownloadState = DEFAULT_DOWNLOAD_ST
     allFoldersComplete:
       !!downloadState.folderSummaries.length &&
       downloadState.folderSummaries.every(
-        (folderSummary) => folderSummary.downloadedCount >= folderSummary.mediaItemsCount
+        (folderSummary) => folderSummary.downloadedCount + folderSummary.missingCount >= folderSummary.mediaItemsCount
       ),
     isRunning: getIsRunning(downloadState),
     shouldIngest: getShouldIngest(downloadState),
