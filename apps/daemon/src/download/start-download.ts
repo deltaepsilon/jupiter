@@ -171,7 +171,9 @@ async function downloadFolder({ db, folder, sendMessage }: Args & { folder: stri
   const mediaItemIds = [...ingestedIds].filter(
     (id) => !downloadedIds.has(id) && !downloadingIds.has(id) && !missingIds.has(id)
   );
-  const text = `Downloading ${mediaItemIds.length} items to ${folder}. Missing: ${missingIds.size}.`;
+  const text = `Downloading ${mediaItemIds.length} items to ${folder}. ${
+    missingIds.size ? `${missingIds.size} missing` : ''
+  }`;
 
   if (mediaItemIds.length) {
     await updateDownloadState({ state: 'downloading', text });

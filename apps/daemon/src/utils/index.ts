@@ -7,3 +7,4 @@ export * from './get-folder';
 export * from './move-to-date-folder';
 export * from './refresh-tokens';
 export * from './remove-irrelevant-filepaths';
+export * from './replace-invalid-filename-characters';

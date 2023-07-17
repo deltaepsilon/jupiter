@@ -12,7 +12,14 @@ import {
   progressMessageDataSchema,
   updateFolder,
 } from 'data/daemon';
-import { GettersAndSetters, SEPARATOR, createGettersAndSetters, getFolderFromDate, moveToDateFolder } from '../utils';
+import {
+  GettersAndSetters,
+  SEPARATOR,
+  createGettersAndSetters,
+  getFolderFromDate,
+  moveToDateFolder,
+  replaceInvalidFilenameCharacters,
+} from '../utils';
 import { MediaItem, MediaItems, getMediaItemKeys } from 'data/media-items';
 import { SetExifError, getExif, getMd5, setExif } from '../exif';
 import axios, { AxiosProgressEvent } from 'axios';
@@ -263,7 +270,11 @@ async function writeFile({
   if (!response) {
     return { filePromise: Promise.resolve(null), mediaItems };
   } else {
-    let downloadingFilepath = path.join(downloadDirectory, `${mediaItem.id}${SEPARATOR}${mediaItem.filename}`);
+    // TODO: Replace invalid filename characters, especially for Windows.
+    let downloadingFilepath = path.join(
+      downloadDirectory,
+      `${mediaItem.id}${SEPARATOR}${replaceInvalidFilenameCharacters(mediaItem.filename)}`
+    );
     const writeStream = fs.createWriteStream(downloadingFilepath);
 
     response.data.pipe(writeStream);
