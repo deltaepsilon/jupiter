@@ -89,9 +89,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       currentUser
         .getIdToken(true)
         .then(() => currentUser.getIdTokenResult())
-        .then((decodedToken) => setCustomClaimRole(decodedToken.claims.stripeRole));
+        .then((decodedToken) => {
+          setCustomClaimRole(decodedToken.claims.stripeRole);
+
+          if (db && user) {
+            setDoc(doc(db, FIREBASE.FIRESTORE.COLLECTIONS.CLAIMS(user.uid)), decodedToken.claims);
+          }
+        });
     }
-  }, [auth?.currentUser]);
+  }, [auth, db, user]);
 
   useEffect(() => {
     if (user) {
