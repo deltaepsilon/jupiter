@@ -7,6 +7,7 @@ import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import LaunchIcon from '@mui/icons-material/Launch';
 import { Library } from 'data/library';
 import { LibraryPickerTrigger } from './library-picker-trigger';
+import NextImage from 'next/image';
 import PhotoIcon from '@mui/icons-material/Photo';
 import PhotoLibraryIcon from '@mui/icons-material/PhotoLibrary';
 import SettingsIcon from '@mui/icons-material/Settings';
@@ -33,6 +34,10 @@ const CARD_SX: SxProps = {
   },
 };
 
+const GOOGLE_IMAGE_SCALE = 0.8;
+const GOOGLE_IMAGE_HEIGHT = 46 * GOOGLE_IMAGE_SCALE;
+const GOOGLE_IMAGE_WIDTH = 191 * GOOGLE_IMAGE_SCALE;
+
 export function LibrariesList({}: Props) {
   const { libraries } = useLibraries();
 
@@ -57,6 +62,13 @@ export function LibrariesList({}: Props) {
             <Button startIcon={<AddPhotoAlternateIcon />} variant='text'>
               Add Library
             </Button>
+            <NextImage
+              alt='sign in with google'
+              height={GOOGLE_IMAGE_HEIGHT}
+              priority
+              src='/icons/btn_google_signin_dark_normal_web@2x.png'
+              width={GOOGLE_IMAGE_WIDTH}
+            />
           </Paper>
         </LibraryPickerTrigger>
       </Box>
