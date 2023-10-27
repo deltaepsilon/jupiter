@@ -336,7 +336,7 @@ async function writeFile({
 }
 
 function getMediaItemDownloadUrl(mediaItem: MediaItem) {
-  const isVideo = mediaItem.mimeType.startsWith('video');
+  const isVideo = mediaItem.mimeType?.startsWith('video');
   const url = `${mediaItem.baseUrl}=${isVideo ? 'dv' : 'd'}`;
 
   return url;
