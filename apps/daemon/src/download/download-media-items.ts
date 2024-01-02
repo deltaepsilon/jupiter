@@ -23,7 +23,7 @@ import {
 import { MediaItem, MediaItems, getMediaItemKeys } from 'data/media-items';
 import { SetExifError, getExif, getMd5, setExif } from '../exif';
 import axios, { AxiosProgressEvent } from 'axios';
-import { multiplex, retry } from 'ui/utils';
+import { multiplex, retry, wait } from 'ui/utils';
 
 import { LevelDatabase } from '../level';
 import debounce from 'lodash/debounce';
@@ -219,6 +219,7 @@ async function writeFile({
     })
     .catch(async (err) => {
       const isBaseUrlExpired = !err.response || err.response.status === 403;
+      const is500 = !err.response || err.response.status === 500;
 
       if (isBaseUrlExpired) {
         const refreshed = await refreshMediaItems({ db, folder, mediaItemIds });
@@ -243,6 +244,15 @@ async function writeFile({
         } else {
           return null;
         }
+
+        return axios.get(getMediaItemDownloadUrl(mediaItem), {
+          onDownloadProgress: onDownloadProgressDebounced,
+          responseType: 'stream',
+        });
+      } else if (is500) {
+        await wait(1000 * 10);
+
+        console.info('retrying download:', mediaItem.id, err.response?.status, err.response?.statusText);
 
         return axios.get(getMediaItemDownloadUrl(mediaItem), {
           onDownloadProgress: onDownloadProgressDebounced,

@@ -13,7 +13,7 @@ const app = initializeApp({
 const auth = getAuth(app);
 
 (async () => {
-  const userId = 'NHrzIfJBSqRoNTCQLMb0kc0vOrj2';
+  const userId = 'Us0r3SJ5wYOIVGWD5iwQgdKRGyv1';
   await auth.setCustomUserClaims(userId, { stripeRole: 'subscriber' });
   const userRecord = await auth.getUser(userId);
 
