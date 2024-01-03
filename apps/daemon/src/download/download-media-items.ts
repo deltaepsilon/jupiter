@@ -250,7 +250,7 @@ async function writeFile({
           responseType: 'stream',
         });
       } else if (is500) {
-        await wait(1000 * 10);
+        await wait(1000 * 30);
 
         console.info('retrying download:', mediaItem.id, err.response?.status, err.response?.statusText);
 
