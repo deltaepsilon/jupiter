@@ -11566,6 +11566,12 @@ __metadata:
   languageName: node
   linkType: hard
 
+"takeout-analyzer@workspace:apps/takeout-analyzer":
+  version: 0.0.0-use.local
+  resolution: "takeout-analyzer@workspace:apps/takeout-analyzer"
+  languageName: unknown
+  linkType: soft
+
 "tapable@npm:^2.2.0":
   version: 2.2.1
   resolution: "tapable@npm:2.2.1"

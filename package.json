@@ -7,7 +7,7 @@
     "deploy": "yarn deploy:web && yarn deploy:firebase",
     "deploy:firebase": "turbo run deploy",
     "deploy:web": "sh bin/docker/deploy.sh",
-    "dev": "turbo run dev --parallel",
+    "dev": "turbo run dev --parallel  --filter !takeout-analyzer",
     "clean": "turbo run clean",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",

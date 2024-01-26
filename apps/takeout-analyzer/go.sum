@@ -1,0 +1,4 @@
+github.com/libsql/go-libsql v0.0.0-20240115151600-e17efbc849fc h1:HV53MJDH5tuLD8mc+JY+xvubuDazHa5VxTe+v2FO5iA=
+github.com/libsql/go-libsql v0.0.0-20240115151600-e17efbc849fc/go.mod h1:MnEG8k0pwr7Y+sLumkzeSpmjuCmi3zRPGc7VlQ05vlg=
+github.com/mattn/go-sqlite3 v1.14.20 h1:BAZ50Ns0OFBNxdAqFhbZqdPcht1Xlb16pDCqkq1spr0=
+github.com/mattn/go-sqlite3 v1.14.20/go.mod h1:Uh1q+B4BYcTPb+yiD3kU8Ct7aC0hY9fxUwlHK0RXw+Y=

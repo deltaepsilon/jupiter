@@ -1,3 +1,17 @@
+## January 25, 2024
+
+I'm so frustrated with the current state of this application. I'm equally frustrated with Google Takeout.
+
+I want to be working on other things, but this project keeps calling me back.
+
+Folks have been subscribing to photos.chrisesplin.com, and they've been emailing me for support... because the process I designed is buggy and difficult.
+
+It works... but it's a pain in the neck, and even technical folks get frustrated by it. The issues are fundamental to the design. The Google Photos API isn't powerful enough to make this tool work smoothly.
+
+So here we are. I'm seriously considering a full rewrite, probably as as Wails app in golang.
+
+But before I do that, I need to absolutely guarantee that Google Takeout is dropping data. I'll have to write some analysis tools to do that. It's not straightforward at all.
+
 ## April 6, 2023
 
 Today is Thursday, and I put my two weeks in on Monday.
