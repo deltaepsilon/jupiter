@@ -18,6 +18,7 @@ isClient &&
 export enum LocalforageDataType {
   DirectoryHandles = 'directory-handles',
   DaemonMessages = 'daemon-messages',
+  V2AlertFlag = 'v2-alert-flag',
 }
 
 export interface LocalforageDataTypeMapping {
@@ -46,6 +47,9 @@ const setDirectoryHandles = createSetter<DirectoryHandleMap>(LocalforageDataType
 
 export const getDaemonMessages = createGetter<DaemonMessages>(LocalforageDataType.DaemonMessages, []);
 export const setDaemonMessages = createSetter<DaemonMessages>(LocalforageDataType.DaemonMessages);
+
+export const getV2AlertFlag = createGetter<boolean>(LocalforageDataType.V2AlertFlag, false);
+export const setV2AlertFlag = createSetter<boolean>(LocalforageDataType.V2AlertFlag);
 
 // Create getters and setters
 function createGetter<Type>(key: string, defaultValue: Type): () => Promise<Type> {

@@ -4,6 +4,7 @@ import { AppFooterPortalProvider } from './app-footer';
 import { AppHead } from './app-head';
 import { AppHeader } from './app-header';
 import { theme } from '../../styles/theme';
+import { V2Alert } from './v2-alert';
 
 export function AppLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -11,6 +12,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
       <AppHead />
       <ThemeProvider theme={theme}>
         <AppFooterPortalProvider>
+          <V2Alert />
           <Box sx={{ flex: 1, paddingX: [1, 1, 2], paddingY: [1, 1, 2] }}>
             <AppHeader />
             <Box
