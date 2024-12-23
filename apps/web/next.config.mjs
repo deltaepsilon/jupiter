@@ -17,6 +17,16 @@ const nextConfig = {
   pageExtensions: ['js', 'jsx', 'ts', 'tsx', 'md', 'mdx'],
   reactStrictMode: true,
   transpilePackages: ['ui'],
+
+  async redirects() {
+    return [
+      {
+        source: '/',
+        destination: 'https://www.quiverphotos.com',
+        permanent: false,
+      },
+    ];
+  },
 };
 
 export default withMDX(mdxOptions)(nextConfig);
